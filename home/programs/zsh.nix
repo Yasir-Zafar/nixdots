@@ -49,7 +49,7 @@
 
            # if login in tty1 (basically the first tty to open) then
            if [[ \"$(tty)\" = \"/dev/tty1\" ]]; then
-                   pgrep Hyprland || dbus-launch Hyprland
+                   pgrep Hyprland || Hyprland
            fi";
 
         initExtra = "eval \"$(direnv hook zsh)\"";

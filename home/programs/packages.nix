@@ -15,6 +15,9 @@
     grim
     ffmpeg
     neofetch
+    grim
+    slurp
+    wl-clipboard
 
     zip
     unzip

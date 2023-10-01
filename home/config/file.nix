@@ -17,8 +17,6 @@
 
     ".config/qutebrowser/config.py".source = qutebrowser/config.py;
 
-    ".emacs.d/config.org".source = emacs/config.org;
-
     ".config/waybar/style.css".source = waybar/style.css;
     ".config/waybar/config".source = waybar/config;
 
@@ -27,6 +25,8 @@
     ".config/hypr/hyprland.conf".source = hypr/hyprland.conf;
 
     ".config/ncmpcpp/notify_mpd.sh".source = ncmpcpp/notify_mpd.sh;
+
+    ".config/swayidle/config".source = idle/config;
 
   };
 

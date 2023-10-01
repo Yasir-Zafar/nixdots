@@ -198,6 +198,19 @@ I have some concerns that =ps -o rss= may be unrepresentative because of [[https
      (message "%f Gb" (/ (float data) 1024 1024)))))
 #+end_src
 
+*** Native Compilation
+I’ve started experimenting with the native-comp branch of Emacs for increased performance. Here are some settings to tweak the behavior slightly:
+
+#+begin_src emacs-lisp
+(setq warning-minimum-level :error)
+
+;; Silence compiler warnings as they can be pretty disruptive
+(setq native-comp-async-report-warnings-errors nil)
+
+;; Set the right directory to store the native comp cache
+(add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
+#+end_src
+
 ** Micromamba
 [[https://github.com/mamba-org/mamba][mamba]] is a faster alternative to [[https://www.anaconda.com/][Anaconda]], a package and environment manager. =micromamba= is a tiny version that provides a subset of mamba commands.
 
@@ -239,10 +252,26 @@ By default Emacs and its packages create a lot files in =.emacs.d= and in other 
 #+begin_src emacs-lisp
 (use-package no-littering
   :straight t)
+
+;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
+(setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
+      url-history-file (expand-file-name "url/history" user-emacs-directory))
+;; Keep customization settings in a temporary file (thanks Ambrevar!)
+(setq custom-file
+      (if (boundp 'server-socket-dir)
+          (expand-file-name "custom.el" server-socket-dir)
+        (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+(load custom-file t)
 #+end_src
 
 * General settings
 ** Keybindings
+*** Escape Key
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+#+end_src
+
 *** general.el
 general.el provides a convenient interface to manage Emacs keybindings.
 
@@ -1163,7 +1192,7 @@ References:
 #+begin_src emacs-lisp
 (when (display-graphic-p)
   (if (x-list-fonts "JetBrainsMono Nerd Font")
-      (let ((font "-JB  -JetBrainsMono Nerd Font-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+      (let ((font "-JB  -JetBrainsMono Nerd Font-*-14-*-*-*-m-0-iso10646-1"))
         (set-frame-font font nil t)
         (add-to-list 'default-frame-alist `(font . ,font)))
     (message "Install JetBrainsMono Nerd Font!")))

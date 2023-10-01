@@ -1,0 +1,4 @@
+timeout 300 'lock'
+timeout 350 'hyprctl dispatch dpms off'
+resume 'hyprctl dispatch dpms on'
+before-sleep 'lock'
