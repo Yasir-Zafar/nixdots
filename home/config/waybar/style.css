@@ -1,0 +1,115 @@
+
+/* Gruv */
+@define-color bg #282828;
+@define-color light #ebdbb2;
+@define-color lightr #fbf1c7;
+@define-color dark #3c3836;
+@define-color aqua #8ec07c;
+@define-color yellow #fabd2f;
+@define-color red #fb4934;
+@define-color blue #83a598;
+
+
+@define-color warning #fabd2f;
+@define-color critical #fb4934;
+
+@define-color gruv_dark_font    #32302f;
+
+* {
+    border: none;
+    border-radius: 0px;
+    min-height: 0px;
+    margin: 0.2em 0.3em 0.2em 0.3em;
+}
+
+window#waybar {
+    background: @bg;
+    color: @light;
+    /*border-bottom: 1.5pt solid @aqua;*/
+    font-family: "feather", "JetBrainsMono Nerd Font";
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Each critical module */
+#cpu.critical,
+#battery.critical {
+    color: @critical;
+}
+
+/* Each warning */
+#network.disconnected,
+#battery.warning {
+    color: @warning;
+}
+
+/* Workspaces stuff */
+
+#workspaces {
+    color: @light;
+    font-weight: 600;
+}
+
+#workspaces button {
+    padding: 0;
+    background: @dark;
+    color: @light;
+}
+
+#workspaces button.active {
+    padding: 0;
+    background: @dark;
+    color: @lightr;
+    border-bottom: 1.2pt solid @red;
+}
+
+#workspaces button.urgent {
+    border-color: #c9545d;
+    color: #c9545d;
+}
+
+#window {
+    margin: 40px;
+}
+
+#network {
+    padding: 0;
+    background: @dark;
+    margin: 0.3em 0.3em 0.3em 0.3em;
+}
+
+#submap {
+    padding: 0;
+    background: @dark;
+    margin: 0.3em 0.3em 0.3em 0.3em;
+}
+
+#battery {
+    padding: 0;
+    background: @dark;
+    margin: 0.3em 0.3em 0.3em 0.3em;
+}
+
+#memory {
+    padding: 0;
+    background: @dark;
+    margin: 0.3em 0.3em 0.3em 0.3em;
+}
+
+#clock {
+    padding: 0;
+    background: @dark;
+    margin: 0.3em 0.3em 0.3em 0.3em;
+}
+
+#wireplumber {
+    padding: 0;
+    background: @dark;
+    margin: 0.3em 0.3em 0.3em 0.3em;
+}
+#wireplumber.muted {
+    color: @red;
+}
+#wireplumber.source-muted {
+    color: @blue;
+}

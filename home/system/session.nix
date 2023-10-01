@@ -1,0 +1,9 @@
+{
+
+  home.sessionVariables = {
+
+    EDITOR = "emacs";
+
+  };
+
+}
