@@ -8,6 +8,7 @@
       ./userspace
       ./programs
       ./system
+      ./services
 
     ];
 
