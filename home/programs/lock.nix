@@ -7,10 +7,22 @@
       enable = true;
       settings = {
 
-        color = "1d2021";
+        image = "~/Data/Pictures/Wallpapers/48.png";
+        indicator-caps-lock = true;
+        scaling = "fill";
+        bs-hl-color = "83a598";
+        caps-lock-bs-hl-color = "d3869b";
+        caps-lock-key-hl-color = "d3869b";
+        font = "JetBrainsMono Nerd Font";
         font-size = 20;
         indicator-idle-visible = false;
-        indicator-radius = 100;
+        indicator-radius = 50;
+        indicator-thickness = 20;
+        inside-color = "1d2021";
+        inside-clear-color = "83a598";
+        inside-ver-color = "8ec07c";
+        inside-wrong-color = "fb4934";
+        key-hl-color = "8ec07c";
         line-color = "ebdbb2";
         show-failed-attempts = true;
 
