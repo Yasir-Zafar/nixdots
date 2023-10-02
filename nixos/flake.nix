@@ -34,26 +34,28 @@
 
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
-  
-    nixosConfigurations = {
+  outputs = { self, nixpkgs, ... }@inputs: 
 
-  nixpkgs.overlays = [ (import self.inputs.emacs-overlay) ];
+    let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs { inherit system; overlays = [ (import self.inputs.emacs-overlay) ]; };
+    in {
+  
+      nixosConfigurations = {
+
       dpix = nixpkgs.lib.nixosSystem {
 
+	      specialArgs = { inherit inputs; };
+       	modules = [
 
-	specialArgs = { inherit inputs; };
-	modules = [
+      	  ./default.nix
 
-	  ./default.nix
-
-	];
+        ];
 
       };
 
-    };
+    };  
 
   };
 
 }
-
