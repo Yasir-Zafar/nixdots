@@ -12,6 +12,7 @@
     ffmpeg
     yt-dlp
     libnotify
+    swayidle
     grim
     ffmpeg
     neofetch
