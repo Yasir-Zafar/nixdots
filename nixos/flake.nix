@@ -38,7 +38,9 @@
   
     nixosConfigurations = {
 
+  nixpkgs.overlays = [ (import self.inputs.emacs-overlay) ];
       dpix = nixpkgs.lib.nixosSystem {
+
 
 	specialArgs = { inherit inputs; };
 	modules = [

@@ -13,7 +13,6 @@
     ./fzf.nix
     ./dircolors.nix
     ./bat.nix
-    ./emacs.nix
     ./foot.nix
     ./ncmpcpp.nix
 
