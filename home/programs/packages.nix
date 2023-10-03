@@ -33,11 +33,18 @@
     waybar
     wofi
 
+    libtool
+    nodejs
+    neovim-unwrapped
+
     pavucontrol
     firefox-wayland
     qutebrowser
     thunderbird
 
+    gtk-engine-murrine
+    gtk_engines
+    gnome.gnome-themes-extra
     gnome.nautilus
     gnome.sushi
     gnome.gnome-calculator
@@ -45,17 +52,16 @@
     gnome-solanum
     evince
     bottles
-    #transmission-gtk
-    #font-manager
+    transmission-gtk
+    font-manager
 
-    #gimp
-    libreoffice
+    gimp
+    libreoffice-fresh
     calibre
     whatsapp-for-linux
     steam
     syncthing
     (pkgs.discord.override {
-      # remove any overrides that you don't want
       withVencord = true;
     })
 

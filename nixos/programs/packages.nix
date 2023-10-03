@@ -13,17 +13,9 @@
     ccls
     llvmPackages_16.libcxxClang
     clang-tools_16
+    glibc
     gnumake
     cmake
-    libtool
-    nodejs
-    python3
-
-    gtk-engine-murrine
-    gtk_engines
-    gnome.gnome-themes-extra
-
-    neovim-unwrapped
 
   ];
 
