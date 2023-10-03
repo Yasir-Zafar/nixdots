@@ -16,6 +16,7 @@
     glibc
     gnumake
     cmake
+    jdk17
 
   ];
 
