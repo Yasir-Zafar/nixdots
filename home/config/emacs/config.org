@@ -211,19 +211,6 @@ I’ve started experimenting with the native-comp branch of Emacs for increased 
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 #+end_src
 
-** Micromamba
-[[https://github.com/mamba-org/mamba][mamba]] is a faster alternative to [[https://www.anaconda.com/][Anaconda]], a package and environment manager. =micromamba= is a tiny version that provides a subset of mamba commands.
-
-[[https://github.com/SqrtMinusOne/micromamba.el][micromamba.el]] is my package to interact with the latter.
-
-#+begin_src emacs-lisp
-(use-package micromamba
-  :straight t
-  :if (executable-find "micromamba")
-  :config
-  (micromamba-activate "general"))
-#+end_src
-
 ** Config files
 *** Custom file location
 By default, =custom= writes stuff to =init.el=, which is somewhat annoying. The following makes it write to a separate file =custom.el=

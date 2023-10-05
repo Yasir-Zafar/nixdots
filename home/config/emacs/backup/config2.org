@@ -1,0 +1,205 @@
+#+PROPERTY: header-args :mkdirp yes
+#+PROPERTY: header-args:bash       :tangle-mode (identity #o755) :comments link :shebang "#!/usr/bin/env bash"
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes :eval never-export :exports both
+#+TODO: CHECK(s) | OFF(o)
+#+TITLE: Emacs config
+#+OPTIONS: broken-links:auto h:6 toc:nil
+
+#+begin_quote
+One day we won't hate one another, no young boy will march to war and I will clean up my Emacs config. But that day isn't today.
+#+end_quote
+- Me, <2021-05-27 Thu 17:35> in commit 93a0573. Adapted from [[https://www.youtube.com/watch?v=pIdBinlW40E][The Dark Element - "The Pallbearer Walks Alone"]]. T_T
+
+* Introduction
+My configuration of [[https://www.gnu.org/software/emacs/][GNU Emacs]], an awesome +text editor+ piece of software that can do almost anything.
+
+At the moment of writing this, that "almost anything" includes:
+- *Programming environment*. With LSP & Co, Emacs is as good as many IDEs and is certainly on par with editors like VS Code.\\
+  Emacs is also particularly great at writing Lisp code, e.g. Clojure, Common Lisp, and of course, Emacs Lisp.
+- *Org Mode* is useful for a lot of things. My use cases include:
+  - *[[https://leanpub.com/lit-config/read][Literate configuration]]*
+  - *Interactive programming* à la Jupyter Notebook
+  - *Task / project management*
+  - *Formatting documents*. I've written my Master's Thesis in Org Mode.
+  - *Notetaking*, mostly with org-roam and org-journal
+- *File management*. Dired is my primary file manager.
+- *Email*, with notmuch.
+- *Multimedia management*, with EMMS.
+- *RSS feed reader*, with elfeed.
+- *Managing passwords*, with pass.
+- ...
+
+As I mentioned above, this document is a piece of literate configuration, i.e. program code interwoven with (occasionally semi-broken) English-language commentary.
+
+I find that approach helpful for maintaining the configuration, but the quality and quantity of comments may vary. I also usually incorporate my Emacs-related blog posts back into this config.
+
+So, you might extract something of value from here if you're an avid Emacs user, but probably not if you're a newcomer to the Elisp wonderland. If the latter applies to you, I'd advise checking out David Wilson's [[https://www.youtube.com/c/SystemCrafters][System Crafters]] YouTube channel.
+
+* Initial setup
+Setting up the environment, performance tuning and a few basic settings.
+
+First things first, lexical binding.
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t -*-
+#+end_src
+
+** Packages
+*** straight.el
+Straight.el is my Emacs package manager of choice. Its advantages & disadvantages over other options are listed pretty thoroughly in the README file in the repo.
+
+The following is the bootstrap script of =straight.el=.
+
+References:
+- [[https://github.com/raxod502/straight.el][straight.el repo]]
+
+#+begin_src emacs-lisp :noweb-ref minimal
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+      (load bootstrap-file nil 'nomessage))
+#+end_src
+*** use-package
+A macro to simplify package specification & configuration. Integrates with straight.el.
+
+References:
+- [[https://github.com/jwiegley/use-package][use-package repo]]
+
+#+begin_src emacs-lisp :noweb-ref minimal
+(straight-use-package 'use-package)
+(eval-when-compile (require 'use-package))
+#+end_src
+
+#+end_src
+** Variables & environment
+This section is about optioning the Emacs config.
+
+And the following is true if Emacs is run from termux on Android.
+#+begin_src emacs-lisp
+(setq my/is-termux (string-match-p (rx (* nonl) "com.termux" (* nonl)) (getenv "HOME")))
+#+end_src
+
+Also, I sometimes need to know if a program is running inside Emacs (say, inside a terminal emulator). To do that, I set the following environment variable:
+#+begin_src emacs-lisp
+(setenv "IS_EMACS" "true")
+#+end_src
+
+Finally, I want to have a minimal Emacs config for debugging purposes. This has just straight.el, use-packages, and evil.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init-minimal.el :noweb yes
+<<minimal>>
+#+end_src
+
+To launch Emacs with this config, run
+#+begin_src bash :eval no :tangle no
+emacs -q -l ~/.emacs.d/init-minimal.el
+#+end_src
+
+A convinience macro:
+#+begin_src emacs-lisp
+(defmacro with-eval-after-load-norem (file &rest body)
+  (declare (indent 1) (debug (form def-body)))
+     (with-eval-after-load ,file
+       ,@body))
+#+end_src
+** Performance
+*** Measure startup speed
+A small function to print out the loading time and number of GCs during the loading. Can be useful as a point of data for optimizing Emacs startup time.
+#+begin_src emacs-lisp
+(setq my/emacs-started nil)
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "*** Emacs loaded in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)
+            (setq my/emacs-started t)))
+#+end_src
+
+Set the following to =t= to print debug information during the startup. This will include the order in which the packages are loaded and the loading time of individual packages.
+#+begin_src emacs-lisp
+;; (setq use-package-verbose t)
+#+end_src
+
+*** Garbage collection
+Just setting ~gc-cons-treshold~ to a larger value.
+
+#+begin_src emacs-lisp
+(setq gc-cons-threshold 80000000)
+(setq read-process-output-max (* 1024 1024))
+#+end_src
+*** Run garbage collection when Emacs is unfocused
+Run GC when Emacs loses focus. +Time will tell if that's a good idea.+
+
+Some time has passed, and I still don't know if there is any quantifiable advantage to this, but it doesn't hurt.
+
+#+begin_src emacs-lisp
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (if (boundp 'after-focus-change-function)
+                (add-function :after after-focus-change-function
+                              (lambda ()
+                                (unless (frame-focus-state)
+                                  (garbage-collect))))
+              (add-hook 'after-focus-change-function 'garbage-collect))))
+#+end_src
+*** Native Compilation
+I’ve started experimenting with the native-comp branch of Emacs for increased performance. Here are some settings to tweak the behavior slightly:
+
+#+begin_src emacs-lisp
+(setq warning-minimum-level :error)
+
+;; Silence compiler warnings as they can be pretty disruptive
+(setq native-comp-async-report-warnings-errors nil)
+
+;; Set the right directory to store the native comp cache
+(add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
+#+end_src
+
+** Config files
+*** Custom file location
+By default, =custom= writes stuff to =init.el=, which is somewhat annoying. The following makes it write to a separate file =custom.el=
+
+#+begin_src emacs-lisp
+(setq custom-file (concat user-emacs-directory "custom.el"))
+(load custom-file 'noerror)
+#+end_src
+*** authinfo
+Use only the gpg-encrypted version of the file.
+#+begin_src emacs-lisp
+(setq auth-source-debug t)
+(setq auth-sources '("~/.authinfo"))
+#+end_src
+*** Private config
+I have some variables which I don't commit to the repo, e.g. my current location. They are stored in =private.el=
+
+#+begin_src emacs-lisp
+(let ((private-file (expand-file-name "private.el" user-emacs-directory)))
+  (when (file-exists-p private-file)
+    (load-file private-file)))
+#+end_src
+*** No littering
+By default Emacs and its packages create a lot files in =.emacs.d= and in other places. [[https://github.com/emacscollective/no-littering][no-littering]] is a collective effort to redirect all of that to two folders in =user-emacs-directory=.
+
+#+begin_src emacs-lisp
+(use-package no-littering
+  :straight t)
+
+;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
+(setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
+      url-history-file (expand-file-name "url/history" user-emacs-directory))
+;; Keep customization settings in a temporary file (thanks Ambrevar!)
+(setq custom-file
+      (if (boundp 'server-socket-dir)
+          (expand-file-name "custom.el" server-socket-dir)
+        (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+(load custom-file t)
+#+end_src

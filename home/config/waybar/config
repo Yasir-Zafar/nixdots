@@ -1,11 +1,11 @@
 {
-    "layer": "top", // Waybar at top layer
-    "position": "top", // Waybar position (top|bottom|left|right)
-    "height": 25, // Waybar height (to be removed for auto height)
+    "layer": "top",
+    "position": "top",
+    "height": 25,
 
-    "modules-left": ["hyprland/workspaces"],
-    "modules-center": ["mpd"],
-    "modules-right": [ "hyprland/submap", "memory", "wireplumber", "battery", "network", "clock"],
+    "modules-left": [ "hyprland/workspaces", "mpd" ],
+    "modules-center": ["clock"],
+    "modules-right": [ "hyprland/submap", "memory", "backlight", "wireplumber", "battery", "network" ],
     "hyprland/workspaces": {
 	    "format": "{icon}",
 	    "format-icons": {
@@ -14,24 +14,20 @@
   	  	"3": "",
 	    	"4": "",
   	  	"5": "",
+  	  	"6": "",
         "focused": "",
         "default": ""
     	},
      "on-click": "activate",
     },
-    "hyprland/submap": {
-        "format": "{}",
-        "max-length": 8,
-        "tooltip": false,
-    },
-    "hyprland/window": {
-        "format": "{}",
-        "max-length": 50, 
-        "tooltip": false,
-        "separate-outputs": true
+    "mpd": {
+        "format": "  <span color=\"#fb4934\"></span>  {title} - {album} ",
+        "format-disconnected": " <span color=\"#fb4934\"></span>  Disconnected ",
+        "format-stopped": " <span color=\"#fb4934\"></span>  Stopped ",
+        "interval": 7,
     },
     "clock": {
-        "format": " <span color=\"#8ec07c\">  </span> {:%I:%M %p} ",
+        "format": " <span color=\"#8ec07c\">  </span> {:%b %a %I:%M %p} ",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "calendar": {
                     "mode"          : "month",
@@ -47,16 +43,15 @@
                               }
                     },
     },
-    "battery": {
-        "states": {
-            "good": 95,
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "  <span color=\"#fe8019\">{icon}</span> {capacity} ",
-        "format-charging": "  <span color=\"#fe8019\"></span> {capacity} ",
-        "format-alt": "  <span color=\"#fe8019\">{icon}</span> {time} ",
-        "format-icons": [""]
+    "memory": {
+        "interval": 30,
+        "format": "  <span color=\"#d3869b\"></span> {used} ",
+        "max-length": 10
+    },
+    "hyprland/submap": {
+        "format": "{}",
+        "max-length": 8,
+        "tooltip": false,
     },
     "network": {
         "format-wifi": "  <span color=\"#83a598\"></span>  {essid} ",
@@ -75,16 +70,20 @@
         },
        "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
     },
-    "memory": {
-        "interval": 30,
-        "format": "  <span color=\"#d3869b\"></span> {used} ",
-        "max-length": 10
-    },
-    "mpd": {
-        "format": " <span color=\"#fb4934\"></span>  {title} - {album} ",
-        "format-disconnected": " <span color=\"#fb4934\"></span>  Disconnected ",
-        "format-stopped": " <span color=\"#fb4934\"></span>  Stopped ",
-        "interval": 7,
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 15
         },
+        "format": "  <span color=\"#fe8019\">{icon}</span> {capacity} ",
+        "format-charging": "  <span color=\"#fe8019\"></span> {capacity} ",
+        "format-alt": "  <span color=\"#fe8019\">{icon}</span> {time} ",
+        "format-icons": [""]
     },
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "  <span color=\"#fabd2f\">{icon}</span> {percent} ",
+        "format-icons": [""]
+     },
 },

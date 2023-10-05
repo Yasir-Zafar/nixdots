@@ -102,6 +102,18 @@ window#waybar {
     margin: 0.3em 0.3em 0.3em 0.3em;
 }
 
+#mpd {
+    padding: 0;
+    background: @dark;
+    margin: 0.3em 0.3em 0.3em 0.3em;
+}
+
+#backlight {
+    padding: 0;
+    background: @dark;
+    margin: 0.3em 0.3em 0.3em 0.3em;
+}
+
 #wireplumber {
     padding: 0;
     background: @dark;
