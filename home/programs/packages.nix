@@ -33,6 +33,9 @@
     waybar
     wofi
 
+    ccls
+    llvmPackages_16.libcxxClang
+    clang-tools_16
     libtool
     nodejs
     neovim-unwrapped

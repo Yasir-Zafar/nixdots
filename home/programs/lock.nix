@@ -33,10 +33,10 @@
         ring-ver-color = "282828";
         ring-wrong-color = "282828";
         separator-color = "282828";
-        text-color = "ebdbb2";
-        text-clear-color = "ebdbb2";
-        text-ver-color = "ebdbb2";
-        text-wrong-color = "ebdbb2";
+        text-color = "282828";
+        text-clear-color = "282828";
+        text-ver-color = "282828";
+        text-wrong-color = "282828";
         show-failed-attempts = true;
 
       };

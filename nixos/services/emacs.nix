@@ -5,7 +5,8 @@
     emacs = {
 
       enable = true;
-      package = pkgs.emacs-pgtk;
+      install = true;
+      package = pkgs.emacs29-pgtk;
 
     };
 
