@@ -12,7 +12,8 @@
 
     ccls
     llvmPackages_16.libcxxClang
-    clang-tools_16
+    clang-tools_16 
+    gdb
     gnumake
     cmake
     jdk17

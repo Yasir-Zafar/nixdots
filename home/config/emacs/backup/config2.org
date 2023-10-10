@@ -265,6 +265,12 @@ By default Emacs and its packages create a lot files in =.emacs.d= and in other 
 (use-package no-littering
   :straight t)
 
+;; Prevent undo tree files from polluting your git repo
+(setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo")))
+
+;; hide saves
+(setq backup-directory-alist `(("." . "~/.saves")))
+
 ;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
 (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
       url-history-file (expand-file-name "url/history" user-emacs-directory))
@@ -374,6 +380,7 @@ Basic evil configuration.
     (setq evil-want-C-i-jump nil))
   :config
   (evil-mode 1)
+  (evil-set-undo-system 'undo-redo)
   (setq evil-respect-visual-line-mode t)
   (when (fboundp #'undo-tree-undo)
     (evil-set-undo-system 'undo-tree))
@@ -772,6 +779,20 @@ References:
     (setq undo-outer-limit 1006632960))
 #+end_src
 
+*** Winner
+
+#+begin_src emacs-lisp
+
+  (use-package winner
+    :after evil
+    :config
+    (winner-mode)
+    (define-key evil-window-map "u" 'winner-undo)
+    (define-key evil-window-map "U" 'winner-redo))
+
+#+end_src
+
+
 *** Snippets
 A snippet system for Emacs and a collection of pre-built snippets.
 
@@ -1095,47 +1116,71 @@ Consult provides a lot of useful completion commands similar to Ivy's Counsel.
 *** Corfu
 
 #+begin_src emacs-lisp
-(use-package corfu
-   :straight t
-  ;; Optional customizations
-   :custom
-   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-   (corfu-auto t)                 ;; Enable auto completion
-   (corfu-separator ?\s)          ;; Orderless field separator
-   (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-   ;; Enable auto completion and configure quitting
-   (setq corfu-quit-no-match 'separator)
-  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
-  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-   (corfu-scroll-margin 5)        ;; Use scroll margin
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; (use-package corfu                                                              ;;
+  ;;    :straight t                                                                  ;;
+  ;;   ;; Optional customizations                                                    ;;
+  ;;    :custom                                                                      ;;
+  ;;    (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'   ;;
+  ;;    (corfu-auto t)                 ;; Enable auto completion                     ;;
+  ;;    (corfu-separator ?\s)          ;; Orderless field separator                  ;;
+  ;;    (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary          ;;
+  ;;    ;; Enable auto completion and configure quitting                             ;;
+  ;;    (setq corfu-quit-no-match 'separator)                                        ;;
+  ;;   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match    ;;
+  ;;   ;; (corfu-preview-current nil)    ;; Disable current candidate preview        ;;
+  ;;   ;; (corfu-preselect 'prompt)      ;; Preselect the prompt                     ;;
+  ;;   ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches      ;;
+  ;;    (corfu-scroll-margin 5)        ;; Use scroll margin                          ;;
+  ;;                                                                                 ;;
+  ;;   ;; Enable Corfu only for certain modes.                                       ;;
+  ;;    :hook ((prog-mode . corfu-mode)                                              ;;
+  ;;           (shell-mode . corfu-mode)                                             ;;
+  ;;           (eshell-mode . corfu-mode))                                           ;;
+  ;;                                                                                 ;;
+  ;;   ;; Recommended: Enable Corfu globally.                                        ;;
+  ;;   ;; This is recommended since Dabbrev can be used globally (M-/).              ;;
+  ;;   ;; See also `global-corfu-modes'.                                             ;;
+  ;;   :init                                                                         ;;
+  ;;   (global-corfu-mode))                                                          ;;
+  ;;                                                                                 ;;
+  ;; ;; A few more useful configurations...                                          ;;
+  ;; (use-package emacs                                                              ;;
+  ;;   :init                                                                         ;;
+  ;;   ;; TAB cycle if there are only few candidates                                 ;;
+  ;;   (setq completion-cycle-threshold 3)                                           ;;
+  ;;                                                                                 ;;
+  ;;   ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.     ;;
+  ;;   ;; Corfu commands are hidden, since they are not supposed to be used via M-x. ;;
+  ;;   ;; (setq read-extended-command-predicate                                      ;;
+  ;;   ;;       #'command-completion-default-include-p)                              ;;
+  ;;                                                                                 ;;
+  ;;   ;; Enable indentation+completion using the TAB key.                           ;;
+  ;;   ;; `completion-at-point' is often bound to M-TAB.                             ;;
+  ;;   (setq tab-always-indent 'complete))                                           ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+#+end_src
 
-  ;; Enable Corfu only for certain modes.
-   :hook ((prog-mode . corfu-mode)
-          (shell-mode . corfu-mode)
-          (eshell-mode . corfu-mode))
+*** Company
 
-  ;; Recommended: Enable Corfu globally.
-  ;; This is recommended since Dabbrev can be used globally (M-/).
-  ;; See also `global-corfu-modes'.
-  :init
-  (global-corfu-mode))
+#+begin_src emacs-lisp
+(use-package company
+    :straight t
+    :diminish company-mode
+    :bind (:map company-active-map
+                ("<tab>" . nil)
+                ("TAB" . nil)
+                ("M-<tab>" . company-complete-common-or-cycle)
+                ("M-<tab>" . company-complete-selection))
+    (:map lsp-mode-map
+          ("M-<tab>" . company-indent-or-complete-common))
+    :init
+    (setq company-format-margin-function nil)
+    (setq company-minimum-prefix-length 2)
+    :custom
+    (company-idle-delay 0.01))
 
-;; A few more useful configurations...
-(use-package emacs
-  :init
-  ;; TAB cycle if there are only few candidates
-  (setq completion-cycle-threshold 3)
-
-  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
-  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
-  ;; (setq read-extended-command-predicate
-  ;;       #'command-completion-default-include-p)
-
-  ;; Enable indentation+completion using the TAB key.
-  ;; `completion-at-point' is often bound to M-TAB.
-  (setq tab-always-indent 'complete))
+  (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
 #+end_src
 
 ** Help
@@ -1495,27 +1540,27 @@ References:
 One thing I don't like is that the list perspectives is displayed in the modeline, but I'll probably look how to move them to the bar at the top of the frame at some point.
 
 #+begin_src emacs-lisp
-(use-package perspective
-  :straight t
-  :init
-  ;; (setq persp-show-modestring 'header)
-  (setq persp-sort 'created)
-  (setq persp-suppress-no-prefix-key-warning t)
-  :config
-  (persp-mode)
-  (my-leader-def "x" '(:keymap perspective-map :which-key "perspective"))
-  (general-define-key
-   :keymaps 'override
-   :states '(normal emacs)
-   "gt" 'persp-next
-   "gT" 'persp-prev
-   "gn" 'persp-switch
-   "gN" 'persp-kill)
-  (general-define-key
-   :keymaps 'perspective-map
-   "b" 'persp-ivy-switch-buffer
-   "x" 'persp-ivy-switch-buffer
-   "u" 'persp-ibuffer))
+  ;; (use-package perspective
+  ;;   :straight t
+  ;;   :init
+  ;;   ;; (setq persp-show-modestring 'header)
+  ;;   (setq persp-sort 'created)
+  ;;   (setq persp-suppress-no-prefix-key-warning t)
+  ;;   :config
+  ;;   (persp-mode)
+  ;;   (my-leader-def "x" '(:keymap perspective-map :which-key "perspective"))
+  ;;   (general-define-key
+  ;;    :keymaps 'override
+  ;;    :states '(normal emacs)
+  ;;    "gt" 'persp-next
+  ;;    "gT" 'persp-prev
+  ;;    "gn" 'persp-switch
+  ;;    "gN" 'persp-kill)
+  ;;   (general-define-key
+  ;;    :keymaps 'perspective-map
+  ;;    "b" 'persp-ivy-switch-buffer
+  ;;    "x" 'persp-ivy-switch-buffer
+  ;;    "u" 'persp-ibuffer))
 #+end_src
 
 *** Functions to manage buffers
@@ -1658,20 +1703,16 @@ References:
   (use-package lsp-mode
     :straight t
     :if (not (or my/slow-ssh my/is-termux my/remote-server))
-    :commands lsp
+    :commands (lsp .lsp-deferred)
     :hook
     (lsp-mode . lsp-enable-which-key-integration)
     (lsp-completion-mode . my/lsp-mode-setup-completion)
     :config
     (setq lsp-prefer-flymake nil)
-    (setq lsp-completion-provider :none) ;; we use Corfu!
     (setq lsp-headerline-breadcrumb-enable t)
     (setq lsp-headerline-breadcrumb-segments '(project file symbols))
     (setq lsp-disabled-clients '((python-mode . pyls)))
     :init
-    (defun my/lsp-mode-setup-completion ()
-      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-            '(orderless))) ;; Configure flex
     (setq lsp-keymap-prefix "C-c l")) ;; Or 'C-l', 's-l'
 
   (use-package lsp-ui
@@ -1779,45 +1820,6 @@ Tree-Sitter integration with Emacs 29.
 References:
 - [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][How to Get Started with Tree-Sitter - Mastering Emacs]]
 
-#+begin_src emacs-lisp
-(use-package treesit
-  :straight (:type built-in)
-  :if (featurep 'treesit)
-  :config
-  (setq treesit-language-source-alist
-        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-          (cmake "https://github.com/uyha/tree-sitter-cmake")
-          (css "https://github.com/tree-sitter/tree-sitter-css")
-          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-          (go "https://github.com/tree-sitter/tree-sitter-go")
-          (html "https://github.com/tree-sitter/tree-sitter-html")
-          (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-          (json "https://github.com/tree-sitter/tree-sitter-json")
-          (make "https://github.com/alemuller/tree-sitter-make")
-          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-          (python "https://github.com/tree-sitter/tree-sitter-python")
-          (toml "https://github.com/tree-sitter/tree-sitter-toml")
-          (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-          (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
-  (setq treesit-font-lock-level 4)
-  (setq major-mode-remap-alist
-        '((typescript-mode . typescript-ts-mode)
-          (js-mode . javascript-ts-mode)
-          (c++-mode . c++-ts-mode)
-          (python-mode . python-ts-mode)
-          (json-mode . json-ts-mode)))
-  (cl-loop for (old-mode . new-mode) in major-mode-remap-alist
-           do (my/set-smartparens-indent new-mode)
-           do (set (intern (concat (symbol-name new-mode) "-hook"))
-                   (list
-                    (eval `(lambda ()
-                             (run-hooks
-                              ',(intern (concat (symbol-name old-mode) "-hook")))))))))
-#+end_src
-
 ** C/C++
 
 #+begin_src emacs-lisp
@@ -1830,6 +1832,7 @@ References:
   (setq ccls-args '("--log-file=/tmp/ccls.log"))
   (setq ccls-sem-highlight-method 'font-lock)
   ;; alternatively, (setq ccls-sem-highlight-method 'overlay)
+  (ccls-use-default-rainbow-sem-highlight)
 
   ;; For rainbow semantic highlighting
   (use-package clang-format
@@ -1884,27 +1887,54 @@ References:
 Use the built-in org mode (=:type built-in=).
 
 #+begin_src emacs-lisp :noweb yes
-(use-package org
-  :straight (:type built-in)
-  :if (not my/remote-server)
-  :defer t
-  :init
-  (setq org-directory (expand-file-name "~/Notes"))
-  (unless (file-exists-p org-directory)
-    (mkdir org-directory t))
-  :config
-  (setq org-startup-indented (not my/is-termux))
-  (setq org-return-follows-link t)
-  (setq org-src-tab-acts-natively nil)
-  (add-hook 'org-mode-hook 'smartparens-mode)
-  (add-hook 'org-agenda-mode-hook
-            (lambda ()
-              (visual-line-mode -1)
-              (toggle-truncate-lines 1)
-              (display-line-numbers-mode 0)))
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (rainbow-delimiters-mode -1))))
+
+  (setq-default fill-column 80)
+
+  (use-package org
+    :straight (:type built-in)
+    :if (not my/remote-server)
+    :defer t
+    :init
+    (setq org-directory (expand-file-name "~/Notes"))
+    (unless (file-exists-p org-directory)
+      (mkdir org-directory t))
+    :config
+    (setq org-startup-indented (not my/is-termux)
+          org-return-follows-link t
+          org-src-tab-acts-natively nil
+          org-hide-emphasis-markers t
+          org-src-fontify-natively t
+          org-fontify-quote-and-verse-blocks t
+          org-src-tab-acts-natively t
+          org-edit-src-content-indentation 2
+          org-hide-block-startup nil
+          org-src-preserve-indentation nil
+          org-startup-folded 'content
+          org-cycle-separator-lines 2
+          org-capture-bookmark nil)
+    (add-hook 'org-mode-hook 'smartparens-mode)
+    (add-hook 'org-agenda-mode-hook
+              (lambda ()
+                (visual-line-mode -1)
+                (toggle-truncate-lines 1)
+                (display-line-numbers-mode 0)))
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (rainbow-delimiters-mode -1))))
+
+      (setq org-refile-targets '((nil :maxlevel . 1)
+                               (org-agenda-files :maxlevel . 1)))
+
+    (setq org-outline-path-complete-in-steps nil)
+    (setq org-refile-use-outline-path t)
+
+    (setq org-agenda-files
+          '("~/data/documents/uni/s2023_01/org-docs/courses.org"))
+
+    (evil-define-key '(normal insert visual) org-mode-map (kbd "C-j") 'org-next-visible-heading)
+    (evil-define-key '(normal insert visual) org-mode-map (kbd "C-k") 'org-previous-visible-heading)
+
+
 #+end_src
 
 *** org-contrib

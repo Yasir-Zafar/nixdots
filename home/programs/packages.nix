@@ -40,11 +40,6 @@
     nodejs
     neovim-unwrapped
 
-    pavucontrol
-    firefox-wayland
-    qutebrowser
-    thunderbird
-
     gtk-engine-murrine
     gtk_engines
     gnome.gnome-themes-extra
@@ -58,12 +53,17 @@
     transmission-gtk
     font-manager
 
+    pavucontrol
+    firefox-wayland
+    qutebrowser
+    thunderbird
     gimp
     libreoffice-fresh
     calibre
     whatsapp-for-linux
     steam
     syncthing
+    octaveFull
     (pkgs.discord.override {
       withVencord = true;
     })

@@ -31,14 +31,18 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     hyprland.url = "github:hyprwm/Hyprland";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+    nix-matlab = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "gitlab:doronbehar/nix-matlab";
+    };
 
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: 
+  outputs = { self, nixpkgs, nix-matlab,... }@inputs: 
 
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; overlays = [ (import self.inputs.emacs-overlay) ]; };
+      pkgs = import nixpkgs { inherit system; overlays = [ (import self.inputs.emacs-overlay) (import self.inputs.nix-matlab.overlay) ]; };
     in {
   
       nixosConfigurations = {
