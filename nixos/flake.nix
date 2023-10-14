@@ -38,11 +38,11 @@
 
   };
 
-  outputs = { self, nixpkgs, nix-matlab,... }@inputs: 
+  outputs = { self, nixpkgs, ... }@inputs: 
 
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; overlays = [ (import self.inputs.emacs-overlay) (import self.inputs.nix-matlab.overlay) ]; };
+      pkgs = import nixpkgs { inherit system; overlays = [ (import self.inputs.emacs-overlay) ]; };
     in {
   
       nixosConfigurations = {

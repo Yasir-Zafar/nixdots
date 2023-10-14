@@ -5,7 +5,7 @@
     overlays = [
 
       (import inputs.emacs-overlay)
-      (import inputs.nix-matlab.overlay)
+      inputs.nix-matlab.overlay
 
     ];
   };

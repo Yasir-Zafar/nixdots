@@ -39,6 +39,7 @@
     libtool
     nodejs
     neovim-unwrapped
+    (texlive.combine { inherit (texlive) scheme-full wrapfig titling titlesec fontspec; })
 
     gtk-engine-murrine
     gtk_engines
@@ -63,7 +64,6 @@
     whatsapp-for-linux
     steam
     syncthing
-    octaveFull
     (pkgs.discord.override {
       withVencord = true;
     })

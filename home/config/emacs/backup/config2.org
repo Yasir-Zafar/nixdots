@@ -792,7 +792,6 @@ References:
 
 #+end_src
 
-
 *** Snippets
 A snippet system for Emacs and a collection of pre-built snippets.
 
@@ -1172,13 +1171,19 @@ Consult provides a lot of useful completion commands similar to Ivy's Counsel.
                 ("TAB" . nil)
                 ("M-<tab>" . company-complete-common-or-cycle)
                 ("M-<tab>" . company-complete-selection))
-    (:map lsp-mode-map
-          ("M-<tab>" . company-indent-or-complete-common))
     :init
-    (setq company-format-margin-function nil)
-    (setq company-minimum-prefix-length 2)
+    (setq company-format-margin-function nil
+          company-minimum-prefix-length 2
+          company-selection-wrap-around t)
     :custom
-    (company-idle-delay 0.01))
+    (company-idle-delay 0.0))
+
+  ;; Required for proportional font
+  (use-package company-posframe
+  :straight t
+    :config
+    (company-posframe-mode 1))
+
 
   (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
 #+end_src
@@ -1706,9 +1711,9 @@ References:
     :commands (lsp .lsp-deferred)
     :hook
     (lsp-mode . lsp-enable-which-key-integration)
-    (lsp-completion-mode . my/lsp-mode-setup-completion)
     :config
     (setq lsp-prefer-flymake nil)
+    (setq lsp-diagnostics-provider :capf)
     (setq lsp-headerline-breadcrumb-enable t)
     (setq lsp-headerline-breadcrumb-segments '(project file symbols))
     (setq lsp-disabled-clients '((python-mode . pyls)))
@@ -1743,39 +1748,6 @@ References:
   "X" #'lsp-execute-code-action)
 #+end_src
 
-**** UI
-I don't like how some LSPs print the full filename in the progress indicator.
-
-#+begin_src emacs-lisp
-(defun my/lsp--progress-status ()
-  "Returns the status of the progress for the current workspaces."
-  (-let ((progress-status
-          (s-join
-           "|"
-           (-keep
-            (lambda (workspace)
-              (let ((tokens (lsp--workspace-work-done-tokens workspace)))
-                (unless (ht-empty? tokens)
-                  (mapconcat
-                   (-lambda ((&WorkDoneProgressBegin :message? :title :percentage?))
-                     (concat (if percentage?
-                                 (if (numberp percentage?)
-                                     (format "%.0f%%%% " percentage?)
-                                   (format "%s%%%% " percentage?))
-                               "")
-                             (let ((msg (url-unhex-string (or message\? title))))
-                               (if (string-match-p "\\`file:///" msg)
-                                   (file-name-nondirectory msg)))))
-                   (ht-values tokens)
-                   "|"))))
-            (lsp-workspaces)))))
-    (unless (s-blank? progress-status)
-      (concat lsp-progress-prefix progress-status))))
-
-(with-eval-after-load 'lsp-mode
-  (advice-add 'lsp--progress-status :override #'my/lsp--progress-status))
-#+end_src
-
 *** Flycheck
 A syntax checking extension for Emacs. Integrates with LSP-mode, but can also use various standalone checkers.
 
@@ -1783,24 +1755,10 @@ References:
 - [[https://www.flycheck.org/en/latest/][Flycheck homepage]]
 
 #+begin_src emacs-lisp
-(use-package flycheck
-  :straight t
-  :config
-  (global-flycheck-mode)
-  (setq flycheck-check-syntax-automatically '(save idle-buffer-switch mode-enabled))
-  ;; (add-hook 'evil-insert-state-exit-hook
-  ;;           (lambda ()
-  ;;             (if flycheck-checker
-  ;;                 (flycheck-buffer))
-  ;;             ))
-  (advice-add 'flycheck-eslint-config-exists-p :override (lambda() t))
-  (add-to-list 'display-buffer-alist
-               `(,(rx bos "*Flycheck errors*" eos)
-                 (display-buffer-reuse-window
-                  display-buffer-in-side-window)
-                 (side            . bottom)
-                 (reusable-frames . visible)
-                 (window-height   . 0.33))))
+  (use-package flycheck
+    :straight t
+    :defer t
+    :hook (lsp-mode . flycheck-mode))
 #+end_src
 
 *** General additional config
@@ -1813,12 +1771,6 @@ Make smartparens behave the way I like for C-like languages.
   (sp-local-pair mode "[" nil :post-handlers '(("|| " "SPC") ("||\n[i]" "RET")))
   (sp-local-pair mode "(" nil :post-handlers '(("|| " "SPC") ("||\n[i]" "RET"))))
 #+end_src
-
-*** Tree Sitter
-Tree-Sitter integration with Emacs 29.
-
-References:
-- [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][How to Get Started with Tree-Sitter - Mastering Emacs]]
 
 ** C/C++
 

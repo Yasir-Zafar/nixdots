@@ -6,7 +6,7 @@
 
       enable = true;
       install = true;
-      package = pkgs.emacs29-pgtk;
+      package = pkgs.emacs-pgtk;
 
     };
 
