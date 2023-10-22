@@ -8,14 +8,12 @@
 
     lf
     htop
+    neofetch
+    libnotify
     mpc-cli
     ffmpeg
     yt-dlp
-    libnotify
     swayidle
-    grim
-    ffmpeg
-    neofetch
     grim
     slurp
     wl-clipboard
@@ -23,6 +21,8 @@
     zip
     unzip
     p7zip
+    isync
+    ledger
 
     brillo
     wbg
@@ -38,6 +38,7 @@
     clang-tools_16
     libtool
     nodejs
+    nasm
     neovim-unwrapped
     (texlive.combine { inherit (texlive) scheme-full wrapfig titling titlesec fontspec; })
 
@@ -52,6 +53,7 @@
     evince
     bottles
     transmission-gtk
+    octaveFull
     font-manager
 
     pavucontrol
@@ -64,6 +66,7 @@
     whatsapp-for-linux
     steam
     syncthing
+    dbeaver
     (pkgs.discord.override {
       withVencord = true;
     })
@@ -73,6 +76,7 @@
       adblock
       pynvim
       flake8
+      black
     ]))
 
   ];
