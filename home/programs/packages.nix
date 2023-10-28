@@ -17,6 +17,7 @@
     grim
     slurp
     wl-clipboard
+    android-tools
 
     zip
     unzip

@@ -6,7 +6,7 @@
     enable = true;
     theme = {
 
-      name = "Gruvbox-Dark-B";
+      name = "Gruvbox-Light-B";
       package = pkgs.gruvbox-gtk-theme;
 
     };
@@ -20,14 +20,14 @@
 
     font = {
 
-      name = "JetBrainsMono 10";
+      name = "JetBrainsMono Nerd Font 10";
 
     };
 
     cursorTheme = {
 
-      name = "macOS-BigSur";
-      package = pkgs.apple-cursor;
+      name = "Capitaine Cursors (Gruvbox) - White";
+      package = pkgs.capitaine-cursors-themed;
 
     };
 
