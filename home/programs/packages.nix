@@ -5,6 +5,8 @@
 
     fd
     ripgrep
+    html-tidy
+    fzf
 
     lf
     htop

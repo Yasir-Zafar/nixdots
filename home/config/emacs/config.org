@@ -1361,7 +1361,7 @@ My colorschemes of choice.
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t)
   ;; (if my/remote-server
-       (load-theme 'doom-gruvbox-light t)
+       (load-theme 'doom-gruvbox t)
   ;;   (load-theme 'doom-palenight t))
   (doom-themes-visual-bell-config)
   (setq doom-themes-treemacs-theme "doom-colors")
@@ -1712,6 +1712,7 @@ References:
     :commands (lsp .lsp-deferred)
     :hook
     (lsp-mode . lsp-enable-which-key-integration)
+    ((js2-mode web-mode) . lsp)
     :config
     (setq lsp-prefer-flymake nil)
     (setq lsp-diagnostics-provider :capf)
@@ -1854,6 +1855,8 @@ Make smartparens behave the way I like for C-like languages.
 (use-package skewer-mode
   :straight t)
 
+(use-package tidy
+  :straight t)
 #+end_src
 
 ** Nix
