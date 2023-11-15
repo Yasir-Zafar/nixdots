@@ -3,14 +3,6 @@
 
   home.packages = with pkgs; [
 
-    fd
-    ripgrep
-    html-tidy
-    fzf
-
-    lf
-    htop
-    neofetch
     libnotify
     mpc-cli
     ffmpeg
@@ -19,13 +11,11 @@
     grim
     slurp
     wl-clipboard
-    android-tools
+    (texlive.combine { inherit (texlive) scheme-full wrapfig titling titlesec fontspec; })
 
     zip
     unzip
     p7zip
-    isync
-    ledger
 
     brillo
     wbg
@@ -40,10 +30,17 @@
     llvmPackages_16.libcxxClang
     clang-tools_16
     libtool
+    
+    html-tidy
     nodejs
+
     nasm
+
+    jdk
+    maven
+    gradle
+
     neovim-unwrapped
-    (texlive.combine { inherit (texlive) scheme-full wrapfig titling titlesec fontspec; })
 
     gtk-engine-murrine
     gtk_engines
@@ -54,10 +51,6 @@
     gnome.gnome-boxes
     gnome-solanum
     evince
-    bottles
-    transmission-gtk
-    octaveFull
-    font-manager
 
     pavucontrol
     firefox-wayland
@@ -66,10 +59,7 @@
     gimp
     libreoffice-fresh
     calibre
-    whatsapp-for-linux
-    steam
     syncthing
-    dbeaver
     (pkgs.discord.override {
       withVencord = true;
     })

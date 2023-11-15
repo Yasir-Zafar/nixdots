@@ -6,7 +6,7 @@
     enable = true;
     theme = {
 
-      name = "Gruvbox-Light-B";
+      name = "Gruvbox-Dark-B";
       package = pkgs.gruvbox-gtk-theme;
 
     };
