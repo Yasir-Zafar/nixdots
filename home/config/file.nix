@@ -15,6 +15,8 @@
 
     };
 
+    #".config/rustfmt/rustfmt.toml".source = rust/rustfmt/rustfmt.toml; 
+
     ".config/qutebrowser/config.py".source = qutebrowser/config.py;
 
     ".config/waybar/style.css".source = waybar/style.css;

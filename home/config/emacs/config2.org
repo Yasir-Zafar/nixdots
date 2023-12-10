@@ -1801,18 +1801,18 @@ Make smartparens behave the way I like for C-like languages.
 ** C/C++
 
 #+begin_src emacs-lisp
-  (use-package ccls
-    :straight t
-    :hook ((c-mode c++-mode objc-mode cuda-mode) .
-           (lambda () (require 'ccls) (lsp))))
+(use-package ccls
+  :straight t
+  :hook ((c-mode c++-mode objc-mode cuda-mode) .
+         (lambda () (require 'ccls) (lsp))))
 
-  (setq ccls-executable "ccls")
-  (setq ccls-args '("--log-file=/tmp/ccls.log"))
-  (setq ccls-sem-highlight-method 'font-lock)
-  ;; alternatively, (setq ccls-sem-highlight-method 'overlay)
-  (ccls-use-default-rainbow-sem-highlight)
+(setq ccls-executable "ccls")
+(setq ccls-args '("--log-file=/tmp/ccls.log"))
+(setq ccls-sem-highlight-method 'font-lock)
+(setq ccls-sem-highlight-method 'overlay)
+;;(ccls-use-default-rainbow-sem-highlight)
 
-  ;; For rainbow semantic highlighting
+
   (use-package clang-format
      :straight t
      :config
@@ -1908,11 +1908,6 @@ Make smartparens behave the way I like for C-like languages.
 #+begin_src emacs-lisp
   (use-package nix-mode
     :straight t)
-  (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
-                    :major-modes '(nix-mode)
-                    :server-id 'nix))
 
   (use-package direnv
     :straight t)
@@ -2548,166 +2543,3 @@ I guess that's the first Emacs function I wrote!
   (general-nmap "~" 'vterm))
 #+end_src
 
-*** eshell
-A shell written in Emacs lisp. I don't use it as of now, but keep the config just in case.
-
-#+begin_src emacs-lisp
-(defun my/configure-eshell ()
-  (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
-  (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
-  (setq eshell-history-size 10000)
-  (setq eshell-hist-ingnoredups t)
-  (setq eshell-buffer-maximum-lines 10000)
-
-  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
-  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
-  (general-define-key
-   :states '(normal)
-   :keymaps 'eshell-mode-map
-   (kbd "C-h") 'evil-window-left
-   (kbd "C-l") 'evil-window-right
-   (kbd "C-k") 'evil-window-up
-   (kbd "C-j") 'evil-window-down))
-
-(use-package eshell
-  :ensure nil
-  :after evil-collection
-  :commands (eshell)
-  :config
-  (add-hook 'eshell-first-time-mode-hook 'my/configure-eshell 90)
-  (when my/slow-ssh
-    (add-hook 'eshell-mode-hook
-              (lambda ()
-                (setq-local company-idle-delay 1000))))
-  (setq eshell-banner-message ""))
-
-(use-package aweshell
-  :straight (:repo "manateelazycat/aweshell" :host github)
-  :after eshell
-  :config
-  (setq eshell-prompt-regexp "^[^#\nλ]* λ[#]* ")
-  (setq eshell-highlight-prompt t)
-  (setq eshell-prompt-function 'epe-theme-pipeline))
-
-(use-package eshell-info-banner
-  :defer t
-  :if (not my/slow-ssh)
-  :straight (eshell-info-banner :type git
-                                :host github
-                                :repo "phundrak/eshell-info-banner.el")
-  :hook (eshell-banner-load . eshell-info-banner-update-banner)
-  :config
-  (setq eshell-info-banner-filter-duplicate-partitions t)
-  (setq eshell-info-banner-exclude-partitions '("b/efi")))
-
-(when (or my/slow-ssh my/remote-server)
-  (general-nmap "`" 'aweshell-dedicated-toggle)
-  (general-nmap "~" 'eshell))
-#+end_src
-
-*** shell
-Interactive subshell (=M-x shell=) is a way to run commands with input and output through an Emacs buffer.
-
-#+begin_src emacs-lisp
-(defun my/setup-shell ()
-  (setq-local comint-use-prompt-regexp t)
-  (setq-local comint-prompt-read-only t))
-
-(add-hook 'shell-mode-hook #'my/setup-shell)
-#+end_src
-
-** Reading Documentation
-*** tldr
-tldr is a collaborative project providing cheatsheets for various console commands. For some reason, the built-in download in the package is broken, so I use my own function.
-
-#+begin_src emacs-lisp
-(use-package tldr
-  :straight t
-  :commands (tldr)
-  :config
-  (setq tldr-source-zip-url "https://github.com/tldr-pages/tldr/archive/refs/heads/main.zip")
-
-  (defun tldr-update-docs ()
-    (interactive)
-    (shell-command-to-string (format "curl -L %s --output %s" tldr-source-zip-url tldr-saved-zip-path))
-    (when (file-exists-p "/tmp/tldr")
-      (delete-directory "/tmp/tldr" t))
-    (shell-command-to-string (format "unzip -d /tmp/tldr/ %s" tldr-saved-zip-path))
-    (when (file-exists-p tldr-directory-path)
-      (delete-directory tldr-directory-path 'recursive 'no-trash))
-    (shell-command-to-string (format "mv %s %s" "/tmp/tldr/tldr-main" tldr-directory-path))))
-
-(my-leader-def "hT" 'tldr)
-#+end_src
-
-*** man & info
-Of course, Emacs can also display man and info pages.
-
-#+begin_src emacs-lisp
-(setq Man-width-max 180)
-(my-leader-def "hM" 'woman)
-(setq woman-fill-column 90)
-
-(general-define-key
- :states '(normal)
- :keymaps 'Info-mode-map
- (kbd "RET") #'Info-follow-nearest-node
- "H" #'Info-history-back
- "L" #'Info-history-forward
- "n" #'Info-search-next
- "b" #'Info-search-backward
- "f" #'ace-link-info)
-
-(defun my/man-fix-width (&rest _)
-  (setq-local Man-width (- (window-width) 4)))
-
-(advice-add #'Man-update-manpage :before #'my/man-fix-width)
-#+end_src
-
-** Fun
-
-*** elcord
-
-#+begin_src emacs-lisp
- (use-package elcord
-  :straight t
-  :if (and (or
-	    (string= (system-name) "indigo")
-	    (string= (system-name) "eminence")
-	    (string= (system-name) "iris"))
-	   (not my/slow-ssh)
-	   (not my/remote-server))
-  :config
-  (setq elcord-buffer-details-format-function #'my/elcord-buffer-details-format-functions)
-  (advice-add 'elcord--try-update-presence :filter-args #'my/elcord-update-presence-mask-advice)
-  (add-to-list 'elcord-mode-text-alist '(telega-chat-mode . "Telega Chat"))
-  (add-to-list 'elcord-mode-text-alist '(telega-root-mode . "Telega Root"))
-  (elcord-mode))
-#+end_src
-
-*** Snow
-
-#+begin_src emacs-lisp
-(use-package snow
-  :straight (:repo "alphapapa/snow.el" :host github)
-  :commands (snow))
-#+end_src
-
-*** Zone
-
-#+begin_src emacs-lisp
-(use-package zone
-  :ensure nil
-  :config
-  (setq original-zone-programs (copy-sequence zone-programs)))
-
-(defun my/zone-with-select ()
-  (interactive)
-  (ivy-read "Zone programs"
-	    (cl-pairlis
-	     (cl-mapcar 'symbol-name original-zone-programs)
-	     original-zone-programs)
-	    :action (lambda (elem)
-		      (setq zone-programs (vector (cdr elem)))
-		      (zone))))
-#+end_src

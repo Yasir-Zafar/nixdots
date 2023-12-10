@@ -9,7 +9,7 @@
 
         main = {
 
-          font="JetBrainsMono Nerd Font:size=11";
+          font="mochi:size=11";
           pad="40x40";
 
         };

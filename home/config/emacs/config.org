@@ -1,7 +1,5 @@
 #+PROPERTY: header-args :mkdirp yes
-#+PROPERTY: header-args:bash       :tangle-mode (identity #o755) :comments link :shebang "#!/usr/bin/env bash"
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes :eval never-export :exports both
-#+TODO: CHECK(s) | OFF(o)
 #+TITLE: Emacs config
 #+OPTIONS: broken-links:auto h:6 toc:nil
 
@@ -10,7 +8,7 @@ One day we won't hate one another, no young boy will march to war and I will cle
 #+end_quote
 - Me, <2021-05-27 Thu 17:35> in commit 93a0573. Adapted from [[https://www.youtube.com/watch?v=pIdBinlW40E][The Dark Element - "The Pallbearer Walks Alone"]]. T_T
 
-* Introduction
+* Intro
 My configuration of [[https://www.gnu.org/software/emacs/][GNU Emacs]], an awesome +text editor+ piece of software that can do almost anything.
 
 At the moment of writing this, that "almost anything" includes:
@@ -35,7 +33,7 @@ I find that approach helpful for maintaining the configuration, but the quality 
 
 So, you might extract something of value from here if you're an avid Emacs user.
 
-* Initialization
+* Init
 Setting up the environment, performance tuning and a few basic settings.
 
 First things first, lexical binding.
@@ -102,36 +100,11 @@ References:
       use-package-expand-minimally (not init-file-debug)
       use-package-compute-statistics nil
       debug-on-error init-file-debug)
+
+  (setq straight-use-package-by-default t)
 #+end_src
 
 ** Variables & environment
-This section is about optioning the Emacs config.
-
-The following is true if Emacs is meant to be used with TRAMP over slow ssh. Take a look at the [[*TRAMP][TRAMP]] section for more details.
-#+begin_src emacs-lisp
-(setq my/slow-ssh
-      (or
-       (string= (getenv "IS_TRAMP") "true")))
-#+end_src
-
-The following is true is Emacs is run on a remote server where I don't need stuff like my org workflow
-#+begin_src emacs-lisp
-(setq my/remote-server
-      (or (string= (getenv "IS_REMOTE") "true")
-          (string= (system-name) "dev-digital")
-          (string= (system-name) "violet")
-          (string= (system-name) "viridian")))
-#+end_src
-
-And the following is true if Emacs is run from termux on Android.
-#+begin_src emacs-lisp
-(setq my/is-termux (string-match-p (rx (* nonl) "com.termux" (* nonl)) (getenv "HOME")))
-#+end_src
-
-Also, I sometimes need to know if a program is running inside Emacs (say, inside a terminal emulator). To do that, I set the following environment variable:
-#+begin_src emacs-lisp
-(setenv "IS_EMACS" "true")
-#+end_src
 
 Finally, I want to have a minimal Emacs config for debugging purposes. This has just straight.el, use-packages, and evil.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init-minimal.el :noweb yes
@@ -175,6 +148,7 @@ Just setting ~gc-cons-treshold~ to a larger value.
 (setq gc-cons-threshold 80000000)
 (setq read-process-output-max (* 1024 1024))
 #+end_src
+
 *** Run garbage collection when Emacs is unfocused
 Run GC when Emacs loses focus. +Time will tell if that's a good idea.+
 
@@ -190,38 +164,14 @@ Some time has passed, and I still don't know if there is any quantifiable advant
                                   (garbage-collect))))
               (add-hook 'after-focus-change-function 'garbage-collect))))
 #+end_src
-*** Measure RAM usage
-I've noticed that Emacs occasionally eats a lot of RAM, especially when used with EXWM. This is my attempt to measure RAM usage.
-
-I have some concerns that =ps -o rss= may be unrepresentative because of [[https://stackoverflow.com/questions/131303/how-can-i-measure-the-actual-memory-usage-of-an-application-or-process][shared memory]], but I guess this shouldn't be a problem here because there's only one process of Emacs.
-
-#+begin_src emacs-lisp
-(defun my/get-ram-usage-async (callback)
-  (let* ((temp-buffer (generate-new-buffer "*ps*"))
-         (proc (start-process "ps" temp-buffer "ps"
-                              "-p" (number-to-string (emacs-pid)) "-o" "rss")))
-    (set-process-sentinel
-     proc
-     (lambda (process _msg)
-       (when (eq (process-status process) 'exit)
-         (let* ((output (with-current-buffer temp-buffer
-                          (buffer-string)))
-                (usage (string-to-number (nth 1 (split-string output "\n")))))
-           (ignore-errors
-             (funcall callback usage)))
-         (kill-buffer temp-buffer))))))
-
-(defun my/ram-usage ()
-  (interactive)
-  (my/get-ram-usage-async
-   (lambda (data)
-     (message "%f Gb" (/ (float data) 1024 1024)))))
-#+end_src
 
 *** Native Compilation
 I’ve started experimenting with the native-comp branch of Emacs for increased performance. Here are some settings to tweak the behavior slightly:
 
 #+begin_src emacs-lisp
+(setq comp-speed 2)
+(native-compile-async (expand-file-name "~/.emacs.d/init.el" user-emacs-directory))
+
 (setq warning-minimum-level :error)
 
 ;; Silence compiler warnings as they can be pretty disruptive
@@ -253,14 +203,13 @@ I have some variables which I don't commit to the repo, e.g. my current location
 By default Emacs and its packages create a lot files in =.emacs.d= and in other places. [[https://github.com/emacscollective/no-littering][no-littering]] is a collective effort to redirect all of that to two folders in =user-emacs-directory=.
 
 #+begin_src emacs-lisp
-(use-package no-littering
-  :straight t)
+(use-package no-littering)
 
 ;; Prevent undo tree files from polluting your git repo
 (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
 
 ;; hide saves
-(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
 
 ;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
 (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
@@ -273,7 +222,7 @@ By default Emacs and its packages create a lot files in =.emacs.d= and in other 
 (load custom-file t)
 #+end_src
 
-* General Settings
+* General
 ** Keybindings
 *** general.el
 general.el provides a convenient interface to manage Emacs keybindings.
@@ -283,7 +232,6 @@ References:
 
 #+begin_src emacs-lisp
 (use-package general
-  :straight t
   :config
   (general-evil-setup))
 #+end_src
@@ -302,7 +250,6 @@ Basic evil configuration.
 
 #+begin_src emacs-lisp :noweb-ref minimal
   (use-package evil
-    :straight t
     :init
     (setq evil-want-integration t)
     (setq evil-want-C-u-scroll t)
@@ -323,13 +270,13 @@ Basic evil configuration.
         :states '(motion)
         "ze" nil)))
 #+end_src
+
 **** Addons
 ***** [[https://github.com/emacs-evil/evil-surround][evil-surround]]
 emulates one of my favorite vim plugins, surround.vim. Adds a lot of parentheses management options.
 
 #+begin_src emacs-lisp
 (use-package evil-surround
-  :straight t
   :after evil
   :config
   (global-evil-surround-mode 1))
@@ -340,28 +287,15 @@ emulates commentary.vim. It provides actions for quick insertion and deletion of
 
 #+begin_src emacs-lisp
 (use-package evil-commentary
-  :straight t
   :after evil
   :config
   (evil-commentary-mode))
-#+end_src
-
-***** [[https://github.com/blorbx/evil-quickscope][evil-quickscope]]
-emulates quickscope.vim. It highlights certain target characters for f, F, t, T keys.
-#+begin_src emacs-lisp
-(use-package evil-quickscope
-  :straight t
-  :after evil
-  :config
-  :hook ((prog-mode . turn-on-evil-quickscope-mode)
-         (org-mode . turn-on-evil-quickscope-mode)))
 #+end_src
 
 ***** [[https://github.com/cofi/evil-numbers][evil-numbers]]
 allows incrementing and decrementing numbers at point.
 #+begin_src emacs-lisp
   (use-package evil-numbers
-    :straight t
     :commands (evil-numbers/inc-at-pt evil-numbers/dec-at-pt)
     :init
     (general-nmap
@@ -369,31 +303,18 @@ allows incrementing and decrementing numbers at point.
       "g-" 'evil-numbers/dec-at-pt))
 #+end_src
 
-***** [[https://github.com/edkolev/evil-lion][evil-lion]]
-provides alignment operators, somewhat similar to vim-easyalign.
-#+begin_src emacs-lisp
-(use-package evil-lion
-  :straight t
-  :config
-  (setq evil-lion-left-align-key (kbd "g a"))
-  (setq evil-lion-right-align-key (kbd "g A"))
-  (evil-lion-mode))
-#+end_src
-
 **** evil-collection
 [[https://github.com/emacs-evil/evil-collection][evil-collection]] is a package that provides evil bindings for a lot of different packages. One can see the complete list in the [[https://github.com/emacs-evil/evil-collection/tree/master/modes][modes]] folder.
 
 #+begin_src emacs-lisp :noweb-ref minimal
 (use-package evil-collection
-  :straight t
   :after evil
   :config
   (evil-collection-init
-   '(eww devdocs proced emms pass calendar dired ivy debug guix calc
-         docker ibuffer geiser pdf info elfeed edebug bookmark company
-         vterm flycheck profiler cider explain-pause-mode notmuch custom
-         xref eshell helpful compile comint git-timemachine magit prodigy
-         slime forge deadgrep vc-annonate telega doc-view gnus)))
+   '(eww devdocs proced emms pass calendar dired calc
+         ibuffer geiser pdf info edebug bookmark company
+         vterm flycheck explain-pause-mode notmuch custom
+         xref eshell helpful compile comint git-timemachine magit deadgrep doc-view gnus)))
 #+end_src
 
 *** which-key
@@ -411,8 +332,7 @@ References:
     (setq which-key-popup-type 'frame)
     (which-key-setup-side-window-bottom)
     (set-face-attribute 'which-key-local-map-description-face nil
-                        :weight 'bold)
-    :straight t)
+                        :weight 'bold))
 #+end_src
 
 *** Avy
@@ -423,7 +343,7 @@ References:
 
 #+begin_src emacs-lisp
 (use-package avy
-  :straight t
+  :defer t
   :config
   (setq avy-timeout-seconds 0.5)
   (setq avy-ignored-modes
@@ -433,50 +353,18 @@ References:
    "-" nil
    "--" #'avy-goto-char-2
    "-=" #'avy-goto-symbol-1))
-#+End_src
+#+end_src
 
 [[https://github.com/abo-abo/ace-link][ace-link]] is a package to jump to links with avy.
 #+begin_src emacs-lisp
 (use-package ace-link
-  :straight t
+  :after avy
   :commands (ace-link-info ace-link-help ace-link-woman ace-link-eww))
 #+end_src
+
 *** My keybindings
 Various keybinding settings that I can't put anywhere else.
 
-**** Escape key
-+Use the escape key instead of =C-g= whenever possible+ No, not really after 2 years... But I'll keep this fragment.
-
-I must have copied it from somewhere, but as I googled to find out the source, I discovered quite a number of variations of the following code over time. I wonder if Richard Dawkins was inspired by something like this a few decades ago.
-
-#+begin_src emacs-lisp
-(defun minibuffer-keyboard-quit ()
-  "Abort recursive edit.
-In Delete Selection mode, if the mark is active, just deactivate it;
-then it takes a second \\[keyboard-quit] to abort the minibuffer."
-  (interactive)
-  (if (and delete-selection-mode transient-mark-mode mark-active)
-      (setq deactivate-mark  t)
-    (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
-    (abort-recursive-edit)))
-
-(defun my/escape-key ()
-  (interactive)
-  (evil-ex-nohighlight)
-  (keyboard-quit))
-
-(general-define-key
- :keymaps '(normal visual global)
- [escape] #'my/escape-key)
-
-(general-define-key
- :keymaps '(minibuffer-local-map
-            minibuffer-local-ns-map
-            minibuffer-local-completion-map
-            minibuffer-local-must-match-map
-            minibuffer-local-isearch-map)
- [escape] 'minibuffer-keyboard-quit)
-#+end_src
 **** My leader
 Using the =SPC= key as a leader key, like in Doom Emacs or Spacemacs.
 
@@ -495,6 +383,13 @@ Replacement for M-x
   "SPC" '(execute-extended-command :wk "M-x"))
 #+end_src
 
+**** Tab history
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "M-[") 'tab-bar-history-back)
+(global-set-key (kbd "M-]") 'tab-bar-history-forward)
+#+end_src
+
 **** Switch windows
 
 #+begin_src emacs-lisp
@@ -504,11 +399,13 @@ Replacement for M-x
 #+end_src
 
 **** Home & end
+
 #+begin_src emacs-lisp
 (general-def :states '(normal insert visual)
   "<home>" 'beginning-of-line
   "<end>" 'end-of-line)
 #+end_src
+
 **** Universal argument
 Change the universal argument to =M-u=. I use =C-u= to scroll up, as I'm used to from vim.
 
@@ -521,7 +418,9 @@ Change the universal argument to =M-u=. I use =C-u= to scroll up, as I'm used to
   :states '(normal motion emacs insert visual)
   "M-u" 'universal-argument)
 #+end_src
+
 **** Buffer management
+
 #+begin_src emacs-lisp
 (my-leader-def
   :infix "b"
@@ -537,6 +436,7 @@ Change the universal argument to =M-u=. I use =C-u= to scroll up, as I'm used to
   "r" 'revert-buffer
   "u" 'ibuffer)
 #+end_src
+
 **** xref
 Some keybindings for xref and go to definition.
 
@@ -570,6 +470,7 @@ Evil does a pretty good job of abstracting all these packages with a set of vim-
  "ze" 'hs-hide-level
  "TAB" 'evil-toggle-fold)
 #+end_src
+
 **** Zoom UI
 #+begin_src emacs-lisp
 (defun my/zoom-in ()
@@ -597,7 +498,6 @@ Preserve Minibuffer History with savehist-mode
 
 #+begin_src emacs-lisp
   (use-package savehist
-    :straight t
     :config
     (setq history-length 25)
     (savehist-mode 1))
@@ -607,10 +507,8 @@ Preserve Minibuffer History with savehist-mode
 [[https://github.com/minad/vertico][Vertico]] is a completion interface. I use this insted of ivy and helm due to it utilizing more core emacs funtionality
 
 #+begin_src emacs-lisp
-
   (use-package vertico
   :demand t
-  :straight t
   :general
   (:keymaps 'vertico-map
   "<tab>" #'vertico-insert  ; Insert selected candidate into text area
@@ -689,59 +587,51 @@ Preserve Minibuffer History with savehist-mode
 
 Display only the Vertico minibuffer in a child frame using the posframe library.
 #+begin_src emacs-lisp
-  (use-package vertico-posframe
-  :straight t
-  :init
-  (vertico-posframe-mode 1))
+  ;; (use-package vertico-posframe
+  ;;
+  ;; :init
+  ;; (vertico-posframe-mode 1))
 
-  (setq vertico-multiform-commands
-        '((consult-line (:not posframe))
-          (t posframe)))
-  (setq vertico-posframe-parameters
-        '((left-fringe . 8)
-          (right-fringe . 8)))
+  ;; (setq vertico-multiform-commands
+  ;;       '((consult-line (:not posframe))
+  ;;         (t posframe)))
+  ;; (setq vertico-posframe-parameters
+  ;;       '((left-fringe . 8)
+  ;;         (right-fringe . 8)))
 #+end_src
 
 ***** [[https://github.com/minad/vertico/blob/main/extensions/vertico-directory.el][Vertico-driectory]]
 Commands for Ido-like directory navigation.
 #+begin_src emacs-lisp
   (use-package  vertico-directory
+    :straight nil
     :after vertico
     :ensure nil
     ;; More convenient directory navigation commands
     :bind (:map vertico-map
-                ("RET" . vertico-directory-enter)
-                ("M-DEL" . vertico-directory-delete-char)
-                ("DEL" . vertico-directory-delete-word))
+		("RET" . vertico-directory-enter)
+		("M-DEL" . vertico-directory-delete-char)
+		("DEL" . vertico-directory-delete-word))
     ;; Tidy shadowed file names
     :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
-#+end_src
-
-***** Vertico-repeat
-Returns to previous state of frame
-
-#+begin_src emacs-lisp
-  (use-package vertico-repeat
-  :general
-  (:keymaps '(normal insert visual motion)
-  "M-." #'vertico-repeat))
 #+end_src
 
 ***** Vertico-quick
 
 #+begin_src emacs-lisp
   (use-package vertico-quick
-  :init
-  (defun kb/vertico-quick-embark (&optional arg)
-  "Embark on candidate using quick keys."
-  (interactive)
-  (when (vertico-quick-jump)
-    (embark-act arg)))
-  :general
-  (:keymaps 'vertico-map
-  "C-i" #'vertico-quick-insert
-  "C-o" #'vertico-quick-exit
-  "M-o" #'kb/vertico-quick-embark))
+    :straight nil
+    :init
+    (defun kb/vertico-quick-embark (&optional arg)
+    "Embark on candidate using quick keys."
+    (interactive)
+    (when (vertico-quick-jump)
+      (embark-act arg)))
+    :general
+    (:keymaps 'vertico-map
+    "C-i" #'vertico-quick-insert
+    "C-o" #'vertico-quick-exit
+    "M-o" #'kb/vertico-quick-embark))
 #+end_src
 
 *** Orderless
@@ -749,7 +639,6 @@ Give [[https://github.com/minad/vertico][Orderless]] completion a try, which is 
 
 #+begin_src emacs-lisp
   (use-package orderless
-    :straight t
     :custom
     (completion-styles '(substring orderless))
     (completion-category-defaults nil)    ; I want to be in control!
@@ -830,7 +719,6 @@ Give [[https://github.com/minad/vertico][Orderless]] completion a try, which is 
 
 #+begin_src emacs-lisp
 (use-package marginalia
-  :straight t
   :general
   (:keymaps 'minibuffer-local-map
 	"M-A" 'marginalia-cycle)
@@ -842,7 +730,6 @@ Give [[https://github.com/minad/vertico][Orderless]] completion a try, which is 
   (marginalia-mode))
 
 (use-package nerd-icons-completion
-  :straight t
   :after marginalia
   :config
   (nerd-icons-completion-mode)
@@ -854,13 +741,12 @@ Give [[https://github.com/minad/vertico][Orderless]] completion a try, which is 
 
 #+begin_src emacs-lisp
   (use-package embark
-    :straight t
     :ensure t
     :general
     ("C-." 'embark-act)         ;; pick some comfortable binding
-     ("C-M-." 'embark-export)
-     ("C-;" 'embark-dwim)        ;; good alternative: M-.
-     ("C-h B" 'embark-bindings) ;; alternative for `describe-bindings'
+    ("C-M-." 'embark-export)
+    ("C-;" 'embark-dwim)        ;; good alternative: M-.
+    ("C-h B" 'embark-bindings) ;; alternative for `describe-bindings'
     :init
     (setq prefix-help-command #'embark-prefix-help-command)
     (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
@@ -873,7 +759,6 @@ Give [[https://github.com/minad/vertico][Orderless]] completion a try, which is 
 	  embark-become-indicator embark-action-indicator))
 
   (use-package embark-consult
-    :straight t
     :ensure t ; only need to install it, embark loads it after consult if found
     :hook
     (embark-collect-mode . consult-preview-at-point-mode))
@@ -886,13 +771,11 @@ Give [[https://github.com/minad/vertico][Orderless]] completion a try, which is 
 Consult provides a lot of useful completion commands similar to Ivy's Counsel.
 
 #+begin_src emacs-lisp
-
   (defun yz/get-project-root ()
     (when (fboundp 'projectile-project-root)
       (projectile-project-root)))
 
   (use-package consult
-    :straight t
     :demand t
     :bind (("C-s" . consult-line)
            ("C-M-l" . consult-imenu)
@@ -902,21 +785,57 @@ Consult provides a lot of useful completion commands similar to Ivy's Counsel.
     :custom
     (consult-project-root-function #'yz/get-project-root)
     (completion-in-region-function #'consult-completion-in-region))
-
 #+end_src
 
 **** consult-dir
 #+begin_src emacs-lisp
-
   (use-package consult-dir
-    :straight t
     :bind (("C-x C-d" . consult-dir)
            :map vertico-map
            ("C-x C-d" . consult-dir)
            ("C-x C-j" . consult-dir-jump-file))
     :custom
     (consult-dir-project-list-function nil))
+#+end_src
 
+*** Corfu
+
+autocompletion
+
+#+begin_src emacs-lisp :tangle no
+  (use-package corfu
+    :config
+    ;;(global-corfu-mode)
+    (setq corfu-cycle t
+          corfu-auto t
+          corfu-quit-at-boundary t
+          corfu-quit-no-match t))
+#+end_src
+
+*** Company
+
+#+begin_src emacs-lisp
+  (use-package company
+      :diminish company-mode
+      :hook (prog-mode . company-mode)
+      :bind (:map company-active-map
+                  ("<tab>" . nil)
+                  ("TAB" . nil)
+                  ("M-<tab>" . company-complete-common-or-cycle)
+                  ("M-<tab>" . company-complete-selection))
+      :init
+      (setq company-format-margin-function nil
+            company-minimum-prefix-length 2
+            company-selection-wrap-around t)
+      :custom
+      (company-idle-delay 0.0))
+
+    ;; Required for proportional font
+    (use-package company-posframe
+      :config
+      (company-posframe-mode 1))
+
+    (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
 #+end_src
 
 ** Editing text
@@ -928,7 +847,6 @@ Default to an indentation size of 4 spaces since it's the norm for pretty much e
 #+begin_src emacs-lisp
   (setq-default tab-width 4)
   (setq-default evil-shift-width tab-width)
-  (setq-default indent-tabs-mode nil)
 #+end_src
 
 **** Delete trailing whitespace
@@ -936,7 +854,6 @@ Delete trailing whitespace on save, unless in particular modes where trailing wh
 
 #+begin_src emacs-lisp
   (use-package ws-butler
-    :straight t
     :hook ((text-mode . ws-butler-mode)
            (prog-mode . ws-butler-mode)))
 #+end_src
@@ -948,9 +865,9 @@ Some default settings to manage tabs.
 (setq tab-always-indent nil)
 (setq-default default-tab-width 4)
 (setq-default tab-width 4)
-(setq-default evil-indent-convert-tabs nil)
-(setq-default indent-tabs-mode nil)
-(setq-default evil-shift-round nil)
+(setq-default evil-indent-convert-tabs t)
+(setq-default indent-tabs-mode t)
+(setq-default evil-shift-round t)
 #+end_src
 
 *** Settings
@@ -986,17 +903,35 @@ References:
 - [[https://www.emacswiki.org/emacs/UndoTree][UndoTree on EmacsWiki]]
 
 #+begin_src emacs-lisp
-  (use-package undo-tree
-    :straight t
-    :init
-    (global-undo-tree-mode))
+(use-package undo-tree
+  :init
+  (global-undo-tree-mode 1)
+  :config
+  ;; Remap undo and redo to be consistent with Vim
+  (general-define-key
+    :states '(normal visual insert)
+    "\C-r" 'redo)
+
+  ;; Display undo-tree in a separate buffer with timestamps and visual diffs
+  (setq undo-tree-visualizer-timestamps t)
+  (setq undo-tree-visualizer-diff t)
+
+  ;; Enable undo-tree in Evil's insert mode
+  (setq evil-undo-system 'undo-tree)
+
+  ;; Customize keybindings for undo-tree-visualizer
+  (general-define-key
+    :keymaps 'undo-tree-visualizer-mode-map
+    "j" 'undo-tree-visualize-redo
+    "k" 'undo-tree-visualize-undo
+    "q" 'undo-tree-visualizer-quit
+    "RET" 'undo-tree-visualizer-quit))
 #+end_src
 
 *** Winner
 
 #+begin_src emacs-lisp
-  (use-package winner
-    :straight t)
+  (use-package winner)
 #+end_src
 
 *** Snippets
@@ -1010,19 +945,15 @@ References:
 - [[http://joaotavora.github.io/yasnippet/][yasnippet documentation]]
 
 #+begin_src emacs-lisp
-(use-package yasnippet-snippets
-  :straight t)
-
 (use-package yasnippet
-  :straight t
-  :config
+  :init
   (setq yas-snippet-dirs
-        `(,(concat (expand-file-name user-emacs-directory) "snippets")
-          ;; yasnippet-snippets-dir
-          ))
+        `(,(concat (expand-file-name user-emacs-directory) "snippets")))
   (setq yas-triggers-in-field t)
   (yas-global-mode 1)
-  (my-leader-def
+
+  :config
+ (my-leader-def
     :keymaps 'yas-minor-mode-map
     :infix "es"
     "" '(:wk "yasnippet")
@@ -1031,20 +962,11 @@ References:
     "v" #'yas-visit-snippet-file))
 
 (general-imap "M-TAB" 'company-yasnippet)
+
+(use-package yasnippet-snippets :after yasnippet)
 #+end_src
 
 *** Other small packages
-**** Managing parentheses (smartparens)
-A minor mode to deal with pairs. Its functionality overlaps with evil-surround, but smartparens provides the most comfortable way to do stuff like automatically insert pairs.
-
-References:
-- [[https://github.com/Fuco1/smartparens][smartparens repo]]
-
-#+begin_src emacs-lisp
-(use-package smartparens
-  :straight t)
-#+end_src
-
 **** Visual fill column mode
 
 #+begin_src emacs-lisp
@@ -1054,7 +976,6 @@ References:
     (visual-fill-column-mode 1))
 
   (use-package visual-fill-column
-    :straight t
     :defer t
     :hook (org-mode . yz/org-mode-visual-fill))
 #+end_src
@@ -1071,7 +992,6 @@ I used to have [[https://github.com/Alexander-Miller/treemacs][Treemacs]] here, 
 
 #+begin_src emacs-lisp
 (use-package projectile
-  :straight t
   :config
   (projectile-mode +1)
   (setq projectile-project-search-path '("~/Projects")))
@@ -1081,12 +1001,11 @@ I used to have [[https://github.com/Alexander-Miller/treemacs][Treemacs]] here, 
 
 #+end_src
 
-*** Git & Magit
+*** Magit
 [[https://magit.vc/][Magit]] is a git interface for Emacs. The closest non-Emacs alternative (sans actual clones) I know is [[https://github.com/jesseduffield/lazygit][lazygit]], which I used before Emacs.
 
 #+begin_src emacs-lisp
 (use-package magit
-  :straight t
   :commands (magit-status magit-file-dispatch)
   :init
   (my-leader-def
@@ -1109,7 +1028,6 @@ I used to have [[https://github.com/Alexander-Miller/treemacs][Treemacs]] here, 
 [[https://github.com/Wilfred/helpful][helpful]] package improves the =*help*= buffer.
 #+begin_src emacs-lisp
 (use-package helpful
-  :straight t
   :commands (helpful-callable
              helpful-variable
              helpful-key
@@ -1141,52 +1059,49 @@ As I use =C-h= to switch buffers, I moved the help to =SPC-h= with the code belo
  "o" 'helpful-symbol)
 #+end_src
 
-* UI settings
+* UI
 ** General settings
 *** Miscellaneous
-Disable GUI elements
+**** Disable GUI elements
 #+begin_src emacs-lisp
-(unless my/is-termux
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1))
-
-(when my/is-termux
-  (menu-bar-mode -1))
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(menu-bar-mode -1)
 #+end_src
 
-Transparency. Not setting it here.
+**** Transparency. Not setting it here.
 #+begin_src emacs-lisp
 ;; (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
 ;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 #+end_src
 
-Do not show GUI dialogs
+**** Do not show GUI dialogs
 #+begin_src emacs-lisp
 (setq use-dialog-box nil)
 #+end_src
 
-No start screen
+**** No start screen
 #+begin_src emacs-lisp
 (setq inhibit-startup-screen t)
 #+end_src
 
-y or n instead of yes or no
+**** y or n instead of yes or no
 #+begin_src emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
-Hide mouse cursor while typing
+**** Hide mouse cursor while typing
 #+begin_src emacs-lisp
 (setq make-pointer-invisible t)
 #+end_src
 
-Show pairs
+**** Show pairs
 #+begin_src emacs-lisp
 (show-paren-mode 1)
 #+end_src
 
-Highlight the current line
+**** Highlight the current line
 #+begin_src emacs-lisp
 (global-hl-line-mode 1)
 #+end_src
@@ -1197,6 +1112,7 @@ Line numbers. There seems to be a catch with the relative number setting:
 - =relative= makes a single number for a wrapped line, but counts folded lines.
 
 =visual= option seems to be less of a problem in most cases.
+
 #+begin_src emacs-lisp
   (column-number-mode)
 
@@ -1224,55 +1140,955 @@ Line numbers. There seems to be a catch with the relative number setting:
 
 #+end_src
 
-*** Word wrapping
-Word wrapping. These settings aren't too obvious compared to =:set wrap= from vim:
-- =word-wrap= means just "don't split one word between two lines". So, if there isn't enough place to put a word at the end of the line, it will be put on a new one. Run =M-x toggle-word-wrap= to toggle that.
-- =visual-line-mode= seems to be a superset of =word-wrap=. It also enables some editing commands to work on visual lines instead of logical ones, hence the naming.
-- =auto-fill-mode= does the same as =word-wrap=, except it actually *edits the buffer* to make lines break in the appropriate places.
-- =truncate-lines= truncates long lines instead of continuing them. Run =M-x toggle-truncate-lines= to toggle that. I find that =truncate-lines= behaves strangely when =visual-line-mode= is on, so I use one or another.
-#+begin_src emacs-lisp
-(setq word-wrap 1)
-(global-visual-line-mode 1)
-#+end_src
-
-*** Custom frame format
-Title format, which used to look something like =emacs:project@hostname=. Now it's just =emacs=.
-
-#+begin_src emacs-lisp
-(setq-default frame-title-format
-              '(""
-                "emacs"
-                ;; (:eval
-                ;;  (let ((project-name (projectile-project-name)))
-                ;;    (if (not (string= "-" project-name))
-                ;;        (format ":%s@%s" project-name (system-name))
-                ;;      (format "@%s" (system-name)))))
-                ))
-#+end_src
-
-*** Olivetti
-[[https://github.com/rnkn/olivetti][Olivetti]] is a package that limits the current text body width. It's pretty nice to use when writing texts.
-
-#+begin_src emacs-lisp
-(use-package olivetti
-  :straight t
-  :if (display-graphic-p)
-  :config
-  (setq-default olivetti-body-width 90))
-#+end_src
-
 *** Theme packages
 My colorschemes of choice.
 #+begin_src emacs-lisp
-(use-package doom-themes
-  :straight t
+  (use-package color-theme-sanityinc-tomorrow)
+  (load-theme 'sanityinc-tomorrow-eighties t)
+	;; :config
+	;; (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+	;;       doom-themes-enable-italic t) ; if nil, italics is universally disabled
+	;; (load-theme 'doom-one t)
+
+	;; (doom-themes-visual-bell-config)
+	;; (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+	;; (doom-themes-treemacs-config)
+	;; (doom-themes-org-config)
+  #+end_src
+
+** Fonts
+*** Frame font
+To install a font, download the font and unpack it into the =.local/share/fonts= directory. Create one if it doesn't exist.
+
+As I use nerd fonts elsewhere, I use one in Emacs as well.
+
+References:
+- [[https://nerdfonts.com][nerd fonts homepage]]
+
+#+begin_src emacs-lisp
+  (set-face-attribute 'default nil
+		      :font "JetBrainsMono Nerd Font"
+		      :height 105)
+
+  (set-face-attribute 'fixed-pitch nil
+		      :font "JetBrainsMono Nerd Font"
+		      :height 105)
+
+  (set-face-attribute 'variable-pitch nil
+		      :font "JetBrainsMono Nerd Font"
+		      :height 105)
+#+end_src
+
+To make the icons work (e.g. in the Doom Modeline), run =M-x all-the-icons-install-fonts=. The package
+definition is somewhere later in the config.
+
+*** Ligatures
+
+Ligature setup for the JetBrainsMono font.
+
+#+begin_src emacs-lisp
+(use-package ligature
+  :straight (:host github :repo "mickeynp/ligature.el")
+  :if (display-graphic-p)
   :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  ;; (if my/remote-server
-       (load-theme 'doom-gruvbox t)
-  ;;   (load-theme 'doom-palenight t))
-  (doom-themes-visual-bell-config)
-  (setq doom-themes-treemacs-theme "doom-colors")
-  (doom-themes-treemacs-config))
+  (ligature-set-ligatures
+   '(
+     typescript-mode
+     typescript-ts-mode
+     js2-mode
+     javascript-ts-mode
+     vue-mode
+     svelte-mode
+     scss-mode
+     php-mode
+     python-mode
+     python-ts-mode
+     js-mode
+     markdown-mode
+     clojure-mode
+     go-mode
+     sh-mode
+     haskell-mode
+     web-mode)
+   '("--" "---" "==" "===" "!=" "!==" "=!=" "=:=" "=/=" "<="
+     ">=" "&&" "&&&" "&=" "++" "+++" "***" ";;" "!!" "??"
+     "?:" "?." "?=" "<:" ":<" ":>" ">:" "<>" "<<<" ">>>"
+     "<<" ">>" "||" "-|" "_|_" "|-" "||-" "|=" "||=" "##"
+     "###" "####" "#{" "#[" "]#" "#(" "#?" "#_" "#_(" "#:"
+     "#!" "#=" "^=" "<$>" "<$" "$>" "<+>" "<+" "+>" "<*>"
+     "<*" "*>" "</" "</>" "/>" "<!--" "<#--" "-->" "->" "->>"
+     "<<-" "<-" "<=<" "=<<" "<<=" "<==" "<=>" "<==>" "==>" "=>"
+     "=>>" ">=>" ">>=" ">>-" ">-" ">--" "-<" "-<<" ">->" "<-<"
+     "<-|" "<=|" "|=>" "|->" "<->" "<~~" "<~" "<~>" "~~" "~~>"
+     "~>" "~-" "-~" "~@" "[||]" "|]" "[|" "|}" "{|" "[<"
+     ">]" "|>" "<|" "||>" "<||" "|||>" "<|||" "<|>" "..." ".."
+     ".=" ".-" "..<" ".?" "::" ":::" ":=" "::=" ":?" ":?>"
+     "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__"))
+  (global-ligature-mode t))
+#+end_src
+
+*** Icons
+
+Run =M-x all-the-icons-install-fonts= at first setup.
+
+#+begin_src emacs-lisp
+(use-package nerd-icons)
+(use-package all-the-icons)
+#+end_src
+
+** Text highlight
+*** Highlight indent guides.
+
+#+begin_src emacs-lisp
+  (use-package highlight-indent-guides
+    :hook (prog-mode . highlight-indent-guides-mode)
+    :config
+    (setq highlight-indent-guides-method 'character))
+#+end_src
+
+*** Highlist numbers mode.
+
+#+begin_src emacs-lisp
+(use-package highlight-numbers
+  :hook (prog-mode . highlight-numbers-mode))
+#+end_src
+
+*** Highlist operators mode.
+
+#+begin_src emacs-lisp
+(use-package highlight-operators
+  :hook (prog-mode . highlight-operators-mode))
+#+end_src
+
+*** Smart Parens
+
+#+begin_src emacs-lisp
+(use-package smartparens
+  :hook (prog-mode . smartparens-mode))
+
+(with-eval-after-load 'smartparens
+  (sp-with-modes
+      '(c++-mode objc-mode c-mode css-mode)
+    (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET")))))
+
+#+end_src
+
+*** Rainbow parentheses.
+
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :hook ((prog-mode . rainbow-delimiters-mode)))
+#+end_src
+
+*** Highlight colors
+
+#+begin_src emacs-lisp
+  (use-package rainbow-mode
+    :defer t
+    :hook (org-mode
+           emacs-lisp-mode
+           web-mode))
+#+end_src
+
+*** Highlight TODOs
+
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :hook (prog-mode . hl-todo-mode))
+#+end_src
+
+** Doom Modeline
+A modeline from Doom Emacs. A big advantage of this package is that it just works out of the box and does not require much customization.
+
+I tried a bunch of other options, including [[https://github.com/TheBB/spaceline][spaceline]], but in the end, decided that Doom Modeline works best for me.
+
+References:
+- [[https://github.com/seagle0128/doom-modeline][Doom Modeline]]
+
+#+begin_src emacs-lisp
+  (use-package doom-modeline
+    :init
+    (setq doom-modeline-env-enable-python nil)
+    (setq doom-modeline-env-enable-go nil)
+    (setq doom-modeline-buffer-encoding 'nondefault)
+    (setq doom-modeline-hud t)
+    (setq doom-modeline-persp-icon nil)
+    (setq doom-modeline-persp-name nil)
+    (setq doom-modeline-display-misc-in-all-mode-lines nil)
+    :custom
+    (doom-modeline-height 30)
+    (doom-modeline-bar-width 4)
+    :config
+    (setq doom-modeline-minor-modes nil)
+    (setq doom-modeline-irc nil)
+    (setq doom-modeline-buffer-state-icon nil)
+    (doom-modeline-mode 1))
+#+end_src
+
+* Writing
+** Org Mode
+
+Set up org mode
+
+#+begin_src emacs-lisp
+(use-package org
+  :straight nil
+  :mode (("\\.org\\'" . org-mode))
+  :config
+  (setq org-agenda-files '("~/org")
+        org-log-done 'time
+        org-return-follows-link t
+        org-hide-emphasis-markers t
+        org-startup-indented t
+        org-src-fontify-natively t
+        org-src-tab-acts-natively nil
+        org-log-done 'time)
+  :hook
+  (org-mode . (lambda ()
+                (org-indent-mode)
+                (visual-line-mode)
+                (variable-pitch-mode)))
+  :general
+  (:keymaps 'org-mode-map
+   "C-c l" 'org-store-link
+   "C-c a" 'org-agenda
+   "C-c c" 'org-capture
+   "C-c <up>" 'org-priority-up
+   "C-c <down>" 'org-priority-down))
+#+end_src
+
+** Templates
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-capture-templates
+      '(
+        ("j" "Work Log Entry"
+         entry (file+datetree "~/org/work-log.org")
+         "* %?"
+         :empty-lines 0)
+        ))
+(setq org-capture-templates
+      '(
+        ("n" "Note"
+         entry (file+headline "~/org/notes.org" "Random Notes")
+         "** %?"
+         :empty-lines 0)
+        ))
+(setq org-capture-templates
+      '(
+        ("g" "General To-Do"
+         entry (file+headline "~/org/todos.org" "General Tasks")
+         "* TODO [#B] %?\n:Created: %T\n "
+         :empty-lines 0)
+      ))
+(setq org-capture-templates
+      '(
+        ("c" "Code To-Do"
+         entry (file+headline "~/org/todos.org" "Code Related Tasks")
+         "* TODO [#B] %?\n:Created: %T\n%i\n%a\nProposed Solution: "
+         :empty-lines 0)
+        ))
+#+end_src
+
+** Tags
+
+#+begin_src emacs-lisp :tangle yes
+;; Tags
+(setq org-tag-alist '(
+                      ;; Ticket types
+                      (:startgroup . nil)
+                      ("@bug" . ?b)
+                      ("@feature" . ?u)
+                      ("@spike" . ?j)
+                      (:endgroup . nil)
+
+                      ;; Ticket flags
+                      ("@write_future_ticket" . ?w)
+                      ("@emergency" . ?e)
+                      ("@research" . ?r)
+
+                      ;; Meeting types
+                      (:startgroup . nil)
+                      ("big_sprint_review" . ?i)
+                      ("cents_sprint_retro" . ?n)
+                      ("dsu" . ?d)
+                      ("grooming" . ?g)
+                      ("sprint_retro" . ?s)
+                      (:endgroup . nil)
+
+                      ;; Code TODOs tags
+                      ("QA" . ?q)
+                      ("backend" . ?k)
+                      ("broken_code" . ?c)
+                      ("frontend" . ?f)
+
+                      ;; Special tags
+                      ("CRITICAL" . ?x)
+                      ("obstacle" . ?o)
+
+                      ;; Meeting tags
+                      ("HR" . ?h)
+                      ("general" . ?l)
+                      ("meeting" . ?m)
+                      ("misc" . ?z)
+                      ("planning" . ?p)
+
+                      ;; Work Log Tags
+                      ("accomplishment" . ?a)
+                      ))
+;; Tag colors
+(setq org-tag-faces
+      '(
+        ("planning"  . (:foreground "mediumPurple1" :weight bold))
+        ("backend"   . (:foreground "royalblue1"    :weight bold))
+        ("frontend"  . (:foreground "forest green"  :weight bold))
+        ("QA"        . (:foreground "sienna"        :weight bold))
+        ("meeting"   . (:foreground "yellow1"       :weight bold))
+        ("CRITICAL"  . (:foreground "red1"          :weight bold))
+        )
+      )
+#+end_src
+
+** Todo
+
+#+begin_src emacs-lisp :tangle yes
+;; TODO states
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "PLANNING(p)" "IN-PROGRESS(i@/!)" "VERIFYING(v!)" "BLOCKED(b@)"  "|" "DONE(d!)" "OBE(o@!)" "WONT-DO(w@/!)" )
+        ))
+;; TODO colors
+(setq org-todo-keyword-faces
+      '(
+        ("TODO" . (:foreground "GoldenRod" :weight bold))
+        ("PLANNING" . (:foreground "DeepPink" :weight bold))
+        ("IN-PROGRESS" . (:foreground "Cyan" :weight bold))
+        ("VERIFYING" . (:foreground "DarkOrange" :weight bold))
+        ("BLOCKED" . (:foreground "Red" :weight bold))
+        ("DONE" . (:foreground "LimeGreen" :weight bold))
+        ("OBE" . (:foreground "LimeGreen" :weight bold))
+        ("WONT-DO" . (:foreground "LimeGreen" :weight bold))
+        ))
+#+end_src
+
+** Addons
+**** Bullets
+
+#+begin_src emacs-lisp
+  (use-package org-bullets
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+end_src
+
+**** Roam
+
+note-taking and linking system
+
+#+begin_src emacs-lisp :tangle no
+  (use-package org-roam
+    :after org
+    :init
+    (setq org-raom-v2-ack t)
+    :custom
+    (org-roam-directory "~/Notes")
+    (org-roam-completion-everywhere t)
+    :bind (("C-c n f" . org-roam-node-find)
+	   ("C-c n l" . org-roam-buffer-toggle)
+	   ("C-c n i" . org-roam-node-insert)
+	   :map org-mode-map
+	   ("C-M-i"   . completion-at-point))
+    :config
+    (org-roam-setup))
+#+end_src
+
+**** Write room
+
+Creates a distraction-free writing environment by centering the buffer and dimming the text outside a narrow margin.
+
+#+begin_src emacs-lisp
+(use-package writeroom-mode
+  :config
+  (setq writeroom-width 120))
+
+(my-leader-def
+  "w" '(writeroom-mode :wk "Write room"))
+#+end_src
+
+**** Olivetti
+
+Creates a visually comfortable writing environment by setting margins and narrowing the text column.
+
+#+begin_src emacs-lisp
+(use-package olivetti
+  :config
+  (setq olivetti-body-width 120)
+  :hook (org-mode . olivetti-mode))
+#+end_src
+
+* Programming
+** General setup
+*** LSP
+LSP-mode provides an IDE-like experience for Emacs - real-time diagnostics, code actions, intelligent autocompletion, etc.
+
+References:
+- [[https://emacs-lsp.github.io/lsp-mode/][lsp-mode homepage]]
+
+**** Setup
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :commands (lsp .lsp-deferred)
+    :hook
+    (lsp-mode . lsp-enable-which-key-integration)
+    (web-mode . lsp)
+    (js2-mode . lsp)
+    :config
+    (setq lsp-prefer-flymake nil)
+    (setq lsp-diagnostics-provider :capf)
+    (setq lsp-headerline-breadcrumb-enable t)
+    (setq lsp-headerline-breadcrumb-segments '(project file symbols))
+    (setq lsp-disabled-clients '((python-mode . pyls)))
+    :init
+    (setq lsp-keymap-prefix "C-c l")) ;; Or 'C-l', 's-l'
+
+  (use-package lsp-ui
+    :straight t
+    :hook (lsp-mode . lsp-ui-mode)
+    :config
+    (setq lsp-ui-sideline-enable t)
+    (setq lsp-ui-doc-position 'bottom)
+    (setq lsp-completion-show-detail nil)
+    (setq lsp-completion-show-kind nil)
+    (setq lsp-completion-show-label-description nil)
+    (setq lsp-completion-enable-additional-text-edit nil)
+    (lsp-ui-doc-show))
+#+end_src
+
+**** Keybindings
+#+begin_src emacs-lisp
+(my-leader-def
+  :infix "l"
+  "" '(:wk "lsp")
+  "d" 'xref-find-definitions
+  "r" #'xref-find-references
+  "n" #'lsp-ui-find-next-reference
+  "p" #'lsp-ui-find-prev-reference
+  "s" #'counsel-imenu
+  "e" #'lsp-ui-flycheck-list
+  "S" #'lsp-ui-sideline-mode
+  "X" #'lsp-execute-code-action)
+#+end_src
+
+*** Flycheck
+A syntax checking extension for Emacs. Integrates with LSP-mode, but can also use various standalone checkers.
+
+References:
+- [[https://www.flycheck.org/en/latest/][Flycheck homepage]]
+
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :defer t
+    :hook (lsp-mode . flycheck-mode))
+#+end_src
+
+*** Tree-sitter
+
+#+begin_src emacs-lisp
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+#+end_src
+
+*** General additional config
+Have to put this before tree-sitter because I need =my/set-smartparens-indent= there.
+
+Make smartparens behave the way I like for C-like languages.
+#+begin_src emacs-lisp
+(defun my/set-smartparens-indent (mode)
+  (sp-local-pair mode "{" nil :post-handlers '(("|| " "SPC") ("||\n[i]" "RET")))
+  (sp-local-pair mode "[" nil :post-handlers '(("|| " "SPC") ("||\n[i]" "RET")))
+  (sp-local-pair mode "(" nil :post-handlers '(("|| " "SPC") ("||\n[i]" "RET"))))
+#+end_src
+
+** C/C++
+
+#+begin_src emacs-lisp
+(use-package ccls
+  :straight t
+  :hook ((c-mode c++-mode objc-mode cuda-mode) .
+         (lambda () (require 'ccls) (lsp))))
+
+(setq ccls-executable "ccls")
+(setq ccls-args '("--log-file=/tmp/ccls.log"))
+(setq ccls-sem-highlight-method 'font-lock)
+;;(setq ccls-sem-highlight-method 'overlay)
+(ccls-use-default-rainbow-sem-highlight)
+
+  (use-package clang-format
+     :straight t
+     :config
+     (setq clang-format-style-option "file"))
+#+end_src
+
+** Rust
+#+begin_src emacs-lisp
+(use-package rustic
+  :config
+  (setq rustic-format-on-save t)
+  (setq rustic-analyzer-command '("~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rust-analyzer"))
+  :custom
+  (rustic-analyzer-command '("rustup" "run" "nightly" "rust-analyzer"))
+  :general
+  (:keymaps 'rustic-mode-map
+            :states '(normal visual)
+            :prefix "SPC"
+            :non-normal-prefix "M-SPC"
+            "c" 'rustic-compile
+            "r" 'rustic-run
+            "b" 'rustic-cargo-build
+            "t" 'rustic-test))
+
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+  #+end_src
+
+** Java
+#+begin_src emacs-lisp
+  (use-package lsp-java
+    :straight t
+    :after lsp)
+
+  (use-package java
+    :straight nil
+    :ensure nil
+    :after lsp-java
+    :bind (:map java-mode-map ("C-c i" . lsp-java-add-import)))
+#+end_src
+
+*** Format
+
+#+begin_src emacs-lisp
+(setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml")
+(setq lsp-java-format-settings-profile "GoogleStyle")
+(add-hook 'java-mode-hook (defun my-set-java-tab-width () (setq c-basic-offset 4)))
+#+end_src
+
+** Javascript
+#+begin_src emacs-lisp
+  (use-package typescript-mode
+    :mode "\\.ts\\'"
+    :config
+    (setq typescript-indent-level 2))
+
+  (defun dw/set-js-indentation ()
+    (setq js-indent-level 2)
+    (setq evil-shift-width js-indent-level)
+    (setq-default tab-width 2))
+
+  (use-package js2-mode
+    :mode "\\.jsx?\\'"
+    :config
+    ;; Use js2-mode for Node scripts
+    (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
+
+    ;; Don't use built-in syntax checking
+    (setq js2-mode-show-strict-warnings nil)
+
+    ;; Set up proper indentation in JavaScript and JSON files
+    (add-hook 'js2-mode-hook #'dw/set-js-indentation)
+    (add-hook 'json-mode-hook #'dw/set-js-indentation))
+
+  (use-package apheleia
+    :config
+    (apheleia-global-mode +1))
+
+  (use-package prettier-js
+    ;; :hook ((js2-mode . prettier-js-mode)
+    ;;        (typescript-mode . prettier-js-mode))
+    :config
+    (setq prettier-js-show-errors nil))
+#+end_src
+
+** HTML
+
+#+begin_src emacs-lisp
+(use-package web-mode
+  :mode "(\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'"
+  :config
+  (setq-default web-mode-code-indent-offset 2)
+  (setq-default web-mode-markup-indent-offset 2)
+  (setq-default web-mode-attribute-indent-offset 2))
+
+;; 1. Start the server with `httpd-start'
+;; 2. Use `impatient-mode' on any buffer
+(use-package impatient-mode)
+
+(use-package emmet-mode
+  :hook (html-mode . emmet-mode)
+        (css-mode . emmet-mode)
+  :config
+  (setq emmet-move-cursor-between-quotes t
+        emmet-self-closing-tag-style " /"))
+(add-hook 'emmet-mode-hook (lambda () (setq emmet-indent-after-insert t)))
+        
+(defun my-setup-indent ()
+  (setq-local css-indent-offset 2))
+(add-hook 'prog-mode-hook 'my-setup-indent)
+#+end_src
+
+** Nix
+
+#+begin_src emacs-lisp
+  (use-package nix-mode
+    :straight t)
+
+  (use-package direnv
+    :straight t
+    :config
+    (direnv-mode))
+#+end_src
+
+** Miscleanious
+
+*** Take care of camelCase and snake_case words
+
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook 'subword-mode)
+(add-hook 'prog-mode-hook 'superword-mode)
+#+end_src
+
+* Applications
+** Reading
+*** Nov
+
+A major mode for reading EPUBs in Emacs.
+
+#+begin_src emacs-lisp
+(use-package nov
+  :ensure t
+  :mode ("\\.epub\\'" . nov-mode))
+  
+(use-package nov-xwidget
+  :straight (:host github :repo "chenyanming/nov-xwidget")
+  :demand t
+  :after nov
+  :config
+  (define-key nov-mode-map (kbd "o") 'nov-xwidget-view)
+  (add-hook 'nov-mode-hook 'nov-xwidget-inject-all-files))
+#+end_src
+
+*** PDF Tools
+
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install))
+#+end_src
+
+** Files
+*** Dired
+
+Dired is the built-in Emacs file manager. It's so good that it's strange that, to my knowledge, no one tried to replicate it outside of Emacs.
+
+**** Basic config & keybindings
+My config mostly follows ranger's and vifm's keybindings which I'm used to.
+
+#+begin_src emacs-lisp
+  (use-package dired
+    :ensure nil
+    :straight nil
+    :commands (dired)
+    :config
+    (setq dired-listing-switches "-lXGah --group-directories-first")
+    (setq dired-dwim-target t)
+    (setq wdired-allow-to-change-permissions t)
+    (setq wdired-create-parent-directories t)
+    (setq dired-recursive-copies 'always)
+    (setq dired-recursive-deletes 'always)
+    (setq dired-kill-when-opening-new-dired-buffer t)
+    (add-hook 'dired-mode-hook
+              (lambda ()
+                (setq truncate-lines t)
+                (visual-line-mode nil)))
+      (add-hook 'dired-mode-hook #'dired-hide-details-mode))
+    (general-define-key
+     :states '(normal)
+     :keymaps 'dired-mode-map
+     "h" #'dired-up-directory
+     "l" #'dired-find-file
+     "=" #'dired-narrow
+     "-" #'my/dired-create-empty-file-subtree
+     "~" #'vterm
+     "M-r" #'wdired-change-to-wdired-mode
+     "<left>" #'dired-up-directory
+     "<right>" #'dired-find-file
+     "M-<return>" #'dired-open-xdg)
+
+  (defun my/dired-home ()
+    "Open dired at $HOME"
+    (interactive)
+    (dired (expand-file-name "~")))
+
+  (my-leader-def
+    "ad" #'dired)
+#+end_src
+
+**** Addons
+I used to use [[https://www.emacswiki.org/emacs/DiredPlus][dired+]], which provides a lot of extensions for dired functionality, but it also creates some new problems, so I opt out of it. Fortunately, the one feature I want from this package - adding more colors to dired buffers - is available as a separate package.
+
+#+begin_src emacs-lisp
+(use-package diredfl
+  :after (dired)
+  :config
+  (diredfl-global-mode 1))
+#+end_src
+
+[[https://github.com/Fuco1/dired-hacks#dired-subtree][dired-subtree]] is a package that enables managing Dired buffers in a tree-like manner. By default =evil-collection= maps =dired-subtree-toggle= to =TAB=.
+
+#+begin_src emacs-lisp
+(use-package dired-subtree
+  :after (dired))
+
+(defun my/dired-create-empty-file-subtree ()
+  (interactive)
+  (let ((default-directory (dired-current-directory)))
+    (dired-create-empty-file
+     (read-file-name "Create empty file: "))))
+#+end_src
+
+[[https://github.com/jojojames/dired-sidebar][dired-sidebar]] enables opening Dired in sidebar. For me, with dired-subtree this makes dired a better option than Treemacs.
+
+#+begin_src emacs-lisp :tangle no
+(defun my/dired-sidebar-toggle ()
+  (interactive)
+  (if (not current-prefix-arg)
+      (dired-sidebar-toggle-sidebar)
+    (let ((dired-sidebar-follow-file-at-point-on-toggle-open
+           current-prefix-arg)
+          (current-prefix-arg nil))
+      (dired-sidebar-toggle-sidebar))))
+
+(use-package dired-sidebar
+  :after (dired)
+  :commands (dired-sidebar-toggle-sidebar)
+  :init
+  (setq dired-sidebar-follow-file-at-point-on-toggle-open nil)
+  (general-define-key
+   :keymaps '(normal override global)
+   "C-n" `(my/dired-sidebar-toggle
+           :wk "dired-sidebar"))
+  :config
+  (setq dired-sidebar-width 45)
+  (defun my/dired-sidebar-setup ()
+    (toggle-truncate-lines 1)
+    (display-line-numbers-mode -1)
+    (setq-local dired-subtree-use-backgrounds nil)
+    (setq-local window-size-fixed nil))
+  (general-define-key
+   :keymaps 'dired-sidebar-mode-map
+   :states '(normal emacs)
+   "l" #'dired-sidebar-find-file
+   "h" #'dired-sidebar-up-directory
+   "=" #'dired-narrow)
+  (add-hook 'dired-sidebar-mode-hook #'my/dired-sidebar-setup)
+  (advice-add #'dired-create-empty-file :after 'dired-sidebar-refresh-buffer))
+#+end_src
+
+[[https://github.com/vifon/dired-recent.el][dired-recent.el]] adds history to dired.
+
+#+begin_src emacs-lisp
+(use-package dired-recent
+  :after dired
+  :commands (dired-recent-open)
+  :config
+  (dired-recent-mode)
+  (general-define-key
+   :keymaps 'dired-recent-mode-map
+   "C-x C-d" nil)
+  (my-leader-def
+    "aD" '(dired-recent-open :wk "dired history")))
+#+end_src
+
+Display icons for files.
+
+| Note      | Type                                                     |
+|-----------+----------------------------------------------------------|
+| *ACHTUNG* | This plugin is slow as hell with TRAMP or in =gnu/store= |
+
+#+begin_src emacs-lisp
+(use-package all-the-icons-dired
+  :hook (dired-mode . (lambda ()
+                        (unless (string-match-p "/gnu/store" default-directory)
+                          (all-the-icons-dired-mode))))
+  :config)
+#+end_src
+
+Provides stuff like =dired-open-xdg=
+
+#+begin_src emacs-lisp
+(use-package dired-open
+  :commands (dired-open-xdg))
+#+end_src
+
+[[https://elpa.gnu.org/packages/dired-du.html][dired-du]] is a package that shows directory sizes
+
+#+begin_src emacs-lisp
+(use-package dired-du
+  :commands (dired-du-mode)
+  :config
+  (setq dired-du-size-format t))
+#+end_src
+
+vifm-like filter
+
+#+begin_src emacs-lisp
+(use-package dired-narrow
+  :commands (dired-narrow)
+  :config
+  (general-define-key
+   :keymaps 'dired-narrow-map
+   [escape] 'keyboard-quit))
+#+end_src
+
+Display git info, such as the last commit for file and stuff. It's pretty useful but also slows down Dired a bit, hence I don't turn it out by default.
+
+#+begin_src emacs-lisp
+(use-package dired-git-info
+  :after dired
+  :config
+  (general-define-key
+   :keymap 'dired-mode-map
+   :states '(normal emacs)
+   ")" 'dired-git-info-mode))
+#+end_src
+
+**** Subdirectories
+Subdirectories are one of the interesting features of Dired. It allows displaying multiple folders on the same window.
+
+I add my own keybindings and some extra functionality.
+
+#+begin_src emacs-lisp
+(defun my/dired-open-this-subdir ()
+  (interactive)
+  (dired (dired-current-directory)))
+
+(defun my/dired-kill-all-subdirs ()
+  (interactive)
+  (let ((dir dired-directory))
+    (kill-buffer (current-buffer))
+    (dired dir)))
+
+(with-eval-after-load 'dired
+  (general-define-key
+   :states '(normal)
+   :keymaps 'dired-mode-map
+   "s" nil
+   "ss" 'dired-maybe-insert-subdir
+   "sl" 'dired-maybe-insert-subdir
+   "sq" 'dired-kill-subdir
+   "sk" 'dired-prev-subdir
+   "sj" 'dired-next-subdir
+   "sS" 'my/dired-open-this-subdir
+   "sQ" 'my/dired-kill-all-subdirs
+   (kbd "TAB") 'dired-hide-subdir))
+#+end_src
+
+** Shells / Terminals
+*** vterm
+My terminal emulator of choice.
+
+References:
+- [[https://github.com/akermu/emacs-libvterm][emacs-libvterm repo]]
+
+**** Configuration
+
+#+begin_src emacs-lisp
+(use-package vterm
+  :straight t
+  :commands (vterm vterm-other-window)
+  :config
+  (setq vterm-kill-buffer-on-exit t)
+
+  (add-hook 'vterm-mode-hook
+            (lambda ()
+              (setq-local global-display-line-numbers-mode nil)
+              (display-line-numbers-mode 0)))
+
+
+  (advice-add 'evil-collection-vterm-insert
+              :before (lambda (&rest args)
+                        (ignore-errors
+                          (apply #'vterm-reset-cursor-point args))))
+
+  (general-define-key
+   :keymaps 'vterm-mode-map
+   "M-q" 'vterm-send-escape
+
+   "C-h" 'evil-window-left
+   "C-l" 'evil-window-right
+   "C-k" 'evil-window-up
+   "C-j" 'evil-window-down
+
+   "C-<right>" 'evil-window-right
+   "C-<left>" 'evil-window-left
+   "C-<up>" 'evil-window-up
+   "C-<down>" 'evil-window-down
+
+   "M-<left>" 'vterm-send-left
+   "M-<right>" 'vterm-send-right
+   "M-<up>" 'vterm-send-up
+   "M-<down>" 'vterm-send-down)
+
+  (general-define-key
+   :keymaps 'vterm-mode-map
+   :states '(normal insert)
+   "<home>" 'vterm-beginning-of-line
+   "<end>" 'vterm-end-of-line)
+
+  (general-define-key
+   :keymaps 'vterm-mode-map
+   :states '(insert)
+   "C-r" 'vterm-send-C-r
+   "C-k" 'vterm-send-C-k
+   "C-j" 'vterm-send-C-j
+   "M-l" 'vterm-send-right
+   "M-h" 'vterm-send-left
+   "M-k" 'vterm-send-up
+   "M-j" 'vterm-send-down))
+#+end_src
+
+**** Subterminal
+Open a terminal in the lower third of the frame with the =`= key.
+
+I guess that's the first Emacs function I wrote!
+
+#+begin_src emacs-lisp
+(add-to-list 'display-buffer-alist
+             `(,"vterm-subterminal.*"
+               (display-buffer-reuse-window
+                display-buffer-in-side-window)
+               (side . bottom)
+               (reusable-frames . visible)
+               (window-height . 0.33)))
+
+(defun my/toggle-vterm-subteminal ()
+  "Toogle subteminal."
+  (interactive)
+  (let ((vterm-window
+        (seq-find
+         (lambda (window)
+           (string-match
+            "vterm-subterminal.*"
+            (buffer-name (window-buffer window))))
+         (window-list))))
+    (if vterm-window
+        (if (eq (get-buffer-window (current-buffer)) vterm-window)
+            (kill-buffer (current-buffer))
+          (select-window vterm-window))
+      (vterm-other-window "vterm-subterminal"))))
+
+  (general-nmap "`" 'my/toggle-vterm-subteminal)
+  (general-nmap "~" 'vterm)
 #+end_src

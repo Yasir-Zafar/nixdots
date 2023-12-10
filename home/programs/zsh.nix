@@ -34,7 +34,7 @@
           rm = "rm -i";
           g = "git";
           gs = "git status";
-          db = "clang++ -ggdb -pedantic-errors -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Werror -std=c++2b -o";
+          db = "clang++ -ggdb -pedantic-errors -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Werror -Wshadow -std=c++2b -o";
 
         };
 

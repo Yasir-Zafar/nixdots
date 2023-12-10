@@ -1,4 +1,24 @@
-{ config, ...}:
+{ config, pkgs, ...}:
+
+let
+  myEmacsDesktopFile = pkgs.writeText "emacs.desktop" ''
+    [Desktop Entry]
+    Name=Emacs
+    Exec=emacs %U
+    Type=Application
+    NoDisplay=true
+    Categories=Development;TextEditor;
+    MimeType=text/plain;
+  '';
+
+  myMimeAppsList = pkgs.writeText "mimeapps.list" ''
+    [Default Applications]
+    text/plain=emacs.desktop
+    application/vnd.oasis.opendocument.text=libreoffice-writer.desktop
+    application/vnd.oasis.opendocument.spreadsheet=libreoffice-calc.desktop
+    application/vnd.oasis.opendocument.presentation=libreoffice-impress.desktop
+  '';
+in
 {
 
   xdg = {
@@ -25,6 +45,10 @@
         "audio" = [ "mpv.desktop" ];
         "video" = [ "mpv.desktop" ];
         "application/pdf" = [ "org.gnome.Evince.desktop" ];
+        "text/plain" = "emacs.desktop";
+        "application/vnd.oasis.opendocument.text" = "libreoffice-writer.desktop";
+        "application/vnd.oasis.opendocument.spreadsheet" = "libreoffice-calc.desktop";
+        "application/vnd.oasis.opendocument.presentation" = "libreoffice-impress.desktop";
 
       };
 

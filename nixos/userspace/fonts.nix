@@ -11,6 +11,12 @@
       noto-fonts
       noto-fonts-cjk
       noto-fonts-emoji
+      "${pkgs.fetchFromGitHub {
+        owner = "addy-dclxvi";
+        repo = "bitmap-font-collections";
+        rev = "8ad8cfd";
+        sha256 = "H3EmC+7BBQfGP0xGinBrW6GqisyarSAErsPIRHd7k48=";
+      }}/bitmap"
 
     ];
 
@@ -27,6 +33,8 @@
         lcdfilter = "default"; # no difference
 
       };
+
+      allowBitmaps = true;
 
     };
 

@@ -17,7 +17,7 @@
         font-size = 10;
         indicator-idle-visible = false;
         indicator-radius = 50;
-        indicator-thickness = 5;
+        indicator-thickness = 10;
         inside-color = "1d2021";
         inside-clear-color = "83a598";
         inside-ver-color = "8ec07c";

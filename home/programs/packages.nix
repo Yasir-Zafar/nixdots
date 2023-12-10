@@ -16,6 +16,7 @@
     zip
     unzip
     p7zip
+    rar
 
     brillo
     wbg
@@ -26,10 +27,14 @@
     waybar
     wofi
 
-    ccls
+    #ccls
     llvmPackages_16.libcxxClang
     clang-tools_16
     libtool
+    gdb
+    cmake
+
+    rustup
     
     html-tidy
     nodejs
@@ -41,6 +46,7 @@
     gradle
 
     neovim-unwrapped
+    android-studio
 
     gtk-engine-murrine
     gtk_engines
@@ -60,6 +66,8 @@
     libreoffice-fresh
     calibre
     syncthing
+    obs-studio
+    android-tools
     (pkgs.discord.override {
       withVencord = true;
     })
