@@ -62,12 +62,14 @@
     firefox-wayland
     qutebrowser
     thunderbird
+    qbittorrent
     gimp
     libreoffice-fresh
     calibre
     syncthing
     obs-studio
     android-tools
+cinnamon.warpinator
     (pkgs.discord.override {
       withVencord = true;
     })

@@ -34,8 +34,6 @@
 
       };
 
-      allowBitmaps = true;
-
     };
 
   };
