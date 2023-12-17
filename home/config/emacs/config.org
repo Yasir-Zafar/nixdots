@@ -1332,18 +1332,12 @@ References:
 Set up org mode
 
 #+begin_src emacs-lisp
+(straight-use-package '(org :type built-in))
+
 (use-package org
+  :defer t
   :straight nil
   :mode (("\\.org\\'" . org-mode))
-  :config
-  (setq org-agenda-files '("~/org")
-        org-log-done 'time
-        org-return-follows-link t
-        org-hide-emphasis-markers t
-        org-startup-indented t
-        org-src-fontify-natively t
-        org-src-tab-acts-natively nil
-        org-log-done 'time)
   :hook
   (org-mode . (lambda ()
                 (org-indent-mode)
@@ -1355,7 +1349,30 @@ Set up org mode
    "C-c a" 'org-agenda
    "C-c c" 'org-capture
    "C-c <up>" 'org-priority-up
-   "C-c <down>" 'org-priority-down))
+   "C-c <down>" 'org-priority-down)
+  :config
+  (setq org-agenda-files '("~/org")
+        org-log-done 'time
+        org-return-follows-link t
+        org-hide-emphasis-markers t
+        org-startup-indented t
+        org-src-fontify-natively t
+        org-src-tab-acts-natively nil
+        org-log-done 'time)
+  (use-package org-roam
+    :demand t
+    :init
+    (setq org-raom-v2-ack t)
+    :custom
+    (org-roam-directory "~/Notes")
+    (org-roam-completion-everywhere t)
+    :bind (("C-c n f" . org-roam-node-find)
+	   ("C-c n l" . org-roam-buffer-toggle)
+	   ("C-c n i" . org-roam-node-insert)
+	   :map org-mode-map
+	   ("C-M-i"   . completion-at-point))
+    :config
+  (org-roam-db-autosync-mode)))
 #+end_src
 
 ** Templates
@@ -1485,20 +1502,6 @@ Set up org mode
 note-taking and linking system
 
 #+begin_src emacs-lisp :tangle no
-  (use-package org-roam
-    :after org
-    :init
-    (setq org-raom-v2-ack t)
-    :custom
-    (org-roam-directory "~/Notes")
-    (org-roam-completion-everywhere t)
-    :bind (("C-c n f" . org-roam-node-find)
-	   ("C-c n l" . org-roam-buffer-toggle)
-	   ("C-c n i" . org-roam-node-insert)
-	   :map org-mode-map
-	   ("C-M-i"   . completion-at-point))
-    :config
-    (org-roam-setup))
 #+end_src
 
 **** Write room

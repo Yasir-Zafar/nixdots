@@ -42,20 +42,14 @@
     nasm
 
     jdk
-    maven
-    gradle
 
     neovim-unwrapped
-    android-studio
 
     gtk-engine-murrine
     gtk_engines
     gnome.gnome-themes-extra
     gnome.nautilus
     gnome.sushi
-    gnome.gnome-calculator
-    gnome.gnome-boxes
-    gnome-solanum
     evince
 
     pavucontrol
@@ -69,7 +63,6 @@
     syncthing
     obs-studio
     android-tools
-cinnamon.warpinator
     (pkgs.discord.override {
       withVencord = true;
     })
