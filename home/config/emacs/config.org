@@ -1,0 +1,34 @@
+#+PROPERTY: header-args :mkdirp yes
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes :eval never-export :exports both
+#+TITLE: Emacs config
+#+OPTIONS: broken-links:auto h:6 toc:nil
+
+#+begin_quote
+One day we won't hate one another, no young boy will march to war and I will clean up my Emacs config. But that day isn't today.
+#+end_quote
+- Me, <2021-05-27 Thu 17:35> in commit 93a0573. Adapted from [[https://www.youtube.com/watch?v=pIdBinlW40E][The Dark Element - "The Pallbearer Walks Alone"]]. T_T
+
+* Intro
+My configuration of [[https://www.gnu.org/software/emacs/][GNU Emacs]], an awesome +text editor+ piece of software that can do almost anything.
+
+At the moment of writing this, that "almost anything" includes:
+- *Programming environment*. With LSP & Co, Emacs is as good as many IDEs and is certainly on par with editors like VS Code.\\
+  Emacs is also particularly great at writing Lisp code, e.g. Clojure, Common Lisp, and of course, Emacs Lisp.
+- *Org Mode* is useful for a lot of things. My use cases include:
+  - *[[https://leanpub.com/lit-config/read][Literate configuration]]*
+  - *Interactive programming* à la Jupyter Notebook
+  - *Task / project management*
+  - *Formatting documents*. I've written my Master's Thesis in Org Mode.
+  - *Notetaking*, mostly with org-roam and org-journal
+- *File management*. Dired is my primary file manager.
+- *Email*, with notmuch.
+- *Multimedia management*, with EMMS.
+- *RSS feed reader*, with elfeed.
+- *Managing passwords*, with pass.
+- ...
+
+As I mentioned above, this document is a piece of literate configuration, i.e. program code interwoven with (occasionally semi-broken) English-language commentary.
+
+I find that approach helpful for maintaining the configuration, but the quality and quantity of comments may vary. I also usually incorporate my Emacs-related blog posts back into this config.
+
+So, you might extract something of value from here if you're an avid Emacs user.
