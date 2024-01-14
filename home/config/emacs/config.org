@@ -16,15 +16,12 @@ At the moment of writing this, that "almost anything" includes:
   Emacs is also particularly great at writing Lisp code, e.g. Clojure, Common Lisp, and of course, Emacs Lisp.
 - *Org Mode* is useful for a lot of things. My use cases include:
   - *[[https://leanpub.com/lit-config/read][Literate configuration]]*
-  - *Interactive programming* à la Jupyter Notebook
+  - *Interactive programming*
   - *Task / project management*
-  - *Formatting documents*. I've written my Master's Thesis in Org Mode.
-  - *Notetaking*, mostly with org-roam and org-journal
-- *File management*. Dired is my primary file manager.
+  - *Formatting documents*
+  - *Notetaking*
+- *File management*.
 - *Email*, with notmuch.
-- *Multimedia management*, with EMMS.
-- *RSS feed reader*, with elfeed.
-- *Managing passwords*, with pass.
 - ...
 
 As I mentioned above, this document is a piece of literate configuration, i.e. program code interwoven with (occasionally semi-broken) English-language commentary.
@@ -32,3 +29,17 @@ As I mentioned above, this document is a piece of literate configuration, i.e. p
 I find that approach helpful for maintaining the configuration, but the quality and quantity of comments may vary. I also usually incorporate my Emacs-related blog posts back into this config.
 
 So, you might extract something of value from here if you're an avid Emacs user.
+
+* UI
+** Better defaults
+
+#+begin_src emacs-lisp
+;; Customize user interface.
+(when (display-graphic-p)
+  (tool-bar-mode 0)
+  (scroll-bar-mode 0))
+(setq inhibit-startup-screen t)
+(column-number-mode)
+#+end_src
+
+**

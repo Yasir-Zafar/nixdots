@@ -5,7 +5,7 @@
     ".config/mpd/mpd.conf".source = mpd/mpd.conf;
 
     ".config/nvim/init.lua".source = nvim/init.lua;
-    #".config/nvim/lazy-lock.json".source = nvim/lazy-lock.json;
+    ".config/nvim/stylua.toml".source = nvim/stylua.toml;
     ".config/nvim/lua" = {
 
       source = nvim/lua;
