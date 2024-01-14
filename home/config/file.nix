@@ -4,14 +4,14 @@
 
     ".config/mpd/mpd.conf".source = mpd/mpd.conf;
 
-    ".config/nvim/init.lua".source = nvim/init.lua;
-    ".config/nvim/stylua.toml".source = nvim/stylua.toml;
-    ".config/nvim/lua" = {
-
-      source = nvim/lua;
-      recursive = true;
-
-    };
+    # ".config/nvim/init.lua".source = nvim/init.lua;
+    # ".config/nvim/stylua.toml".source = nvim/stylua.toml;
+    # ".config/nvim/lua" = {
+    #
+    #   source = nvim/lua;
+    #   recursive = true;
+    #
+    # };
 
     ".config/qutebrowser/config.py".source = qutebrowser/config.py;
 
