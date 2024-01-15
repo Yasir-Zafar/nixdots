@@ -16,6 +16,7 @@
     ./foot.nix
     ./ncmpcpp.nix
     ./eww.nix
+    ./emacs.nix
 
   ];
 

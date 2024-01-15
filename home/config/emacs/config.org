@@ -30,16 +30,3 @@ I find that approach helpful for maintaining the configuration, but the quality 
 
 So, you might extract something of value from here if you're an avid Emacs user.
 
-* UI
-** Better defaults
-
-#+begin_src emacs-lisp
-;; Customize user interface.
-(when (display-graphic-p)
-  (tool-bar-mode 0)
-  (scroll-bar-mode 0))
-(setq inhibit-startup-screen t)
-(column-number-mode)
-#+end_src
-
-**
