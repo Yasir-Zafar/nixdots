@@ -30,3 +30,1410 @@ I find that approach helpful for maintaining the configuration, but the quality 
 
 So, you might extract something of value from here if you're an avid Emacs user.
 
+* Init
+Setting up the environment, performance tuning and a few basic settings.
+
+First things first, lexical binding.
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t -*-
+#+end_src
+** Package
+*** elpaca
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
+  (setq package-enable-at-startup nil)
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq elpaca-core-date '(20240116)) ;; set to the build date of Emacs
+  (defvar elpaca-installer-version 0.6)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+				:ref nil
+				:files (:defaults "elpaca-test.el" (:exclude "extensions"))
+				:build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+	 (build (expand-file-name "elpaca/" elpaca-builds-directory))
+	 (order (cdr elpaca-order))
+	 (default-directory repo))
+    (add-to-list 'load-path (if (file-exists-p build) build repo))
+    (unless (file-exists-p repo)
+      (make-directory repo t)
+      (when (< emacs-major-version 28) (require 'subr-x))
+      (condition-case-unless-debug err
+	  (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+		   ((zerop (call-process "git" nil buffer t "clone"
+					 (plist-get order :repo) repo)))
+		   ((zerop (call-process "git" nil buffer t "checkout"
+					 (or (plist-get order :ref) "--"))))
+		   (emacs (concat invocation-directory invocation-name))
+		   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+					 "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+		   ((require 'elpaca))
+		   ((elpaca-generate-autoloads "elpaca" repo)))
+	      (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+	    (error "%s" (with-current-buffer buffer (buffer-string))))
+	((error) (warn "%s" err) (delete-directory repo 'recursive))))
+    (unless (require 'elpaca-autoloads nil t)
+      (require 'elpaca)
+      (elpaca-generate-autoloads "elpaca" repo)
+      (load "./elpaca-autoloads")))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
+#+end_src
+*** use-package
+A macro to simplify package specification & configuration. Integrates with straight.el.
+Set ~use-package-verbose~ to ~t~ to print out loading times for individual packages.
+References:
+- [[https://github.com/jwiegley/use-package][use-package repo]]
+#+begin_src emacs-lisp
+  ;; Install use-package support
+  (elpaca elpaca-use-package
+  ;; Enable :elpaca use-package keyword.
+  (elpaca-use-package-mode))
+
+  ;; Block until current queue processed.
+  (elpaca-wait)
+#+end_src
+
+*** Measure startup speed
+A small function to print out the loading time and number of GCs during the loading. Can be useful as a point of data for optimizing Emacs startup time.
+#+begin_src emacs-lisp
+(setq my/emacs-started nil)
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "*** Emacs loaded in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)
+            (setq my/emacs-started t)))
+#+end_src
+
+*** Garbage collection
+Just setting ~gc-cons-treshold~ to a larger value.
+
+#+begin_src emacs-lisp
+(setq gc-cons-threshold 80000000)
+(setq read-process-output-max (* 1024 1024))
+#+end_src
+
+*** Native Compilation
+I’ve started experimenting with the native-comp branch of Emacs for increased performance. Here are some settings to tweak the behavior slightly:
+
+#+begin_src emacs-lisp
+(setq comp-speed 2)
+(native-compile-async (expand-file-name "~/.emacs.d/init.el" user-emacs-directory))
+
+(setq warning-minimum-level :error)
+
+;; Silence compiler warnings as they can be pretty disruptive
+(setq native-comp-async-report-warnings-errors nil)
+
+;; Set the right directory to store the native comp cache
+(add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
+#+end_src
+** Custom.el
+#+begin_src emacs-lisp
+  ;; Write customizations to a separate file instead of this file.
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (load custom-file t)
+#+end_src
+
+** Littering
+By default Emacs and its packages create a lot files in =.emacs.d= and in other places. [[https://github.com/emacscollective/no-littering][no-littering]] is a collective effort to redirect all of that to two folders in =user-emacs-directory=.
+
+#+begin_src emacs-lisp
+  (use-package no-littering
+    :elpaca t)
+
+  ;; Prevent undo tree files from polluting your git repo
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+
+  ;; hide saves
+  (setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
+
+  ;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
+  (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
+        url-history-file (expand-file-name "url/history" user-emacs-directory))
+  ;; Keep customization settings in a temporary file (thanks Ambrevar!)
+  (setq custom-file
+        (if (boundp 'server-socket-dir)
+            (expand-file-name "custom.el" server-socket-dir)
+          (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+  (load custom-file t)
+#+end_src
+* General
+** general.el
+general.el provides a convenient interface to manage Emacs keybindings.
+References:
+- [[https://github.com/noctuid/general.el][general.el repo]]
+#+begin_src emacs-lisp
+  (use-package general
+    :demand t
+    :elpaca t)
+  (elpaca-wait)
+#+end_src
+
+** Buffers
+#+begin_src emacs-lisp
+  ;;; Buffers
+  ;; Revert Dired and other buffers
+  (customize-set-variable 'global-auto-revert-non-file-buffers t)
+
+  ;; Revert buffers when the underlying file has changed
+  (global-auto-revert-mode 1)
+
+  ;; Make dired do something intelligent when two directories are shown
+  ;; in separate dired buffers.  Makes copying or moving files between
+  ;; directories easier.  The value `t' means to guess the default
+  ;; target directory.
+  (customize-set-variable 'dired-dwim-target t)
+
+  ;; automatically update dired buffers on revisiting their directory
+  (customize-set-variable 'dired-auto-revert-buffer t)
+
+  ;; scroll eshell buffer to the bottom on input, but only in "this"
+  ;; window.
+  (customize-set-variable 'eshell-scroll-to-bottom-on-input 'this)
+
+  ;; pop up dedicated buffers in a different window.
+  (customize-set-variable 'switch-to-buffer-in-dedicated-window 'pop)
+  ;; treat manual buffer switching (C-x b for example) the same as
+  ;; programmatic buffer switching.
+  (customize-set-variable 'switch-to-buffer-obey-display-actions t)
+
+  ;; prefer the more full-featured built-in ibuffer for managing
+  ;; buffers.
+  (keymap-global-set "<remap> <list-buffers>" #'ibuffer-list-buffers)
+  ;; turn off forward and backward movement cycling
+  (customize-set-variable 'ibuffer-movement-cycle nil)
+  ;; the number of hours before a buffer is considered "old" by
+  ;; ibuffer.
+  (customize-set-variable 'ibuffer-old-time 24)
+#+end_src
+
+** Completion
+#+begin_src emacs-lisp
+  ;;; Completion settings
+
+  ;; Turn on the best completion-mode available:
+  ;; - in version 28 or later, turn on `fido-vertical-mode'
+  ;; - in earlier versions, if the additional package `icomplete-vertical' is
+  ;;   present, turn it on.
+  ;; - otherwise turn on `icomplete-mode'
+  ;;
+  ;; Note: If you also use `crafted-completion-config' and have `vertico'
+  ;;       installed, all of these modes will be turned off in favour of
+  ;;       `vertico'.
+  (if (version< emacs-version "28")
+      (if (locate-library "icomplete-vertical")
+          (icomplete-vertical-mode 1)
+        (icomplete-mode 1))
+    (fido-vertical-mode 1))
+
+  ;; No matter which completion mode is used:
+  (customize-set-variable 'tab-always-indent 'complete)
+  (customize-set-variable 'completion-cycle-threshold 3)
+  (customize-set-variable 'completion-category-overrides
+                          '((file (styles . (partial-completion)))))
+  (customize-set-variable 'completions-detailed t)
+
+  ;; use completion system instead of popup window
+  (customize-set-variable 'xref-show-definitions-function
+                          #'xref-show-definitions-completing-read)
+#+end_src
+
+** Sessions
+#+begin_src emacs-lisp
+;;; Persistence between sessions
+
+;; Turn on recentf mode
+(add-hook 'after-init-hook #'recentf-mode)
+
+;; Enable savehist-mode for command history
+(savehist-mode 1)
+
+;; save the bookmarks file every time a bookmark is made or deleted
+;; rather than waiting for Emacs to be killed.  Useful especially when
+;; Emacs is a long running process.
+(customize-set-variable 'bookmark-save-flag 1)
+#+end_src
+
+** Windows
+#+begin_src emacs-lisp
+  ;;; Window management
+
+  (defgroup crafted-windows '()
+    "Window related configuration for Crafted Emacs."
+    :tag "Crafted Windows"
+    :group 'crafted)
+
+  (defcustom crafted-windows-prefix-key "C-c w"
+    "Configure the prefix key for window movement bindings.
+
+  Movement commands provided by `windmove' package, `winner-mode'
+  also enables undo functionality if the window layout changes."
+    :group 'crafted-windows
+    :type 'string)
+
+  ;; Turning on `winner-mode' provides an "undo" function for resetting
+  ;; your window layout.  We bind this to `C-c w u' for winner-undo and
+  ;; `C-c w r' for winner-redo (see below).
+  (winner-mode 1)
+
+  (define-prefix-command 'crafted-windows-key-map)
+
+  (keymap-set 'crafted-windows-key-map "u" 'winner-undo)
+  (keymap-set 'crafted-windows-key-map "r" 'winner-redo)
+  (keymap-set 'crafted-windows-key-map "n" 'windmove-down)
+  (keymap-set 'crafted-windows-key-map "p" 'windmove-up)
+  (keymap-set 'crafted-windows-key-map "b" 'windmove-left)
+  (keymap-set 'crafted-windows-key-map "f" 'windmove-right)
+
+  (keymap-global-set crafted-windows-prefix-key 'crafted-windows-key-map)
+
+  ;; Make scrolling less stuttered
+  (setq auto-window-vscroll nil)
+  (customize-set-variable 'fast-but-imprecise-scrolling t)
+  (customize-set-variable 'scroll-conservatively 101)
+  (customize-set-variable 'scroll-margin 0)
+  (customize-set-variable 'scroll-preserve-screen-position t)
+
+  ;; open man pages in their own window, and switch to that window to
+  ;; facilitate reading and closing the man page.
+  (customize-set-variable 'Man-notify-method 'aggressive)
+
+  ;; keep the Ediff control panel in the same frame
+  (customize-set-variable 'ediff-window-setup-function
+                          'ediff-setup-windows-plain)
+
+  ;; Window configuration for special windows.
+  (add-to-list 'display-buffer-alist
+               '("\\*Help\\*"
+                 (display-buffer-reuse-window display-buffer-pop-up-window)
+                 (inhibit-same-window . t)))
+
+  (add-to-list 'display-buffer-alist
+               '("\\*Completions\\*"
+                 (display-buffer-reuse-window display-buffer-pop-up-window)
+                 (inhibit-same-window . t)
+                 (window-height . 10)))
+#+end_src
+** My keybindings
+**** My leader
+Using the =SPC= key as a leader key, like in Doom Emacs or Spacemacs.
+
+#+begin_src emacs-lisp
+  (general-create-definer my-leader-def
+    :keymaps 'override
+    :prefix "C-c"
+    :states '(normal motion emacs))
+#+end_src
+
+**** up-list
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-M-o") 'up-list)
+(global-set-key (kbd "C-o") 'split-line)
+#+end_src
+
+**** Move 5 lines
+#+begin_src emacs-lisp
+;; Move more quickly
+(global-set-key (kbd "C-S-n")
+            (lambda ()
+              (interactive)
+              (ignore-errors (next-line 5))))
+
+(global-set-key (kbd "C-S-p")
+             (lambda ()
+              (interactive)
+              (ignore-errors (previous-line 5))))
+#+end_src
+**** Expanded command
+Replacement for M-x
+#+begin_src emacs-lisp
+(my-leader-def
+  "C-c" '(execute-extended-command :wk "M-x"))
+#+end_src
+
+**** Tab history
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "M-[") 'tab-bar-history-back)
+(global-set-key (kbd "M-]") 'tab-bar-history-forward)
+#+end_src
+
+**** Switch windows
+
+#+begin_src emacs-lisp
+  (general-define-key
+   "M-o" 'other-window)
+  (windmove-default-keybindings)
+#+end_src
+
+**** Buffer management
+
+#+begin_src emacs-lisp
+(my-leader-def
+  :infix "b"
+  "" '(:which-key "buffers")
+  "s" '((lambda () (interactive) (switch-to-buffer (persp-scratch-buffer)))
+        :which-key "*scratch*")
+  "m" '((lambda () (interactive) (persp-switch-to-buffer "*Messages*"))
+        :which-key "*Messages*")
+  "l" 'next-buffer
+  "h" 'previous-buffer
+  "k" 'kill-buffer
+  "b" 'persp-ivy-switch-buffer
+  "r" 'revert-buffer
+  "u" 'ibuffer)
+#+end_src
+
+**** Zoom UI
+#+begin_src emacs-lisp
+(defun my/zoom-in ()
+  "Increase font size by 10 points"
+  (interactive)
+  (set-face-attribute 'default nil
+                      :height
+                      (+ (face-attribute 'default :height) 10)))
+
+(defun my/zoom-out ()
+  "Decrease font size by 10 points"
+  (interactive)
+  (set-face-attribute 'default nil
+                      :height
+                      (- (face-attribute 'default :height) 10)))
+
+;; change font size, interactively
+(global-set-key (kbd "C-+") 'my/zoom-in)
+(global-set-key (kbd "C-=") 'my/zoom-out)
+#+end_src
+
+** Misc
+#+begin_src emacs-lisp
+  ;;; Miscellaneous
+
+  ;; Custom command.
+  (defun show-current-time ()
+    "Show current time."
+    (interactive)
+    (message (current-time-string)))
+
+  ;; Custom key sequences.
+  (global-set-key (kbd "C-c t") 'show-current-time)
+  (global-set-key (kbd "C-c d") 'delete-trailing-whitespace)
+
+  ;; Load source (.el) or the compiled (.elc or .eln) file whichever is
+  ;; newest
+  (customize-set-variable 'load-prefer-newer t)
+
+  ;; Make shebang (#!) file executable when saved
+  (add-hook 'after-save-hook
+            #'executable-make-buffer-file-executable-if-script-p)
+
+  ;; Turn on repeat mode to allow certain keys to repeat on the last
+  ;; keystroke. For example, C-x [ to page backward, after pressing this
+  ;; keystroke once, pressing repeated [ keys will continue paging
+  ;; backward. `repeat-mode' is exited with the normal C-g, by movement
+  ;; keys, typing, or pressing ESC three times.
+  (unless (version< emacs-version "28")
+    (repeat-mode 1))
+#+end_src
+
+* Completion
+** which-key
+A package that displays the available keybindings in a popup. The package is pretty useful, as Emacs seems to have more keybindings than I can remember at any given point.
+References:
+- [[https://github.com/justbur/emacs-which-key][which-key repo]]
+#+begin_src emacs-lisp
+  (use-package which-key
+    :elpaca t
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 0.3)
+    (setq which-key-popup-type 'frame)
+    (which-key-setup-side-window-bottom)
+    (set-face-attribute 'which-key-local-map-description-face nil
+                        :weight 'bold))
+#+end_src
+** Vertico
+#+begin_src emacs-lisp
+  ;;; Vertico
+  (use-package vertico
+    :elpaca t
+    :init
+      (vertico-mode 1)
+    :custom
+      (vertico-scroll-margin 0)
+      (vertico-count 15)
+      (vertico-resize t)
+      (vertico-cycle t)
+    :config
+      (fido-mode -1)
+      (fido-vertical-mode -1)
+      (icomplete-mode -1)
+      (icomplete-vertical-mode -1)
+      (advice-add #'vertico--format-candidate :around
+					    (lambda (orig cand prefix suffix index _start)
+					      (setq cand (funcall orig cand prefix suffix index _start))
+					      (concat
+					       (if (= vertico--index index)
+						   (propertize "» " 'face 'vertico-current)
+						 "  ")
+					       cand))))
+#+end_src
+
+**** Configure emacs
+#+begin_src emacs-lisp
+    (use-package emacs
+      :init
+      ;; Add prompt indicator to `completing-read-multiple'.
+      ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+      (defun crm-indicator (args)
+        (cons (format "[CRM%s] %s"
+                      (replace-regexp-in-string
+                       "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                       crm-separator)
+                      (car args))
+              (cdr args)))
+      (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+      ;; Do not allow the cursor in the minibuffer prompt
+      (setq minibuffer-prompt-properties
+            '(read-only t cursor-intangible t face minibuffer-prompt))
+      (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+      ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+      ;; Vertico commands are hidden in normal buffers.
+      (setq read-extended-command-predicate
+            #'command-completion-default-include-p)
+
+      ;; Enable recursive minibuffers
+      (setq enable-recursive-minibuffers t))
+#+end_src
+
+**** Fix org-refile
+#+begin_src emacs-lisp
+;; Alternative 1: Use the basic completion style
+(setq org-refile-use-outline-path 'file
+      org-outline-path-complete-in-steps t)
+
+(advice-add #'org-olpath-completing-read :around #'org-enforce-basic-completion)
+
+(defun org-enforce-basic-completion (&rest args)
+  (minibuffer-with-setup-hook
+      (:append
+       (lambda ()
+         (let ((map (make-sparse-keymap (current-local-map))))
+           (define-key map [tab] #'minibuffer-complete)
+           (use-local-map map))
+         (setq-local completion-styles (cons 'basic completion-styles)
+                     vertico-preselect 'prompt)))
+    (apply args)))
+#+end_src
+
+**** Addons
+***** [[https://github.com/minad/vertico/blob/main/extensions/vertico-directory.el][Vertico-driectory]]
+Commands for Ido-like directory navigation.
+#+begin_src emacs-lisp
+  (use-package  vertico-directory
+    :after vertico
+    :ensure nil
+    ;; More convenient directory navigation commands
+    :bind (:map vertico-map
+		("RET" . vertico-directory-enter)
+		("M-DEL" . vertico-directory-delete-char)
+		("DEL" . vertico-directory-delete-word))
+    ;; Tidy shadowed file names
+    :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+#+end_src
+
+** Marginalia
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :elpaca t
+    :bind (:map minibuffer-local-map
+                ("M-A" . marginalia-cycle))
+    :custom
+      (marginalia-max-relative-age 0)
+      (marginalia-align 'right)
+      (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+    :init
+      (marginalia-mode 1))
+#+end_src
+
+*** Nerd-icons
+#+begin_src emacs-lisp
+  (use-package nerd-icons-completion
+    :elpaca t
+    :after marginalia
+    :config
+    (nerd-icons-completion-mode)
+    (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+#+end_src
+** Consult
+#+begin_src emacs-lisp
+  (defun yz/get-project-root ()
+    (when (fboundp 'projectile-project-root)
+      (projectile-project-root)))
+
+  (use-package consult
+    :elpaca t
+    :demand t
+    :bind (("C-s" . consult-line)
+           ("C-M-l" . consult-imenu)
+           ("C-M-j" . persp-switch-to-buffer*)
+           :map minibuffer-local-map
+           ("C-r" . consult-history))
+    :custom
+      (consult-project-root-function #'yz/get-project-root)
+      (completion-in-region-function #'consult-completion-in-region))
+#+end_src
+
+**** consult-dir
+#+begin_src emacs-lisp
+  (use-package consult-dir
+    :elpaca t
+    :bind (("C-x C-d" . consult-dir)
+           :map vertico-map
+           ("C-x C-d" . consult-dir)
+           ("C-x C-j" . consult-dir-jump-file))
+    :custom
+    (consult-dir-project-list-function nil))
+#+end_src
+
+** Orderless
+#+begin_src emacs-lisp
+  (use-package orderless
+    :elpaca t
+    :config
+    (customize-set-variable 'completion-styles '(orderless partial-completion file basic))
+    (customize-set-variable 'completion-category-defaults nil)
+    (customize-set-variable 'completion-category-overrides nil))
+    #+end_src
+
+** Embark
+#+begin_src emacs-lisp
+(use-package embark
+  :elpaca t
+  :bind (("C-." . embark-act)         ;; pick some comfortable binding
+         ("C-M-." . embark-export)
+         ("C-;" . embark-dwim)        ;; good alternative: M-.
+         ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+  :config
+    (keymap-global-set "<remap> <describe-bindings>" #'embark-bindings)
+    (keymap-global-set "C-." 'embark-act)
+  :init
+    (setq prefix-help-command #'embark-prefix-help-command)
+    (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+
+    ;; Show Embark actions via which-key
+    (setq embark-action-indicator
+      (lambda (map)
+        (which-key--show-keymap "Embark" map nil nil 'no-paging)
+        #'which-key--hide-popup-ignore-command)
+      embark-become-indicator embark-action-indicator))
+
+      (use-package embark-consult
+    :elpaca t
+    :after (embark consult)
+    :config
+    (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
+#+end_src
+
+** Corfu
+#+begin_src emacs-lisp
+  ;;; Corfu
+  (use-package corfu
+  :elpaca t
+  :config
+    ;; Setup corfu for popup-like completion
+    (setq corfu-cycle t         ; Allows cycling through candidates
+          corfu-auto t          ; Enable auto-completion
+          corfu-auto-prefix 2)  ; Complete with less prefix keys
+  :init
+    (global-corfu-mode 1))
+
+  (use-package corfu-popupinfo
+    :elpaca nil
+    :config
+      (corfu-popupinfo-mode 1)
+      (eldoc-add-command #'corfu-insert)
+      :bind (:map corfu-map
+                  ("M-p" . corfu-popupinfo-scroll-down)
+                  ("M-n" . corfu-popupinfo-scroll-up)
+                  ("M-d" . corfu-popupinfo-toggle)))
+#+end_src
+
+** Cape
+#+begin_src emacs-lisp
+  (use-package cape
+  :elpaca t
+  :commands (cape-file cape-dabbrev)
+  :config
+  ;; Add useful defaults completion sources from cape
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+
+  ;; Silence the pcomplete capf, no errors or messages!
+  ;; Important for corfu
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+
+  ;; Ensure that pcomplete does not write to the buffer
+  ;; and behaves as a pure `completion-at-point-function'.
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+#+end_src
+* Editing
+** Defaults
+#+begin_src emacs-lisp
+  ;;; Editing
+
+  ;; Typed text replaces the selection if the selection is active,
+  ;; pressing delete or backspace deletes the selection.
+  (delete-selection-mode)
+
+  ;; Use spaces instead of tabs
+  (setq-default indent-tabs-mode nil)
+
+  ;; Do not save duplicates in kill-ring
+  (customize-set-variable 'kill-do-not-save-duplicates t)
+
+  ;; Better support for files with long lines
+  (setq-default bidi-paragraph-direction 'left-to-right)
+  (setq-default bidi-inhibit-bpa t)
+  (global-so-long-mode 1)
+
+  ;; define a key to define the word at point.
+  (keymap-set global-map "M-#" #'dictionary-lookup-definition)
+
+  ;; Show dictionary definition on the left
+  (add-to-list 'display-buffer-alist
+               '("^\\*Dictionary\\*"
+                 (display-buffer-in-side-window)
+                 (side . left)
+                 (window-width . 70)))
+
+  ;; turn on spell checking, if available.
+  (use-package ispell
+    :hook
+      (text-mode-hook . flyspell-mode)
+      (prog-mode-hook . flyspell-prog-mode))
+#+end_src
+
+** Spacing
+#+begin_src emacs-lisp
+  ;; Add a newline automatically at the end of a file while saving.
+  (setq-default require-final-newline t)
+
+  ;; Consider a period followed by a single space to be end of sentence.
+  (setq sentence-end-double-space nil)
+
+  ;; Use spaces, not tabs, for indentation.
+  (setq-default indent-tabs-mode nil)
+
+  ;; Display the distance between two tab stops as 4 characters wide.
+  (setq-default tab-width 4)
+
+  ;; Indentation setting for various languages.
+  (setq c-basic-offset 4)
+  (setq js-indent-level 2)
+  (setq css-indent-offset 2)
+
+  (use-package aggressive-indent
+  :defer t
+  :elpaca t
+  :hook (prog-mode . aggressive-indent-mode)
+          (org-mode . aggressive-indent-mode))
+#+end_src
+
+** Parens
+#+begin_src emacs-lisp
+  ;; Highlight matching pairs of parentheses.
+  (setq show-paren-delay 0)
+  (show-paren-mode)
+
+  (electric-pair-mode 1)
+
+  (use-package paredit
+    :elpaca t
+    :hook ((emacs-lisp-mode
+            lisp-interaction-mode
+            lisp-mode) . enable-paredit-mode))
+
+  (use-package rainbow-delimiters
+    :elpaca t
+    :hook ((prog-mode
+            org-mode) . rainbow-delimiters-mode))
+#+end_src
+
+** Line Numbers
+#+begin_src emacs-lisp
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode) ;; Line numbers for all programming modes 
+  (dolist (mode '(                     ;; Disable line numbers for the specified modes
+          org-mode-hook
+          pdf-view-mode-hook
+          term-mode-hook
+          eshell-mode-hook
+          vterm-mode-hook
+          treemacs-mode-hook
+          imenu-list-minor-mode-hook
+          imenu-list-major-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode -1))))
+#+end_src
+
+** Speedbar
+#+begin_src emacs-lisp
+  (use-package speedbar
+    :custom
+      (speedbar-update-flag t)
+      (speedbar-use-images nil)
+      (speedbar-frame-parameters
+       '((name . "speedbar")
+         (title . "speedbar")
+         (minibuffer . nil)
+         (border-width . 2)
+         (menu-bar-lines . 0)
+         (tool-bar-lines . 0)
+         (unsplittable . t)
+         (left-fringe . 10)))
+    :config
+      (defun crafted-speedbar-switch-to-quick-buffers ()
+        "Temporarily switch to quick-buffers expansion list.
+         Useful for quickly switching to an open buffer."
+        (interactive)
+        (speedbar-change-initial-expansion-list "quick buffers"))
+       ;;; File Extensions
+      (speedbar-add-supported-extension
+       (list
+  ;;;; General Lisp Languages
+        ".cl"
+        ".li?sp"
+  ;;;; Lua/Fennel (Lisp that transpiles to lua)
+        ".lua"
+        ".fnl"
+        ".fennel"
+  ;;;; JVM languages (Java, Kotlin, Clojure)
+        ".kt"
+        ".mvn"
+        ".gradle"
+        ".properties"
+        ".cljs?"
+  ;;;; shellscript
+        ".sh"
+        ".bash"
+  ;;;; Web Languages and Markup/Styling
+        ".php"
+        ".ts"
+        ".html?"
+        ".css"
+        ".less"
+        ".scss"
+        ".sass"
+  ;;;; Makefile
+        "makefile"
+        "MAKEFILE"
+        "Makefile"
+  ;;;; Data formats
+        ".json"
+        ".yaml"
+        ".toml"
+  ;;;; Notes and Markup
+        ".md"
+        ".markdown"
+        ".org"
+        ".txt"
+        "README"))
+    :bind
+    (:map speedbar-mode-map
+          ("b" . crafted-speedbar-switch-to-quick-buffers)))
+#+end_src
+* Writing
+** Whitespace
+#+begin_src emacs-lisp
+;;; Whitespace
+(defun crafted-writing-configure-whitespace (use-tabs &optional use-globally &rest enabled-modes)
+  "Helper function to configure `whitespace' mode.
+
+Enable using TAB characters if USE-TABS is non-nil.  If
+USE-GLOBALLY is non-nil, turn on `global-whitespace-mode'.  If
+ENABLED-MODES is non-nil, it will be a list of modes to activate
+whitespace mode using hooks.  The hooks will be the name of the
+mode in the list with `-hook' appended.  If USE-GLOBALLY is
+non-nil, ENABLED-MODES is ignored.
+
+Configuring whitespace mode is not buffer local.  So calling this
+function twice with different settings will not do what you
+think.  For example, if you wanted to use spaces instead of tabs
+globally except for in Makefiles, doing the following won't work:
+
+;; turns on global-whitespace-mode to use spaces instead of tabs
+(crafted-writing-configure-whitespace nil t)
+
+;; overwrites the above to turn to use tabs instead of spaces,
+;; does not turn off global-whitespace-mode, adds a hook to
+;; makefile-mode-hook
+(crafted-writing-configure-whitespace t nil 'makefile-mode)
+
+Instead, use a configuration like this:
+;; turns on global-whitespace-mode to use spaces instead of tabs
+(crafted-writing-configure-whitespace nil t)
+
+;; turn on the buffer-local mode for using tabs instead of spaces.
+(add-hook 'makefile-mode-hook #'indent-tabs-mode)
+
+For more information on `indent-tabs-mode', See the info
+node `(emacs)Just Spaces'
+
+Example usage:
+
+;; Configuring whitespace mode does not turn on whitespace mode
+;; since we don't know which modes to turn it on for.
+;; You will need to do that in your configuration by adding
+;; whitespace mode to the appropriate mode hooks.
+(crafted-writing-configure-whitespace nil)
+
+;; Configure whitespace mode, but turn it on globally.
+(crafted-writing-configure-whitespace nil t)
+
+;; Configure whitespace mode and turn it on only for prog-mode
+;; and derived modes.
+(crafted-writing-configure-whitespace nil nil 'prog-mode)"
+  (if use-tabs
+      (customize-set-variable 'whitespace-style
+                              '(face empty trailing indentation::tab
+                                     space-after-tab::tab
+                                     space-before-tab::tab))
+    ;; use spaces instead of tabs
+    (customize-set-variable 'whitespace-style
+                            '(face empty trailing tab-mark
+                                   indentation::space)))
+
+  (if use-globally
+      (global-whitespace-mode 1)
+    (when enabled-modes
+      (dolist (mode enabled-modes)
+        (add-hook (intern (format "%s-hook" mode)) #'whitespace-mode))))
+
+  ;; cleanup whitespace
+  (customize-set-variable 'whitespace-action '(cleanup auto-cleanup)))
+#+end_src
+
+** Markdown
+#+begin_src emacs-lisp
+  ;;; Markdown
+  (when (fboundp 'markdown-mode)
+    ;; because the markdown-command variable may not be loaded (yet),
+    ;; check manually for the other markdown processors.  If it is
+    ;; loaded, the others are superfluous but `or' fails fast, so they
+    ;; are not checked if `markdown-command' is set and the command is
+    ;; indeed found.
+    (unless (or (and (boundp 'markdown-command)
+                     (executable-find markdown-command))
+                (executable-find "markdown")
+                (executable-find "pandoc"))
+      (message "No markdown processor found, preview may not possible."))
+
+    (with-eval-after-load 'markdown-mode
+      (customize-set-variable 'markdown-enable-math t)
+      (customize-set-variable 'markdown-enable-html t)
+      (add-hook 'markdown-mode-hook #'conditionally-turn-on-pandoc)))
+#+end_src
+
+** PDF
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :elpaca t
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :init
+  (defun crafted-writing-load-pdf-tools ()
+    "Attempts to require pdf-tools, but for attaching to hooks."
+    (require 'pdf-tools nil :noerror))
+  (add-hook 'doc-view-mode-hook #'crafted-writing-load-pdf-tools)
+  :config
+  (setq-default pdf-view-display-size 'fit-width))
+#+end_src
+
+** Org
+#+begin_src emacs-lisp
+;; Disable auto-pairing of "<" in org-mode with electric-pair-mode
+(defun crafted-org-enhance-electric-pair-inhibit-predicate ()
+  "Disable auto-pairing of \"<\" in `org-mode' when using `electric-pair-mode'."
+  (when (and electric-pair-mode (eql major-mode #'org-mode))
+    (setq-local electric-pair-inhibit-predicate
+                `(lambda (c)
+                   (if (char-equal c ?<)
+                       t
+                     (,electric-pair-inhibit-predicate c))))))
+
+;; Add hook to both electric-pair-mode-hook and org-mode-hook
+;; This ensures org-mode buffers don't behave weirdly,
+;; no matter when electric-pair-mode is activated.
+(add-hook 'electric-pair-mode-hook #'crafted-org-enhance-electric-pair-inhibit-predicate)
+(add-hook 'org-mode-hook #'crafted-org-enhance-electric-pair-inhibit-predicate)
+
+(use-package org
+  :defer t
+  :elpaca nil
+  :hook
+  (org-mode . (lambda ()
+                (org-indent-mode)
+                (visual-line-mode)))
+  :bind
+  (:map org-mode-map
+        ("C-c l" . org-store-link)
+        ("C-c a" . org-agenda)
+        ("C-c c" . org-capture)
+        ("C-c <up>" . org-priority-up)
+        ("C-c <down>" . org-priority-down))
+  :config
+  (setq org-agenda-files '("~/org")
+        org-log-done 'time
+        org-return-follows-link t
+        org-mouse-1-follows-link t
+        org-link-descriptive t
+        org-hide-emphasis-markers t
+        org-startup-indented t
+        org-src-fontify-natively t
+        org-src-tab-acts-natively nil
+        org-log-done 'time))
+#+end_src
+
+*** Org-Appear
+#+begin_src emacs-lisp
+  (use-package org-appear
+    :elpaca t
+    :hook (org-mode . org-appear-mode))
+#+end_src
+
+* Programming
+** Treesitter
+#+begin_src emacs-lisp
+(use-package treesit-auto
+:elpaca t
+:custom
+(treesit-auto-install 'prompt)
+:config
+(treesit-auto-add-to-auto-mode-alist 'all)
+(global-treesit-auto-mode))
+#+end_src
+
+*** General additional config
+Have to put this before tree-sitter because I need =my/set-smartparens-indent= there.
+
+Make smartparens behave the way I like for C-like languages.
+#+begin_src emacs-lisp
+(defun my/set-smartparens-indent (mode)
+  (sp-local-pair mode "{" nil :post-handlers '(("|| " "SPC") ("||\n[i]" "RET")))
+  (sp-local-pair mode "[" nil :post-handlers '(("|| " "SPC") ("||\n[i]" "RET")))
+  (sp-local-pair mode "(" nil :post-handlers '(("|| " "SPC") ("||\n[i]" "RET"))))
+#+end_src
+
+** Project
+*** Buffer
+#+begin_src emacs-lisp
+  (use-package ibuffer-project
+    :elpaca t)
+#+end_src
+
+** LSP
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+  :elpaca t
+  :commands (lsp lsp-deferred)
+  :hook ((python-mode . lsp)
+         (java-mode . lsp)
+         (typescript-mode . lsp)
+         (c-mode . lsp)
+         (c++-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration)
+         (lsp-completion-mode . my/lsp-mode-setup-completion)
+         ;; Add more modes as needed
+         )
+  :custom
+  (lsp-enable-file-watchers nil)  ; Disable file watchers for better performance
+  (lsp-prefer-flymake nil)        ; Use lsp-ui and/or flycheck instead of flymake
+  (lsp-log-io nil)                ; Disable logging for better performance
+  (lsp-completion-provider :none) ;; we use Corfu!
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-headerline-breadcrumb-segments '(project file symbols))
+  (lsp-disabled-clients '((python-mode . pyls)))
+  (lsp-idle-delay 0.1)
+  :init
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+    '(orderless)))) ;; Configure orderless
+
+    (use-package lsp-ui
+    :elpaca t
+    :hook (lsp-mode . lsp-ui-mode)
+    :after lsp
+    :config
+    (setq lsp-ui-sideline-enable t)
+    (setq lsp-ui-doc-position 'bottom)
+    (setq lsp-completion-show-detail nil)
+    (setq lsp-completion-show-kind nil)
+    (setq lsp-completion-show-label-description nil)
+    (setq lsp-completion-enable-additional-text-edit nil)
+    (lsp-ui-doc-show))
+    #+end_src
+    
+*** Keybinds
+#+begin_src emacs-lisp
+(my-leader-def
+  :infix "l"
+  "" '(:wk "lsp")
+  "d" 'xref-find-definitions
+  "r" #'xref-find-references
+  "n" #'lsp-ui-find-next-reference
+  "p" #'lsp-ui-find-prev-reference
+  "s" #'counsel-imenu
+  "e" #'lsp-ui-flycheck-list
+  "S" #'lsp-ui-sideline-mode
+  "X" #'lsp-execute-code-action)
+#+end_src
+** Flycheck
+A syntax checking extension for Emacs. Integrates with LSP-mode, but can also use various standalone checkers.
+References:
+- [[https://www.flycheck.org/en/latest/][Flycheck homepage]]
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :defer t
+    :elpaca t
+    :hook (lsp-mode . flycheck-mode))
+#+end_src
+** Languages
+*** C/C++
+#+begin_src emacs-lisp
+  (use-package clang-format
+  :elpaca t
+  :config
+  (setq clang-format-style-option "file"))
+#+end_src
+*** Rust
+#+begin_src emacs-lisp
+(use-package rustic
+:elpaca t
+:defer t
+:config
+(setq rustic-format-on-save t)
+(setq rustic-analyzer-command '("~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rust-analyzer"))
+:custom
+(rustic-analyzer-command '("rustup" "run" "nightly" "rust-analyzer"))
+:general
+(:keymaps 'rustic-mode-map
+:states '(normal visual)
+:prefix "SPC"
+:non-normal-prefix "M-SPC"
+"c" 'rustic-compile
+"r" 'rustic-run
+"b" 'rustic-cargo-build
+"t" 'rustic-test))
+
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+#+end_src
+
+** Javascript
+#+begin_src emacs-lisp
+  (use-package typescript-mode
+  :elpaca t
+  :defer t
+  :mode "\\.ts\\'"
+  :config
+  (setq typescript-indent-level 2))
+
+  (defun dw/set-js-indentation ()
+    (setq js-indent-level 2)
+    (setq evil-shift-width js-indent-level)
+    (setq-default tab-width 2))
+
+  (use-package js2-mode
+  :elpaca t
+  :defer t
+  :mode "\\.jsx?\\'"
+  :config
+  ;; Use js2-mode for Node scripts
+  (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
+
+  ;; Don't use built-in syntax checking
+  (setq js2-mode-show-strict-warnings nil)
+
+  ;; Set up proper indentation in JavaScript and JSON files
+  (add-hook 'js2-mode-hook #'dw/set-js-indentation)
+  (add-hook 'json-mode-hook #'dw/set-js-indentation))
+
+  (use-package apheleia
+  :elpaca t
+  :defer t
+  :config
+  (apheleia-global-mode +1))
+
+  (use-package prettier-js
+  :elpaca t
+  :defer t
+  ;; :hook ((js2-mode . prettier-js-mode)
+  ;;        (typescript-mode . prettier-js-mode))
+  :config
+  (setq prettier-js-show-errors nil))
+#+end_src
+
+** HTML
+#+begin_src emacs-lisp
+;; web-mode for HTML
+(use-package web-mode
+:elpaca t
+:defer t
+:mode (("\\.html\\'" . web-mode))
+:config
+(setq web-mode-enable-auto-pairing t)
+(setq web-mode-enable-css-colorization t)
+(setq web-mode-markup-indent-offset 2))
+
+;; emmet-mode for HTML/CSS abbreviation expansion
+(use-package emmet-mode
+:elpaca t
+:defer t
+:hook ((web-mode . emmet-mode)
+         (css-mode . emmet-mode))
+         :config
+         (setq emmet-move-cursor-between-quotes t
+        emmet-self-closing-tag-style " /"))
+(add-hook 'emmet-mode-hook (lambda () (setq emmet-indent-after-insert t)))
+
+;; Set up hooks for modes
+(add-hook 'web-mode-hook
+          (lambda ()
+            (emmet-mode)
+            ;; Add other web-mode specific configurations here
+            ))
+
+(add-hook 'css-mode-hook
+          (lambda ()
+            (emmet-mode)
+            ;; Add other css-mode specific configurations here
+            ))
+
+(defun my-setup-indent ()
+  (setq-local css-indent-offset 2))
+(add-hook 'prog-mode-hook 'my-setup-indent)
+#+end_src
+
+** Nix
+#+begin_src emacs-lisp
+  (use-package nix-mode
+  :elpaca t
+  :mode "\\.nix\\'")
+  #+end_src
+
+* File manager
+** Dired
+Dired is the built-in Emacs file manager. It's so good that it's strange that, to my knowledge, no one tried to replicate it outside of Emacs.
+
+*** TODO Basic config & keybindings
+My config mostly follows ranger's and vifm's keybindings which I'm used to.
+
+#+begin_src emacs-lisp
+  (use-package dired
+    :elpaca nil
+    :commands (dired)
+    :config
+    (setq dired-listing-switches "-lXGah --group-directories-first")
+    (setq dired-dwim-target t)
+    (setq wdired-allow-to-change-permissions t)
+    (setq wdired-create-parent-directories t)
+    (setq dired-recursive-copies 'always)
+    (setq dired-recursive-deletes 'always)
+    (setq dired-kill-when-opening-new-dired-buffer t)
+    (add-hook 'dired-mode-hook
+              (lambda ()
+                (setq truncate-lines t)
+                (visual-line-mode nil)))
+      (add-hook 'dired-mode-hook #'dired-hide-details-mode))
+    (general-define-key
+     :states '(normal)
+     :keymaps 'dired-mode-map
+     "h" #'dired-up-directory
+     "l" #'dired-find-file
+     "=" #'dired-narrow
+     "-" #'my/dired-create-empty-file-subtree
+     "~" #'vterm
+     "M-r" #'wdired-change-to-wdired-mode
+     "<left>" #'dired-up-directory
+     "<right>" #'dired-find-file
+     "M-<return>" #'dired-open-xdg)
+
+  (defun my/dired-home ()
+    "Open dired at $HOME"
+    (interactive)
+    (dired (expand-file-name "~")))
+
+  (my-leader-def
+    "ad" #'dired)
+#+end_src
+
+*** Addons
+I used to use [[https://www.emacswiki.org/emacs/DiredPlus][dired+]], which provides a lot of extensions for dired functionality, but it also creates some new problems, so I opt out of it. Fortunately, the one feature I want from this package - adding more colors to dired buffers - is available as a separate package.
+
+#+begin_src emacs-lisp
+(use-package diredfl
+:elpaca t
+:after (dired)
+:config
+(diredfl-global-mode 1))
+#+end_src
+
+[[https://github.com/vifon/dired-recent.el][dired-recent.el]] adds history to dired.
+
+#+begin_src emacs-lisp
+(use-package dired-recent
+:elpaca t
+:after dired
+:commands (dired-recent-open)
+:config
+(dired-recent-mode)
+(general-define-key
+   :keymaps 'dired-recent-mode-map
+   "C-x C-d" nil)
+   (my-leader-def
+    "aD" '(dired-recent-open :wk "dired history")))
+#+end_src
+
+Display icons for files.
+
+| Note      | Type                                                     |
+|-----------+----------------------------------------------------------|
+| *ACHTUNG* | This plugin is slow as hell with TRAMP or in =gnu/store= |
+
+#+begin_src emacs-lisp
+(use-package all-the-icons-dired
+:elpaca t
+:hook (dired-mode . (lambda ()
+                        (unless (string-match-p "/gnu/store" default-directory)
+                        (all-the-icons-dired-mode)))))
+                        #+end_src
+
+Provides stuff like =dired-open-xdg=
+
+#+begin_src emacs-lisp
+(use-package dired-open
+:defer t
+:commands (dired-open-xdg))
+#+end_src
+
+[[https://elpa.gnu.org/packages/dired-du.html][dired-du]] is a package that shows directory sizes
+
+#+begin_src emacs-lisp
+(use-package dired-du
+:elpaca t
+:commands (dired-du-mode)
+:config
+(setq dired-du-size-format t))
+#+end_src
+
+*** Subdirectories
+Subdirectories are one of the interesting features of Dired. It allows displaying multiple folders on the same window.
+
+I add my own keybindings and some extra functionality.
+
+#+begin_src emacs-lisp
+(defun my/dired-open-this-subdir ()
+  (interactive)
+  (dired (dired-current-directory)))
+
+(defun my/dired-kill-all-subdirs ()
+  (interactive)
+  (let ((dir dired-directory))
+    (kill-buffer (current-buffer))
+    (dired dir)))
+
+(with-eval-after-load 'dired
+  (general-define-key
+   :states '(normal)
+   :keymaps 'dired-mode-map
+   "s" nil
+   "ss" 'dired-maybe-insert-subdir
+   "sl" 'dired-maybe-insert-subdir
+   "sq" 'dired-kill-subdir
+   "sk" 'dired-prev-subdir
+   "sj" 'dired-next-subdir
+   "sS" 'my/dired-open-this-subdir
+   "sQ" 'my/dired-kill-all-subdirs
+   (kbd "TAB") 'dired-hide-subdir))
+#+end_src
+
+* UI
+** Interace
+#+begin_src emacs-lisp
+  ;; Customize user interface.
+  (when (display-graphic-p)
+    (tool-bar-mode 0)
+    (menu-bar-mode 0)
+    (scroll-bar-mode 0))
+  (setq inhibit-startup-screen t)
+  (column-number-mode 1)
+#+end_src
+
+** Theme
+#+begin_src emacs-lisp
+  ;; Dark theme.
+  (load-theme 'modus-vivendi-deuteranopia)
+#+end_src
+** Bar
+*** Keycast
+#+begin_src emacs-lisp
+  (use-package keycast
+    :elpaca t
+    :custom
+    (keycast-mode-line-remove-tail-elements nil)
+    (keycast-mode-line-insert-after 'mode-line-misc-info)
+    :init
+    (keycast-mode-line-mode 1))
+#+end_src
+* Utilities
+** Workspaces
+#+begin_src emacs-lisp
+  (use-package tabspaces
+  :elpaca t
+  :config
+  (customize-set-variable 'tabspaces-use-filtered-buffers-as-default t)
+  (customize-set-variable 'tabspaces-remove-to-default t)
+  (customize-set-variable 'tabspaces-include-buffers '("*scratch*"))
+  :init
+  (tabspaces-mode 1))
+
+;; Make sure project is initialized
+(use-package project
+  :config
+  (project--ensure-read-project-list))
+
+#+end_src
+
+** helpful
+#+begin_src emacs-lisp
+  (use-package helpful
+  :elpaca t
+  :bind
+  (:map helpful-mode-map
+        ("<remap> <revert-buffer>" . #'helpful-update))
+  :bind
+  (("C-h f" . #'helpful-function)
+   ("C-h v" . #'helpful-variable)
+   ("C-h k" . #'helpful-key)
+   ("C-h c" . #'helpful-command)
+   ("C-h s" . #'helpful-symbol))
+   :config
+   (keymap-global-set "C-h F" #'helpful-function))
+#+end_src
+
+** Nerd Icons
+#+begin_src emacs-lisp
+  (use-package nerd-icons
+    :elpaca t)
+#+end_src

@@ -27,6 +27,7 @@
     imv
     swayidle
     waybar
+    eww-wayland
     wofi
 
     llvmPackages_17.libcxxClang

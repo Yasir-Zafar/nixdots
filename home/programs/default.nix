@@ -15,7 +15,6 @@
     ./bat.nix
     ./foot.nix
     ./ncmpcpp.nix
-    ./eww.nix
 
   ];
 
