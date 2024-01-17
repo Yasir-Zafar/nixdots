@@ -10,7 +10,7 @@
         IMAPAccount gmail
         Host imap.gmail.com
         User dpix720@gmail.com
-        PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.dpix.txt.gpg"
+        Pass C**lrule3650
         
         IMAPStore gmail-remote
         Account gmail
@@ -22,7 +22,7 @@
         Channel gmail
         Master :gmail-remote:
         Slave :gmail-local:
-        Patterns "INBOX"
+        Patterns \"INBOX\"
         Create Both
         Expunge Both
         SyncState *
@@ -41,7 +41,7 @@
 
         # Archive sent mail
         Channel gmail-inbox
-        Patterns "INBOX"
+        Patterns \"INBOX\"
         Create Both
         Expunge Both
         SyncState *
@@ -55,7 +55,7 @@
         IMAPAccount gmail265
         Host imap.gmail.com
         User yasirzafar365@gmail.com
-        PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.yz365.txt.gpg"
+        Pass C**lrule3650
 
         IMAPStore gmail365-remote
         Account gmail365
@@ -67,7 +67,7 @@
         Channel gmail365
         Master :gmail365-remote:
         Slave :gmail365-local:
-        Patterns "INBOX"
+        Patterns \"INBOX\"
         Create Both
         Expunge Both
         SyncState *
@@ -84,23 +84,22 @@
         MoveSpam nil
         Trash junk
 
-# Archive sent mail
-Channel gmail365-inbox
-Patterns "INBOX"
-Create Both
-Expunge Both
-SyncState *
-Automaton FileState
-Group mail
-UseGmailLabel yes
-RemoveDuplicates no
-MoveSpam nil
-Trash Gmail365
-
-        "
+        # Archive sent mail
+        Channel gmail365-inbox
+        Patterns \"INBOX\"
+        Create Both
+        Expunge Both
+        SyncState *
+        Automaton FileState
+        Group mail
+        UseGmailLabel yes
+        RemoveDuplicates no
+        MoveSpam nil
+        Trash Gmail365
+        ";
         
-    }
+    };
     
-  }
+  };
   
 }

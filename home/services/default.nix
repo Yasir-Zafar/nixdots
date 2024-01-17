@@ -6,7 +6,6 @@
 
     ./mako.nix
     ./easy.nix
-    ./gpg.nix
 
   ];
 
