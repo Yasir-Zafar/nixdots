@@ -11,6 +11,7 @@
       noto-fonts-cjk
       noto-fonts-emoji
       font-awesome
+      atkinson-hyperlegible
 
     ];
 

@@ -52,11 +52,12 @@
     gnome-solanum
     evince
     transmission-gtk
+    foliate
 
-    vim
     neovim-unwrapped
     firefox-wayland
     libreoffice-fresh
+    calibre
     (python311.withPackages (ps: with ps; [
       pip
       adblock
