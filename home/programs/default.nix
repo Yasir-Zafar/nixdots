@@ -16,6 +16,7 @@
     ./foot.nix
     ./ncmpcpp.nix
     ./mail.nix
+    ./afew.nix
 
   ];
 

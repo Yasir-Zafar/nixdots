@@ -32,11 +32,11 @@ So, you might extract something of value from here if you're an avid Emacs user.
 
 * Init
 Setting up the environment, performance tuning and a few basic settings.
-
 First things first, lexical binding.
 #+begin_src emacs-lisp
 ;;; -*- lexical-binding: t -*-
 #+end_src
+
 ** Package
 *** elpaca
 
@@ -136,6 +136,7 @@ I’ve started experimenting with the native-comp branch of Emacs for increased 
 ;; Set the right directory to store the native comp cache
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 #+end_src
+
 ** Custom.el
 #+begin_src emacs-lisp
   ;; Write customizations to a separate file instead of this file.
@@ -166,6 +167,7 @@ By default Emacs and its packages create a lot files in =.emacs.d= and in other 
           (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
   (load custom-file t)
 #+end_src
+
 * General
 ** general.el
 general.el provides a convenient interface to manage Emacs keybindings.
@@ -1403,6 +1405,24 @@ I add my own keybindings and some extra functionality.
    (kbd "TAB") 'dired-hide-subdir))
 #+end_src
 
+* Mail
+#+begin_src emacs-lisp
+(use-package notmuch
+  :elpaca t
+  :config
+  (setq notmuch-saved-searches
+          '((:name "inbox" :query "tag:inbox" :key "i")
+            (:name "unread" :query "tag:unread" :key "u")
+            (:name "star" :query "tag:star" :key "b")
+            (:name "sent" :query "tag:sent" :key "s")
+            (:name "archive" :query "tag:archive" :key "r")
+            (:name "all" :query "*" :key "a"))
+          )
+   (setq notmuch-fcc-dirs "Sent")
+   (setq notmuch-show-indent-messages-width 2)
+   (setq notmuch-search-oldest-first nil)
+   (setq notmuch-show-indent-content t))
+#+end_src
 * UI
 ** Interace
 #+begin_src emacs-lisp

@@ -1,24 +1,5 @@
 { config, pkgs, ...}:
 
-let
-  myEmacsDesktopFile = pkgs.writeText "emacs.desktop" ''
-    [Desktop Entry]
-    Name=Emacs
-    Exec=emacs %U
-    Type=Application
-    NoDisplay=true
-    Categories=Development;TextEditor;
-    MimeType=text/plain;
-  '';
-
-  myMimeAppsList = pkgs.writeText "mimeapps.list" ''
-    [Default Applications]
-    text/plain=emacs.desktop
-    application/vnd.oasis.opendocument.text=libreoffice-writer.desktop
-    application/vnd.oasis.opendocument.spreadsheet=libreoffice-calc.desktop
-    application/vnd.oasis.opendocument.presentation=libreoffice-impress.desktop
-  '';
-in
 {
 
   xdg = {
@@ -44,11 +25,25 @@ in
         "image" = [ "imv.desktop" ];
         "audio" = [ "mpv.desktop" ];
         "video" = [ "mpv.desktop" ];
-        "application/pdf" = [ "org.gnome.Evince.desktop" ];
+        "application/pdf" = [ "emacs.desktop" ];
         "text/plain" = "emacs.desktop";
         "application/vnd.oasis.opendocument.text" = "libreoffice-writer.desktop";
         "application/vnd.oasis.opendocument.spreadsheet" = "libreoffice-calc.desktop";
         "application/vnd.oasis.opendocument.presentation" = "libreoffice-impress.desktop";
+        
+        # Web browser
+        "text/html" = "firefox.desktop";
+
+        # Video files
+        "video/mp4" = "mpv.desktop";
+        "video/x-matroska" = "mpv.desktop";
+
+        # Audio files
+        "audio/mpeg" = "mpv.desktop";
+        "audio/ogg" = "mpv.desktop";
+
+        # Archive files
+        "application/zip" = "org.gnome.nautilus.desktop";
 
       };
 
