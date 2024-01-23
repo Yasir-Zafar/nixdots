@@ -1,6 +1,8 @@
 {
 
-  afew = {
+  programs = {
+
+    afew = {
 
     enable = true;
     extraConfig = ''
@@ -15,8 +17,15 @@
       tags = +fast
       message = Fast Mail
 
+      [Filter.2]
+      query = 'dpix720@gmail.com'
+      tags = +dpix
+      message = dpix mail
+
     '';
     
+    };
+
   };
 
 }

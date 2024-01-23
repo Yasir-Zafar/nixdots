@@ -6,6 +6,7 @@
     enable = true;
     hooks = {
       preNew = "mbsync --all";
+      postNew = "notmuch tag +fast --is:new folder:fast/";
     };
   };
   

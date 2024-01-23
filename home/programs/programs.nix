@@ -7,6 +7,7 @@
     fd
     ripgrep
     fzf
+    semgrep
     ffmpeg
     unzip
     (texlive.combine { inherit (texlive) scheme-full wrapfig titling titlesec fontspec; })
@@ -36,6 +37,7 @@
     gdb
     cmake
     gnumake
+    mono
 
     rustup
     
@@ -57,6 +59,7 @@
     neovim-unwrapped
     firefox-wayland
     libreoffice-fresh
+    syncthing
     calibre
     (python311.withPackages (ps: with ps; [
       pip

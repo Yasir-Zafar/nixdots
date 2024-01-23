@@ -1,6 +1,6 @@
+#+TITLE: dpix720 Emacs config
 #+PROPERTY: header-args :mkdirp yes
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes :eval never-export :exports both
-#+TITLE: Emacs config
 #+OPTIONS: broken-links:auto h:6 toc:nil
 
 #+begin_quote
@@ -42,6 +42,7 @@ First things first, lexical binding.
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
   (setq package-enable-at-startup nil)
+  (setq-default pgtk-wait-for-event-timeout 0)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -51,31 +52,31 @@ First things first, lexical binding.
   (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
   (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
   (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-				:ref nil
-				:files (:defaults "elpaca-test.el" (:exclude "extensions"))
-				:build (:not elpaca--activate-package)))
+                :ref nil
+                :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                :build (:not elpaca--activate-package)))
   (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-	 (build (expand-file-name "elpaca/" elpaca-builds-directory))
-	 (order (cdr elpaca-order))
-	 (default-directory repo))
+         (build (expand-file-name "elpaca/" elpaca-builds-directory))
+         (order (cdr elpaca-order))
+         (default-directory repo))
     (add-to-list 'load-path (if (file-exists-p build) build repo))
     (unless (file-exists-p repo)
       (make-directory repo t)
       (when (< emacs-major-version 28) (require 'subr-x))
       (condition-case-unless-debug err
-	  (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-		   ((zerop (call-process "git" nil buffer t "clone"
-					 (plist-get order :repo) repo)))
-		   ((zerop (call-process "git" nil buffer t "checkout"
-					 (or (plist-get order :ref) "--"))))
-		   (emacs (concat invocation-directory invocation-name))
-		   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-					 "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-		   ((require 'elpaca))
-		   ((elpaca-generate-autoloads "elpaca" repo)))
-	      (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-	    (error "%s" (with-current-buffer buffer (buffer-string))))
-	((error) (warn "%s" err) (delete-directory repo 'recursive))))
+          (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                   ((zerop (call-process "git" nil buffer t "clone"
+                                         (plist-get order :repo) repo)))
+                   ((zerop (call-process "git" nil buffer t "checkout"
+                                         (or (plist-get order :ref) "--"))))
+                   (emacs (concat invocation-directory invocation-name))
+                   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                         "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                   ((require 'elpaca))
+                   ((elpaca-generate-autoloads "elpaca" repo)))
+              (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+            (error "%s" (with-current-buffer buffer (buffer-string))))
+        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
     (unless (require 'elpaca-autoloads nil t)
       (require 'elpaca)
       (elpaca-generate-autoloads "elpaca" repo)
@@ -83,6 +84,7 @@ First things first, lexical binding.
   (add-hook 'after-init-hook #'elpaca-process-queues)
   (elpaca `(,@elpaca-order))
 #+end_src
+
 *** use-package
 A macro to simplify package specification & configuration. Integrates with straight.el.
 Set ~use-package-verbose~ to ~t~ to print out loading times for individual packages.
@@ -779,11 +781,6 @@ Commands for Ido-like directory navigation.
   (setq c-basic-offset 4)
   (setq js-indent-level 2)
   (setq css-indent-offset 2)
-
-  (use-package aggressive-indent
-  :defer t
-  :elpaca t
-  :hook (prog-mode . aggressive-indent-mode))
 #+end_src
 
 ** Parens
@@ -791,7 +788,7 @@ Commands for Ido-like directory navigation.
   ;; Highlight matching pairs of parentheses.
   (setq show-paren-delay 0)
   (show-paren-mode)
-  
+
   (electric-pair-mode 1)
 
   (use-package paredit
@@ -819,6 +816,7 @@ Commands for Ido-like directory navigation.
 ** Speedbar
 #+begin_src emacs-lisp
   (use-package speedbar
+    :defer t
     :custom
       (speedbar-update-flag t)
       (speedbar-use-images nil)
@@ -882,6 +880,17 @@ Commands for Ido-like directory navigation.
     (:map speedbar-mode-map
           ("b" . crafted-speedbar-switch-to-quick-buffers)))
 #+end_src
+
+** Undo Tree
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :elpaca t
+  :init
+  (global-undo-tree-mode 1)
+  :bind
+  ("C-x u" . undo-tree-visualize))
+#+end_src
+
 * Writing
 ** Whitespace
 #+begin_src emacs-lisp
@@ -1039,7 +1048,104 @@ Example usage:
         org-startup-indented t
         org-src-fontify-natively t
         org-src-tab-acts-natively nil
-        org-log-done 'time))
+        org-log-done 'time)
+  (custom-set-faces
+    '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
+    '(org-level-2 ((t (:inherit outline-2 :height 1.14))))
+    '(org-level-3 ((t (:inherit outline-3 :height 1.13))))
+    '(org-level-4 ((t (:inherit outline-4 :height 1.12))))
+    '(org-level-5 ((t (:inherit outline-5 :height 1.11))))
+    '(org-level-6 ((t (:inherit outline-6 :height 1.0))))
+    '(org-document-title ((t (:inherit outline-1 :height 1.6))))))
+#+end_src
+
+*** Tags
+#+begin_src emacs-lisp
+(setq org-tag-alist '(
+                      ;; Ticket types
+                      (:startgroup . nil)
+                      ("@bug" . ?b)
+                      ("@feature" . ?u)
+                      ("@spike" . ?j)
+                      (:endgroup . nil)
+
+                      ;; Ticket flags
+                      ("@write_future_ticket" . ?w)
+                      ("@emergency" . ?e)
+                      ("@research" . ?r)
+
+                      ;; Meeting types
+                      (:startgroup . nil)
+                      ("big_sprint_review" . ?i)
+                      ("cents_sprint_retro" . ?n)
+                      ("dsu" . ?d)
+                      ("grooming" . ?g)
+                      ("sprint_retro" . ?s)
+                      (:endgroup . nil)
+
+                      ;; Code TODOs tags
+                      ("QA" . ?q)
+                      ("backend" . ?k)
+                      ("broken_code" . ?c)
+                      ("frontend" . ?f)
+
+                      ;; Special tags
+                      ("CRITICAL" . ?x)
+                      ("obstacle" . ?o)
+
+                      ;; Meeting tags
+                      ("HR" . ?h)
+                      ("general" . ?l)
+                      ("meeting" . ?m)
+                      ("misc" . ?z)
+                      ("planning" . ?p)
+
+                      ;; Work Log Tags
+                      ("accomplishment" . ?a)
+                      ))
+;; Tag colors
+(setq org-tag-faces
+      '(
+        ("planning"  . (:foreground "mediumPurple1" :weight bold))
+        ("backend"   . (:foreground "royalblue1"    :weight bold))
+        ("frontend"  . (:foreground "forest green"  :weight bold))
+        ("QA"        . (:foreground "sienna"        :weight bold))
+        ("meeting"   . (:foreground "yellow1"       :weight bold))
+        ("CRITICAL"  . (:foreground "red1"          :weight bold))
+        )
+      )
+#+end_src
+
+*** Templates
+#+begin_src emacs-lisp :tangle yes
+(setq org-capture-templates
+      '(
+        ("j" "Uni Log Entry"
+         entry (file+datetree "~/org/uni-log.org")
+         "* %?"
+         :empty-lines 0)
+        ))
+(setq org-capture-templates
+      '(
+        ("n" "Note"
+         entry (file+headline "~/org/notes.org" "Random Notes")
+         "** %?"
+         :empty-lines 0)
+        ))
+(setq org-capture-templates
+      '(
+        ("g" "General To-Do"
+         entry (file+headline "~/org/todos.org" "General Tasks")
+         "* TODO [#B] %?\n:Created: %T\n "
+         :empty-lines 0)
+      ))
+(setq org-capture-templates
+      '(
+        ("c" "Code To-Do"
+         entry (file+headline "~/org/todos.org" "Code Related Tasks")
+         "* TODO [#B] %?\n:Created: %T\n%i\n%a\nProposed Solution: "
+         :empty-lines 0)
+        ))
 #+end_src
 
 *** Org-Appear
@@ -1047,6 +1153,68 @@ Example usage:
   (use-package org-appear
     :elpaca t
     :hook (org-mode . org-appear-mode))
+#+end_src
+
+*** Denote
+#+begin_src emacs-lisp
+(use-package denote
+  :elpaca t
+  :bind
+  (:map global-map
+        ("C-c n n" . denote)
+        ("C-c n c" . denote-region)
+        ("C-c n N" . denote-type)
+        ("C-c n d" . denote-date)
+        ("C-c n z" . denote-signature)
+        ("C-c n s" . denote-subdirectory)
+        ("C-c n t" . denote-template)
+        ("C-c n i" . denote-link)
+        ("C-c n I" . denote-add-links)
+        ("C-c n b" . denote-backlinks)
+        ("C-c n f f" . denote-find-link)
+        ("C-c n f b" . denote-find-backlink)
+        ("C-c n r" . denote-rename-file)
+        ("C-c n R" . denote-rename-file-using-front-matter))
+  (:map dired-mode-map
+        ("C-c n C-i" . denote-link-dired-marked-notes)
+        ("C-c n C-r" . denote-dired-rename-files)
+        ("C-c n C-k" . denote-dired-rename-marked-files-with-keywords)
+        ("C-c n C-R" . denote-dired-rename-marked-files-using-front-matter))
+  :config
+  (customize-set-variable 'denote-directory (expand-file-name "/home/boi/Notes/"))
+  (customize-set-variable 'denote-known-keywords '("emacs" "DS" "DLD" "ISE" "MC" "OOP"))
+  (customize-set-variable 'denote-infer-keywords t)
+  (customize-set-variable 'denote-sort-keywords t)
+  (customize-set-variable 'denote-file-type nil) ; Org is the default, set others here
+  (customize-set-variable 'denote-prompts '(title keywords))
+  (customize-set-variable 'denote-excluded-directories-regexp nil)
+  (customize-set-variable 'denote-excluded-keywords-regexp nil)
+  :hook
+  (dired-mode . denote-dired-mode))
+#+end_src
+
+*** Bullets
+#+begin_src emacs-lisp
+(use-package org-bullets
+  :elpaca t
+  :init
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+#+end_src
+
+*** Write room
+
+Creates a distraction-free writing environment by centering the buffer and dimming the text outside a narrow margin.
+
+#+begin_src emacs-lisp
+  (use-package writeroom-mode
+    :elpaca t
+    :config
+    (setq writeroom-width 120)
+
+    (my-leader-def
+      "w" '(writeroom-mode :wk "Write room")))
 #+end_src
 
 * Programming
@@ -1061,17 +1229,6 @@ Example usage:
 (global-treesit-auto-mode))
 #+end_src
 
-*** General additional config
-Have to put this before tree-sitter because I need =my/set-smartparens-indent= there.
-
-Make smartparens behave the way I like for C-like languages.
-#+begin_src emacs-lisp
-(defun my/set-smartparens-indent (mode)
-  (sp-local-pair mode "{" nil :post-handlers '(("|| " "SPC") ("||\n[i]" "RET")))
-  (sp-local-pair mode "[" nil :post-handlers '(("|| " "SPC") ("||\n[i]" "RET")))
-  (sp-local-pair mode "(" nil :post-handlers '(("|| " "SPC") ("||\n[i]" "RET"))))
-#+end_src
-
 ** Project
 *** Buffer
 #+begin_src emacs-lisp
@@ -1079,45 +1236,124 @@ Make smartparens behave the way I like for C-like languages.
     :elpaca t)
 #+end_src
 
+*** Projectile
+[[https://github.com/bbatsov/projectile][Projectile]] gives a bunch of useful functions for managing projects, like finding files within a project, fuzzy-find, replace, etc.
+
+~defadvice~ is meant to speed projectile up with TRAMP a bit.
+
+#+begin_src emacs-lisp
+(use-package projectile
+  :demand t
+  :elpaca t
+  :config
+  (projectile-mode 1)
+  (setq projectile-project-search-path '("~/Projects"))
+  :bind
+  (("C-c p" . projectile-command-map)
+   ("s-p" . projectile-find-file)
+   ("s-g" . projectile-grep)))
+
+(use-package consult-projectile
+:elpaca t)
+#+end_src
+
+*** Magit
+[[https://magit.vc/][Magit]] is a git interface for Emacs. The closest non-Emacs alternative (sans actual clones) I know is [[https://github.com/jesseduffield/lazygit][lazygit]], which I used before Emacs.
+
+#+begin_src emacs-lisp
+(use-package magit
+  :defer t
+  :elpaca t
+  :commands (magit-status magit-file-dispatch)
+  :init
+  (my-leader-def
+    "m" 'magit
+    "M" 'magit-file-dispatch)
+  :config
+  (setq magit-blame-styles
+        '((headings
+           (heading-format . "%-20a %C %s\n"))
+          (highlight
+           (highlight-face . magit-blame-highlight))
+          (lines
+           (show-lines . t)
+           (show-message . t)))))
+#+end_src
+
+**** Gutter
+#+begin_src emacs-lisp
+;; Git Gutter configuration using use-package
+(use-package git-gutter
+  :elpaca t
+  :config
+  ;; Enable Git Gutter globally
+  (global-git-gutter-mode t)
+
+  ;; Customize Git Gutter appearance
+  (custom-set-variables
+   '(git-gutter:update-interval 2) ; Update interval in seconds (default is 2)
+   '(git-gutter:added-sign "++")    ; Symbol for added lines
+   '(git-gutter:modified-sign "==") ; Symbol for modified lines
+   '(git-gutter:deleted-sign "--"))) ; Symbol for deleted lines
+#+end_src
+
 ** LSP
 #+begin_src emacs-lisp
   (use-package lsp-mode
   :elpaca t
   :commands (lsp lsp-deferred)
-  :hook ((python-mode . lsp)
-         (java-mode . lsp)
-         (typescript-mode . lsp)
-         (c-mode . lsp)
-         (c++-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration)
-         (lsp-completion-mode . my/lsp-mode-setup-completion)
-         ;; Add more modes as needed
-         )
+  :hook
+  (c++-mode . lsp-deferred)
+  (js2-mode . lsp)
+  (css-mode .lsp)
+  (lsp-mode . lsp-enable-which-key-integration)
+  (lsp-completion-mode . my/lsp-mode-setup-completion)
   :custom
-  (lsp-enable-file-watchers nil)  ; Disable file watchers for better performance
   (lsp-prefer-flymake nil)        ; Use lsp-ui and/or flycheck instead of flymake
-  (lsp-log-io nil)                ; Disable logging for better performance
   (lsp-completion-provider :none) ;; we use Corfu!
-  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-headerline-breadcrumb-enable t)
   (lsp-headerline-breadcrumb-segments '(project file symbols))
   (lsp-disabled-clients '((python-mode . pyls)))
   (lsp-idle-delay 0.1)
   :init
+  (defun my/orderless-dispatch-flex-first (_pattern index _total)
+    (and (eq index 0) 'orderless-flex))
+
   (defun my/lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-    '(orderless)))) ;; Configure orderless
+          '(orderless))
+    ;; Optionally configure the first word as flex filtered.
+    (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
+    ;; Optionally configure the cape-capf-buster.
+    (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))))
 
-    (use-package lsp-ui
+  (use-package lsp-ui
     :elpaca t
     :hook (lsp-mode . lsp-ui-mode)
     :after lsp
     :config
-    (setq lsp-ui-sideline-enable t)
-    (setq lsp-ui-doc-position 'bottom)
-    (setq lsp-completion-show-detail nil)
-    (setq lsp-completion-show-kind nil)
-    (setq lsp-completion-show-label-description nil)
-    (setq lsp-completion-enable-additional-text-edit nil)
+      (setq lsp-ui-sideline-enable t           ; Show sideline information (errors, warnings, etc.)
+        lsp-ui-sideline-show-symbol t     ; Show symbol information in sideline
+        lsp-ui-sideline-show-hover t      ; Show hover information in sideline
+        lsp-ui-sideline-show-diagnostics t; Show diagnostic information in sideline
+        lsp-ui-sideline-ignore-duplicate t; Ignore duplicate information in sideline
+        lsp-ui-sideline-enable t
+        lsp-ui-doc-enable t               ; Enable inline documentation
+        lsp-ui-doc-header t               ; Show a header line with documentation information
+        lsp-ui-doc-include-signature t    ; Include function signatures in documentation
+        lsp-ui-doc-position 'bottom       ; Show documentation at the bottom
+        lsp-ui-doc-delay 0.5               ; Delay before showing documentation
+        lsp-ui-peek-enable t              ; Enable peek definition UI
+        lsp-ui-peek-always-show t         ; Always show peek UI even if there's only one candidate
+        lsp-ui-peek-fontify 'always       ; Fontify code in peek UI
+        lsp-ui-flycheck-enable t          ; Enable flycheck integration
+        lsp-ui-flycheck-list-position 'right ; Flycheck list position
+        lsp-ui-flycheck-live-reporting t  ; Live reporting of flycheck errors
+        lsp-completion-show-detail t
+        lsp-completion-show-kind t
+        lsp-completion-show-label-description r
+        lsp-completion-enable-additional-text-edit t
+        )
     (lsp-ui-doc-show))
     #+end_src
     
@@ -1135,6 +1371,7 @@ Make smartparens behave the way I like for C-like languages.
   "S" #'lsp-ui-sideline-mode
   "X" #'lsp-execute-code-action)
 #+end_src
+
 ** Flycheck
 A syntax checking extension for Emacs. Integrates with LSP-mode, but can also use various standalone checkers.
 References:
@@ -1145,14 +1382,50 @@ References:
     :elpaca t
     :hook (lsp-mode . flycheck-mode))
 #+end_src
+
+** Yasnippets
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :elpaca t
+    :hook ((prog-mode . yas-minor-mode)
+           (org-mode . yas-minor-mode)
+           (markdown-mode . yas-minor-mode))
+    :bind (:map yas-minor-mode-map
+                ("C-c y" . yas-expand))
+    :config
+    (setq yas-snippet-dirs '("~/.emacs.d/snippets"
+                             "~/.emacs.d/personal-snippets")))
+
+  (use-package yasnippet-snippets
+    :elpaca t)
+
+  (setq custom-snippets-dir "~/.emacs.d/personal-snippets")
+
+  (when (file-exists-p custom-snippets-dir)
+    (add-to-list 'yas-snippet-dirs custom-snippets-dir))
+#+end_src
+
 ** Languages
 *** C/C++
 #+begin_src emacs-lisp
+  (use-package c++-mode
+  :after lsp-mode
+  :mode ("\\.cpp$" "\\.h$")
+  :hook (c++-mode . lsp))
+
+  (defun my-c-mode-hook ()
+  (setq c-basic-offset 4
+        c-indent-level 4
+        c-default-style (cons '(c-mode . "k&r") c-default-style)
+        c-default-style "bsd"))
+  (add-hook 'c-mode-common-hook 'my-c-mode-hook)
+  
   (use-package clang-format
-  :elpaca t
-  :config
-  (setq clang-format-style-option "file"))
+    :elpaca t
+    :config
+    (setq clang-format-style-option "file"))
 #+end_src
+
 *** Rust
 #+begin_src emacs-lisp
 (use-package rustic
@@ -1177,7 +1450,7 @@ References:
   (exec-path-from-shell-initialize))
 #+end_src
 
-** Javascript
+*** Javascript
 #+begin_src emacs-lisp
   (use-package typescript-mode
   :elpaca t
@@ -1221,7 +1494,7 @@ References:
   (setq prettier-js-show-errors nil))
 #+end_src
 
-** HTML
+*** HTML
 #+begin_src emacs-lisp
 ;; web-mode for HTML
 (use-package web-mode
@@ -1262,18 +1535,19 @@ References:
 (add-hook 'prog-mode-hook 'my-setup-indent)
 #+end_src
 
-** Nix
+*** Nix
 #+begin_src emacs-lisp
   (use-package nix-mode
   :elpaca t
   :mode "\\.nix\\'")
   #+end_src
 
+  ** 
 * File manager
 ** Dired
 Dired is the built-in Emacs file manager. It's so good that it's strange that, to my knowledge, no one tried to replicate it outside of Emacs.
 
-*** TODO Basic config & keybindings
+*** Basic config & keybindings
 My config mostly follows ranger's and vifm's keybindings which I'm used to.
 
 #+begin_src emacs-lisp
@@ -1423,6 +1697,7 @@ I add my own keybindings and some extra functionality.
    (setq notmuch-search-oldest-first nil)
    (setq notmuch-show-indent-content t))
 #+end_src
+
 * UI
 ** Interace
 #+begin_src emacs-lisp
@@ -1473,17 +1748,6 @@ References:
   '((fg-prompt cyan)
   (bg-prompt bg-cyan-nuanced)))
   
-  ;; Add a nuanced background color to completion matches, while keeping their foreground intact 
-  (setq modus-themes-common-palette-overrides
-  '((fg-completion-match-0 fg-main)
-  (fg-completion-match-1 fg-main)
-  (fg-completion-match-2 fg-main)
-  (fg-completion-match-3 fg-main)
-  (bg-completion-match-0 bg-blue-subtle)
-  (bg-completion-match-1 bg-yellow-subtle)
-  (bg-completion-match-2 bg-cyan-subtle)
-  (bg-completion-match-3 bg-red-subtle)))
-  
   ;; Change the background to a shade of magenta
   (setq modus-themes-common-palette-overrides
   '((bg-paren-match bg-magenta-intense)))
@@ -1492,13 +1756,6 @@ References:
   (setq modus-themes-common-palette-overrides
   '((bg-paren-match bg-magenta-intense)
   (underline-paren-match fg-main)))
-  
-  ;; Apply more colorful foreground to some headings (headings 0-8).
-  ;; Level 0 is for Org #+title and related.
-  (setq modus-themes-common-palette-overrides
-  '((fg-heading-1 blue-warmer)
-  (fg-heading-2 yellow-cooler)
-  (fg-heading-3 cyan-cooler)))
   
   (setq modus-themes-common-palette-overrides
   '((border-mode-line-active bg-mode-line-active)
@@ -1547,6 +1804,15 @@ References:
   (setq sml/mode-width 'full)        ; Set the width of the minor modes column  
   :config
   (sml/setup))
+#+end_src
+
+*** Minion
+#+begin_src emacs-lisp
+(use-package minions
+  :elpaca t
+  :config
+  ;; Enable Minions mode to display minor modes in the mode line
+  (minions-mode 1))
 #+end_src
 
 ** Text highlight
@@ -1618,6 +1884,100 @@ References:
 (use-package hl-todo
 :elpaca t
 :hook (prog-mode . hl-todo-mode))
+#+end_src
+
+* Terminal
+*** vterm
+My terminal emulator of choice.
+
+References:
+- [[https://github.com/akermu/emacs-libvterm][emacs-libvterm repo]]
+
+**** Configuration
+
+#+begin_src emacs-lisp
+(use-package vterm
+  :elpaca t
+  :commands (vterm vterm-other-window)
+  :config
+  (setq vterm-kill-buffer-on-exit t)
+
+  (add-hook 'vterm-mode-hook
+            (lambda ()
+              (setq-local global-display-line-numbers-mode nil)
+              (display-line-numbers-mode 0)))
+
+
+  (advice-add 'evil-collection-vterm-insert
+              :before (lambda (&rest args)
+                        (ignore-errors
+                          (apply #'vterm-reset-cursor-point args))))
+
+  (general-define-key
+   :keymaps 'vterm-mode-map
+   "M-q" 'vterm-send-escape
+
+   "C-h" 'evil-window-left
+   "C-l" 'evil-window-right
+   "C-k" 'evil-window-up
+   "C-j" 'evil-window-down
+
+   "C-<right>" 'evil-window-right
+   "C-<left>" 'evil-window-left
+   "C-<up>" 'evil-window-up
+   "C-<down>" 'evil-window-down
+
+   "M-<left>" 'vterm-send-left
+   "M-<right>" 'vterm-send-right
+   "M-<up>" 'vterm-send-up
+   "M-<down>" 'vterm-send-down)
+
+  (general-define-key
+   :keymaps 'vterm-mode-map
+   :states '(normal insert)
+   "<home>" 'vterm-beginning-of-line
+   "<end>" 'vterm-end-of-line)
+
+  (general-define-key
+   :keymaps 'vterm-mode-map
+   :states '(insert)
+   "C-r" 'vterm-send-C-r
+   "C-k" 'vterm-send-C-k
+   "C-j" 'vterm-send-C-j
+   "M-l" 'vterm-send-right
+   "M-h" 'vterm-send-left
+   "M-k" 'vterm-send-up
+   "M-j" 'vterm-send-down))
+#+end_src
+
+**** Subterminal
+Open a terminal in the lower third of the frame with the =`= key.
+I guess that's the first Emacs function I wrote!
+#+begin_src emacs-lisp
+(add-to-list 'display-buffer-alist
+             `(,"vterm-subterminal.*"
+               (display-buffer-reuse-window
+                display-buffer-in-side-window)
+               (side . bottom)
+               (reusable-frames . visible)
+               (window-height . 0.33)))
+
+(defun my/toggle-vterm-subteminal ()
+  "Toogle subteminal."
+  (interactive)
+  (let ((vterm-window
+        (seq-find
+         (lambda (window)
+           (string-match
+            "vterm-subterminal.*"
+            (buffer-name (window-buffer window))))
+         (window-list))))
+    (if vterm-window
+        (if (eq (get-buffer-window (current-buffer)) vterm-window)
+            (kill-buffer (current-buffer))
+          (select-window vterm-window))
+      (vterm-other-window "vterm-subterminal"))))
+
 #+end_src
 
 * Utilities

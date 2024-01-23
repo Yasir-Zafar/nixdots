@@ -30,7 +30,7 @@
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     hyprland.url = "github:hyprwm/Hyprland";
-    emacs-overlay.url = "github:nix-community/emacs-overlay/c114295bcec0eb9f036e0d893e09e1bffdf3e84e";
+    emacs-overlay.url = "github:nix-community/emacs-overlay/e2953343aa80377bb1f486f46ef5553b5570753e";
 
   };
 
