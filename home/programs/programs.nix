@@ -8,18 +8,17 @@
     ripgrep
     fzf
     semgrep
-    ffmpeg
     unzip
+    p7zip
     (texlive.combine { inherit (texlive) scheme-full wrapfig titling titlesec fontspec; })
 
     libnotify
     mpc-cli
     yt-dlp
+    ffmpeg
     grim
     slurp
     wl-clipboard
-
-    p7zip
 
     brillo
     wbg
@@ -28,7 +27,6 @@
     imv
     swayidle
     waybar
-    eww-wayland
     wofi
 
     llvmPackages_17.libcxxClang
@@ -40,21 +38,15 @@
     mono
 
     rustup
-    
-    html-tidy
     nodejs
-
-    nasm
-
     jdk
+    nasm
 
     gtk-engine-murrine
     gtk_engines
     gnome.nautilus
     gnome-solanum
-    evince
     transmission-gtk
-    foliate
 
     neovim-unwrapped
     firefox-wayland

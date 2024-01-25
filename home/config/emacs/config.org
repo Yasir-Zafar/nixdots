@@ -46,7 +46,7 @@ First things first, lexical binding.
 #+end_src
 
 #+begin_src emacs-lisp
-  (setq elpaca-core-date '(20240116)) ;; set to the build date of Emacs
+  (setq elpaca-core-date '(20240123)) ;; set to the build date of Emacs
   (defvar elpaca-installer-version 0.6)
   (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
   (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -152,10 +152,7 @@ By default Emacs and its packages create a lot files in =.emacs.d= and in other 
 #+begin_src emacs-lisp
   (use-package no-littering
     :elpaca t)
-
-  ;; Prevent undo tree files from polluting your git repo
-  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-
+    
   ;; hide saves
   (setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
 
@@ -695,16 +692,6 @@ Commands for Ido-like directory navigation.
           corfu-auto-prefix 2)  ; Complete with less prefix keys
   :init
     (global-corfu-mode 1))
-
-  (use-package corfu-popupinfo
-    :elpaca nil
-    :config
-      (corfu-popupinfo-mode 1)
-      (eldoc-add-command #'corfu-insert)
-      :bind (:map corfu-map
-                  ("M-p" . corfu-popupinfo-scroll-down)
-                  ("M-n" . corfu-popupinfo-scroll-up)
-                  ("M-d" . corfu-popupinfo-toggle)))
 #+end_src
 
 ** Cape
@@ -735,9 +722,6 @@ Commands for Ido-like directory navigation.
   ;; pressing delete or backspace deletes the selection.
   (delete-selection-mode)
 
-  ;; Use spaces instead of tabs
-  (setq-default indent-tabs-mode nil)
-
   ;; Do not save duplicates in kill-ring
   (customize-set-variable 'kill-do-not-save-duplicates t)
 
@@ -765,9 +749,6 @@ Commands for Ido-like directory navigation.
 
 ** Spacing
 #+begin_src emacs-lisp
-  ;; Add a newline automatically at the end of a file while saving.
-  (setq-default require-final-newline t)
-
   ;; Consider a period followed by a single space to be end of sentence.
   (setq sentence-end-double-space nil)
 
@@ -887,81 +868,13 @@ Commands for Ido-like directory navigation.
   :elpaca t
   :init
   (global-undo-tree-mode 1)
+  :config
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
   :bind
   ("C-x u" . undo-tree-visualize))
 #+end_src
 
 * Writing
-** Whitespace
-#+begin_src emacs-lisp
-;;; Whitespace
-(defun crafted-writing-configure-whitespace (use-tabs &optional use-globally &rest enabled-modes)
-  "Helper function to configure `whitespace' mode.
-
-Enable using TAB characters if USE-TABS is non-nil.  If
-USE-GLOBALLY is non-nil, turn on `global-whitespace-mode'.  If
-ENABLED-MODES is non-nil, it will be a list of modes to activate
-whitespace mode using hooks.  The hooks will be the name of the
-mode in the list with `-hook' appended.  If USE-GLOBALLY is
-non-nil, ENABLED-MODES is ignored.
-
-Configuring whitespace mode is not buffer local.  So calling this
-function twice with different settings will not do what you
-think.  For example, if you wanted to use spaces instead of tabs
-globally except for in Makefiles, doing the following won't work:
-
-;; turns on global-whitespace-mode to use spaces instead of tabs
-(crafted-writing-configure-whitespace nil t)
-
-;; overwrites the above to turn to use tabs instead of spaces,
-;; does not turn off global-whitespace-mode, adds a hook to
-;; makefile-mode-hook
-(crafted-writing-configure-whitespace t nil 'makefile-mode)
-
-Instead, use a configuration like this:
-;; turns on global-whitespace-mode to use spaces instead of tabs
-(crafted-writing-configure-whitespace nil t)
-
-;; turn on the buffer-local mode for using tabs instead of spaces.
-(add-hook 'makefile-mode-hook #'indent-tabs-mode)
-
-For more information on `indent-tabs-mode', See the info
-node `(emacs)Just Spaces'
-
-Example usage:
-
-;; Configuring whitespace mode does not turn on whitespace mode
-;; since we don't know which modes to turn it on for.
-;; You will need to do that in your configuration by adding
-;; whitespace mode to the appropriate mode hooks.
-(crafted-writing-configure-whitespace nil)
-
-;; Configure whitespace mode, but turn it on globally.
-(crafted-writing-configure-whitespace nil t)
-
-;; Configure whitespace mode and turn it on only for prog-mode
-;; and derived modes.
-(crafted-writing-configure-whitespace nil nil 'prog-mode)"
-  (if use-tabs
-      (customize-set-variable 'whitespace-style
-                              '(face empty trailing indentation::tab
-                                     space-after-tab::tab
-                                     space-before-tab::tab))
-    ;; use spaces instead of tabs
-    (customize-set-variable 'whitespace-style
-                            '(face empty trailing tab-mark
-                                   indentation::space)))
-
-  (if use-globally
-      (global-whitespace-mode 1)
-    (when enabled-modes
-      (dolist (mode enabled-modes)
-        (add-hook (intern (format "%s-hook" mode)) #'whitespace-mode))))
-
-  ;; cleanup whitespace
-  (customize-set-variable 'whitespace-action '(cleanup auto-cleanup)))
-#+end_src
-
 ** Markdown
 #+begin_src emacs-lisp
   ;;; Markdown
@@ -1218,6 +1131,72 @@ Creates a distraction-free writing environment by centering the buffer and dimmi
 #+end_src
 
 * Programming
+** LSP
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+  :elpaca t
+  :commands (lsp lsp-deferred)
+  :hook
+  (prog-mode . lsp-deferred)
+  (lsp-mode . lsp-enable-which-key-integration)
+  (lsp-completion-mode . my/lsp-mode-setup-completion)
+  :config
+  (setq lsp-enable-on-type-formatting t)
+  (setq lsp-warn-no-matched-clients nil)
+  (setq lsp-prefer-flymake nil)
+  (setq lsp-completion-provider :none)
+  (setq lsp-headerline-breadcrumb-enable t)
+  (setq lsp-headerline-breadcrumb-segments '(project file symbols))
+  (setq lsp-disabled-clients '((python-mode . pyls)))
+  (setq lsp-idle-delay 0.1)
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  (defun my/orderless-dispatch-flex-first (_pattern index _total)
+    (and (eq index 0) 'orderless-flex))
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless))
+    (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
+    (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))))
+
+  (use-package lsp-ui
+    :elpaca t
+    :hook (lsp-mode . lsp-ui-mode)
+    :after lsp
+    :config
+      (setq lsp-ui-sideline-enable t      ; Show sideline information (errors, warnings, etc.)
+        lsp-ui-sideline-show-diagnostics t; Show diagnostic information in sideline
+        lsp-ui-sideline-ignore-duplicate t; Ignore duplicate information in sideline
+        lsp-ui-doc-enable t               ; Enable inline documentation
+        lsp-ui-doc-header t               ; Show a header line with documentation information
+        lsp-ui-doc-position 'bottom       ; Show documentation at the bottom
+        lsp-ui-doc-delay 0.5              ; Delay before showing documentation
+        lsp-ui-flycheck-enable t          ; Enable flycheck integration
+        lsp-ui-flycheck-list-position 'right ; Flycheck list position
+        lsp-ui-flycheck-live-reporting t  ; Live reporting of flycheck errors
+        lsp-completion-show-detail t
+        lsp-completion-show-kind t
+        lsp-completion-show-label-description r
+        lsp-completion-enable-additional-text-edit t)
+    (lsp-ui-doc-show))
+    #+end_src
+    
+*** Keybinds
+#+begin_src emacs-lisp
+(my-leader-def
+  :infix "l"
+  "" '(:wk "lsp")
+  "d" 'xref-find-definitions
+  "r" #'xref-find-references
+  "n" #'lsp-ui-find-next-reference
+  "p" #'lsp-ui-find-prev-reference
+  "s" #'counsel-imenu
+  "f" #'lsp-format-buffer
+  "e" #'lsp-ui-flycheck-list
+  "S" #'lsp-ui-sideline-mode
+  "X" #'lsp-execute-code-action)
+#+end_src
+
 ** Treesitter
 #+begin_src emacs-lisp
 (use-package treesit-auto
@@ -1297,81 +1276,6 @@ Creates a distraction-free writing environment by centering the buffer and dimmi
    '(git-gutter:deleted-sign "--"))) ; Symbol for deleted lines
 #+end_src
 
-** LSP
-#+begin_src emacs-lisp
-  (use-package lsp-mode
-  :elpaca t
-  :commands (lsp lsp-deferred)
-  :hook
-  (c++-mode . lsp-deferred)
-  (js2-mode . lsp)
-  (css-mode .lsp)
-  (lsp-mode . lsp-enable-which-key-integration)
-  (lsp-completion-mode . my/lsp-mode-setup-completion)
-  :custom
-  (lsp-prefer-flymake nil)        ; Use lsp-ui and/or flycheck instead of flymake
-  (lsp-completion-provider :none) ;; we use Corfu!
-  (lsp-headerline-breadcrumb-enable t)
-  (lsp-headerline-breadcrumb-segments '(project file symbols))
-  (lsp-disabled-clients '((python-mode . pyls)))
-  (lsp-idle-delay 0.1)
-  :init
-  (defun my/orderless-dispatch-flex-first (_pattern index _total)
-    (and (eq index 0) 'orderless-flex))
-
-  (defun my/lsp-mode-setup-completion ()
-    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(orderless))
-    ;; Optionally configure the first word as flex filtered.
-    (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
-    ;; Optionally configure the cape-capf-buster.
-    (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))))
-
-  (use-package lsp-ui
-    :elpaca t
-    :hook (lsp-mode . lsp-ui-mode)
-    :after lsp
-    :config
-      (setq lsp-ui-sideline-enable t           ; Show sideline information (errors, warnings, etc.)
-        lsp-ui-sideline-show-symbol t     ; Show symbol information in sideline
-        lsp-ui-sideline-show-hover t      ; Show hover information in sideline
-        lsp-ui-sideline-show-diagnostics t; Show diagnostic information in sideline
-        lsp-ui-sideline-ignore-duplicate t; Ignore duplicate information in sideline
-        lsp-ui-sideline-enable t
-        lsp-ui-doc-enable t               ; Enable inline documentation
-        lsp-ui-doc-header t               ; Show a header line with documentation information
-        lsp-ui-doc-include-signature t    ; Include function signatures in documentation
-        lsp-ui-doc-position 'bottom       ; Show documentation at the bottom
-        lsp-ui-doc-delay 0.5               ; Delay before showing documentation
-        lsp-ui-peek-enable t              ; Enable peek definition UI
-        lsp-ui-peek-always-show t         ; Always show peek UI even if there's only one candidate
-        lsp-ui-peek-fontify 'always       ; Fontify code in peek UI
-        lsp-ui-flycheck-enable t          ; Enable flycheck integration
-        lsp-ui-flycheck-list-position 'right ; Flycheck list position
-        lsp-ui-flycheck-live-reporting t  ; Live reporting of flycheck errors
-        lsp-completion-show-detail t
-        lsp-completion-show-kind t
-        lsp-completion-show-label-description r
-        lsp-completion-enable-additional-text-edit t
-        )
-    (lsp-ui-doc-show))
-    #+end_src
-    
-*** Keybinds
-#+begin_src emacs-lisp
-(my-leader-def
-  :infix "l"
-  "" '(:wk "lsp")
-  "d" 'xref-find-definitions
-  "r" #'xref-find-references
-  "n" #'lsp-ui-find-next-reference
-  "p" #'lsp-ui-find-prev-reference
-  "s" #'counsel-imenu
-  "e" #'lsp-ui-flycheck-list
-  "S" #'lsp-ui-sideline-mode
-  "X" #'lsp-execute-code-action)
-#+end_src
-
 ** Flycheck
 A syntax checking extension for Emacs. Integrates with LSP-mode, but can also use various standalone checkers.
 References:
@@ -1409,20 +1313,21 @@ References:
 *** C/C++
 #+begin_src emacs-lisp
   (use-package c++-mode
+  :elpaca nil
   :after lsp-mode
-  :mode ("\\.cpp$" "\\.h$")
-  :hook (c++-mode . lsp))
-
-  (defun my-c-mode-hook ()
-  (setq c-basic-offset 4
-        c-indent-level 4
-        c-default-style (cons '(c-mode . "k&r") c-default-style)
-        c-default-style "bsd"))
-  (add-hook 'c-mode-common-hook 'my-c-mode-hook)
+  :mode ("\\.cpp\\'" "\\.h\\'")
+  :hook (c++-mode . lsp-defered)
+  :config
+  (add-hook 'c++-mode-hook #'lsp)
+  (defun my/clang-format-on-save ()
+    (when (eq major-mode 'c++-mode)
+      (clang-format-buffer)))
+  (add-hook 'before-save-hook #'my/clang-format-on-save))
   
   (use-package clang-format
     :elpaca t
     :config
+    (global-set-key (kbd "C-c C-f") 'clang-format-buffer)
     (setq clang-format-style-option "file"))
 #+end_src
 
