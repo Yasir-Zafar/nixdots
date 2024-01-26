@@ -32,6 +32,12 @@
 
   };
 
+  location = {
+
+    provider = "geoclue2";
+
+  };
+
 #virtualisation.libvirtd.enable = true;
 
 }
