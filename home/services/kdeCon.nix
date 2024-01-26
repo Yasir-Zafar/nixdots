@@ -2,8 +2,8 @@
 
    services = {
 
-     kdeconnect.enable;
+     kdeconnect.enable = true;
 
-     };
+   };
 
 }
