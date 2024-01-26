@@ -11,10 +11,8 @@
     ./direnv.nix
     ./eza.nix
     ./fzf.nix
-    ./dircolors.nix
     ./bat.nix
     ./foot.nix
-    ./ncmpcpp.nix
     ./mail.nix
 
   ];

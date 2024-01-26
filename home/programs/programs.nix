@@ -53,6 +53,7 @@
     libreoffice-fresh
     syncthing
     calibre
+    wineWowPackages.waylandFull
     (python311.withPackages (ps: with ps; [
       pip
       adblock

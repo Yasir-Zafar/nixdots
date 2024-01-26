@@ -12,7 +12,6 @@
          "*.props:Java Properties"
          ];
         pager = "less -FR";
-        theme = "Gruvbox";
 
       };
 
