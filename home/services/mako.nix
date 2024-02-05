@@ -8,15 +8,15 @@
       anchor = "top-right";
       layer = "overlay";
       backgroundColor = "#1d2021ff";
-      borderColor = "#1d2021ff";
+      borderColor = "#282828ff";
       textColor = "#ebdbb2ff";
-      #borderRadius = 10;
-      borderSize = 0;
+      borderRadius = 10;
+      borderSize = 5;
 
       defaultTimeout = 3000;
       font = "JetBrains Mono 10";
-      margin = "15";
-      padding = "0";
+      margin = "20";
+      padding = "10";
 
       maxIconSize = 128;
       width = 350;

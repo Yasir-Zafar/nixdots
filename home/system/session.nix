@@ -16,7 +16,7 @@
       EDITOR = "emacsclient -c -a 'emacs'";
       ALTERNATE_EDITOR="nvim";
       TERMINAL="foot";
-      READER="evince";
+      READER="emacs";
       BROWSER="firefox";
       VIDEO="mpv";
       IMAGE="imv";

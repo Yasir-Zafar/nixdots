@@ -139,13 +139,6 @@ I’ve started experimenting with the native-comp branch of Emacs for increased 
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 #+end_src
 
-** Custom.el
-#+begin_src emacs-lisp
-  ;; Write customizations to a separate file instead of this file.
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-  (load custom-file t)
-#+end_src
-
 ** Littering
 By default Emacs and its packages create a lot files in =.emacs.d= and in other places. [[https://github.com/emacscollective/no-littering][no-littering]] is a collective effort to redirect all of that to two folders in =user-emacs-directory=.
 
@@ -158,13 +151,7 @@ By default Emacs and its packages create a lot files in =.emacs.d= and in other 
 
   ;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
   (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
-        url-history-file (expand-file-name "url/history" user-emacs-directory))
-  ;; Keep customization settings in a temporary file (thanks Ambrevar!)
-  (setq custom-file
-        (if (boundp 'server-socket-dir)
-            (expand-file-name "custom.el" server-socket-dir)
-          (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
-  (load custom-file t)
+  url-history-file (expand-file-name "url/history" user-emacs-directory))
 #+end_src
 
 * General
@@ -682,6 +669,10 @@ Commands for Ido-like directory navigation.
 
 ** Corfu
 #+begin_src emacs-lisp
+  (use-package prescient
+  :elpaca t
+  :config
+  (prescient-persist-mode 1))
   ;;; Corfu
   (use-package corfu
   :elpaca t
@@ -692,6 +683,11 @@ Commands for Ido-like directory navigation.
           corfu-auto-prefix 2)  ; Complete with less prefix keys
   :init
     (global-corfu-mode 1))
+
+  (use-package corfu-prescient
+    :elpaca t
+    :init
+    (corfu-prescient-mode 1))
 #+end_src
 
 ** Cape
@@ -1149,6 +1145,13 @@ Creates a distraction-free writing environment by centering the buffer and dimmi
   (setq lsp-headerline-breadcrumb-segments '(project file symbols))
   (setq lsp-disabled-clients '((python-mode . pyls)))
   (setq lsp-idle-delay 0.1)
+
+  ;; C++
+  (setq lsp-clients-clangd-format-style "file") ; Use the style from .clang-format file in the project
+  (setq lsp-clients-clangd-fall-back-style "Allman") ; Set the fallback style if no .clang-format file is found
+  (setq lsp-clients-clangd-enable-completions-in-comments t) ; Enable completions in comments
+  (setq lsp-clients-clangd-cross-file-rename t) ; Enable cross-file rename
+  (setq lsp-clients-clangd-file-relative-includes t) ; Use relative paths in #include directives
   :init
   (setq lsp-keymap-prefix "C-c l")
   (defun my/orderless-dispatch-flex-first (_pattern index _total)
@@ -1333,26 +1336,26 @@ References:
 
 *** Rust
 #+begin_src emacs-lisp
-(use-package rustic
-:elpaca t
-:defer t
-:config
-(setq rustic-format-on-save t)
-(setq rustic-analyzer-command '("~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rust-analyzer"))
-:custom
-(rustic-analyzer-command '("rustup" "run" "nightly" "rust-analyzer"))
-:general
-(:keymaps 'rustic-mode-map
-:states '(normal visual)
-:prefix "SPC"
-:non-normal-prefix "M-SPC"
-"c" 'rustic-compile
-"r" 'rustic-run
-"b" 'rustic-cargo-build
-"t" 'rustic-test))
+  (use-package rustic
+    :elpaca t
+    :defer t
+    :config
+    (setq rustic-format-on-save t)
+    (setq rustic-analyzer-command '("~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rust-analyzer"))
+    :custom
+    (rustic-(and )nalyzer-command '("rustup" "run" "nightly" "rust-analyzer"))
+    :general
+    (:keymaps 'rustic-mode-map
+              :states '(normal visual)
+              :prefix "SPC"
+              :non-normal-prefix "M-SPC"
+              "c" 'rustic-compile
+              "r" 'rustic-run
+              "b" 'rustic-cargo-build
+              "t" 'rustic-test))
 
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize))
 #+end_src
 
 *** Javascript
@@ -1401,43 +1404,31 @@ References:
 
 *** HTML
 #+begin_src emacs-lisp
-;; web-mode for HTML
-(use-package web-mode
-:elpaca t
-:defer t
-:mode (("\\.html\\'" . web-mode))
-:config
-(setq web-mode-enable-auto-pairing t)
-(setq web-mode-enable-css-colorization t)
-(setq web-mode-markup-indent-offset 2))
+  ;; web-mode for HTML
+  (use-package web-mode
+    :elpaca t
+    :defer t
+    :mode (("\\.html\\'" . web-mode))
+    :config
+    (setq web-mode-enable-auto-pairing t)
+    (setq web-mode-markup-indent-offset 2))
 
-;; emmet-mode for HTML/CSS abbreviation expansion
-(use-package emmet-mode
-:elpaca t
-:defer t
-:hook ((web-mode . emmet-mode)
-         (css-mode . emmet-mode))
-         :config
-         (setq emmet-move-cursor-between-quotes t
-        emmet-self-closing-tag-style " /"))
-(add-hook 'emmet-mode-hook (lambda () (setq emmet-indent-after-insert t)))
+  ;; emmet-mode for HTML/CSS abbreviation expansion
 
-;; Set up hooks for modes
-(add-hook 'web-mode-hook
-          (lambda ()
-            (emmet-mode)
-            ;; Add other web-mode specific configurations here
-            ))
+  
+  (use-package emmet-mode
+    :elpaca t
+    :defer t
+    :hook (web-mode . emmet-mode)
+    :config
+    (setq emmet-move-cursor-between-quotes t
+          emmet-self-closing-tag-style " /")
+    (org-add-hook 'emmet-mode-hook (lambda () (setq emmet-indent-after-insert t))))
 
-(add-hook 'css-mode-hook
-          (lambda ()
-            (emmet-mode)
-            ;; Add other css-mode specific configurations here
-            ))
 
-(defun my-setup-indent ()
-  (setq-local css-indent-offset 2))
-(add-hook 'prog-mode-hook 'my-setup-indent)
+  (defun my-setup-indent ()
+    (setq-local css-indent-offset 2))
+  (add-hook 'prog-mode-hook 'my-setup-indent)
 #+end_src
 
 *** Nix
@@ -1639,85 +1630,52 @@ References:
 
 ** Theme
 #+begin_src emacs-lisp
-  (use-package modus-themes
-  :elpaca t
-  :config
-  ;; Subtle underlines  
-  (setq modus-themes-common-palette-overrides
-  '((underline-link border)
-  (underline-link-visited border)
-  (underline-link-symbolic border)))
-  
-  ;; Add a nuanced background to prompts that complements their foreground.
-  (setq modus-themes-common-palette-overrides
-  '((fg-prompt cyan)
-  (bg-prompt bg-cyan-nuanced)))
-  
-  ;; Change the background to a shade of magenta
-  (setq modus-themes-common-palette-overrides
-  '((bg-paren-match bg-magenta-intense)))
-  
-  ;; Enable underlines by applying a color to them
-  (setq modus-themes-common-palette-overrides
-  '((bg-paren-match bg-magenta-intense)
-  (underline-paren-match fg-main)))
-  
-  (setq modus-themes-common-palette-overrides
-  '((border-mode-line-active bg-mode-line-active)
-  (border-mode-line-inactive bg-mode-line-inactive)))
-
-  (setq modus-themes-org-blocks 'gray-background)
-
-  (defun my-modus-themes-custom-faces ()
-  (modus-themes-with-colors
-    (custom-set-faces
-     ;; Add "padding" to the mode lines
-     `(mode-line ((,c :box (:line-width 5 :color ,bg-mode-line-active))))
-     `(mode-line-inactive ((,c :box (:line-width 5 :color ,bg-mode-line-inactive)))))))
-
-  (add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
-
-  ;; Load the theme of your choice.
-  (modus-themes-load-theme 'modus-operandi)
-
-  (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
+  (use-package doom-themes
+    :elpaca t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    (load-theme 'doom-gruvbox t))
 #+end_src
 
 ** Bar
 *** Keycast
 #+begin_src emacs-lisp
-  ;; (use-package keycast
-  ;; :elpaca t
-  ;; :custom
-  ;; (keycast-mode-line-remove-tail-elements nil)
-  ;; (keycast-mode-line-insert-after 'mode-line-misc-info)
-  ;; :init
-  ;; (keycast-mode-line-mode 0))
-  #+end_src
-
-*** Smart modeline
-#+begin_src emacs-lisp
-  (use-package smart-mode-line
+  (use-package keycast
   :elpaca t
+  :custom
+  (keycast-mode-line-remove-tail-elements nil)
+  (keycast-mode-line-insert-after 'mode-line-misc-info)
   :init
-  (setq sml/no-confirm-load-theme t) ; Don't prompt for confirmation when loading themes
-  (setq sml/theme 'automatic)       ; Set the theme (options: dark, light, respectful, automatic)
-  (setq sml/shorten-directory t)     ; Shorten the directory name
-  (setq sml/shorten-modes t)         ; Shorten minor mode names
-  (setq sml/use-projectile-p 'before-prefixes)       ; Show Projectile project name
-  (setq sml/name-width 40)           ; Set the width of the buffer name
-  (setq sml/mode-width 'full)        ; Set the width of the minor modes column  
-  :config
-  (sml/setup))
-#+end_src
+  (keycast-mode-line-mode 1))
+  #+end_src
 
 *** Minion
 #+begin_src emacs-lisp
-(use-package minions
-  :elpaca t
-  :config
-  ;; Enable Minions mode to display minor modes in the mode line
-  (minions-mode 1))
+  ;; (use-package minions
+  ;;   :elpaca t
+  ;;   :config
+  ;;   ;; Enable Minions mode to display minor modes in the mode line
+  ;;   (minions-mode 1))
+#+end_src
+
+*** Mode Line
+#+begin_src emacs-lisp
+
+(set-face-attribute 'mode-line nil
+                    :background "#383838"
+                    :foreground "#DCDCDC"
+                    :box '(:line-width 8 :color "#383838")
+                    :overline nil
+                    :underline nil)
+
+(set-face-attribute 'mode-line-inactive nil
+                    :background "#383838"
+                    :foreground "#DCDCDC"
+                    :box '(:line-width 8 :color "#383838")
+                    :overline nil
+                    :underline nil)
 #+end_src
 
 ** Text highlight

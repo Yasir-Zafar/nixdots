@@ -1,9 +1,9 @@
 window {
   font-family: "JetBrainsMono Nerd Font";
-  margin: 0px;
+  margin: 5px;
   border: 4px solid rgba(40, 40, 40, 1);
   background-color: rgba(29, 32, 33, 1);
-  border-radius: 0px;
+  border-radius: 10px;
 }
 
 #input {
@@ -11,18 +11,21 @@ window {
   border: none;
   color: #fcf1c7;
   background-color: rgba(40, 40, 40, 1);
+  border-radius: 10px;
 }
 
 #inner-box {
   margin: 5px;
   border: none;
   background-color: transparent;
+  border-radius: 10px;
 }
 
 #outer-box {
   margin: 5px;
   border: none;
   background-color: transparent;
+  border-radius: 10px;
 }
 
 #scroll {
@@ -38,14 +41,16 @@ window {
 
 #entry {
   border: none;
+  border-radius: 10px;
 }
 
 #entry:focus {
   border: none;
+  border-radius: 10px;
 }
 
 #entry:selected {
   background-color: rgba(60, 56, 54, 0.95);
-  border-radius: 0px;
+  border-radius: 10px;
   border: none;
 }

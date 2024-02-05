@@ -24,13 +24,6 @@
 
     ".config/swayidle/config".source = idle/config;
 
-    ".config/eww" = {
-
-      source = ./eww;
-      recursive = true;
-
-    };
-
   };
 
 }
