@@ -14,7 +14,6 @@
     ./bat.nix
     ./foot.nix
     ./mail.nix
-    ./steam.nix
 
   ];
 
