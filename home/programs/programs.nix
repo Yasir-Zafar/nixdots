@@ -50,9 +50,12 @@
 
     neovim-unwrapped
     firefox-wayland
+    pavucontrol
     libreoffice-fresh
     syncthing
     calibre
+    gimp
+    zoom-us
     wineWowPackages.waylandFull
     (python311.withPackages (ps: with ps; [
       pip

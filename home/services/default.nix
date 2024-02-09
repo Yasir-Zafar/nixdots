@@ -6,7 +6,7 @@
 
     ./mako.nix
     ./easy.nix
-    ./kdeCon.nix
+    #./kdeCon.nix
 
   ];
 
