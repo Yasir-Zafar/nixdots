@@ -9,6 +9,7 @@
     fzf
     semgrep
     unzip
+    unrar
     p7zip
     (texlive.combine { inherit (texlive) scheme-full wrapfig titling titlesec fontspec; })
 
