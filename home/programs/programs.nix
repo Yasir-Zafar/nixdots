@@ -52,6 +52,7 @@
     neovim-unwrapped
     firefox-wayland
     pavucontrol
+    discord
     libreoffice-fresh
     syncthing
     calibre
