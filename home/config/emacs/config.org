@@ -904,13 +904,12 @@ Commands for Ido-like directory navigation.
   (add-hook 'doc-view-mode-hook #'crafted-writing-load-pdf-tools)
   :config
   (setq pdf-view-use-scaling nil)
-  
-  (defun my-pdf-tools-backdrop ()
-  (modus-themes-with-colors
-    (face-remap-add-relative
-     'default
-     `(:background ,bg-dim))))
   (add-hook 'pdf-tools-enabled-hook #'my-pdf-tools-backdrop)
+  (add-hook 'pdf-view-mode-hook 'pdf-outline-imenu-enable)
+  (add-hook 'pdf-view-mode-hook 'pdf-misc-size-indication-minor-mode)
+  (add-hook 'pdf-view-mode-hook 'pdf-links-minor-mode)
+  (add-hook 'pdf-view-mode-hook 'pdf-history-minor-mode)
+  (add-hook 'pdf-view-mode-hook 'pdf-isearch-minor-mode)
   
   (setq-default pdf-view-display-size 'fit-width))
 #+end_src
@@ -1447,42 +1446,30 @@ Dired is the built-in Emacs file manager. It's so good that it's strange that, t
 My config mostly follows ranger's and vifm's keybindings which I'm used to.
 
 #+begin_src emacs-lisp
-  (use-package dired
-    :elpaca nil
-    :commands (dired)
-    :config
-    (setq dired-listing-switches "-lXGah --group-directories-first")
-    (setq dired-dwim-target t)
-    (setq wdired-allow-to-change-permissions t)
-    (setq wdired-create-parent-directories t)
-    (setq dired-recursive-copies 'always)
-    (setq dired-recursive-deletes 'always)
-    (setq dired-kill-when-opening-new-dired-buffer t)
-    (add-hook 'dired-mode-hook
-              (lambda ()
-                (setq truncate-lines t)
-                (visual-line-mode nil)))
-      (add-hook 'dired-mode-hook #'dired-hide-details-mode))
-    (general-define-key
-     :states '(normal)
-     :keymaps 'dired-mode-map
-     "h" #'dired-up-directory
-     "l" #'dired-find-file
-     "=" #'dired-narrow
-     "-" #'my/dired-create-empty-file-subtree
-     "~" #'vterm
-     "M-r" #'wdired-change-to-wdired-mode
-     "<left>" #'dired-up-directory
-     "<right>" #'dired-find-file
-     "M-<return>" #'dired-open-xdg)
+    (use-package dired
+      :elpaca nil
+      :commands (dired)
+      :config
+      (setq dired-listing-switches "-lXGah --group-directories-first"
+            dired-dwim-target t
+            wdired-allow-to-change-permissions t
+            wdired-create-parent-directories t
+            dired-recursive-copies 'always
+            dired-recursive-deletes 'always
+            dired-kill-when-opening-new-dired-buffer t)
+      (add-hook 'dired-mode-hook
+                (lambda ()
+                  (setq truncate-lines t)
+                  (visual-line-mode nil))))
 
-  (defun my/dired-home ()
-    "Open dired at $HOME"
-    (interactive)
-    (dired (expand-file-name "~")))
-
-  (my-leader-def
-    "ad" #'dired)
+    (eval-after-load 'dired
+      '(progn
+         (bind-keys :map dired-mode-map
+                    ("=" . dired-narrow)
+                    ("~" . vterm)
+                    ("<left>" . dired-up-directory)
+                    ("<right>" . dired-find-file)
+                    ("M-<return>" . dired-open-xdg))))
 #+end_src
 
 *** Addons
@@ -1542,6 +1529,17 @@ Provides stuff like =dired-open-xdg=
 :commands (dired-du-mode)
 :config
 (setq dired-du-size-format t))
+#+end_src
+
+dired-hide
+
+#+begin_src emacs-lisp
+(use-package dired-hide-dotfiles
+  :elpaca t
+  :hook (dired-mode . dired-hide-dotfiles-mode)
+  :config
+  :bind (:map dired-mode-map
+              ("." . dired-hide-dotfiles-mode)))
 #+end_src
 
 *** Subdirectories

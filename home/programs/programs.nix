@@ -57,6 +57,11 @@
     syncthing
     calibre
     gimp
+    dbeaver
+    obs-studio
+    kdenlive
+    inkscape
+    whatsapp-for-linux
     zoom-us
     wineWowPackages.waylandFull
     (python311.withPackages (ps: with ps; [
