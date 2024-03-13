@@ -11,6 +11,7 @@
     unzip
     unrar
     p7zip
+    neofetch
     (texlive.combine { inherit (texlive) scheme-full wrapfig titling titlesec fontspec; })
 
     libnotify
@@ -58,6 +59,7 @@
     calibre
     gimp
     dbeaver
+    qtcreator
     obs-studio
     kdenlive
     inkscape

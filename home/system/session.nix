@@ -25,8 +25,7 @@
       NIXOS_OZONE_WL = "1";
       QT_QPA_PLATFORMTHEME = "gtk3";
       QT_SCALE_FACTOR = "1";
-      QT_QPA_PLATFORM = "wayland-egl";
-      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      QT_QPA_PLATFORM = "wayland";
       QT_AUTO_SCREEN_SCALE_FACTOR = "1";
 
       WLR_RENDERER = "vulkan";
