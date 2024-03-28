@@ -13,7 +13,7 @@
   services = {
 
     fstrim.enable = true;
-    tlp.enable = true;
+    #tlp.enable = true;
     gvfs.enable = true;
 
   };
