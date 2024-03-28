@@ -3,7 +3,7 @@
   imports = [
 
     ./packages.nix
-    ./kde.nix
+    ./gnome.nix
     #./hyprland.nix
     ./steam.nix
     #./xdg.nix
