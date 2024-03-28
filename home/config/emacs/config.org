@@ -1644,7 +1644,7 @@ References:
   (keycast-mode-line-remove-tail-elements nil)
   (keycast-mode-line-insert-after 'mode-line-misc-info)
   :init
-  (keycast-mode-line-mode 1))
+  (keycast-mode-line-mode 0))
   #+end_src
 
 *** Minion
@@ -1658,20 +1658,37 @@ References:
 
 *** Mode Line
 #+begin_src emacs-lisp
+(use-package doom-modeline
+  :elpaca t
+  :custom
+(setq doom-modeline-height 25)
+(setq doom-modeline-bar-width 4)
+(setq doom-modeline-hud t)
+(setq doom-modeline-window-width-limit 80)
+(setq doom-modeline-project-detection 'auto)
+(setq doom-modeline-buffer-file-name-style 'truncate-upto-project)
 
-(set-face-attribute 'mode-line nil
-                    :background "#383838"
-                    :foreground "#DCDCDC"
-                    :box '(:line-width 8 :color "#383838")
-                    :overline nil
-                    :underline nil)
+;; Whether display icons in the mode-line.
+;; While using the server mode in GUI, should set the value explicitly.
+(setq doom-modeline-icon t)
 
-(set-face-attribute 'mode-line-inactive nil
-                    :background "#383838"
-                    :foreground "#DCDCDC"
-                    :box '(:line-width 8 :color "#383838")
-                    :overline nil
-                    :underline nil)
+;; Whether display the icon for `major-mode'. It respects option `doom-modeline-icon'.
+(setq doom-modeline-major-mode-icon t)
+
+;; Whether display the colorful icon for `major-mode'.
+;; It respects `nerd-icons-color-icons'.
+(setq doom-modeline-major-mode-color-icon t)
+
+;; Whether display the icon for the buffer state. It respects option `doom-modeline-icon'.
+(setq doom-modeline-buffer-state-icon t)
+;; Whether display the buffer encoding.
+(setq doom-modeline-buffer-encoding nil)
+(setq doom-modeline-modal nil)
+(setq doom-modeline-modal-icon nil)
+(setq doom-modeline-modal-modern-icon t)
+(setq doom-modeline-gnus nil)
+(setq doom-modeline-irc nil)
+  :init (doom-modeline-mode 1))
 #+end_src
 
 ** Text highlight

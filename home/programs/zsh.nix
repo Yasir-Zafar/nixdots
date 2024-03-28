@@ -10,7 +10,7 @@
 
         historySubstringSearch.enable = true;
         syntaxHighlighting.enable = true;
-        enableAutosuggestions = true;
+        autosuggestion.enable = true;
         enableCompletion = true;
         history.path = "$XDG_DATA_HOME/history";
 

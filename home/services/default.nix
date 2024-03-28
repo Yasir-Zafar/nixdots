@@ -4,9 +4,8 @@
 
   [
 
-    ./mako.nix
+    #./mako.nix
     ./easy.nix
-    #./kdeCon.nix
 
   ];
 

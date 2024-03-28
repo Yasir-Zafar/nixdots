@@ -4,8 +4,8 @@
 
     ./programs.nix
     ./git.nix
-    ./xdg.nix
-    ./lock.nix
+    #./xdg.nix
+    #./lock.nix
     ./zsh.nix
     ./starship.nix
     ./direnv.nix
@@ -13,7 +13,7 @@
     ./fzf.nix
     ./bat.nix
     ./foot.nix
-    ./mail.nix
+    #./mail.nix
 
   ];
 

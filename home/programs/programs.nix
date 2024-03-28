@@ -3,7 +3,6 @@
 
   home.packages = with pkgs; [
 
-    libnotify
     fd
     ripgrep
     fzf
@@ -14,22 +13,23 @@
     neofetch
     (texlive.combine { inherit (texlive) scheme-full wrapfig titling titlesec fontspec; })
 
-    libnotify
-    mpc-cli
-    yt-dlp
-    ffmpeg
-    grim
-    slurp
-    wl-clipboard
+    # libnotify
+    # mpc-cli
+    # yt-dlp
+    # ffmpeg
+    # grim
+    # slurp
+    # wl-clipboard
 
-    brillo
-    wbg
-    mpd
-    mpv
-    imv
-    swayidle
-    waybar
-    wofi
+    # brillo
+    # wbg
+    # mpd
+    # mpv
+    # imv
+    # swayidle
+    # waybar
+    # wofi
+    # libnotify
 
     llvmPackages_17.libcxxClang
     clang-tools_17
@@ -57,13 +57,8 @@
     libreoffice-fresh
     syncthing
     calibre
-    gimp
-    dbeaver
     qtcreator
-    obs-studio
-    kdenlive
     inkscape
-    whatsapp-for-linux
     zoom-us
     wineWowPackages.waylandFull
     (python311.withPackages (ps: with ps; [

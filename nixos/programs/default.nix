@@ -3,10 +3,10 @@
   imports = [
 
     ./packages.nix
-    ./hyprland.nix
+    ./kde.nix
+    #./hyprland.nix
     ./steam.nix
-    ./xdg.nix
-    ./gpg.nix
+    #./xdg.nix
 
   ];
 

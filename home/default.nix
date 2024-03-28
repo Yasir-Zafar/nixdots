@@ -5,7 +5,7 @@
     ./programs
     ./config
     ./services
-    ./scripts
+    #./scripts
 
   ];
 
