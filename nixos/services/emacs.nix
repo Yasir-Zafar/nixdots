@@ -5,7 +5,7 @@
     emacs = {
 
       enable = false;
-      install = true;
+      install = false;
       defaultEditor = true;
       package = pkgs.emacs-pgtk;
 
