@@ -3,7 +3,6 @@
   imports = [
   
     ./graphics.nix
-    ./pulse.nix
     ./sound.nix
     ./bluetooth.nix
     ./zsh.nix
