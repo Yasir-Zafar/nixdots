@@ -8,7 +8,6 @@
     curl
 
     htop
-    powertop
     wineWowPackages.waylandFull
 
   ];
