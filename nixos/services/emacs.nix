@@ -1,16 +1,14 @@
-{ config, pkgs, ...}:{
-
+{
+  config,
+  pkgs,
+  ...
+}: {
   services = {
- 
     emacs = {
-
       enable = false;
-      install = false;
+      install = true;
       defaultEditor = true;
       package = pkgs.emacs-pgtk;
-
     };
-
   };
-
 }

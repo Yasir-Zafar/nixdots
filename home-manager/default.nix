@@ -1,9 +1,9 @@
 {
   imports = [
-    ./hardware
-    ./userspace
-    ./packages
     ./system
+    ./programs
+    ./config
     ./services
+    ./scripts
   ];
 }

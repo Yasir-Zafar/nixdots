@@ -1,8 +1,7 @@
 {
   imports = [
-    ./users.nix
-    ./system.nix
     ./settings.nix
+    ./session.nix
     ./overlays.nix
   ];
 }

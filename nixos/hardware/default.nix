@@ -1,14 +1,8 @@
 {
-
-  imports =
-
-    [
-
-      ./hardware-configuration.nix
-      ./boot.nix
-      ./networking.nix
-      ./locale.nix
-
-    ];
-
+  imports = [
+    ./hardware-configuration.nix
+    ./boot.nix
+    ./networking.nix
+    ./locale.nix
+  ];
 }

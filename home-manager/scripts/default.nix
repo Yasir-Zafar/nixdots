@@ -1,5 +1,5 @@
 {
   imports = [
-    ./emacs.nix
+    ./file.nix
   ];
 }
