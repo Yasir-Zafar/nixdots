@@ -11,5 +11,6 @@
     ./fzf.nix
     ./bat.nix
     ./foot.nix
+    ./nvim.nix
   ];
 }
