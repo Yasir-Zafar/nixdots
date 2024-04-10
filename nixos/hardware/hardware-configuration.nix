@@ -1,9 +1,8 @@
-{
-  config,
-  lib,
-  pkgs,
-  modulesPath,
-  ...
+{ config
+, lib
+, pkgs
+, modulesPath
+, ...
 }: {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -12,14 +11,14 @@
   boot = {
     initrd = {
       verbose = true;
-      availableKernelModules = ["xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "sr_mod" "rtsx_usb_sdmmc"];
-      kernelModules = [];
+      availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "sr_mod" "rtsx_usb_sdmmc" ];
+      kernelModules = [ ];
     };
 
-    blacklistedKernelModules = ["nouveau" "nvidia" "amd"];
-    kernelModules = ["kvm-intel"];
-    kernelParams = ["quiet" "udev.log_level=3"];
-    extraModulePackages = [];
+    blacklistedKernelModules = [ "nouveau" "nvidia" "amd" ];
+    kernelModules = [ "kvm-intel" ];
+    kernelParams = [ "quiet" "udev.log_level=3" ];
+    extraModulePackages = [ ];
   };
 
   fileSystems."/" = {
@@ -37,7 +36,7 @@
     fsType = "ext4";
   };
 
-  swapDevices = [];
+  swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;
 

@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     grim
     slurp
@@ -22,6 +22,7 @@
 
     rustup
     nodejs
+    nixfmt-rfc-style
 
     gnome.nautilus
     gnome-solanum
@@ -29,6 +30,8 @@
     transmission-gtk
 
     firefox-wayland
+    thunderbird
+    vscode
     pavucontrol
     gimp
     discord
@@ -36,8 +39,9 @@
     syncthing
     calibre
     qtcreator
+    qbittorrent
 
-    (texlive.combine {inherit (texlive) scheme-full wrapfig titling titlesec fontspec;})
+    (texlive.combine { inherit (texlive) scheme-full wrapfig titling titlesec fontspec; })
     (python311.withPackages (ps:
       with ps; [
         pip

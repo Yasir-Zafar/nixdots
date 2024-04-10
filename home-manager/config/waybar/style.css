@@ -52,7 +52,6 @@ window#waybar {
     padding: 0;
     background: @dark;
     color: @light;
-    border-radius: 10px;
 }
 
 #workspaces button.active {
@@ -75,56 +74,36 @@ window#waybar {
     padding: 0;
     background: @dark;
     margin: 0.3em 0.3em 0.3em 0.3em;
-    border-radius: 10px;
 }
 
 #submap {
     padding: 0;
     background: @dark;
     margin: 0.3em 0.3em 0.3em 0.3em;
-    border-radius: 10px;
 }
 
 #battery {
     padding: 0;
     background: @dark;
     margin: 0.3em 0.3em 0.3em 0.3em;
-    border-radius: 10px;
 }
 
 #memory {
     padding: 0;
     background: @dark;
     margin: 0.3em 0.3em 0.3em 0.3em;
-    border-radius: 10px;
 }
 
 #clock {
     padding: 0;
     background: @dark;
     margin: 0.3em 0.3em 0.3em 0.3em;
-    border-radius: 10px;
-}
-
-#mpd {
-    padding: 0;
-    background: @dark;
-    margin: 0.3em 0.3em 0.3em 0.3em;
-    border-radius: 10px;
-}
-
-#backlight {
-    padding: 0;
-    background: @dark;
-    margin: 0.3em 0.3em 0.3em 0.3em;
-    border-radius: 10px;
 }
 
 #wireplumber {
     padding: 0;
     background: @dark;
     margin: 0.3em 0.3em 0.3em 0.3em;
-    border-radius: 10px;
 }
 #wireplumber.muted {
     color: @red;

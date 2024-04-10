@@ -1,6 +1,6 @@
 {
   programs.zsh.enable = true;
-  environment.pathsToLink = ["/share/zsh"];
+  environment.pathsToLink = [ "/share/zsh" ];
 
   environment.sessionVariables = rec {
     XDG_CACHE_HOME = "$HOME/.cache";

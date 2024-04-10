@@ -1,11 +1,11 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 25,
+    "height": 30,
 
-    "modules-left": [ "hyprland/workspaces", "mpd" ],
-    "modules-center": ["clock"],
-    "modules-right": [ "hyprland/submap", "memory", "backlight", "wireplumber", "battery", "network" ],
+    "modules-left": [ "wireplumber", "battery", "network" ],
+    "modules-center": [ "hyprland/workspaces" ],
+    "modules-right": [ "clock", "hyprland/submap" ],
     "hyprland/workspaces": {
 	    "format": "{icon}",
 	    "format-icons": {
@@ -20,14 +20,8 @@
     	},
      "on-click": "activate",
     },
-    "mpd": {
-        "format": "  <span color=\"#fb4934\"></span>  {title} - {album} ",
-        "format-disconnected": " <span color=\"#fb4934\"></span>  Disconnected ",
-        "format-stopped": " <span color=\"#fb4934\"></span>  Stopped ",
-        "interval": 7,
-    },
     "clock": {
-        "format": " <span color=\"#8ec07c\">  </span> {:%b %a %I:%M %p} ",
+        "format": " <span color=\"#8ec07c\">  </span> {:%A, %B %d %I:%M %p} ",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "calendar": {
                     "mode"          : "month",
@@ -81,9 +75,4 @@
         "format-alt": "  <span color=\"#fe8019\">{icon}</span> {time} ",
         "format-icons": [""]
     },
-    "backlight": {
-        "device": "intel_backlight",
-        "format": "  <span color=\"#fabd2f\">{icon}</span> {percent} ",
-        "format-icons": [""]
-     },
-},
+}

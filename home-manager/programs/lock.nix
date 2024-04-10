@@ -3,7 +3,7 @@
     swaylock = {
       enable = true;
       settings = {
-        image = "~/Data/Pictures/Wallpapers/151.jpg";
+        image = "~/Data/Pictures/Wallpapers/200.png";
         indicator-caps-lock = true;
         scaling = "fill";
         bs-hl-color = "83a598";

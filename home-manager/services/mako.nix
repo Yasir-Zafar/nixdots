@@ -7,8 +7,8 @@
       backgroundColor = "#1d2021ff";
       borderColor = "#282828ff";
       textColor = "#ebdbb2ff";
-      borderRadius = 10;
-      borderSize = 5;
+      borderRadius = 0;
+      borderSize = 10;
 
       defaultTimeout = 3000;
       font = "JetBrains Mono 10";

@@ -1,7 +1,6 @@
-{
-  config,
-  pkgs,
-  ...
+{ config
+, pkgs
+, ...
 }: {
   xdg = {
     userDirs = {
@@ -18,10 +17,10 @@
     mimeApps = {
       enable = true;
       defaultApplications = {
-        "image" = ["imv.desktop"];
-        "audio" = ["mpv.desktop"];
-        "video" = ["mpv.desktop"];
-        "application/pdf" = ["emacs.desktop"];
+        "image" = [ "imv.desktop" ];
+        "audio" = [ "mpv.desktop" ];
+        "video" = [ "mpv.desktop" ];
+        "application/pdf" = [ "emacs.desktop" ];
         "text/plain" = "emacs.desktop";
         "application/vnd.oasis.opendocument.text" = "libreoffice-writer.desktop";
         "application/vnd.oasis.opendocument.spreadsheet" = "libreoffice-calc.desktop";
