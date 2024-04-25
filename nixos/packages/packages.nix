@@ -14,8 +14,6 @@
     htop
     cava
 
-    wineWowPackages.waylandFull
-    mono
     jdk17
     nasm
 

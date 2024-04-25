@@ -3,6 +3,7 @@
     grim
     slurp
     wl-clipboard
+    xdg-utils
 
     brillo
     wbg
@@ -23,6 +24,8 @@
     rustup
     nodejs
     nixfmt-rfc-style
+    statix
+    deadnix
 
     gnome.nautilus
     gnome-solanum
@@ -40,6 +43,8 @@
     calibre
     qtcreator
     qbittorrent
+    winetricks
+    wineWowPackages.waylandFull
 
     (texlive.combine { inherit (texlive) scheme-full wrapfig titling titlesec fontspec; })
     (python311.withPackages (ps:

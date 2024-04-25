@@ -15,9 +15,9 @@
         ".." = "cd ..";
         ".2" = "cd ../..";
         ".3" = "cd ../../..";
-        nu = "sudo nixos-rebuild switch --flake .!/.dots/nix#dpix";
-        hu = "home-manager switch --flake .~/.dots/home-manager#boi@dpix";
-        uu = "nix fmt; nix flake update --accept-flake-config .~/.dots/nix; sudo nixos-rebuild switch --flake ./.dots#dpix; home-manager switch --flake ./.dots#boi@dpix";
+        nu = "sudo nixos-rebuild switch --flake ./.dots/nix#dpix";
+        hu = "home-manager switch --flake ./.dots/home-manager#boi@dpix";
+        uu = "nix fmt; nix flake update --accept-flake-config ./.dots sudo nixos-rebuild switch --flake ./.dots#dpix; home-manager switch --flake ./.dots#boi@dpix";
         v = "nvim";
         e = "emacs";
         l = "exa -la";

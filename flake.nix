@@ -48,7 +48,7 @@
     {
       # Formatter for your nix files, available through 'nix fmt'
       # Other options beside 'alejandra' include 'nixpkgs-fmt'
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt-rfc-style);
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
 
       # NixOS configuration entrypoint
       # Available through 'nixos-rebuild --flake .#your-hostname'

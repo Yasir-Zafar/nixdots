@@ -9,7 +9,7 @@ in {
     inputs.nixvim.homeManagerModules.nixvim
   ];
   programs.nixvim = {
-    enable = true;
+    enable = false;
     colorschemes.gruvbox = {
       enable = true;
     };
@@ -66,6 +66,7 @@ in {
       cmp.enable = true;
       treesitter.enable = true;
       lsp.enable = true;
+      gitignore.enable=true;
       cmp.settings = {
         sources = [
           { name = "nvim_lsp"; }
