@@ -8,6 +8,7 @@
   nixpkgs = {
     # You can add overlays here
     overlays = [
+      #(self: super: { discord = super.discord.overrideAttrs (_: { src = builtins.fetchTarball <link-to-tarball>; });})
     ];
     # Configure your nixpkgs instance
     config = {

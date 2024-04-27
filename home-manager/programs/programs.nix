@@ -37,7 +37,7 @@
     vscode
     pavucontrol
     gimp
-    discord
+    discord-canary
     libreoffice-fresh
     syncthing
     calibre
