@@ -1,16 +1,9 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [
-    ./mpv.nix
-    ./spotify.nix
-    ./image-viewers.nix
-  ];
-  
   # Basic media packages
   home.packages = with pkgs; [
     # Audio players
-    spotify
     mpv
     
     # Video players

@@ -5,7 +5,6 @@
     ./terminal
     ./editors
     ./media
-    ./development
     ./communication
     ./productivity
     ./gaming
