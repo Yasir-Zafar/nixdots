@@ -184,6 +184,7 @@
         image_size = 32;
       };
     };
+  };
     
   
   # Ensure needed environment variables for Wayland/Hyprland
