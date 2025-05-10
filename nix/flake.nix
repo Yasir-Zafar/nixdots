@@ -15,12 +15,6 @@
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
-    # For cachix
-    nix-cache-action = {
-      url = "github:nix-community/nix-cache-action";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = { self, nixpkgs, nixos-hardware, home-manager, hyprland, flake-utils, ... }@inputs:

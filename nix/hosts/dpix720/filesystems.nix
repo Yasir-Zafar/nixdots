@@ -1,4 +1,4 @@
-{ config, pkgs, lib ... }:
+{ config, pkgs, lib, ... }:
 
 {
   fileSystems."/mnt/home/boi/Data" = {
