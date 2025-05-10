@@ -3,7 +3,6 @@
 
 {
   imports = [
-    ./packages.nix
     ./fonts.nix
     ./gtk.nix
     ./qt.nix
