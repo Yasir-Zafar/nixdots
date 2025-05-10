@@ -10,12 +10,6 @@
     # For flake management
     flake-utils.url = "github:numtide/flake-utils";
     
-    # For home-manager integration if needed
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    
     # For Hyprland
     hyprland = {
       url = "github:hyprwm/Hyprland";
