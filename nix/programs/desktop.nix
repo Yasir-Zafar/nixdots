@@ -24,17 +24,11 @@
     vesktop
     
     # Terminal emulators
-    alacritty
     kitty
-    foot
-    
-    # Development tools
-    vscode
-    helix
     
     # System utilities
     pavucontrol
-    gnome.gnome-disk-utility
+    gnome-disk-utility
     
     # Screenshot and screen recording
     #obs-studio
@@ -48,17 +42,13 @@
     #transmission-gtk
     
     # For GTK and Qt theming
-    gnome.adwaita-icon-theme
+    adwaita-icon-theme
     hicolor-icon-theme
     papirus-icon-theme
-    breeze-icons
-    breeze-gtk
-    breeze-qt5
     
     # Utilities
     xdg-utils
-    libsForQt5.ark
-    gnome.file-roller
+    file-roller
     
     # Bluetooth manager
     blueman

@@ -1,6 +1,16 @@
 {
   description = "NixOS System Configuration";
-
+  nixConfig = {
+    # Cachix binary caches
+    extra-substituters = [
+      "https://cache.nixos.org"
+      "https://hyprland.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+    ];
+  };
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     
@@ -11,24 +21,23 @@
     flake-utils.url = "github:numtide/flake-utils";
     
     # For Hyprland
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    hyprland.url = "github:hyprwm/Hyprland";
   };
-
-  outputs = { self, nixpkgs, nixos-hardware, home-manager, hyprland, flake-utils, ... }@inputs:
-    let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-      
-      # Library functions 
-      lib = nixpkgs.lib;
-      
-    in {
-      nixosConfigurations = {
-        dpix720 = lib.nixosSystem {
+  outputs = { self, nixpkgs, nixos-hardware, hyprland, flake-utils, ... }@inputs:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
           inherit system;
+          config.allowUnfree = true;
+        };
+      in {
+        packages.default = pkgs.hello;
+      }) // {
+      nixosConfigurations.dpix720 = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs hyprland;
+          };
           modules = [
             # Core configuration
             ./hosts/dpix720
@@ -41,38 +50,7 @@
             ./programs
             ./userspace
             ./services
-            
-            # Hyprland module
-            hyprland.nixosModules.default
-            
-            # Always include cachix
-            ({ pkgs, ... }: {
-              nix = {
-                settings = {
-                  substituters = [
-                    "https://cache.nixos.org"
-                    "https://hyprland.cachix.org"
-                    "https://nix-community.cachix.org"
-                  ];
-                  trusted-public-keys = [
-                    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-                    "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-                    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-                  ];
-                  trusted-users = [ "root" "@wheel" ];
-                  auto-optimise-store = true;
-                  experimental-features = [ "nix-command" "flakes" ];
-                };
-                gc = {
-                  automatic = true;
-                  dates = "weekly";
-                  options = "--delete-older-than 30d";
-                };
-              };
-            })
           ];
-          specialArgs = { inherit inputs; };
         };
-      };
-    };
+    }; 
 }

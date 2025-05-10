@@ -101,12 +101,8 @@
     ripgrep
     fd
     bat
-    exa
+    eza
     jq
-    yq
-    bottom
-    htop
-    btop
     neofetch
     duf
     ncdu
@@ -151,7 +147,6 @@
     # Text editors
     vim
     neovim
-    nano
   ];
   
   # Set environment variables for shells
@@ -159,7 +154,7 @@
     EDITOR = "vim";
     VISUAL = "vim";
     PAGER = "less";
-    BAT_THEME = "TwoDark";
+    BAT_THEME = "Catppuccin";
     FZF_DEFAULT_COMMAND = "fd --type f --hidden --follow --exclude .git";
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
   };

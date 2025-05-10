@@ -52,7 +52,6 @@
     sqlite
     pgcli
     mycli
-    dbeaver
     
     # Editor and IDE
     neovim

@@ -41,11 +41,6 @@
       dates = [ "weekly" ];
     };
     
-    # Registry configuration
-    registry = {
-      nixpkgs.flake = pkgs.path;
-    };
-    
     # Run nix-daemon with low priority
     daemonIOSchedClass = "idle";
     daemonCPUSchedPolicy = "idle";
