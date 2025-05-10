@@ -24,9 +24,4 @@
   
   # Firmware update daemon
   services.fwupd.enable = true;
-  
-  # Disable beep
-  security.rtkit.enable = true;
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
 }

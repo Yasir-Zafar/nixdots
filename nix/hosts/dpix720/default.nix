@@ -18,7 +18,6 @@
   networking.networkmanager.enable = true;
   
   # Enable sound
-  sound.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;

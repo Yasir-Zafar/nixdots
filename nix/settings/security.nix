@@ -24,18 +24,6 @@
       '';
     };
     
-    # PAM configuration
-    pam = {
-      services.swaylock = {
-        text = ''
-          auth include login
-        '';
-      };
-      
-      # Enable fingerprint authentication (if available)
-      services.login.fprintAuth = true;
-    };
-    
     # RTKit for better desktop performance
     rtkit.enable = true;
     
@@ -99,13 +87,6 @@
     bitwarden-cli
     pass
   ];
-  
-  # Enable GnuPG agent
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-    pinentryFlavor = "gtk2";
-  };
   
   # Enable fwupd for firmware updates
   services.fwupd.enable = true;

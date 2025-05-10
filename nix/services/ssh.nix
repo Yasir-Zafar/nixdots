@@ -10,6 +10,7 @@
       PermitRootLogin = "no";
       X11Forwarding = true;
       KbdInteractiveAuthentication = false;
+    };
   };
 
   # Install SSH-related packages

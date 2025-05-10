@@ -6,8 +6,7 @@
   programs = {
     # Bash configuration
     bash = {
-      enable = true;
-      enableCompletion = true;
+      completion.enable = true;
       enableLsColors = true;
       
       # System-wide bash configuration
@@ -71,8 +70,6 @@
     # StarShip prompt
     starship = {
       enable = true;
-      enableZshIntegration = true;
-      enableBashIntegration = true;
       settings = {
         add_newline = false;
         character = {
@@ -89,14 +86,6 @@
     direnv = {
       enable = true;
       nix-direnv.enable = true;
-    };
-    
-    # FZF (Fuzzy Finder)
-    fzf = {
-      enable = true;
-      enableZshIntegration = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
     };
   };
   

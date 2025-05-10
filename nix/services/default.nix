@@ -4,9 +4,10 @@
 {
   imports = [
     ./networking.nix
-    ./printing.nix
     ./sound.nix
     ./bluetooth.nix
     ./ssh.nix
   ];
+
+    services.power-profiles-daemon.enable = true;
 }

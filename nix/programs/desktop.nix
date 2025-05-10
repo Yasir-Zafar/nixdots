@@ -62,9 +62,6 @@
     
     # Bluetooth manager
     blueman
-    
-    # Screensaver
-    xscreensaver
   ];
   
   # Programs with special configuration
@@ -78,9 +75,6 @@
     
     # Dconf for GTK applications
     dconf.enable = true;
-    
-    # Kitty terminal emulator
-    kitty.enable = true;
     
     # Kdeconnect
     kdeconnect.enable = true;

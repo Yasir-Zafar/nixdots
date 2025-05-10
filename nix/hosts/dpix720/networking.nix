@@ -16,14 +16,6 @@
     
     # DNS settings
     nameservers = [ "1.1.1.1" "1.0.0.1" ];
-    
-    # Advanced NetworkManager settings
-    networkmanager.extraConfig = ''
-      [device]
-      wifi.backend=iwd
-      [connection]
-      wifi.powersave=2
-    '';
   };
   
   # Install network management tools

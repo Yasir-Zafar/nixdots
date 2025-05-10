@@ -31,10 +31,4 @@
   
   # Enable bluetooth audio support
   services.blueman.enable = true;
-  
-  # Configure A2DP sink
-  hardware.bluetooth.hsphfpd.enable = true;
-  
-  # Enable media control
-  services.mpris-proxy.enable = true;
 }

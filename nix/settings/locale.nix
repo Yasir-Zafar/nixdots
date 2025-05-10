@@ -28,17 +28,7 @@
   # Configure console
   console = {
     font = "Lat2-Terminus16";
-    keyMap = "us";
     useXkbConfig = true;
-  };
-  
-  # Set X11 keyboard layout
-  services.xserver = {
-    xkb = {
-      layout = "us";
-      variant = "";
-      options = "caps:escape"; # Map caps lock to escape - good for vim users
-    };
   };
   
   # Enable NTP time synchronization

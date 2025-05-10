@@ -34,9 +34,6 @@
     slurp
     swappy
     
-    # Screen recording
-    wf-recorder
-    
     # For waybar and other GTK apps
     gtk3
     gsettings-desktop-schemas
@@ -44,16 +41,8 @@
     # Polkit authentication agent
     polkit_gnome
     
-    # Color picker
-    hyprpicker
     
-    # Wallpaper
-    hyprpaper
-    swaybg
-    
-    # Lockscreen
-    swaylock-effects
-    swayidle
+    kitty  
   ];
   
   # Configure XDG portals for proper desktop integration
@@ -92,16 +81,6 @@
         thunar-volman
       ];
     };
-    
-    # Terminal emulator
-    kitty.enable = true;
-    
-    # For GUI file operations
-    xfconf.enable = true;
-    
-    # Default applications
-    # Use mime types for default applications
-    xdg.mime.enable = true;
   };
   
   # Environment variables for Wayland/Hyprland

@@ -27,9 +27,6 @@
         enable = true;
         style = "slight";
       };
-      
-      # Use embedded bitmaps with fonts that provide them
-      embeddedBitmaps = true;
     };
     
     # Install fonts
@@ -42,17 +39,10 @@
       open-sans
       
       # Serif fonts
-      noto-fonts-serif
       dejavu_fonts
       liberation_ttf
       
       # Monospace fonts
-      (nerdfonts.override { fonts = [
-        "JetBrainsMono"
-        "FiraCode"
-        "Hack"
-        "SourceCodePro"
-      ]; })
       jetbrains-mono
       fira-code
       fira-code-symbols
@@ -83,9 +73,6 @@
       unifont # Fallback font
     ];
   };
-  
-  # Enable font-manager
-  programs.font-manager.enable = true;
   
   # Install font utilities
   environment.systemPackages = with pkgs; [
