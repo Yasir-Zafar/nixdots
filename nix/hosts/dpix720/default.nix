@@ -11,12 +11,6 @@
     ./boot.nix
   ];
 
-  # Basic system configuration
-  system.stateVersion = "24.11"; # Never change this value
-  
-  # Set your time zone
-  time.timeZone = "Asia/Karachi"; # Change to your timezone
-  
   # Hostname
   networking.hostName = "dpix720";
   
@@ -31,12 +25,6 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
-  };
-  
-  # Configure console settings
-  console = {
-    font = "Lat2-Terminus16";
-    keyMap = "us";
   };
   
   # Basic system packages
@@ -66,5 +54,6 @@
     shell = pkgs.zsh;
   };
 
-  security.sudo.wheelNeedsPassword = false;
+  # Basic system configuration
+  system.stateVersion = "24.11"; # Never change this value
 }
