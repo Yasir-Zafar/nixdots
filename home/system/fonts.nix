@@ -8,7 +8,7 @@
   home.packages = with pkgs; [
     # Sans-serif fonts
     noto-fonts
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
     noto-fonts-emoji
     inter
     liberation_ttf
@@ -25,16 +25,6 @@
     fira-code-symbols
     hack-font
     iosevka
-    
-    # Nerd Fonts
-    (nerdfonts.override { 
-      fonts = [ 
-        "JetBrainsMono" 
-        "FiraCode" 
-        "Hack" 
-        "Iosevka"
-      ]; 
-    })
     
     # Icon fonts
     font-awesome

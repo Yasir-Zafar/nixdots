@@ -7,14 +7,14 @@
     obsidian
     
     # Office suite
-    #libreoffice-qt
+    libreoffice
     
     # PDF tools
     zathura
     poppler_utils
     
     # Time management
-    gnome.gnome-calendar
+    gnome-calendar
     anki
     
     # Mind mapping
@@ -25,7 +25,7 @@
     htop
     
     # Calculator
-    gnome.gnome-calculator
+    gnome-calculator
     bc
   ];
   

@@ -5,10 +5,9 @@
   # Qt configuration
   qt = {
     enable = true;
-    platformTheme = "qtct";
+    platformTheme.name = "gtk";
     style = {
-      name = "kvantum";
-      package = pkgs.libsForQt5.qtstyleplugin-kvantum;
+      name = "gtk2";
     };
   };
 
@@ -18,16 +17,13 @@
     libsForQt5.qt5ct
     qt6ct
     libsForQt5.breeze-qt5
-    libsForQt5.breeze-icons
-    breeze-icons
-    breeze-gtk
     adwaita-qt
     adwaita-qt6
     
     # Install Kvantum theme
     (catppuccin-kvantum.override {
-      accent = "Blue";
-      variant = "Mocha";
+      accent = "blue";
+      variant = "mocha";
     })
   ];
 

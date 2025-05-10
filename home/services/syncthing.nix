@@ -15,6 +15,5 @@
   # Install Syncthing-related packages
   home.packages = with pkgs; [
     syncthingtray
-    syncthing-gtk
   ];
 }

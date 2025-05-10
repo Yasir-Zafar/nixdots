@@ -6,19 +6,6 @@
   xdg = {
     enable = true;
     
-    # Desktop entries
-    desktopEntries = {
-      # Example desktop entry for a custom application
-      obsidian = {
-        name = "Obsidian";
-        exec = "obsidian %u";
-        icon = "obsidian";
-        comment = "Knowledge base";
-        categories = [ "Office" "Development" ];
-        mimeType = [ "x-scheme-handler/obsidian" ];
-      };
-    };
-    
     # MIME type associations
     mimeApps = {
       enable = true;
@@ -58,12 +45,9 @@
       pictures = "$HOME/Pictures";
       videos = "$HOME/Videos";
       desktop = "$HOME/Desktop";
-      publicShare = "$HOME/Public";
-      templates = "$HOME/Templates";
       extraConfig = {
         XDG_PROJECTS_DIR = "$HOME/Projects";
         XDG_GAMES_DIR = "$HOME/Games";
-        XDG_DOTFILES_DIR = "$HOME/Dotfiles";
       };
     };
   };

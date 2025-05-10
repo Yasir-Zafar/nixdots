@@ -12,15 +12,9 @@
   };
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    home-manager.url = "github:nix-community/home-manager";  # Fixed typo here
     flake-utils.url = "github:numtide/flake-utils";
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    hyprland.url = "github:hyprwm/Hyprland";  # Fixed space
   };
   outputs = { self, nixpkgs, home-manager, flake-utils, hyprland, ... }@inputs:
     let
@@ -46,6 +40,7 @@
                 stateVersion = "24.05";
               };
               programs.home-manager.enable = true;
+              nix.package = nixpkgs.legacyPackages.x86_64-linux.nix;  # Added this line
             }
           ];
         };
@@ -62,6 +57,7 @@
                 stateVersion = "24.05";
               };
               programs.home-manager.enable = true;
+              nix.package = nixpkgs.legacyPackages.x86_64-linux.nix;  # Added this line
             }
           ];
         };

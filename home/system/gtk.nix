@@ -55,17 +55,16 @@
 
   # Install GTK theme engines and related packages
   home.packages = with pkgs; [
-    gnome.adwaita-icon-theme
+    adwaita-icon-theme
     adwaita-qt
     adwaita-qt6
-    qt5ct
     qt6ct
     libsForQt5.qtstyleplugin-kvantum
     lxappearance
     xfce.thunar
     dconf
     gsettings-desktop-schemas
-    gnome.gnome-themes-extra
+    gnome-themes-extra
   ];
 
   # Set some GNOME/GTK settings using dconf
