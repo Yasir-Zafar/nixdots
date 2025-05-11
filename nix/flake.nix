@@ -22,7 +22,6 @@
     
     # For Hyprland
     hyprland.url = "github:hyprwm/Hyprland";
-    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
   };
   outputs = { self, nixpkgs, nixos-hardware, hyprland, flake-utils, ... }@inputs:
     flake-utils.lib.eachDefaultSystem (system:
@@ -51,7 +50,6 @@
             ./programs
             ./userspace
             ./services
-            {nixpkgs.overlays = [inputs.hyprpanel.overlay];}
           ];
         };
     }; 

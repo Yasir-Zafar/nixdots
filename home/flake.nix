@@ -18,6 +18,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     hyprland.url = "github:hyprwm/Hyprland";
+    hyprpanel.url = "github:jas-singhfsu/hyprpanel";
   };
 
   outputs = { self, nixpkgs, home-manager, flake-utils, hyprland, ... }@inputs: 
@@ -25,6 +26,7 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
+        overlays = [ inputs.hyprpanel.overlay ];
         config.allowUnfree = true;
       };
     in {

@@ -136,6 +136,8 @@
     nmap
 
     neovim
+
+    manix
   ];
   
   # Set environment variables for shells

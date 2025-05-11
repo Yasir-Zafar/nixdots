@@ -40,8 +40,6 @@
     
     # Polkit authentication agent
     polkit_gnome
-
-    hyprpanel
   ];
   
   # Configure XDG portals for proper desktop integration

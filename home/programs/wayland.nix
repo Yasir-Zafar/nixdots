@@ -254,11 +254,8 @@
       
       # Startup applications
       exec-once = [
-        "mako"
-        "~/.local/bin/wallpaper-rotator.sh"
         "hypridle"
         "brightnessctl s 55%"
-        #"batsignal -b -w 30 -c 15 -d 5 -f 100 -W \"DC NIGGA\" -F \"am too full\" -C \"Kys\""
         "easyeffects --gapplication-service"
         "wl-clipboard-history -t"
         "gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'"
@@ -378,6 +375,8 @@
     pamixer
     pavucontrol
     glib
+
+    hyprpanel
   ];
   
   # Ensure needed environment variables for Wayland/Hyprland
