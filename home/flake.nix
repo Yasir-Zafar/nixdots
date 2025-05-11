@@ -18,7 +18,6 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     hyprland.url = "github:hyprwm/Hyprland";
-    zen-browser.url = "github:MarceColl/zen-browser-flake";
   };
 
   outputs = { self, nixpkgs, home-manager, flake-utils, hyprland, ... }@inputs: 
@@ -44,8 +43,17 @@
 
               nix.package = pkgs.nix;
               nixpkgs.config.allowUnfree = true;
+              _module.args = {
+                inherit inputs;
+                # You can also export individual inputs if needed
+                inherit hyprland;
+              };
             }
           ];
+          # You can also pass extraSpecialArgs to make inputs available
+          extraSpecialArgs = { 
+            inherit inputs;
+          };
         };
       };
     };

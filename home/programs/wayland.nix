@@ -376,6 +376,7 @@
     # Media and audio
     pamixer
     pavucontrol
+    glib
   ];
   
   # Ensure needed environment variables for Wayland/Hyprland

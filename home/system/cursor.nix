@@ -13,9 +13,6 @@
   # Install cursor themes
   home.packages = with pkgs; [
     bibata-cursors
-    capitaine-cursors
-    numix-cursor-theme
-    nordzy-cursor-theme
   ];
 
   # Make sure settings are also applied to Wayland

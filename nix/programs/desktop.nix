@@ -43,7 +43,6 @@
     
     # For GTK and Qt theming
     adwaita-icon-theme
-    hicolor-icon-theme
     papirus-icon-theme
     
     # Utilities
@@ -78,30 +77,7 @@
   
   # Enable flatpak
   services.flatpak.enable = true;
-  
-  # Configure GTK themes
-  environment.etc."xdg/gtk-3.0/settings.ini".text = ''
-    [Settings]
-    gtk-theme-name=Breeze-Dark
-    gtk-icon-theme-name=Papirus-Dark
-    gtk-font-name=Inter 11
-    gtk-cursor-theme-name=Breeze_Snow
-    gtk-cursor-theme-size=24
-    gtk-application-prefer-dark-theme=true
-    gtk-xft-antialias=1
-    gtk-xft-hinting=1
-    gtk-xft-hintstyle=hintslight
-    gtk-xft-rgba=rgb
-    gtk-enable-animations=true
-  '';
-  
-  # Configure environment variables for Qt applications to use GTK themes
-  environment.variables = {
-    QT_QPA_PLATFORMTHEME = "qt5ct";
-    QT_STYLE_OVERRIDE = "kvantum";
-    GTK_THEME = "Breeze-Dark";
-  };
-  
+ 
   # Configure MIME types
   xdg.mime = {
     enable = true;
