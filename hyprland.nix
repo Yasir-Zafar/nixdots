@@ -1,11 +1,13 @@
-{ pkgs, inputs, ... }:
+# *.nix
+{ pkgs, ...}:
 {
-  imports = [ inputs.hyprpanel.homeManagerModules.hyprpanel ];
+
   programs.hyprpanel = {
 
     # Enable the module.
     # Default: false
     enable = true;
+    package = pkgs.hyprpanel;
 
     # Automatically restart HyprPanel with systemd.
     # Useful when updating your config so that you
@@ -34,25 +36,17 @@
       theme.bar.menus.text = "#123ABC";
     };
 
-    # Configure bar layouts for monitors.
-    # See 'https://hyprpanel.com/configuration/panel.html'.
-    # Default: null
-    layout = {
-      "bar.layouts" = {
-        "0" = {
-          left = [ "dashboard" "workspaces" "windowtitle" ];
-          middle = [ "media" ];
-          right = [ "volume" "network" "bluetooth" "battery" "systray" "clock" "notifications" ];
+    settings = {
+      layout = {
+        "bar.layouts" = {
+          "0" = {
+            left = [ "dashboard" "workspaces" ];
+            middle = [ "media" ];
+            right = [ "volume" "systray" "notifications" ];
+          };
         };
       };
-    };
 
-    # Configure and theme almost all options from the GUI.
-    # Options that require '{}' or '[]' are not yet implemented,
-    # except for the layout above.
-    # See 'https://hyprpanel.com/configuration/settings.html'.
-    # Default: <same as gui>
-    settings = {
       bar.launcher.autoDetectIcon = true;
       bar.workspaces.show_icons = true;
 
@@ -70,21 +64,9 @@
       theme.bar.transparent = true;
 
       theme.font = {
-        name = "JetBrainsMono Nerd Font";
-        size = "14px";
+        name = "CaskaydiaCove NF";
+        size = "16px";
       };
     };
   };
-
-  home.packages = with pkgs; [
-    aylurs-gtk-shell-git
-    libgtop
-    dart-sass
-    wl-clipboard
-    upower
-    hyprsunset
-    wf-recorder
-    grimblast
-  ];
 }
-

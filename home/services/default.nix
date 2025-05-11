@@ -3,7 +3,7 @@
 
 {
   imports = [
-    ./mako.nix
+    #./mako.nix
     ./syncthing.nix
     ./wayland.nix
     ./batsignal.nix
