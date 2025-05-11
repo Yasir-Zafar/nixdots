@@ -8,12 +8,14 @@
 (defpoll brightness :interval "1s" "$HOME/.config/eww/scripts/brightness.sh get")
 (defpoll volume :interval "1s" "$HOME/.config/eww/scripts/volume.sh get")
 (defpoll wifi_status :interval "1s" "$HOME/.config/eww/scripts/wifi.sh status")
-(defpoll wifi_name :interval "3s" "$HOME/.config/eww/scripts/wifi.sh name")
+(defpoll wifi_name :interval "1s" "$HOME/.config/eww/scripts/wifi.sh name")
 (defpoll bluetooth_status :interval "1s" "$HOME/.config/eww/scripts/bluetooth.sh status")
+(defpoll bluetooth_device :interval "1s" "$HOME/.config/eww/scripts/bluetooth.sh device")
 (defpoll dnd_status :interval "1s" "$HOME/.config/eww/scripts/dnd.sh status")
 
 ;; Listen to workspace changes
-(deflisten workspaces :initial "[]" "$HOME/.config/eww/scripts/workspaces.sh")
+(deflisten workspaces :initial "{\"workspaces\":[]}" 
+  "$HOME/.config/eww/scripts/workspaces.sh")
 
 ;; Widget definitions
 (defwidget bar []
@@ -28,7 +30,6 @@
        :orientation "h" 
        :space-evenly false 
        :halign "start"
-    (power)
     (wifi)
     (bluetooth)
     (dnd)))
@@ -38,7 +39,7 @@
        :orientation "h"
        :space-evenly false
        :halign "center"
-    (workspaces)))
+    (workspaces workspaces-var)))
 
 (defwidget right []
   (box :class "right-modules"
@@ -50,40 +51,47 @@
     (brightness_module)
     (time_module)))
 
-;; Left modules
-(defwidget power []
-  (button :class "power-btn module-btn"
-          :tooltip "Power menu"
-          :onclick "$HOME/.config/eww/scripts/power.sh"
-    ""))
-
 (defwidget wifi []
-  (button :class "wifi-btn module-btn ${wifi_status == 'connected' ? 'wifi-connected' : 'wifi-disconnected'}"
-          :tooltip "${wifi_status == 'connected' ? 'Connected to ${wifi_name}' : 'Disconnected'}"
-          :onclick "$HOME/.config/eww/scripts/wifi.sh toggle"
-    "${wifi_status == 'connected' ? '' : ''}"))
+  (box :orientation "h" 
+       :space-evenly false 
+       :spacing 5
+    (button :class "wifi-btn module-btn ${wifi_status == 'connected' ? 'wifi-connected' : 'wifi-disconnected'}"
+            :tooltip "${wifi_status == 'connected' ? 'Connected to ${wifi_name}' : 'Disconnected'}"
+            :onclick "$HOME/.config/eww/scripts/wifi.sh toggle"
+      "${wifi_status == 'connected' ? '󰖩' : '󰖪'}")
+    (label :class "wifi-label ${wifi_status == 'connected' ? 'wifi-connected-label' : 'wifi-disconnected-label'}"
+           :text "${wifi_status == 'connected' ? wifi_name : 'WiFi'}"
+           :limit-width 15)))
 
+;; Bluetooth widget with connected device name
 (defwidget bluetooth []
-  (button :class "bluetooth-btn module-btn ${bluetooth_status == 'on' ? 'bluetooth-on' : 'bluetooth-off'}"
-          :tooltip "${bluetooth_status == 'on' ? 'Bluetooth On' : 'Bluetooth Off'}"
-          :onclick "$HOME/.config/eww/scripts/bluetooth.sh toggle"
-    "${bluetooth_status == 'on' ? '' : ''}"))
+  (box :orientation "h" 
+       :space-evenly false 
+       :spacing 5
+    (button :class "bluetooth-btn module-btn ${bluetooth_status == 'on' ? 'bluetooth-on' : 'bluetooth-off'}"
+            :tooltip "${bluetooth_status == 'on' ? 'Bluetooth On' : 'Bluetooth Off'}"
+            :onclick "$HOME/.config/eww/scripts/bluetooth.sh toggle"
+      "${bluetooth_status == 'on' ? '󰂯' : '󰂲'}")
+    (label :class "bluetooth-label ${bluetooth_status == 'on' ? 'bluetooth-on-label' : 'bluetooth-off-label'}"
+           :text "${bluetooth_status == 'on' ? bluetooth_device : 'BT'}"
+           :limit-width 15)))
 
 (defwidget dnd []
   (button :class "dnd-btn module-btn ${dnd_status == 'on' ? 'dnd-on' : 'dnd-off'}"
           :tooltip "${dnd_status == 'on' ? 'Do Not Disturb On' : 'Do Not Disturb Off'}"
           :onclick "$HOME/.config/eww/scripts/dnd.sh toggle"
-    "${dnd_status == 'on' ? '' : ''}"))
+    "${dnd_status == 'on' ? '󰂛' : '󰂚'}"))
 
-;; Center modules
+
+;; Workspaces widget with icons
 (defwidget workspaces []
-  (box :class "workspaces"
+  (box :class "workspaces-box"
        :orientation "h"
        :space-evenly true
-    (for workspace in workspaces
-      (button :class "workspace-btn ${workspace.current ? 'current' : ''} ${workspace.windows > 0 ? 'occupied' : 'empty'}"
+    (for workspace in {workspaces.workspaces}
+      (button :class "workspace-btn ${workspace.current ? 'current' : ''} ${workspace.occupied ? 'occupied' : 'empty'}"
               :onclick "hyprctl dispatch workspace ${workspace.id}"
-        "${workspace.id}"))))
+        (label :text "${workspace.icon ?: workspace.id}")))))
 
 ;; Right modules
 (defwidget battery []
@@ -91,12 +99,12 @@
        :orientation "h"
        :space-evenly false
        :tooltip "Battery: ${battery}%"
-    (label :class "battery-icon" :text "${battery_status == 'Charging' ? '' : 
-                                       battery > 90 ? '' :
-                                       battery > 70 ? '' :
-                                       battery > 40 ? '' :
-                                       battery > 20 ? '' : ''}")
-    (label :class "battery-percentage" :text "${battery}%")))
+    (label :class "battery-icon" :text "${battery_status == 'Charging' ? '󰂄' : 
+                                       battery > 90 ? '󰂂' :
+                                       battery > 70 ? '󰂀' :
+                                       battery > 40 ? '󰁽' :
+                                       battery > 20 ? '󰁻' : '󰂃'}")
+    (label :class "battery-percentage" :text "${battery}")))
 
 (defwidget volume_module []
   (box :class "volume-module module"
@@ -105,9 +113,9 @@
     (button :class "volume-icon"
             :onclick "$HOME/.config/eww/scripts/volume.sh toggle"
             :tooltip "Toggle mute"
-      "${volume == 0 ? '' : 
-         volume > 66 ? '' :
-         volume > 33 ? '' : ''}")
+      "${volume == 0 ? '' : 
+         volume > 66 ? '' :
+         volume > 33 ? '' : ''}")
     (scale :class "volume-slider"
            :value volume
            :min 0
@@ -118,7 +126,7 @@
   (box :class "brightness-module module"
        :orientation "h"
        :space-evenly false
-    (label :class "brightness-icon" :text "")
+    (label :class "brightness-icon" :text "󰃠")
     (scale :class "brightness-slider"
            :value brightness
            :min 1
@@ -130,14 +138,15 @@
        :orientation "h"
        :space-evenly false
        :tooltip "${date}"
+    (label :class "time-icon" :text "")
     (label :class "time-text" :text time)))
 
 ;; Windows
 (defwindow bar
   :monitor 0
   :geometry (geometry :x "0%"
-                      :y "0px"
-                      :width "100%"
+                      :y "10px"
+                      :width "98%"
                       :height "30px"
                       :anchor "top center")
   :exclusive true

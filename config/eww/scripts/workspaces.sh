@@ -1,48 +1,29 @@
 #!/usr/bin/env bash
+# Enhanced workspaces script for eww
 
-# Workspace management script for eww
-# This script monitors Hyprland workspaces and outputs JSON for eww
+# Get active workspace
+active=$(hyprctl monitors -j | jq '.[0].activeWorkspace.id')
 
-get_workspaces() {
-    # Get active workspace
-    active=$(hyprctl monitors -j | jq '.[0].activeWorkspace.id')
-    
-    # Get occupied workspaces (workspaces with windows)
-    occupied=$(hyprctl workspaces -j | jq '[.[].id] | sort')
-    
-    # Generate JSON for all workspaces from 1 to 10
-    seq 1 10 | jq --argjson active "$active" --argjson occupied "$occupied" -nc '
-        {
-            "id": .,
-            "current": . == $active,
-            "windows": $occupied | index(.) != null
-        }
-    ' | jq -s '.'
+# Get occupied workspaces - ensuring we handle empty/no workspaces case
+occupied=$(hyprctl workspaces -j | jq '[.[].id]')
+if [ -z "$occupied" ] || [ "$occupied" == "null" ]; then
+    occupied="[]"
+fi
+
+# Define icons for each workspace
+# You can customize these icons to your preference
+icons=(
+    '{"1": "󰎤", "2": "󰎧", "3": "󰎪", "4": "󰎭", "5": "󰎱", "6": "󰎳"}'
+)
+
+# Output wrapped in an object for Eww with proper icons
+jq -n --argjson active "$active" --argjson occupied "$occupied" --argjson icons "${icons[0]}" '
+{
+  workspaces: [range(1; 7) | {
+    id: .,
+    icon: ($icons[tostring(.)]),
+    current: (. == $active),
+    occupied: ($occupied | contains([.]))
+  }]
 }
-
-# Initial workspace state
-get_workspaces
-
-# Set up socket to listen for workspace changes
-socat -u UNIX-CONNECT:/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | while read -r line; do
-    case ${line%>>*} in
-        *workspace*)
-            get_workspaces
-            ;;
-        *createworkspace*)
-            get_workspaces
-            ;;
-        *destroyworkspace*)
-            get_workspaces
-            ;;
-        *moveworkspace*)
-            get_workspaces
-            ;;
-        *openwindow*)
-            get_workspaces
-            ;;
-        *closewindow*)
-            get_workspaces
-            ;;
-    esac
-done
+'

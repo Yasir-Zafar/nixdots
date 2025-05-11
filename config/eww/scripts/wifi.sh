@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-
-# WiFi management script for eww
+# Enhanced WiFi management script for eww
 
 check_wifi_status() {
     WIFI_STATUS=$(nmcli -t -f WIFI radio)
@@ -18,7 +17,12 @@ check_wifi_status() {
 
 get_wifi_name() {
     if [[ $(check_wifi_status) == "connected" ]]; then
-        nmcli -t -f NAME connection show --active | head -n 1
+        SSID=$(nmcli -t -f NAME connection show --active | head -n 1)
+        if [[ -z "$SSID" ]]; then
+            echo "Unknown Network"
+        else
+            echo "$SSID"
+        fi
     else
         echo "Not connected"
     fi
