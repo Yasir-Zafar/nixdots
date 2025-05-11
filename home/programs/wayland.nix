@@ -144,6 +144,10 @@
         "float,title:^(Save As)(.*)$"
         "float,title:^(Library)(.*)$"
       ];
+
+      windowrulev2 = [
+        "opacity 0.9 0.9,class:^(eww)$"
+      ];
       
       # Layer rules
       layerrule = [

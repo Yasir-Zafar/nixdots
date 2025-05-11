@@ -3,7 +3,7 @@
 
 {
   imports = [
-    ./dunst.nix
+    ./mako.nix
     ./syncthing.nix
     ./wayland.nix
     ./batsignal.nix

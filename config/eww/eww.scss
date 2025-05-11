@@ -26,7 +26,7 @@ tooltip {
   background-color: $bg0;
   border: 1px solid $bg3;
   border-radius: 8px;
-  
+
   label {
     color: $fg1;
     padding: 5px;
@@ -39,7 +39,7 @@ tooltip {
   border-radius: 12px;
   padding: 0 15px;
   margin: 0 15px;
-  opacity: 0.7;
+  opacity: 0.85;
 }
 
 // Common module styling
@@ -60,11 +60,11 @@ tooltip {
   min-width: 36px;
   min-height: 24px;
   opacity: 0.9;
-  
+
   &:hover {
     background-color: $bg2;
   }
-  
+
   &:active {
     background-color: $bg3;
   }
@@ -88,11 +88,11 @@ tooltip {
 
 .wifi-label {
   margin-left: 4px;
-  
+
   &.wifi-connected-label {
     color: $green;
   }
-  
+
   &.wifi-disconnected-label {
     color: $fg2;
   }
@@ -113,11 +113,11 @@ tooltip {
 
 .bluetooth-label {
   margin-left: 4px;
-  
+
   &.bluetooth-on-label {
     color: $blue;
   }
-  
+
   &.bluetooth-off-label {
     color: $fg2;
   }
@@ -135,7 +135,7 @@ tooltip {
   color: $fg2;
 }
 
-.workspaces { 
+.workspaces {
   background-color: $bg1;
   border-radius: 12px;
   margin: 10px 8px;
@@ -148,20 +148,19 @@ tooltip {
     background: $bg1;
     color: $fg1;
     min-width: 12px;
-    min-height: 12px;   
+    min-height: 12px;
     transition: all 0.2s ease;
-    
-    &:hover {
-    }
-    
+
+    &:hover {}
+
     &.current {
       color: $aqua;
     }
-    
+
     &.occupied {
       color: $red;
     }
-    
+
     &.empty {
       color: $fg2;
       opacity: 0.7;
@@ -176,7 +175,7 @@ tooltip {
     min-width: 16px;
     color: $orange;
   }
-  
+
   .battery-percentage {
     color: $orange;
   }
@@ -188,16 +187,16 @@ tooltip {
     min-width: 16px;
     color: $blue;
   }
-  
+
   scale {
     min-width: 80px;
     min-height: 10px;
-    
+
     trough {
       background-color: $bg2;
       border-radius: 10px;
       min-height: 5px;
-      
+
       highlight {
         background-color: $blue;
         border-radius: 10px;
@@ -212,16 +211,16 @@ tooltip {
     min-width: 16px;
     color: $yellow;
   }
-  
+
   scale {
     min-width: 80px;
     min-height: 10px;
-    
+
     trough {
       background-color: $bg2;
       border-radius: 10px;
       min-height: 5px;
-      
+
       highlight {
         background-color: $yellow;
         border-radius: 10px;
@@ -232,13 +231,13 @@ tooltip {
 
 .time-module {
   margin: 10px 0px 10px 2px;
-  
+
   .time-text {
     color: $aqua;
     font-weight: bold;
     margin: 0 5px;
   }
-  
+
   .time-icon {
     margin-right: 8px;
     min-width: 16px;
