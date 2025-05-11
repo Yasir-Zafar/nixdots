@@ -17,7 +17,7 @@ check_wifi_status() {
 
 get_wifi_name() {
     if [[ $(check_wifi_status) == "connected" ]]; then
-        SSID=$(nmcli -t -f NAME connection show --active | head -n 1)
+        SSID=$(nmcli -t -f NAME connection show --active | head -n 1 | cut -d' ' -f1)
         if [[ -z "$SSID" ]]; then
             echo "Unknown Network"
         else

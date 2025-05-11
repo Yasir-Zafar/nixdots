@@ -4,7 +4,7 @@
   # Enable eww
   programs.eww = {
     enable = true;
-    package = pkgs.eww-wayland;
+    package = pkgs.eww;
     configDir = ./../../config/eww;
   };
 
@@ -41,10 +41,6 @@
     };
     ".config/eww/scripts/dnd.sh" = {
       source = ./../../config/eww/scripts/dnd.sh;
-      executable = true;
-    };
-    ".config/eww/scripts/power.sh" = {
-      source = ./../../config/eww/scripts/power.sh;
       executable = true;
     };
   };

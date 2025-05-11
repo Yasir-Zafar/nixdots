@@ -1,4 +1,3 @@
-# home/services/dunst.nix
 { config, lib, pkgs, ... }:
 
 {
@@ -27,16 +26,16 @@
         
         # UI and text
         indicate_hidden = true;
-        transparency = 10;
+        transparency = 15; # Slight transparency for better look
         separator_height = 2;
         padding = 12;
-        horizontal_padding = 12;
+        horizontal_padding = 15; # Improved padding
         text_icon_padding = 12;
-        frame_width = 2;
+        frame_width = 3; # Slightly thicker frame for better visibility
         separator_color = "frame";
         sort = true;
-        font = "Inter 11";
-        line_height = 0;
+        font = "Inter 12"; # A slightly larger font for better readability
+        line_height = 1.2; # Adjust line height for better vertical spacing
         markup = "full";
         format = "<b>%s</b>\\n%b";
         alignment = "left";
@@ -63,7 +62,7 @@
         always_run_script = true;
         title = "Dunst";
         class = "Dunst";
-        corner_radius = 10;
+        corner_radius = 12;  # Round corners for notifications
         ignore_dbusclose = false;
         force_xwayland = false;
         force_xinerama = false;
@@ -74,25 +73,25 @@
         mouse_right_click = "context";
       };
       
-      # Urgency levels
+      # Urgency levels with Gruvbox color scheme
       urgency_low = {
-        background = "#1E1E2E";
-        foreground = "#CDD6F4";
-        frame_color = "#89B4FA";
+        background = "#282828";  # Gruvbox dark background
+        foreground = "#D8D8D8";  # Gruvbox light foreground
+        frame_color = "#A89984";  # Gruvbox frame color
         timeout = 10;
       };
       
       urgency_normal = {
-        background = "#1E1E2E";
-        foreground = "#CDD6F4";
-        frame_color = "#89B4FA";
+        background = "#282828";  # Gruvbox dark background
+        foreground = "#D8D8D8";  # Gruvbox light foreground
+        frame_color = "#A89984";  # Gruvbox frame color
         timeout = 10;
       };
       
       urgency_critical = {
-        background = "#1E1E2E";
-        foreground = "#CDD6F4";
-        frame_color = "#F38BA8";
+        background = "#282828";  # Gruvbox dark background
+        foreground = "#D8D8D8";  # Gruvbox light foreground
+        frame_color = "#FB4934";  # Gruvbox red for critical urgency
         timeout = 0;
       };
     };

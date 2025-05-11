@@ -6,5 +6,6 @@
     ./dunst.nix
     ./syncthing.nix
     ./wayland.nix
+    ./batsignal.nix
   ];
 }

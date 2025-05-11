@@ -51,8 +51,8 @@
       # Decoration settings
       decoration = {
         rounding = 10;
-        active_opacity = 1.0;
-        inactive_opacity = 1.0;
+        active_opacity = 0.8;
+        inactive_opacity = 0.8;
         blur = {
           enabled = true;
           size = 5;
@@ -251,18 +251,16 @@
       # Startup applications
       exec-once = [
         "mako"
-        #"wbg ~/Pictures/Wallpapers/7.jpg"
-        #"ags"
+        "~/.local/bin/wallpaper-rotator.sh"
+        "eww open bar"
         "hypridle"
-        #"brightnessctl s 55%"
-        "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
-        "gsettings set org.gnome.desktop.interface gtk-theme 'Catppuccin-Mocha-Standard-Blue-Dark'"
+        "brightnessctl s 55%"
+        #"batsignal -b -w 30 -c 15 -d 5 -f 100 -W \"DC NIGGA\" -F \"am too full\" -C \"Kys\""
+        "easyeffects --gapplication-service"
+        "wl-clipboard-history -t"
         "gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'"
         "gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'"
         "gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice'"
-        #"batsignal -b -w 30 -c 15 -d 5 -f 100 -W \"DC NIGGA\" -F \"am too full\" -C \"Kys\""
-        #"easyeffects --gapplication-service"
-        "wl-clipboard-history -t"
       ];
     };
   };

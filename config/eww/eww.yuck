@@ -14,8 +14,7 @@
 (defpoll dnd_status :interval "1s" "$HOME/.config/eww/scripts/dnd.sh status")
 
 ;; Listen to workspace changes
-(deflisten workspaces :initial "{\"workspaces\":[]}" 
-  "$HOME/.config/eww/scripts/workspaces.sh")
+(defpoll workspaces :interval "100ms" :initial "[]" `$HOME/.config/eww/scripts/workspaces.sh`)
 
 ;; Widget definitions
 (defwidget bar []
@@ -39,7 +38,7 @@
        :orientation "h"
        :space-evenly false
        :halign "center"
-    (workspaces workspaces-var)))
+    (workspaces)))
 
 (defwidget right []
   (box :class "right-modules"
@@ -51,30 +50,31 @@
     (brightness_module)
     (time_module)))
 
+;; WiFi widget with connected network name
 (defwidget wifi []
-  (box :orientation "h" 
-       :space-evenly false 
-       :spacing 5
-    (button :class "wifi-btn module-btn ${wifi_status == 'connected' ? 'wifi-connected' : 'wifi-disconnected'}"
-            :tooltip "${wifi_status == 'connected' ? 'Connected to ${wifi_name}' : 'Disconnected'}"
-            :onclick "$HOME/.config/eww/scripts/wifi.sh toggle"
-      "${wifi_status == 'connected' ? '󰖩' : '󰖪'}")
-    (label :class "wifi-label ${wifi_status == 'connected' ? 'wifi-connected-label' : 'wifi-disconnected-label'}"
-           :text "${wifi_status == 'connected' ? wifi_name : 'WiFi'}"
-           :limit-width 15)))
+  (button :class "wifi-module ${wifi_status == 'connected' ? 'wifi-connected' : 'wifi-disconnected'}"
+          :tooltip "${wifi_status == 'connected' ? 'Connected to ${wifi_name}' : 'Disconnected'}"
+          :onclick "$HOME/.config/eww/scripts/wifi.sh toggle"
+    (box :orientation "h" 
+         :space-evenly false 
+         :spacing 5
+      (label :class "wifi-icon" :text "${wifi_status == 'connected' ? '󰖩 ' : '󰖪 '}")
+      (label :class "wifi-label" 
+             :text "${wifi_status == 'connected' ? wifi_name : ' WiFi'}"
+             :limit-width 15))))
 
 ;; Bluetooth widget with connected device name
 (defwidget bluetooth []
-  (box :orientation "h" 
-       :space-evenly false 
-       :spacing 5
-    (button :class "bluetooth-btn module-btn ${bluetooth_status == 'on' ? 'bluetooth-on' : 'bluetooth-off'}"
-            :tooltip "${bluetooth_status == 'on' ? 'Bluetooth On' : 'Bluetooth Off'}"
-            :onclick "$HOME/.config/eww/scripts/bluetooth.sh toggle"
-      "${bluetooth_status == 'on' ? '󰂯' : '󰂲'}")
-    (label :class "bluetooth-label ${bluetooth_status == 'on' ? 'bluetooth-on-label' : 'bluetooth-off-label'}"
-           :text "${bluetooth_status == 'on' ? bluetooth_device : 'BT'}"
-           :limit-width 15)))
+  (button :class "module-btn bluetooth-module ${bluetooth_status == 'on' ? 'bluetooth-on' : 'bluetooth-off'}"
+          :tooltip "${bluetooth_status == 'on' ? 'Bluetooth On' : 'Bluetooth Off'}"
+          :onclick "$HOME/.config/eww/scripts/bluetooth.sh toggle"
+    (box :orientation "h" 
+         :space-evenly false 
+         :spacing 5
+      (label :class "bluetooth-icon" :text "${bluetooth_status == 'on' ? '󰂯 ' : '󰂲 '}")
+      (label :class "bluetooth-label"
+             :text "${bluetooth_status == 'on' ? bluetooth_device : 'BT'}"
+             :limit-width 15))))
 
 (defwidget dnd []
   (button :class "dnd-btn module-btn ${dnd_status == 'on' ? 'dnd-on' : 'dnd-off'}"
@@ -84,14 +84,17 @@
 
 
 ;; Workspaces widget with icons
+;; Widget definition for the workspaces bar
 (defwidget workspaces []
-  (box :class "workspaces-box"
-       :orientation "h"
+  (box :class "workspaces"
+       :spacing 8
        :space-evenly true
-    (for workspace in {workspaces.workspaces}
-      (button :class "workspace-btn ${workspace.current ? 'current' : ''} ${workspace.occupied ? 'occupied' : 'empty'}"
+       :halign "center"
+    (for workspace in workspaces
+      (button :class {workspace.current ? "current" :
+                      workspace.occupied ? "occupied" : "empty"}
               :onclick "hyprctl dispatch workspace ${workspace.id}"
-        (label :text "${workspace.icon ?: workspace.id}")))))
+              "${workspace.id}"))))
 
 ;; Right modules
 (defwidget battery []
@@ -100,7 +103,7 @@
        :space-evenly false
        :tooltip "Battery: ${battery}%"
     (label :class "battery-icon" :text "${battery_status == 'Charging' ? '󰂄' : 
-                                       battery > 90 ? '󰂂' :
+                                       battery > 90 ? '󰁹' :
                                        battery > 70 ? '󰂀' :
                                        battery > 40 ? '󰁽' :
                                        battery > 20 ? '󰁻' : '󰂃'}")
