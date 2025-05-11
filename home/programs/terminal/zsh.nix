@@ -18,7 +18,7 @@
       ignoreSpace = true;
     };
     
-    initExtra = ''
+    initContent = ''
       # Set the directory for zinit
       ZINIT_HOME="''${XDG_DATA_HOME:-''${HOME}/.local/share}/zinit/zinit.git"
       
