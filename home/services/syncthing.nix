@@ -6,7 +6,7 @@
   services.syncthing = {
     enable = true;
     tray = {
-      enable = true;
+      enable = false;
       command = "syncthingtray";
       package = pkgs.syncthingtray;
     };

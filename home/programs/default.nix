@@ -11,5 +11,6 @@
     ./theming
     ./shell
     ./wayland.nix
+    ./browser.nix
   ];
 }
