@@ -20,7 +20,7 @@
       window_padding_width = "10";
       hide_window_decorations = "yes";
       confirm_os_window_close = 0;  # Terminal closing confirmation already disabled
-      background_opacity = "0.95";
+      background_opacity = "0.8";
       dynamic_background_opacity = "yes";
       
       # Terminal bell

@@ -89,8 +89,8 @@
       gco = "git checkout";
       gb = "git branch";
       ff = "fd … | fzf —preview \" [[ -f {} ]] && bat -f {} || eza -lah --color=always --tree {}\"";
-      hm = "home-manager switch --flake ~/Dotfiles/home#boi --option substituters true"
-      nu = "sudo nixos-rebuild switch --flake ~/Dotfiles/nix#dpix720"
+      hm = "home-manager switch --flake ~/Dotfiles/home#boi --option substituters true";
+      nu = "sudo nixos-rebuild switch --flake ~/Dotfiles/nix#dpix720";
     };
   };
   
