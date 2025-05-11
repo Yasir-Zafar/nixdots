@@ -146,7 +146,7 @@
       ];
 
       windowrulev2 = [
-        "opacity 0.9 0.9,class:^(eww)$"
+        "opacity 0.85 0.85,class:^(mako)$"
       ];
       
       # Layer rules
@@ -256,7 +256,6 @@
       exec-once = [
         "mako"
         "~/.local/bin/wallpaper-rotator.sh"
-        "eww open bar"
         "hypridle"
         "brightnessctl s 55%"
         #"batsignal -b -w 30 -c 15 -d 5 -f 100 -W \"DC NIGGA\" -F \"am too full\" -C \"Kys\""

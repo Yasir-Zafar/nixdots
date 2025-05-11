@@ -1,5 +1,3 @@
-{ config, lib, pkgs, ... }:
-
 {
   imports = [
     ./terminal
@@ -11,6 +9,7 @@
     ./theming
     ./shell
     ./wayland.nix
-    ./eww.nix
+    ./hyprpanel.nix
+    #./eww.nix
   ];
 }

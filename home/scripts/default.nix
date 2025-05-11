@@ -8,7 +8,7 @@
       WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
       DELAY=300  # 5 minutes
 
-      pgrep -x swww > /dev/null || swww-deamon
+      pgrep -x swww > /dev/null || swww-daemon
 
       while true; do
         find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" \) | shuf | while read -r img; do
