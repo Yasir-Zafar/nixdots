@@ -5,7 +5,7 @@
   # Enable Hyprland window manager at the system level
   programs.hyprland = {
     enable = true;
-    xwayland.enable = true;
+    #xwayland.enable = true;
     package = inputs.hyprland.packages.${pkgs.system}.hyprland;
   };
 
@@ -40,9 +40,6 @@
     
     # Polkit authentication agent
     polkit_gnome
-    
-    
-    kitty  
   ];
   
   # Configure XDG portals for proper desktop integration
@@ -55,12 +52,6 @@
   
   # Configure some services needed for Hyprland
   services = {
-    # Upower for battery monitoring
-    upower.enable = true;
-    
-    # For screen brightness
-    actkbd.enable = true;
-    
     # For gtk applications
     dbus.packages = [ pkgs.dconf ];
     
@@ -88,14 +79,14 @@
     # For Hyprland
     NIXOS_OZONE_WL = "1";
     MOZ_ENABLE_WAYLAND = "1";
-    QT_QPA_PLATFORM = "wayland;xcb";
+    QT_QPA_PLATFORM = "wayland";
     SDL_VIDEODRIVER = "wayland";
     _JAVA_AWT_WM_NONREPARENTING = "1";
     WLR_NO_HARDWARE_CURSORS = "1";
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_SESSION_DESKTOP = "Hyprland";
-    GDK_BACKEND = "wayland,x11";
+    GDK_BACKEND = "wayland";
   };
   
   # Security policy for Hyprland

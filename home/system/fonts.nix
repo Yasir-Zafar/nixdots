@@ -6,6 +6,8 @@
   fonts.fontconfig.enable = true;
   
   home.packages = with pkgs; [
+    nerd-fonts.symbols-only
+    nerd-fonts.jetbrains-mono
     # Sans-serif fonts
     noto-fonts
     noto-fonts-cjk-sans

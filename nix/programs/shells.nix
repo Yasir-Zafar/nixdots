@@ -60,11 +60,6 @@
       enableCompletion = true;
       autosuggestions.enable = true;
       syntaxHighlighting.enable = true;
-      
-      # Zsh prompt
-      promptInit = ''
-        PROMPT="%B%F{green}%n@%m%f%b:%B%F{blue}%~%f%b$ "
-      '';
     };
     
     # StarShip prompt
@@ -100,9 +95,9 @@
     tree
     ripgrep
     fd
-    bat
-    eza
     jq
+    htop
+    btop
     neofetch
     duf
     ncdu
@@ -122,6 +117,8 @@
     # Advanced tools
     nix-zsh-completions
     nix-bash-completions
+    zsh-completions
+    zsh-powerlevel10k
     
     # Shell scripting
     shellcheck
@@ -137,24 +134,16 @@
     traceroute
     whois
     nmap
-    
-    # Development tools
-    gnumake
-    gcc
-    cmake
-    pkg-config
-    
-    # Text editors
-    vim
+
     neovim
   ];
   
   # Set environment variables for shells
   environment.variables = {
-    EDITOR = "vim";
-    VISUAL = "vim";
+    EDITOR = "nvim";
+    VISUAL = "nvim";
     PAGER = "less";
-    BAT_THEME = "Catppuccin";
+    BAT_THEME = "TwoDark";
     FZF_DEFAULT_COMMAND = "fd --type f --hidden --follow --exclude .git";
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
   };

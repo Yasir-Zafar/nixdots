@@ -158,8 +158,8 @@
       bind = [
         # App launchers
         "$mainMod, Return, exec, $terminal"
-        "$mainMod, D, exec, wofi --show drun"
-        "$mainMod, B, exec, flatpak run app.zen_browser.zen"
+        "$mainMod, P, exec, wofi --show drun"
+        "$mainMod, W, exec, flatpak run app.zen_browser.zen"
         "$mainMod, E, exec, $files"
         "$mainMod, T, exec, $reader"
         
@@ -268,7 +268,7 @@
   };
 
   # Hypridle Configuration
-  home.file.".config/hypridle/hypridle.conf".text = ''
+  home.file.".config/hypr/hypridle.conf".text = ''
     general {
       lock_cmd = "hyprlock"
       unlock_cmd = ""
@@ -294,7 +294,7 @@
   '';
   
   # Hyprlock Configuration
-  home.file.".config/hyprlock/hyprlock.conf".text = ''
+  home.file.".config/hypr/hyprlock.conf".text = ''
     general {
       disable_loading_bar = false
       hide_cursor = true
