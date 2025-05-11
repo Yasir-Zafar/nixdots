@@ -2,6 +2,6 @@
 
 {
   imports = [
-    ./kitty.conf
+    ./kitty.nix
   ];
 }
