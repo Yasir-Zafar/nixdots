@@ -16,7 +16,6 @@
     open-sans
     
     # Serif fonts
-    noto-fonts-serif
     dejavu_fonts
     
     # Monospace fonts

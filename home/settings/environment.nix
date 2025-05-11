@@ -20,17 +20,8 @@
     LANG = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
     
-    # XDG dirs
-    XDG_CONFIG_HOME = "$HOME/.config";
-    XDG_CACHE_HOME = "$HOME/.cache";
-    XDG_DATA_HOME = "$HOME/.local/share";
-    XDG_STATE_HOME = "$HOME/.local/state";
-    
     # Wayland specific
-    MOZ_ENABLE_WAYLAND = 1;
-    QT_QPA_PLATFORM = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
-    QT_QPA_PLATFORMTHEME = "qt5ct";
     SDL_VIDEODRIVER = "wayland";
     _JAVA_AWT_WM_NONREPARENTING = 1;
     CLUTTER_BACKEND = "wayland";
@@ -40,9 +31,6 @@
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_SESSION_DESKTOP = "Hyprland";
     XDG_SESSION_TYPE = "wayland";
-    
-    # Toolkit backends
-    GDK_BACKEND = "wayland,x11";
     
     # Path additions
     PATH = "$HOME/.local/bin:$HOME/bin:$PATH";

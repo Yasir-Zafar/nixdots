@@ -48,10 +48,6 @@
           passes = 1;
           new_optimizations = true;
         };
-        drop_shadow = true;
-        shadow_range = 4;
-        shadow_render_power = 3;
-        "col.shadow" = "rgba(1a1a1aee)";
       };
       
       # Animation settings
@@ -80,10 +76,6 @@
       
       # Window rules
       windowrule = [
-        "float,^(pavucontrol)$"
-        "float,^(blueman-manager)$"
-        "float,^(nm-connection-editor)$"
-        "float,^(file-roller)$"
         "float,title:^(Picture-in-Picture)$"
         "float,title:^(Firefox — Sharing Indicator)$"
       ];
@@ -189,13 +181,13 @@
   
   # Ensure needed environment variables for Wayland/Hyprland
   home.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-    MOZ_ENABLE_WAYLAND = "1";
+    NIXOS_OZONE_WL = 1;
+    MOZ_ENABLE_WAYLAND = 1;
     XDG_SESSION_TYPE = "wayland";
-    QT_QPA_PLATFORM = "wayland;xcb";
-    QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-    GDK_BACKEND = "wayland,x11";
+    QT_QPA_PLATFORM = "wayland";
+    QT_AUTO_SCREEN_SCALE_FACTOR = 1;
+    QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
+    GDK_BACKEND = "wayland";
     SDL_VIDEODRIVER = "wayland";
     CLUTTER_BACKEND = "wayland";
   };

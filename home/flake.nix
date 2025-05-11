@@ -1,5 +1,6 @@
 {
   description = "Home Manager Flake with Hyprland and Cachix";
+
   nixConfig = {
     extra-substituters = [
       "https://cache.nixos.org"
@@ -10,62 +11,42 @@
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
     ];
   };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager";  # Fixed typo here
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
-    hyprland.url = "github:hyprwm/Hyprland";  # Fixed space
+    hyprland.url = "github:hyprwm/Hyprland";
   };
-  outputs = { self, nixpkgs, home-manager, flake-utils, hyprland, ... }@inputs:
+
+  outputs = { self, nixpkgs, home-manager, flake-utils, hyprland, ... }@inputs: 
     let
-      # Define the supported systems
-      supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
-      # Get the hostname
-      hostname = "dpix720"; # Replace with your actual hostname
-      # Username 
-      username = "boi";
-      # Helper function to generate configs for each system
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
     in {
       homeConfigurations = {
-        # Simple configuration: username only
-        "${username}" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        boi = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
           modules = [
             ./default.nix
             {
-              home = {
-                username = username;
-                homeDirectory = "/home/${username}";
-                stateVersion = "24.05";
-              };
+	      home = {
+                username = "boi";
+                homeDirectory = "/home/boi";
+		stateVersion = "24.11";
+	      };
               programs.home-manager.enable = true;
-              nix.package = nixpkgs.legacyPackages.x86_64-linux.nix;  # Added this line
-            }
-          ];
-        };
-        
-        # Configuration with hostname: username@hostname
-        "${username}@${hostname}" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          modules = [
-            ./default.nix
-            {
-              home = {
-                username = username;
-                homeDirectory = "/home/${username}";
-                stateVersion = "24.05";
-              };
-              programs.home-manager.enable = true;
-              nix.package = nixpkgs.legacyPackages.x86_64-linux.nix;  # Added this line
+
+              nix.package = pkgs.nix;
+              nixpkgs.config.allowUnfree = true;
             }
           ];
         };
       };
-      
-      # Additional packages and outputs
-      packages = forAllSystems (system: {
-        default = self.homeConfigurations."${username}@${hostname}".activationPackage;
-      });
     };
 }
+
