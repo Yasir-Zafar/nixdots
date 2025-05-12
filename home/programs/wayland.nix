@@ -255,6 +255,7 @@
       # Startup applications
       exec-once = [
         "hypridle"
+        "hyprpanel"
         "brightnessctl s 55%"
         "easyeffects --gapplication-service"
         "wl-clipboard-history -t"
@@ -265,76 +266,76 @@
     };
   };
 
-  # Hypridle Configuration
-  home.file.".config/hypr/hypridle.conf".text = ''
-    general {
-      lock_cmd = "hyprlock"
-      unlock_cmd = ""
-      before_sleep_cmd = "hyprlock"
-      after_sleep_cmd = ""
-      ignore_dbus_inhibit = false
-    }
+  services.hypridle = {
+    enable = true;
+    settings = {
+      general = {
+        ignore_dbus_inhibit = false;
+        lock_cmd = "hyprlock";
+        after_sleep_cmd = "hyprctl dispatch dpms on";
+      };
+      listener = [
+        {
+          timeout = 600;
+          on-timeout = "hyprlock";
+        }
+        {
+          timeout = 900;
+          on-timeout = "hyprctl dispatch dpms off";
+          on-resume  = "hyprctl dispatch dpms on";
+        }
+      ];
+    };
+  };
 
-    listener {
-      timeout = 300
-      on_timeout = "hyprlock"
-    }
-
-    listener {
-      timeout = 600
-      on_timeout = "systemctl suspend"
-    }
-
-    listener {
-      timeout = 1800
-      on_timeout = "systemctl hibernate"
-    }
-  '';
-  
-  # Hyprlock Configuration
-  home.file.".config/hypr/hyprlock.conf".text = ''
-    general {
-      disable_loading_bar = false
-      hide_cursor = true
-      grace = 5
-    }
-
-    background {
-      monitor =
-      path = screenshot
-      blur_size = 4
-      blur_passes = 3
-    }
-
-    input-field {
-      monitor =
-      size = 200, 50
-      outline_thickness = 2
-      dots_size = 0.2
-      dots_spacing = 0.2
-      dots_center = true
-      outer_color = rgb(151515)
-      inner_color = rgb(200, 200, 200)
-      font_color = rgb(10, 10, 10)
-      fade_on_empty = true
-      placeholder_text = <i>Password...</i>
-      hide_input = false
-      position = 0, -80
-      halign = center
-      valign = center
-    }
-
-    label {
-      monitor =
-      text = Hi there, $USER
-      color = rgba(200, 200, 200, 1.0)
-      font_size = 25
-      font_family = Noto Sans
-      position = 0, 80
-      halign = center
-      valign = center
-    }
-  '';
+  programs.hyprlock = {
+    enable = true;
+    settings = {
+      general = {
+        hide_cursor = true;
+        no_fade_in  = false;
+        disable_loading_bar = false;
+        grace = 5;
+      };
+      background = [
+        {
+          # Use a blurred screenshot as the lock background
+          path        = "screenshot";
+          blur_passes = 4;
+          blur_size   = 8;
+        }
+      ];
+      input-field = [
+        {
+          size             = "200, 50";
+          placeholder_text = "Password...";
+          outline_thickness = 2;
+          dots_size = 0.2;
+          dots_spacing = 0.2;
+          dots_center = true;
+          outer_color = "rgb(151515)";
+          inner_color = "rgb(200, 200, 200)";
+          font_color = "rgb(10, 10, 10)";
+          fade_on_empty = true;
+          hide_input = false;
+          position = "0, -80";
+          halign = "center";
+          valign = "center";
+        }
+      ];
+      label = [
+          {
+            text = "Hi there, boi";
+            color = "rgba(200, 200, 200, 1.0)";
+            font_size = 25;
+            font_family = "DejaVu Sans";
+            position = "0, 80";
+            halign = "center";
+            valign = "center";
+          }
+        ];
+    };
+  };
   
   # Other Wayland utilities
   programs = {
