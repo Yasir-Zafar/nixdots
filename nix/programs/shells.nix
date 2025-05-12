@@ -57,9 +57,6 @@
     # Zsh configuration
     zsh = {
       enable = true;
-      enableCompletion = true;
-      autosuggestions.enable = true;
-      syntaxHighlighting.enable = true;
     };
     
     # StarShip prompt
@@ -118,7 +115,6 @@
     nix-zsh-completions
     nix-bash-completions
     zsh-completions
-    zsh-powerlevel10k
     
     # Shell scripting
     shellcheck

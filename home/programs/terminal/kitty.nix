@@ -62,16 +62,15 @@
       
       # Tab bar - enhanced appearance
       tab_bar_edge = "top";
-      tab_bar_style = "powerline";
-      tab_powerline_style = "round";
+      tab_bar_style = "fade";
       tab_bar_min_tabs = 1;
       tab_bar_margin_width = 4;
       tab_bar_margin_height = "4.0 0.0";
       active_tab_font_style = "bold";
       inactive_tab_font_style = "normal";
-      tab_activity_symbol = "◉";
-      tab_title_template = "{activity_symbol}{index}: {title}";
-      active_tab_title_template = "{index}: {title}";
+      tab_activity_symbol = "";
+      tab_title_template = "{title}";
+      active_tab_title_template = "{title}";
       
       # Color scheme - Gruvbox Dark
       foreground = "#ebdbb2";
@@ -158,13 +157,13 @@
       listen_on unix:/tmp/kitty
       
       # Tab bar colors - Gruvbox themed
-      active_tab_foreground   #282828
-      active_tab_background   #fabd2f
+      tab_bar_background      #1d2021
+      inactive_tab_background #1d2021
+      inactive_tab_foreground #665c54
+      active_tab_foreground   #ebdbb2
+      active_tab_background   #3c3836
       active_tab_font_style   bold
-      inactive_tab_foreground #ebdbb2
-      inactive_tab_background #504945
       inactive_tab_font_style normal
-      tab_bar_background      #3c3836
     '';
   };
 }
