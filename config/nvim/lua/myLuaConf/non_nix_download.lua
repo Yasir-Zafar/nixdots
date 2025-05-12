@@ -25,6 +25,7 @@ require('nixCatsUtils.catPacker').setup({
   { "BirdeeHub/lzextras", },
   { "stevearc/oil.nvim", },
   { 'joshdick/onedark.vim', },
+  { 'ellisonleo/gruvbox.nvim', },
   { 'nvim-tree/nvim-web-devicons', },
   { 'nvim-lua/plenary.nvim', },
   { 'tpope/vim-repeat', },
@@ -77,6 +78,7 @@ require('nixCatsUtils.catPacker').setup({
   { 'lukas-reineke/indent-blankline.nvim', opt = true, },
   { 'numToStr/Comment.nvim', opt = true, as = "comment.nvim", },
   { 'kylechui/nvim-surround', opt = true, },
+  { 'windwp/nvim-autopair', opt = true, },
   {
     "iamcco/markdown-preview.nvim",
     build = ":call mkdp#util#install()",

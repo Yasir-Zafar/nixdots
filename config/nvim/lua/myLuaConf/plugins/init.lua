@@ -1,6 +1,6 @@
 local colorschemeName = nixCats('colorscheme')
 if not require('nixCatsUtils').isNixCats then
-  colorschemeName = 'onedark'
+  colorschemeName = 'gruvbox'
 end
 -- Could I lazy load on colorscheme with lze?
 -- sure. But I was going to call vim.cmd.colorscheme() during startup anyway
@@ -186,12 +186,12 @@ require('lze').load {
           },
           lualine_x = {'filetype'},
         },
-        tabline = {
-          lualine_a = { 'buffers' },
-          -- if you use lualine-lsp-progress, I have mine here instead of fidget
-          -- lualine_b = { 'lsp_progress', },
-          lualine_z = { 'tabs' }
-        },
+        -- tabline = {
+        --   lualine_a = { 'buffers' },
+        --   -- if you use lualine-lsp-progress, I have mine here instead of fidget
+        --   -- lualine_b = { 'lsp_progress', },
+        --   lualine_z = { 'tabs' }
+        -- },
       })
     end,
   },

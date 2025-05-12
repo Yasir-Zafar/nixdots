@@ -94,6 +94,14 @@ require('lze').load {
     -- also these are regular specs and you can use before and after and all the other normal fields
   },
   {
+    "clangd",
+    enabled = nixCats('c') or nixCats('neonixdev') or false,
+    for_cat = "c",
+    lsp = {
+        filetypes = {"c", "cpp", "h", "cc"},
+    },
+  },
+  {
     "gopls",
     for_cat = "go",
     -- if you don't provide the filetypes it asks lspconfig for them

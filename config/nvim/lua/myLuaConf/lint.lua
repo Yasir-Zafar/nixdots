@@ -6,7 +6,7 @@ require('lze').load {
     event = "FileType",
     -- ft = "",
     -- keys = "",
-    -- colorscheme = "",
+    colorscheme = "gruvbox",
     after = function (plugin)
       require('lint').linters_by_ft = {
         -- NOTE: download some linters in lspsAndRuntimeDeps
