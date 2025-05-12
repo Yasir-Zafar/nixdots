@@ -39,9 +39,6 @@
     pgcli
     mycli
     
-    # Editor and IDE
-    neovim
-
     # Language formatters
     black
     stylua
