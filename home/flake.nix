@@ -18,6 +18,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     hyprland.url = "github:hyprwm/Hyprland";
+    nixCats.url = "path:../config/nvim";
   };
 
   outputs = { self, nixpkgs, home-manager, flake-utils, hyprland, ... }@inputs: 
