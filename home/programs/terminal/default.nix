@@ -4,6 +4,6 @@
   imports = [
     ./kitty.nix
     ./zsh.nix
-    ./neovim.nix
+    #./neovim.nix
   ];
 }

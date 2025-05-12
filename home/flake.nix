@@ -18,7 +18,6 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     hyprland.url = "github:hyprwm/Hyprland";
-    nixCats.url = "github:BirdeeHub/nixCats-nvim";  # Add this as a flake input
   };
 
   outputs = { self, nixpkgs, home-manager, flake-utils, hyprland, ... }@inputs: 
