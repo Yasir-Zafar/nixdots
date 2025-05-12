@@ -7,7 +7,6 @@
     ./productivity
     ./gaming
     ./theming
-    ./shell
     ./wayland.nix
     ./hyprpanel.nix
     #./eww.nix

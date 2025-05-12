@@ -1,7 +1,5 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }: {
   # Enable zsh as your default shell
@@ -32,11 +30,12 @@
       source "''${ZINIT_HOME}/zinit.zsh"
       
       # Load zinit plugins
-      zinit light zsh-users/zsh-syntax-highlighting
-      zinit light zsh-users/zsh-completions
-      zinit light zsh-users/zsh-autosuggestions
-      zinit light zsh-users/zsh-history-substring-search
-      zinit light Aloxaf/fzf-tab
+      zinit wait lucid light-mode for \
+        zsh-users/zsh-syntax-highlighting \
+        zsh-users/zsh-completions \
+        zsh-users/zsh-autosuggestions \
+        zsh-users/zsh-history-substring-search \
+        Aloxaf/fzf-tab
       
       # Load zinit snippets
       zinit snippet OMZP::git
@@ -44,7 +43,12 @@
       zinit snippet OMZP::archlinux
       
       # Load completions
-      autoload -U compinit && compinit
+      autoload -Uz compinit
+        if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+          compinit
+        else
+          compinit -C
+      fi
       zinit cdreplay -q
       
       # Keybindings
@@ -61,13 +65,11 @@
       zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
       
       # Shell integrations
-      eval "$(fzf --zsh)"
-      eval "$(zoxide init --cmd cd zsh)"
-      
-      # Launch Hyprland if not already in a graphical session
-      if [ -z "$\{DISPLAY}" ] && [ "$\{XDG_VTNR}" -eq 1 ]; then
-        exec Hyprland
-      fi
+      zsh_load_plugins() {
+          eval "$(fzf --zsh)"
+          eval "$(zoxide init --cmd cd zsh)"
+      }
+      zsh_load_plugins &!
     '';
     
     shellAliases = {
@@ -92,6 +94,11 @@
       hm = "home-manager switch --flake ~/Dotfiles/home#boi --option substituters true";
       nu = "sudo nixos-rebuild switch --flake ~/Dotfiles/nix#dpix720";
     };
+    loginShellInit = ''
+        if [[ "$(tty)" == "/dev/tty1" ]]; then
+          exec Hyprland
+        fi
+    '';
   };
   
   # Starship prompt configuration
