@@ -1,11 +1,6 @@
 # *.nix
 { inputs, pkgs, ...}:
 {
-  imports = [ inputs.hyprpanel.homeManagerModules.hyprpanel ];
-  programs.hyprpanel = {
-    enable = true;
-  };
-
   home.packages = with pkgs; [
     ags
     libgtop

@@ -366,7 +366,6 @@
     
     # Common utilities for Hyprland
     wofi
-    mako       # notifications
     grim       # screenshot functionality
     slurp      # screen selection tool
     wl-clipboard
@@ -375,8 +374,6 @@
     pamixer
     pavucontrol
     glib
-
-    hyprpanel
   ];
   
   # Ensure needed environment variables for Wayland/Hyprland
