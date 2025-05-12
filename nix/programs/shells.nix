@@ -7,7 +7,6 @@
     # Bash configuration
     bash = {
       completion.enable = true;
-      enableLsColors = true;
       
       # System-wide bash configuration
       interactiveShellInit = ''
@@ -22,35 +21,6 @@
         
         # Set a nice prompt
         PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-        
-        # Useful aliases
-        alias ls='ls --color=auto'
-        alias ll='ls -alF'
-        alias la='ls -A'
-        alias l='ls -CF'
-        alias grep='grep --color=auto'
-        alias fgrep='fgrep --color=auto'
-        alias egrep='egrep --color=auto'
-        
-        # Git aliases
-        alias g='git'
-        alias ga='git add'
-        alias gc='git commit'
-        alias gd='git diff'
-        alias gp='git push'
-        alias gs='git status'
-        
-        # Nix shortcuts
-        alias nix-search='nix search nixpkgs'
-        alias nix-shell='nix-shell --run zsh'
-        alias nrs='sudo nixos-rebuild switch'
-        alias nrb='sudo nixos-rebuild boot'
-        alias nrt='sudo nixos-rebuild test'
-        alias hms='home-manager switch'
-        
-        # Edit files
-        alias edit='nano'
-        alias vi='vim'
       '';
     };
     
@@ -130,8 +100,6 @@
     traceroute
     whois
     nmap
-
-    neovim
 
     manix
   ];

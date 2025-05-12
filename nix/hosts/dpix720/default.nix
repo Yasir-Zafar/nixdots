@@ -41,7 +41,6 @@
     file
     tree
     gnumake
-    gcc
     cachix
   ];
   

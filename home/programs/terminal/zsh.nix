@@ -22,10 +22,22 @@
     zplug = {
       enable = true;
       plugins = [
-        "zsh-users/zsh-completions"
-        "zsh-users/zsh-autosuggestions"
-        "zsh-users/zsh-history-substring-search"
-        "Aloxaf/fzf-tab"
+        {
+          name = "zsh-users/zsh-completions";
+          tags = [ "defer:0" ];
+        }
+        {
+          name = "zsh-users/zsh-autosuggestions";
+          tags = [ "defer:2" ];
+        }
+        {
+          name = "zsh-users/zsh-history-substring-search";
+          tags = [ "defer:2" ];
+        }
+        {
+          name = "Aloxaf/fzf-tab";
+          tags = [ "defer:2" ];
+        }
       ];
     };
 
@@ -35,11 +47,10 @@
       path = "${config.home.homeDirectory}/.zsh_history";
       save = 5000;
       ignoreDups = true;
-      shareHistory = true;
     };
 
     # Keybindings
-    initExtra = ''
+    initContent = ''
       # Keybindings
       bindkey -e
       bindkey '^p' history-search-backward
@@ -75,24 +86,15 @@
       ".3" = "cd ../../..";
       "cat" = "bat --style=plain --paging=never";
       "bat" = "bat --style=grid --theme \"gruvbox-dark\"";
-      "gs" = "git status";
-      "ga" = "git add";
-      "gc" = "git commit";
-      "gp" = "git push";
-      "gl" = "git log";
-      "gco" = "git checkout";
-      "gb" = "git branch";
       "ff" = "fd … | fzf --preview \" [[ -f {} ]] && bat -f {} || eza -lah --color=always --tree {}\"";
+      "hm" = "home-manager switch --flake ~/Dotfiles/home#boi --option substituters true";
+      "nu" = "sudo nixos-rebuild switch --flake ~/Dotfiles/nix#dpix720";
     };
   };
 
   # Ensure required packages are installed
   home.packages = with pkgs; [
-    zsh
-    oh-my-zsh
-    zplug
     lsd
-    neovim
     bat
     fzf
     zoxide
@@ -100,13 +102,43 @@
     eza
   ];
 
-  # Oh My Posh configuration
-  programs.oh-my-posh = {
+  
+  # Starship prompt configuration
+  programs.starship = {
     enable = true;
     enableZshIntegration = true;
     settings = {
-      # You can customize this further or point to your existing config
-      config = "$HOME/Dotfiles/config/oh-my-posh/zen.toml";
+      # One-line minimalist configuration
+      add_newline = false;
+      format = "$all";
+      
+      character = {
+        success_symbol = "[❯](bold green)";
+        error_symbol = "[❯](bold red)";
+      };
+      
+      line_break = {
+        disabled = true;
+      };
+      
+      # You can customize other modules as needed
+      directory = {
+        truncation_length = 3;
+        truncate_to_repo = true;
+        style = "blue";
+      };
+      
+      git_branch = {
+        format = "[$branch]($style) ";
+        style = "green";
+      };
+      
+      # Keep it clean and focused
+      kubernetes = { disabled = true; };
+      ruby = { disabled = true; };
+      direnv = { disabled = true; };
+      c = { disabled = true; };
+      nix_shell = {disabled = true; };
     };
   };
 }

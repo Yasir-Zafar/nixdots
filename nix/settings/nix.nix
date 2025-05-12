@@ -78,6 +78,8 @@
     nixpkgs-review
     cachix
     nix-top
+    deadnix
+    nh
   ];
   
   # Automatic upgrades

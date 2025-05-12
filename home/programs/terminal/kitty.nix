@@ -63,7 +63,7 @@
       # Tab bar - enhanced appearance
       tab_bar_edge = "top";
       tab_bar_style = "fade";
-      tab_bar_min_tabs = 1;
+      tab_bar_min_tabs = 2;
       tab_bar_margin_width = 4;
       tab_bar_margin_height = "4.0 0.0";
       active_tab_font_style = "bold";
