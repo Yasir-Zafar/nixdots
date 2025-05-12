@@ -122,6 +122,15 @@ require('lze').load {
     end,
   },
   {
+    "nvim-autopair",
+    for_cat = 'general.always',
+    event = "InsertEnter",
+    -- keys = "",
+    after = function(plugin)
+      require('nvim-autopair').setup()
+    end,
+  },
+  {
     "vim-startuptime",
     for_cat = 'general.extra',
     cmd = { "StartupTime" },

@@ -1,6 +1,6 @@
 require('lze').load {
         {
-                "gruvbxo-nvim",
+                "gruvbox-nvim",
                 -- Default options:
                 require("gruvbox").setup({
                         terminal_colors = true,
