@@ -32,19 +32,24 @@
     # Install fonts
     packages = with pkgs; [
       # Sans-serif fonts
+      inter
+      noto-fonts
       roboto
       ubuntu_font_family
+      open-sans
 
       # Serif fonts
-      dejavu_fonts
       atkinson-hyperlegible
+      dejavu_fonts
       liberation_ttf
 
       # Monospace fonts
       jetbrains-mono
       fira-code
+      fira-code-symbols
       hack-font
       inconsolata
+      victor-mono
       atkinson-monolegible
 
       # Symbol/Icon fonts
@@ -59,6 +64,15 @@
       # Emoji fonts
       noto-fonts-emoji
       noto-fonts-color-emoji
+
+      # Programming ligature fonts
+      hasklig
+
+      # Variable fonts
+      iosevka
+
+      # Special purpose
+      unifont # Fallback font
     ];
   };
 

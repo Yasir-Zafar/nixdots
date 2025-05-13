@@ -7,7 +7,5 @@
     ./productivity
     ./theming
     ./wayland
-    ./hyprpanel.nix
-    #./eww.nix
   ];
 }

@@ -259,8 +259,8 @@
         "brightnessctl s 55%"
         "easyeffects --gapplication-service"
         "wl-clipboard-history -t"
-        "gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'"
-        "gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'"
+        #"gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'"
+        #"gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'"
         "gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice'"
       ];
     };
@@ -337,36 +337,12 @@
     };
   };
 
-  # Other Wayland utilities
-  programs = {
-    wofi = {
-      enable = true;
-      settings = {
-        width = 500;
-        height = 400;
-        location = "center";
-        show = "drun";
-        prompt = "Search...";
-        filter_rate = 100;
-        allow_markup = true;
-        no_actions = true;
-        halign = "fill";
-        orientation = "vertical";
-        content_halign = "fill";
-        insensitive = true;
-        allow_images = true;
-        image_size = 32;
-      };
-    };
-  };
-
   home.packages = with pkgs; [
     # Install Hyprland dependencies
     hypridle
     hyprlock
 
     # Common utilities for Hyprland
-    wofi
     rofi-wayland
     grim # screenshot functionality
     slurp # screen selection tool

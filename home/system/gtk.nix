@@ -7,13 +7,11 @@
     enable = true;
 
     theme = {
-      name = "Adwaita-dark";
-      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
     };
 
     iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
+      name = "Adwaita";
     };
 
     font = {
@@ -21,9 +19,19 @@
       size = 11;
     };
 
+    # Ensure settings apply across GTK3 and GTK4
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+    };
+
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+    };
   };
 
   # Install GTK theme engines and related packages
+  xdg.enable = true;
+
   home.packages = with pkgs; [
     gsettings-desktop-schemas
     gnome-themes-extra

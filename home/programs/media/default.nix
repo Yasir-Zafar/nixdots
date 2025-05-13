@@ -21,8 +21,5 @@
     ffmpeg
     yt-dlp
     obs-studio
-
-    # office suite
-    libreoffice
   ];
 }
