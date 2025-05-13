@@ -13,7 +13,7 @@
           commands = [
             {
               command = "ALL";
-              options = [ "NOPASSWD" ]; # Allow passwordless sudo
+              options = [ "NOPASSWD" ];
             }
           ];
         }
@@ -23,9 +23,6 @@
         Defaults lecture=never
       '';
     };
-
-    # RTKit for better desktop performance
-    rtkit.enable = true;
 
     # Polkit for user permissions
     polkit.enable = true;
@@ -59,35 +56,4 @@
     # Network sandboxing
     enableEmergencyMode = false;
   };
-
-  # Limit process resource usage
-  # services.cgrulesengd = {
-  #   enable = true;
-  #   settings = {
-  #     "*/chrome" = {
-  #       memory = { limit = 4096; };
-  #     };
-  #   };
-  # };
-
-  # Install security tools
-  environment.systemPackages = with pkgs; [
-    gnupg
-    pinentry
-    keepassxc
-    cryptsetup
-    openssl
-    libfido2
-    yubikey-manager
-    yubikey-personalization
-    yubico-piv-tool
-    age
-    rage
-    sops
-    bitwarden-cli
-    pass
-  ];
-
-  # Enable fwupd for firmware updates
-  services.fwupd.enable = true;
 }

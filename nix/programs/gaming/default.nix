@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ./retroarch.nix
+    #./retroarch.nix
   ];
   # Gaming applications and utilities
   environment.systemPackages = with pkgs; [

@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    (pkgs.libretro.retroarchWithCores {
+    (retroarch.override {
       cores = with pkgs.libretro; [
         snes9x
         nestopia
