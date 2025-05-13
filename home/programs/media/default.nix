@@ -12,14 +12,17 @@
     # Image tools
     gimp
     inkscape
-    imv # Simple image viewer for Wayland
+    imv
 
     # Screenshot utilities
-    grimblast # Screenshots for Hyprland
+    grimblast
 
     # Media utilities
     ffmpeg
     yt-dlp
     obs-studio
+
+    # office suite
+    libreoffice
   ];
 }

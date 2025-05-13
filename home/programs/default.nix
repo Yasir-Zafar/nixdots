@@ -6,7 +6,7 @@
     ./communication
     ./productivity
     ./theming
-    ./wayland.nix
+    ./wayland
     ./hyprpanel.nix
     #./eww.nix
   ];
