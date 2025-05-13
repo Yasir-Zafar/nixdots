@@ -1,5 +1,5 @@
 # hardware/default.nix
-{ config, lib, pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -10,7 +10,7 @@
   # Firmware updates
   hardware.enableRedistributableFirmware = true;
   hardware.enableAllFirmware = true;
-  
+
   # Firmware tools
   environment.systemPackages = with pkgs; [
     fwupd
@@ -21,7 +21,7 @@
     hwinfo
     inxi
   ];
-  
+
   # Firmware update daemon
   services.fwupd.enable = true;
 }

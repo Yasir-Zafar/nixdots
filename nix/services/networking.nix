@@ -1,6 +1,4 @@
 # nixos/services/networking.nix
-{ config, lib, pkgs, ... }:
-
 {
   networking = {
     networkmanager = {
@@ -9,7 +7,7 @@
       # DNS configuration
       dns = "systemd-resolved";
     };
-    
+
     firewall = {
       enable = true;
       allowPing = true;

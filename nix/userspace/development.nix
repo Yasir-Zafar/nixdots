@@ -1,5 +1,5 @@
 # userspace/development.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Install development packages

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Productivity applications
@@ -10,15 +10,10 @@
     libreoffice
 
     # PDF tools
-    zathura
     poppler_utils
 
     # Time management
     gnome-calendar
-    anki
-
-    # Mind mapping
-    xmind
 
     # System monitoring
     btop
@@ -26,7 +21,6 @@
 
     # Calculator
     gnome-calculator
-    bc
   ];
 
   # Configure Zathura as a PDF reader

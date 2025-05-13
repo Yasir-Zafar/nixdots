@@ -1,21 +1,21 @@
 # home/system/gtk.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # GTK configuration
   gtk = {
     enable = true;
-    
+
     theme = {
       name = "Adwaita-dark";
       package = pkgs.adwaita-icon-theme;
     };
-    
+
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
     };
-    
+
     font = {
       name = "Inter";
       size = 11;

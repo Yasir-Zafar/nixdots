@@ -1,13 +1,13 @@
 # hardware/graphics.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Enable OpenGL
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      intel-media-driver  # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel          # LIBVA_DRIVER_NAME=i965 (older but works better for some applications)
+      intel-media-driver # LIBVA_DRIVER_NAME=iHD
+      vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for some applications)
       vaapiVdpau
       libvdpau-va-gl
       intel-compute-runtime # OpenCL filter support (Intel)
@@ -22,7 +22,7 @@
       libvdpau-va-gl
     ];
   };
-  
+
   # For Intel
   environment.variables = {
     LIBVA_DRIVER_NAME = "iHD"; # Use intel-media-driver
@@ -32,7 +32,7 @@
     XDG_SESSION_TYPE = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
   };
-  
+
   # Graphics tools
   environment.systemPackages = with pkgs; [
     glxinfo

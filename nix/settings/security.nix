@@ -1,5 +1,5 @@
 # settings/security.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Security settings
@@ -23,13 +23,13 @@
         Defaults lecture=never
       '';
     };
-    
+
     # RTKit for better desktop performance
     rtkit.enable = true;
-    
+
     # Polkit for user permissions
     polkit.enable = true;
-    
+
     # Firewall configuration
     # Note: Also see networking.nix for additional settings
     #firewall = {
@@ -39,15 +39,15 @@
     #  checkReversePath = "loose";
     #  # Add more firewall settings as needed
     #};
-    
+
     # Enable AppArmor
     apparmor = {
       enable = true;
       packages = with pkgs; [ apparmor-utils ];
     };
-    
+
   };
-  
+
   # Systemd hardening
   systemd = {
     extraConfig = ''
@@ -55,11 +55,11 @@
       DefaultTimeoutStopSec=10s
       DefaultRestartSec=100ms
     '';
-    
+
     # Network sandboxing
     enableEmergencyMode = false;
   };
-  
+
   # Limit process resource usage
   # services.cgrulesengd = {
   #   enable = true;
@@ -69,7 +69,7 @@
   #     };
   #   };
   # };
-  
+
   # Install security tools
   environment.systemPackages = with pkgs; [
     gnupg
@@ -87,7 +87,7 @@
     bitwarden-cli
     pass
   ];
-  
+
   # Enable fwupd for firmware updates
   services.fwupd.enable = true;
 }

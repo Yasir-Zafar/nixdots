@@ -1,5 +1,5 @@
 # nixos/services/ssh.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Enable OpenSSH daemon

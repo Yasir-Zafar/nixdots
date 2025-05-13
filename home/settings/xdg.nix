@@ -1,11 +1,9 @@
 # home/settings/xdg.nix
-{ config, lib, pkgs, ... }:
-
 {
   # XDG Base Directory specification
   xdg = {
     enable = true;
-    
+
     # MIME type associations
     mimeApps = {
       enable = true;
@@ -31,11 +29,11 @@
         "text/plain" = [ "nvim.desktop" ];
       };
     };
-    
+
     configFile = {
       # Add custom XDG config files here
     };
-    
+
     userDirs = {
       enable = true;
       createDirectories = true;

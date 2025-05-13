@@ -1,14 +1,11 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Communication apps
   home.packages = with pkgs; [
     # Messaging
     vesktop
-    
-    # Email
-    #thunderbird
-    
+
     # Video conferencing
     #zoom-us
   ];

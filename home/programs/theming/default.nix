@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Basic theming configuration
@@ -6,10 +6,10 @@
     # Theme engines
     gtk-engine-murrine
     gtk_engines
-    
+
     # Icon themes
     papirus-icon-theme
-    
+
     # Cursor themes
     bibata-cursors
 

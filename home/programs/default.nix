@@ -5,7 +5,6 @@
     ./media
     ./communication
     ./productivity
-    ./gaming
     ./theming
     ./wayland.nix
     ./hyprpanel.nix

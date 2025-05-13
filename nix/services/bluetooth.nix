@@ -1,5 +1,5 @@
 # nixos/services/bluetooth.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   hardware.bluetooth = {
@@ -36,8 +36,8 @@
 
   # Install helpful Bluetooth utilities
   environment.systemPackages = with pkgs; [
-    bluetuith  # Terminal UI for Bluetooth
-    blueberry  # Bluetooth management GUI
+    bluetuith # Terminal UI for Bluetooth
+    blueberry # Bluetooth management GUI
     bluez-tools # CLI tools
   ];
 }

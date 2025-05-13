@@ -1,5 +1,5 @@
 # home/system/qt.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Qt configuration

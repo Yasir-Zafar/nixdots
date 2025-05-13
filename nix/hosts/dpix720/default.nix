@@ -1,5 +1,5 @@
 # hosts/dpix720/default.nix
-{ config, pkgs, lib, inputs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -13,10 +13,10 @@
 
   # Hostname
   networking.hostName = "dpix720";
-  
+
   # Enable networking
   networking.networkmanager.enable = true;
-  
+
   # Enable sound
   services.pipewire = {
     enable = true;
@@ -25,7 +25,7 @@
     pulse.enable = true;
     jack.enable = true;
   };
-  
+
   # Basic system packages
   environment.systemPackages = with pkgs; [
     vim
@@ -43,7 +43,7 @@
     gnumake
     cachix
   ];
-  
+
   # Users
   users.users.boi = {
     isNormalUser = true;

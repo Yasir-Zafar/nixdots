@@ -1,5 +1,3 @@
-{ config, lib, pkgs, ... }:
-
 {
   home.file.".local/bin/wallpaper-rotator.sh" = {
     executable = true;

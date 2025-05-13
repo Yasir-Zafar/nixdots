@@ -1,33 +1,28 @@
 # home/default.nix
-{ config, lib, pkgs, inputs, ... }:
-
 {
   imports = [
     # Import system settings
     ./system
-    
+
     # Import app/program configurations 
     ./programs
-    
+
     # Import settings
     ./settings
-    
+
     # Import services
     ./services
-    
+
     # Import scripts
     ./scripts
-    
-    # Import files
-    ./files
   ];
 
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
-  
+
   # Enable fontconfig
   fonts.fontconfig.enable = true;
-  
+
   nix = {
     settings = {
       substituters = [
@@ -44,7 +39,7 @@
       auto-optimise-store = true;
       experimental-features = [ "nix-command" "flakes" ];
     };
-    
+
     # Garbage collection
     gc = {
       automatic = true;

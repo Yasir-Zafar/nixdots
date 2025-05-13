@@ -1,8 +1,7 @@
 # programs/default.nix
-{ config, lib, pkgs, ... }:
-
 {
   imports = [
+    ./gaming
     ./hyprland.nix
     ./shells.nix
     ./desktop.nix

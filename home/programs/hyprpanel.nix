@@ -1,5 +1,5 @@
 # *.nix
-{ inputs, pkgs, ...}:
+{ pkgs, ... }:
 {
   home.packages = with pkgs; [
     ags

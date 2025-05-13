@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Enable eww
@@ -13,7 +13,7 @@
     # Main eww configuration
     ".config/eww/eww.yuck".source = ./../../config/eww/eww.yuck;
     ".config/eww/eww.scss".source = ./../../config/eww/eww.scss;
-    
+
     # Scripts
     ".config/eww/scripts/battery.sh" = {
       source = ./../../config/eww/scripts/battery.sh;

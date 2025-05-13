@@ -1,6 +1,4 @@
 # home/system/default.nix
-{ config, lib, pkgs, ... }:
-
 {
   imports = [
     ./fonts.nix

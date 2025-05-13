@@ -20,25 +20,26 @@
     hyprland.url = "github:hyprwm/Hyprland";
   };
 
-  outputs = { self, nixpkgs, home-manager, flake-utils, hyprland, ... }@inputs: 
+  outputs = { nixpkgs, home-manager, hyprland, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
-    in {
+    in
+    {
       homeConfigurations = {
         boi = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
             ./default.nix
             {
-	      home = {
+              home = {
                 username = "boi";
                 homeDirectory = "/home/boi";
-		stateVersion = "24.11";
-	      };
+                stateVersion = "24.11";
+              };
               programs.home-manager.enable = true;
 
               nix.package = pkgs.nix;
@@ -51,7 +52,7 @@
             }
           ];
           # You can also pass extraSpecialArgs to make inputs available
-          extraSpecialArgs = { 
+          extraSpecialArgs = {
             inherit inputs;
           };
         };

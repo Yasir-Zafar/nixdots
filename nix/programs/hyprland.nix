@@ -1,5 +1,5 @@
 # programs/hyprland.nix
-{ config, lib, pkgs, inputs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   # Enable Hyprland window manager at the system level
@@ -19,31 +19,31 @@
     wl-clipboard
     wlr-randr
     wev
-    
+
     # XDG utilities
     xdg-desktop-portal
     xdg-desktop-portal-hyprland
     xdg-desktop-portal-gtk
     xdg-utils
-    
+
     # Notification daemon
     libnotify
-    
+
     # Screenshot utilities
     grim
     slurp
     swappy
-    
+
     # For waybar and other GTK apps
     gtk3
     gsettings-desktop-schemas
-    
+
     # Polkit authentication agent
     polkit_gnome
 
     hyprpanel
   ];
-  
+
   # Configure XDG portals for proper desktop integration
   xdg.portal = {
     enable = true;
@@ -51,19 +51,19 @@
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     config.common.default = "*";
   };
-  
+
   # Configure some services needed for Hyprland
   services = {
     # For gtk applications
     dbus.packages = [ pkgs.dconf ];
-    
+
     # Gnome virtual file system
     gvfs.enable = true;
-    
+
     # Thumbnail service
     tumbler.enable = true;
   };
-  
+
   # Enable some essential programs
   programs = {
     # For file browser and thumbnails
@@ -75,7 +75,7 @@
       ];
     };
   };
-  
+
   # Environment variables for Wayland/Hyprland
   environment.sessionVariables = {
     # For Hyprland
@@ -90,12 +90,12 @@
     XDG_SESSION_DESKTOP = "Hyprland";
     GDK_BACKEND = "wayland";
   };
-  
+
   # Security policy for Hyprland
   security = {
     # Allow swaylock to unlock the screen
     # pam.services.swaylock = {};
-    
+
     # Allow screen idle management
     # pam.services.swayidle = {};
   };

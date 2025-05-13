@@ -1,9 +1,9 @@
 # home/services/wayland.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Configure Wayland-specific services
-  
+
   # Enable GTK portal for screen sharing
   xdg.portal = {
     enable = true;
@@ -22,7 +22,7 @@
       };
       hyprland = {
         default = [
-          "hyprland" 
+          "hyprland"
           "gtk"
         ];
         "org.freedesktop.impl.portal.Secret" = [
@@ -31,7 +31,7 @@
       };
     };
   };
-  
+
   # Clipboard history manager
   services.clipman = {
     enable = true;
@@ -48,7 +48,7 @@
     wlr-randr
     slurp
     grim
-    swappy   # Screenshot editor
+    swappy # Screenshot editor
     xdg-desktop-portal-hyprland
     libsForQt5.qt5.qtwayland
     qt6.qtwayland

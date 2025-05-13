@@ -1,5 +1,5 @@
 # nixos/services/sound.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Use PipeWire for audio
@@ -10,7 +10,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
-    
+
     # High quality audio settings
     wireplumber.configPackages = [
       (pkgs.writeTextFile {

@@ -1,10 +1,10 @@
 # home/system/fonts.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Font configuration
   fonts.fontconfig.enable = true;
-  
+
   home.packages = with pkgs; [
     nerd-fonts.symbols-only
     nerd-fonts.jetbrains-mono
@@ -16,34 +16,34 @@
     liberation_ttf
     roboto
     open-sans
-    
+
     # Serif fonts
     dejavu_fonts
-    
+
     # Monospace fonts
     jetbrains-mono
     fira-code
     fira-code-symbols
     hack-font
     iosevka
-    
+
     # Icon fonts
     font-awesome
     material-design-icons
     material-icons
-    
+
     # CJK fonts
     wqy_microhei
     wqy_zenhei
-    
+
     # Arabic fonts
     scheherazade
-    
+
     # Other language support
     culmus # Hebrew
     lohit-fonts.tamil
     lohit-fonts.devanagari
-    
+
     # Symbol fonts
     symbola
   ];

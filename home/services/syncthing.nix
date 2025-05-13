@@ -1,5 +1,5 @@
 # home/services/syncthing.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Syncthing file synchronization

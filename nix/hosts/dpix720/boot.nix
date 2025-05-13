@@ -1,5 +1,5 @@
 # hosts/dpix720/boot.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   boot = {
@@ -17,7 +17,7 @@
       };
       timeout = 3;
     };
-    
+
     # Silent boot
     consoleLogLevel = 0;
     initrd.verbose = false;
@@ -29,13 +29,13 @@
       "udev.log_priority=3"
       "boot.shell_on_fail"
     ];
-    
+
     # Plymouth (boot splash)
     #plymouth = {
     #  enable = true;
     #  theme = "breeze";
     #};
-    
+
     # Better kernel parameters for desktop
     kernel.sysctl = {
       "vm.swappiness" = 10;
@@ -50,21 +50,21 @@
       # "net.ipv4.tcp_slow_start_after_idle" = 0;
       # "net.ipv4.tcp_wmem" = "4096 87380 8388608";
     };
-    
+
     # Enable crash handling
     crashDump.enable = true;
     kernelPackages = pkgs.linuxPackages_latest;
-    
+
     # Kernel modules to load early in the boot process
     initrd.kernelModules = [
       "vfat"
       "usbhid"
     ];
-    
+
     # Better thermald support
     kernelModules = [ "kvm-intel" "coretemp" "acpi_thermal_rel" ];
     extraModulePackages = [ ];
-    
+
     # Cleanup /tmp during boot
     tmp.cleanOnBoot = true;
   };

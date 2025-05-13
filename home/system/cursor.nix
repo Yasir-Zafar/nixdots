@@ -1,5 +1,5 @@
 # home/system/cursor.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Mouse cursor configuration

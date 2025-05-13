@@ -1,5 +1,5 @@
 # programs/desktop.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Configure default applications
@@ -7,52 +7,52 @@
     # Media players
     mpv
     #vlc
-    
+
     # Image viewers/editors
     imv
     #gimp
     #inkscape
-    
+
     # Document viewers
     zathura
     #libreoffice-qt
-    
+
     # File managers
     lf
-    
+
     # Communication apps
     vesktop
-    
+
     # Terminal emulators
     kitty
-    
+
     # System utilities
     pavucontrol
     gnome-disk-utility
-    
+
     # Screenshot and screen recording
     #obs-studio
-    
+
     # Office and productivity
     #thunderbird
-    
+
     # Other useful applications
     #bitwarden
     #keepassxc
     #transmission-gtk
-    
+
     # For GTK and Qt theming
     adwaita-icon-theme
     papirus-icon-theme
-    
+
     # Utilities
     xdg-utils
     file-roller
-    
+
     # Bluetooth manager
     blueman
   ];
-  
+
   # Programs with special configuration
   programs = {
     # Steam
@@ -61,23 +61,23 @@
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
     };
-    
+
     # Dconf for GTK applications
     dconf.enable = true;
-    
+
     # Kdeconnect
     kdeconnect.enable = true;
-    
+
     # GnuPG
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
   };
-  
+
   # Enable flatpak
   services.flatpak.enable = true;
- 
+
   # Configure MIME types
   xdg.mime = {
     enable = true;

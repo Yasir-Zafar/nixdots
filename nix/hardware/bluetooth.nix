@@ -1,5 +1,5 @@
 # hardware/bluetooth.nix
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Enable bluetooth
@@ -20,7 +20,7 @@
       };
     };
   };
-  
+
   # Install bluetooth tools
   environment.systemPackages = with pkgs; [
     bluez
@@ -28,7 +28,7 @@
     blueman
     #bluedevil
   ];
-  
+
   # Enable bluetooth audio support
   services.blueman.enable = true;
 }

@@ -1,10 +1,8 @@
 # settings/locale.nix
-{ config, lib, pkgs, ... }:
-
 {
   # Set your time zone
   time.timeZone = "Asia/Karachi"; # Adjust according to your location
-  
+
   # Configure locale settings
   i18n = {
     defaultLocale = "en_GB.UTF-8";
@@ -24,16 +22,16 @@
       # Add other locales as needed
     ];
   };
-  
+
   # Configure console
   console = {
     font = "Lat2-Terminus16";
     useXkbConfig = true;
   };
-  
+
   # Enable NTP time synchronization
   services.timesyncd.enable = true;
-  
+
   # Use NetworkManager to manage network interfaces
   networking.useDHCP = false;
   networking.networkmanager.enable = true;
