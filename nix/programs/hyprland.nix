@@ -90,13 +90,4 @@
     XDG_SESSION_DESKTOP = "Hyprland";
     GDK_BACKEND = "wayland";
   };
-
-  # Security policy for Hyprland
-  security = {
-    # Allow swaylock to unlock the screen
-    # pam.services.swaylock = {};
-
-    # Allow screen idle management
-    # pam.services.swayidle = {};
-  };
 }

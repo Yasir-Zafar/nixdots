@@ -71,7 +71,5 @@
       systemd-udev-settle.enable = false;
       NetworkManager-wait-online.enable = false;
     };
-    watchdogRuntimeSec = "0";
-    watchdogRebootSec = "0";
   };
 }

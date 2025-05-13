@@ -6,22 +6,12 @@
   environment.systemPackages = with pkgs; [
     # Media players
     mpv
-    #vlc
 
     # Image viewers/editors
     imv
-    #gimp
-    #inkscape
-
-    # Document viewers
-    zathura
-    #libreoffice-qt
 
     # File managers
     lf
-
-    # Communication apps
-    vesktop
 
     # Terminal emulators
     kitty
@@ -30,17 +20,6 @@
     pavucontrol
     gnome-disk-utility
 
-    # Screenshot and screen recording
-    #obs-studio
-
-    # Office and productivity
-    #thunderbird
-
-    # Other useful applications
-    #bitwarden
-    #keepassxc
-    #transmission-gtk
-
     # For GTK and Qt theming
     adwaita-icon-theme
     papirus-icon-theme
@@ -48,9 +27,6 @@
     # Utilities
     xdg-utils
     file-roller
-
-    # Bluetooth manager
-    blueman
   ];
 
   # Programs with special configuration
@@ -84,6 +60,7 @@
     defaultApplications = {
       "application/pdf" = "org.pwmt.zathura.desktop";
       "image/jpeg" = "imv.desktop";
+      "image/jpg" = "imv.desktop";
       "image/png" = "imv.desktop";
       "image/gif" = "imv.desktop";
       "video/mp4" = "mpv.desktop";

@@ -1,6 +1,8 @@
 { pkgs, ... }:
-
 {
+  imports = [
+    ./retroarch.nix
+  ];
   # Gaming applications and utilities
   environment.systemPackages = with pkgs; [
     # Game platforms
@@ -11,8 +13,6 @@
     wineWowPackages.stable
     winetricks
     proton-caller
-
-    # Emulators
 
     # Game utilities
     gamemode

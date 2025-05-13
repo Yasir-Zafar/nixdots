@@ -16,9 +16,6 @@
         export HISTCONTROL=ignoredups:erasedups
         export HISTIGNORE="ls:cd:exit:clear:history"
         
-        # Automatically trim long paths in the prompt
-        PROMPT_DIRTRIM=2
-        
         # Set a nice prompt
         PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
       '';
@@ -68,7 +65,6 @@
     neofetch
     duf
     ncdu
-    tldr
     tealdeer
 
     # Command-line tools
