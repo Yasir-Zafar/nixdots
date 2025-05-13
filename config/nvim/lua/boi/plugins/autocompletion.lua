@@ -34,11 +34,16 @@ return {
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer', -- Buffer source
+      'hrsh7th/cmp-cmdline',
+      'onsails/lspkind.nvim',
     },
     config = function()
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
+      local lspkind = require 'lspkind'
+
       luasnip.config.setup {}
 
       cmp.setup {
@@ -110,8 +115,33 @@ return {
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'buffer' },
+        },
+        formatting = {
+          format = lspkind.cmp_format {
+            mode = 'symbol_text',
+            maxwidth = 50,
+            ellipsis_char = '...',
+            before = function(entry, vim_item)
+              return vim_item
+            end,
+          },
         },
       }
+      cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources {
+          { name = 'path' },
+          { name = 'cmdline' },
+        },
+      })
+      -- Set up completion for searches
+      cmp.setup.cmdline('/', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = 'buffer' },
+        },
+      })
     end,
   },
 }

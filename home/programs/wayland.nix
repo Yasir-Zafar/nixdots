@@ -1,12 +1,12 @@
 { pkgs, ... }:
 {
   # Wayland-specific programs and configurations
-  
+
   # Hyprland configuration through home-manager (complements system installation)
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
-    
+
     # Hyprland settings
     settings = {
       # Monitor configuration
@@ -15,7 +15,7 @@
         ",highres,auto,1"
         ",addreserved,0,0,0,0"
       ];
-      
+
       # Input configuration
       input = {
         kb_layout = "us";
@@ -34,7 +34,7 @@
         };
         scroll_method = "2fg";
       };
-      
+
       # General settings
       general = {
         gaps_in = 10;
@@ -47,7 +47,7 @@
         allow_tearing = true;
         no_focus_fallback = true;
       };
-      
+
       # Decoration settings
       decoration = {
         rounding = 10;
@@ -63,7 +63,7 @@
           brightness = 0.8;
         };
       };
-      
+
       # Animation settings
       animations = {
         enabled = true;
@@ -80,24 +80,24 @@
           "workspaces, 1, 3, overshot"
         ];
       };
-      
+
       # Cursor settings
       cursor = {
         inactive_timeout = 3;
       };
-      
+
       # Layout settings
       dwindle = {
         pseudotile = true;
         preserve_split = true;
         smart_resizing = false;
       };
-      
+
       # Master layout
       master = {
         new_status = "master";
       };
-      
+
       # Miscellaneous
       misc = {
         vfr = true;
@@ -111,12 +111,12 @@
         new_window_takes_over_fullscreen = 2;
         force_default_wallpaper = 0;
       };
-      
+
       # Gestures
       gestures = {
         workspace_swipe = true;
       };
-      
+
       # Device-specific settings
       device = [
         {
@@ -124,7 +124,7 @@
           sensitivity = -0.5;
         }
       ];
-      
+
       # Variable definitions
       "$mainMod" = "SUPER";
       "$terminal" = "kitty";
@@ -132,7 +132,7 @@
       "$files" = "thunar";
       "$editor" = "nvim";
       "$reader" = "zathura";
-      
+
       # Window rules
       windowrule = [
         "float,title:^(Picture-in-Picture)$"
@@ -148,7 +148,7 @@
       windowrulev2 = [
         "opacity 0.85 0.85,class:^(mako)$"
       ];
-      
+
       # Layer rules
       layerrule = [
         "xray 1,.*"
@@ -157,35 +157,35 @@
         "noanim,noanim"
         "blur,noanim"
       ];
-      
+
       # Key bindings
       bind = [
         # App launchers
         "$mainMod, Return, exec, $terminal"
-        "$mainMod, P, exec, wofi --show drun"
+        "$mainMod, P, exec, rofi -show drun"
         "$mainMod, W, exec, flatpak run app.zen_browser.zen"
         "$mainMod, E, exec, $files"
         "$mainMod, T, exec, $reader"
-        
+
         # Window management
         "$mainMod, Q, killactive,"
         "$mainMod, F, fullscreen,"
         "$mainMod, Space, togglefloating,"
         "$mainMod SHIFT, Space, togglesplit,"
         "$mainMod SHIFT, P, pseudo,"
-        
+
         # Window movement
         "$mainMod, left, movewindow, l"
         "$mainMod, right, movewindow, r"
         "$mainMod, up, movewindow, u"
         "$mainMod, down, movewindow, d"
-        
+
         # Focus movement
         "$mainMod, H, movefocus, l"
         "$mainMod, L, movefocus, r"
         "$mainMod, K, movefocus, u"
         "$mainMod, J, movefocus, d"
-        
+
         # Workspace navigation
         "$mainMod, 1, workspace, 1"
         "$mainMod, 2, workspace, 2"
@@ -199,7 +199,7 @@
         "$mainMod, 0, workspace, 10"
         "$mainMod, C, movetoworkspace, special"
         "$mainMod SHIFT, C, togglespecialworkspace"
-        
+
         # Move window to workspace
         "$mainMod SHIFT, 1, movetoworkspace, 1"
         "$mainMod SHIFT, 2, movetoworkspace, 2"
@@ -211,12 +211,12 @@
         "$mainMod SHIFT, 8, movetoworkspace, 8"
         "$mainMod SHIFT, 9, movetoworkspace, 9"
         "$mainMod SHIFT, 0, movetoworkspace, 10"
-        
+
         # System commands
         "$mainMod CTRL, Q, exit,"
         "$mainMod SHIFT, R, exec, hyprctl reload"
         "$mainMod, Backspace, exec, powermenu"
-        
+
         # Resize submap
         "ALT, R, submap, resize"
 
@@ -225,33 +225,33 @@
         "SHIFT, Print, exec, grimblast save area"
         "CTRL, Print, exec, grimblast copy active"
       ];
-      
+
       # Hardware controls
       bindl = [
         ", XF86AudioMute, exec, pactl set-source-mute 0 toggle || pactl set-source-mute 1 toggle"
       ];
-      
+
       bindle = [
         ", XF86AudioRaiseVolume, exec, pactl set-sink-mute 0 false ; pactl set-sink-volume 0 +5%"
         ", XF86AudioLowerVolume, exec, pactl set-sink-mute 0 false ; pactl set-sink-volume 0 -5%"
         ", XF86MonBrightnessDown, exec, brightnessctl s 5-%"
         ", XF86MonBrightnessUp, exec, brightnessctl s 5+%"
       ];
-      
+
       binde = [
         ", XF86AudioPlay, exec, mpc toggle"
         ", XF86AudioNext, exec, mpc next"
         ", XF86AudioPrev, exec, mpc prev"
       ];
-      
+
       # Submap (resize mode)
-      
+
       # Mouse bindings
       bindm = [
         "$mainMod, mouse:272, movewindow"
         "$mainMod, mouse:273, resizewindow"
       ];
-      
+
       # Startup applications
       exec-once = [
         "hypridle"
@@ -282,7 +282,7 @@
         {
           timeout = 900;
           on-timeout = "hyprctl dispatch dpms off";
-          on-resume  = "hyprctl dispatch dpms on";
+          on-resume = "hyprctl dispatch dpms on";
         }
       ];
     };
@@ -293,21 +293,21 @@
     settings = {
       general = {
         hide_cursor = true;
-        no_fade_in  = false;
+        no_fade_in = false;
         disable_loading_bar = false;
         grace = 5;
       };
       background = [
         {
           # Use a blurred screenshot as the lock background
-          path        = "screenshot";
+          path = "screenshot";
           blur_passes = 4;
-          blur_size   = 8;
+          blur_size = 8;
         }
       ];
       input-field = [
         {
-          size             = "200, 50";
+          size = "200, 50";
           placeholder_text = "Password...";
           outline_thickness = 2;
           dots_size = 0.2;
@@ -324,19 +324,19 @@
         }
       ];
       label = [
-          {
-            text = "Hi there, boi";
-            color = "rgba(200, 200, 200, 1.0)";
-            font_size = 25;
-            font_family = "DejaVu Sans";
-            position = "0, 80";
-            halign = "center";
-            valign = "center";
-          }
-        ];
+        {
+          text = "Hi there, boi";
+          color = "rgba(200, 200, 200, 1.0)";
+          font_size = 25;
+          font_family = "DejaVu Sans";
+          position = "0, 80";
+          halign = "center";
+          valign = "center";
+        }
+      ];
     };
   };
-  
+
   # Other Wayland utilities
   programs = {
     wofi = {
@@ -364,19 +364,20 @@
     # Install Hyprland dependencies
     hypridle
     hyprlock
-    
+
     # Common utilities for Hyprland
     wofi
-    grim       # screenshot functionality
-    slurp      # screen selection tool
+    rofi-wayland
+    grim # screenshot functionality
+    slurp # screen selection tool
     wl-clipboard
-    
+
     # Media and audio
     pamixer
     pavucontrol
     glib
   ];
-  
+
   # Ensure needed environment variables for Wayland/Hyprland
   home.sessionVariables = {
     NIXOS_OZONE_WL = 1;

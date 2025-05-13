@@ -9,7 +9,7 @@
     gitui
     lazygit
     gh
-    
+
     # Build tools
     gnumake
     cmake
@@ -19,34 +19,68 @@
     autoconf
     libtool
     pkg-config
-    
+
     # C/C++ development
-    clang-tools
-    llvm
-    clang
+    clang_19
+    llvmPackages.libcxx
+    #llvmPackages.libcxxabi
+    gdb
+
     python3
     python311Packages.pip
-    poetry
     nodejs
     rustup
     go
     jdk24
     lua
     luarocks
-    
+
     # Database tools
     sqlite
-    pgcli
-    mycli
-    
-    # Language formatters
-    black
-    stylua
-    shfmt
-    alejandra
-    shfmt              # Shell
-    beautysh           # Bash beautifier
-    rustfmt            # Rust
+    #pgcli
+    #mycli
+
+    # LSP servers
+    clang-tools # For C/C++
+    lua-language-server
+    nil # Nix language server
+    jdt-language-server # Java
+    nodejs
+    nodePackages.typescript
+    nodePackages.typescript-language-server
+
+    # Linters & formatters
+    luaformatter
+    stylua # Lua formatter
+    nixpkgs-fmt # Nix formatter
+    statix # Nix linter
+    checkstyle # Java linter
+    google-java-format # Java formatter
+    nodePackages.eslint
+    nodePackages.prettier
+
+    neovim
   ];
 
+  environment.variables = {
+    PATH = [
+      "${pkgs.clang_19}/bin" # Compiler in PATH
+      "${pkgs.clang-tools}/bin"
+      "${pkgs.stylua}/bin"
+      "${pkgs.lua-language-server}/bin"
+      "${pkgs.nil}/bin"
+      "${pkgs.jdt-language-server}/bin"
+      "${pkgs.nodePackages.typescript-language-server}/bin"
+    ];
+    CPLUS_INCLUDE_PATH = [
+      "${pkgs.llvmPackages.libcxx}/include/c++/v1"
+      "${pkgs.llvmPackages.clang}/resource/include"
+    ];
+
+    # Help the linker find libraries
+    LIBRARY_PATH = [
+      "${pkgs.llvmPackages.libcxx}/lib"
+      #"${pkgs.llvmPackages.libcxxabi}/lib"
+    ];
+  };
 }

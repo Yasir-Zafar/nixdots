@@ -5,30 +5,30 @@
   home.packages = with pkgs; [
     # Note taking
     obsidian
-    
+
     # Office suite
     libreoffice
-    
+
     # PDF tools
     zathura
     poppler_utils
-    
+
     # Time management
     gnome-calendar
     anki
-    
+
     # Mind mapping
     xmind
-    
+
     # System monitoring
     btop
     htop
-    
+
     # Calculator
     gnome-calculator
     bc
   ];
-  
+
   # Configure Zathura as a PDF reader
   programs.zathura = {
     enable = true;
@@ -47,4 +47,7 @@
       statusbar-fg = "#f8f8f2";
     };
   };
+
+  # rofi source
+  home.file.".config/rofi".source = ./../../../config/rofi;
 }

@@ -67,10 +67,11 @@
       # Shell integrations
       eval "$(${pkgs.fzf}/bin/fzf --zsh)"
       eval "$(${pkgs.zoxide}/bin/zoxide init --cmd cd zsh)"
+    '';
 
-      # Launch Hyprland if not already in a graphical session
-      if [ -z "''${DISPLAY}" ] && [ "''${XDG_VTNR}" -eq 1 ]; then
-        exec wrappedh1
+    profileExtra = ''
+      if [[ -z $DISPLAY ]] && [[ $(tty) == /dev/tty1 ]]; then
+        exec Hyprland
       fi
     '';
 
@@ -102,7 +103,7 @@
     eza
   ];
 
-  
+
   # Starship prompt configuration
   programs.starship = {
     enable = true;
@@ -111,34 +112,34 @@
       # One-line minimalist configuration
       add_newline = false;
       format = "$all";
-      
+
       character = {
         success_symbol = "[❯](bold green)";
         error_symbol = "[❯](bold red)";
       };
-      
+
       line_break = {
         disabled = true;
       };
-      
+
       # You can customize other modules as needed
       directory = {
         truncation_length = 3;
         truncate_to_repo = true;
         style = "blue";
       };
-      
+
       git_branch = {
         format = "[$branch]($style) ";
         style = "green";
       };
-      
+
       # Keep it clean and focused
       kubernetes = { disabled = true; };
       ruby = { disabled = true; };
       direnv = { disabled = true; };
       c = { disabled = true; };
-      nix_shell = {disabled = true; };
+      nix_shell = { disabled = true; };
     };
   };
 }
