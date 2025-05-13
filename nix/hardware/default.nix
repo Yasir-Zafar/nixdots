@@ -1,6 +1,4 @@
-# hardware/default.nix
 { pkgs, ... }:
-
 {
   imports = [
     ./bluetooth.nix
@@ -11,6 +9,12 @@
   hardware.enableRedistributableFirmware = true;
   hardware.enableAllFirmware = true;
 
+  # CPU microcode updates
+  hardware.cpu.intel.updateMicrocode = true;
+
+  # SSD optimization
+  services.fstrim.enable = true;
+
   # Firmware tools
   environment.systemPackages = with pkgs; [
     fwupd
@@ -20,6 +24,7 @@
     dmidecode
     hwinfo
     inxi
+    smartmontools
   ];
 
   # Firmware update daemon

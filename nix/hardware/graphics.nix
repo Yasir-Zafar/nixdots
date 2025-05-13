@@ -6,11 +6,12 @@
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for some applications)
+      intel-media-driver
+      vaapiIntel
       vaapiVdpau
       libvdpau-va-gl
-      intel-compute-runtime # OpenCL filter support (Intel)
+      intel-compute-runtime
+
       vulkan-loader
       vulkan-validation-layers
       vulkan-extension-layer
@@ -25,9 +26,9 @@
 
   # For Intel
   environment.variables = {
-    LIBVA_DRIVER_NAME = "iHD"; # Use intel-media-driver
+    LIBVA_DRIVER_NAME = "iHD";
     VDPAU_DRIVER = "va_gl";
-    MOZ_X11_EGL = "1"; # For Firefox hardware acceleration
+    MOZ_X11_EGL = "1";
     MOZ_ACCELERATED = "1";
     XDG_SESSION_TYPE = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
@@ -39,6 +40,6 @@
     vulkan-tools
     libva-utils
     vdpauinfo
-    intel-gpu-tools # For Intel GPUs
+    intel-gpu-tools
   ];
 }

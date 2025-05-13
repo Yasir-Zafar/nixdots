@@ -3,7 +3,6 @@
   imports = [
     ./networking.nix
     ./sound.nix
-    ./bluetooth.nix
     ./ssh.nix
   ];
 

@@ -30,12 +30,6 @@
       "boot.shell_on_fail"
     ];
 
-    # Plymouth (boot splash)
-    #plymouth = {
-    #  enable = true;
-    #  theme = "breeze";
-    #};
-
     # Better kernel parameters for desktop
     kernel.sysctl = {
       "vm.swappiness" = 10;
@@ -46,9 +40,9 @@
       "net.core.wmem_max" = 8388608;
       "net.ipv4.tcp_fastopen" = 3;
       "net.ipv4.tcp_max_syn_backlog" = 8192;
-      # "net.ipv4.tcp_rmem" = "4096 87380 8388608";
-      # "net.ipv4.tcp_slow_start_after_idle" = 0;
-      # "net.ipv4.tcp_wmem" = "4096 87380 8388608";
+      "net.ipv4.tcp_rmem" = "4096 87380 8388608";
+      "net.ipv4.tcp_slow_start_after_idle" = 0;
+      "net.ipv4.tcp_wmem" = "4096 87380 8388608";
     };
 
     # Enable crash handling
@@ -69,7 +63,15 @@
     tmp.cleanOnBoot = true;
   };
 
+  fileSystems."/".options = [ "noatime" "commit=60" ];
+
   # Boot performance tweaks
-  systemd.services.systemd-udev-settle.enable = false;
-  systemd.services.NetworkManager-wait-online.enable = false;
+  systemd = {
+    services = {
+      systemd-udev-settle.enable = false;
+      NetworkManager-wait-online.enable = false;
+    };
+    watchdogRuntimeSec = "0";
+    watchdogRebootSec = "0";
+  };
 }
