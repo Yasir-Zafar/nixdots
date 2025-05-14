@@ -21,7 +21,7 @@
     nixvim.url = "github:nix-community/nixvim";
   };
 
-  outputs = { nixpkgs, home-manager, hyprland, ... }@inputs:
+  outputs = { nixpkgs, home-manager, hyprland, nixvim, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
