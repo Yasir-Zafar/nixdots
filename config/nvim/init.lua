@@ -163,8 +163,11 @@ print('Loading plugins from:', vim.fn.stdpath 'config' .. '/lua/boi/plugins')
 -- Then check if these directories actually exist
 
 require('lazy').setup {
-  import = { 'kickstart.plugins', 'boi.plugins' },
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  spec = {
+    { import = "kickstart.plugins" },
+    { import = "boi.plugins" },
+    { "tpope/vim-sleuth" },
+  },
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`

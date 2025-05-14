@@ -58,6 +58,7 @@
     google-java-format # Java formatter
     nodePackages.eslint
     nodePackages.prettier
+    lua52Packages.luacheck
 
     neovim
   ];
@@ -71,6 +72,8 @@
       "${pkgs.nil}/bin"
       "${pkgs.jdt-language-server}/bin"
       "${pkgs.nodePackages.typescript-language-server}/bin"
+      "/run/current-system/sw/bin/statix"
+      "/run/current-system/sw/bin/luacheck"
     ];
     CPLUS_INCLUDE_PATH = [
       "${pkgs.llvmPackages.libcxx}/include/c++/v1"

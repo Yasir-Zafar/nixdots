@@ -51,30 +51,20 @@ return {
       }
 
       -- TypeScript/JavaScript
-      lspconfig.tsserver.setup = {
-        settings = {
-          typescript = {
-            inlayHints = {
-              includeInlayParameterNameHints = 'all',
-              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-              includeInlayFunctionParameterTypeHints = true,
-              includeInlayVariableTypeHints = true,
-              includeInlayPropertyDeclarationTypeHints = true,
-              includeInlayFunctionLikeReturnTypeHints = true,
-              includeInlayEnumMemberValueHints = true,
+      lspconfig.ts_ls.setup = {
+        init_options = {
+          plugins = {
+            {
+              name = '@vue/typescript-plugin',
+              location = '/usr/local/lib/node_modules/@vue/typescript-plugin',
+              languages = { 'javascript', 'typescript', 'vue' },
             },
           },
-          javascript = {
-            inlayHints = {
-              includeInlayParameterNameHints = 'all',
-              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-              includeInlayFunctionParameterTypeHints = true,
-              includeInlayVariableTypeHints = true,
-              includeInlayPropertyDeclarationTypeHints = true,
-              includeInlayFunctionLikeReturnTypeHints = true,
-              includeInlayEnumMemberValueHints = true,
-            },
-          },
+        },
+        filetypes = {
+          'javascript',
+          'typescript',
+          'vue',
         },
       }
       -- ESLint
@@ -82,41 +72,6 @@ return {
         settings = {
           workingDirectories = { { mode = 'auto' } },
         },
-      }
-      -- SonarLint
-      lspconfig.sonarlint.setup = {
-        cmd = { 'sonarlint-language-server', '-stdio' },
-        filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
-        root_dir = require('lspconfig.util').root_pattern('package.json', 'jsconfig.json', 'tsconfig.json', '.git'),
-        settings = {
-          sonarlint = {
-            pathToNodeExecutable = vim.fn.exepath 'node',
-            testFilePattern = { '**/*test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}' },
-            analyzerProperties = {},
-            showAnalyzerLogs = false,
-            output = {
-              showIssues = true,
-              showVerbose = false,
-            },
-            disableTelemetry = true,
-            connectedMode = {
-              enabled = false,
-            },
-            javascript = {
-              plugins = {
-                sonarjs = {
-                  enabled = true,
-                  path = vim.fn.stdpath 'data' .. '/mason/packages/sonarlint-vscode/extension/analyzers/sonarplugin.js',
-                },
-              },
-            },
-          },
-        },
-        on_attach = function(client, bufnr)
-          -- Disable formatting (handled by prettier)
-          client.server_capabilities.documentFormattingProvider = false
-          client.server_capabilities.documentRangeFormattingProvider = false
-        end,
       }
       -- CSS
       lspconfig.cssls.setup = {
