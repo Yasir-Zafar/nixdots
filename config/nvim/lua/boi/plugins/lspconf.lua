@@ -50,6 +50,105 @@ return {
         },
       }
 
+      -- TypeScript/JavaScript
+      lspconfig.tsserver.setup = {
+        settings = {
+          typescript = {
+            inlayHints = {
+              includeInlayParameterNameHints = 'all',
+              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayVariableTypeHints = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayEnumMemberValueHints = true,
+            },
+          },
+          javascript = {
+            inlayHints = {
+              includeInlayParameterNameHints = 'all',
+              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayVariableTypeHints = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayEnumMemberValueHints = true,
+            },
+          },
+        },
+      }
+      -- ESLint
+      lspconfig.eslint.setup = {
+        settings = {
+          workingDirectories = { { mode = 'auto' } },
+        },
+      }
+      -- SonarLint
+      lspconfig.sonarlint.setup = {
+        cmd = { 'sonarlint-language-server', '-stdio' },
+        filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+        root_dir = require('lspconfig.util').root_pattern('package.json', 'jsconfig.json', 'tsconfig.json', '.git'),
+        settings = {
+          sonarlint = {
+            pathToNodeExecutable = vim.fn.exepath 'node',
+            testFilePattern = { '**/*test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}' },
+            analyzerProperties = {},
+            showAnalyzerLogs = false,
+            output = {
+              showIssues = true,
+              showVerbose = false,
+            },
+            disableTelemetry = true,
+            connectedMode = {
+              enabled = false,
+            },
+            javascript = {
+              plugins = {
+                sonarjs = {
+                  enabled = true,
+                  path = vim.fn.stdpath 'data' .. '/mason/packages/sonarlint-vscode/extension/analyzers/sonarplugin.js',
+                },
+              },
+            },
+          },
+        },
+        on_attach = function(client, bufnr)
+          -- Disable formatting (handled by prettier)
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvider = false
+        end,
+      }
+      -- CSS
+      lspconfig.cssls.setup = {
+        settings = {
+          css = {
+            validate = true,
+            lint = {
+              unknownAtRules = 'ignore',
+            },
+          },
+          scss = {
+            validate = true,
+            lint = {
+              unknownAtRules = 'ignore',
+            },
+          },
+        },
+      }
+      -- HTML
+      lspconfig.html.setup = {
+        filetypes = { 'html', 'javascriptreact', 'typescriptreact' },
+      }
+      -- JSON
+      lspconfig.jsonls.setup = {
+        settings = {
+          json = {
+            schemas = require('schemastore').json.schemas(),
+            validate = { enable = true },
+          },
+        },
+      }
+
       lspconfig.clangd.setup {
         -- Basic setup with default options
         -- If needed, you can add specific configurations:
@@ -71,6 +170,20 @@ return {
           -- },
         },
         filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+      }
+      lspconfig.setup = {
+        eslint = function()
+          -- Automatically fix eslint issues on save
+          vim.api.nvim_create_autocmd('BufWritePre', {
+            pattern = { '*.js', '*.jsx', '*.ts', '*.tsx' },
+            callback = function(event)
+              if require('lspconfig.util').get_active_client_by_name(event.buf, 'eslint') then
+                vim.cmd 'EslintFixAll'
+              end
+            end,
+          })
+          return true
+        end,
       }
 
       vim.api.nvim_create_autocmd('LspAttach', {
