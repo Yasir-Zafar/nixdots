@@ -84,6 +84,7 @@
         # Added from paste-2.txt
         clangd = {
           enable = true;
+          package = pkgs.llvmPackages_19.clang-tools;
           cmd = [
             "clangd"
             "--background-index"
@@ -94,23 +95,13 @@
             "--fallback-style=llvm"
           ];
           
-          initOptions = {
-            compilationDatabasePath = "build"; # If you have compile_commands.json in a build directory
-          };
-          
           filetypes = [ "c" "cpp" "objc" "objcpp" ];
-        };
-        
-        gopls = {
-          enable = true;
-        };
-        
-        pyright = {
-          enable = true;
         };
         
         rust_analyzer = {
           enable = true;
+          installCargo = true;
+          installRustc = true;
         };
         
         nil_ls = {
@@ -206,19 +197,6 @@
         };
       };
       
-      # Added from paste-2.txt for ESLint auto-fixing
-      extraConfig = ''
-        -- Automatically fix eslint issues on save
-        vim.api.nvim_create_autocmd('BufWritePre', {
-          pattern = { '*.js', '*.jsx', '*.ts', '*.tsx' },
-          callback = function(event)
-            if require('lspconfig.util').get_active_client_by_name(event.buf, 'eslint') then
-              vim.cmd 'EslintFixAll'
-            end
-          end,
-        })
-      '';
-
       keymaps = {
         # Diagnostic keymaps
         diagnostic = {
@@ -379,40 +357,18 @@
         end
       '';
     };
-    
-    # Added from paste-2.txt for Mason integration
-    extraConfigLua = ''
-      -- Ensure the servers and tools are installed
-      local ensure_installed = {
-        "clangd",
-        "gopls",
-        "pyright",
-        "rust_analyzer",
-        "lua_ls",
-        "nil_ls",
-        "jdtls",
-        "tsserver",
-        "eslint",
-        "cssls",
-        "html",
-        "jsonls",
-        "stylua", -- Used to format Lua code
-      }
 
-      -- Configure Mason if it's available
-      local mason_ok, mason = pcall(require, "mason")
-      if mason_ok then
-        mason.setup()
-        
-        -- Check if mason-lspconfig is available
-        local mason_lsp_ok, mason_lsp = pcall(require, "mason-lspconfig")
-        if mason_lsp_ok then
-          mason_lsp.setup({
-            ensure_installed = ensure_installed,
-            automatic_installation = true,
-          })
-        end
-      end
-    '';
+      # Added from paste-2.txt for ESLint auto-fixing
+      extraConfigLuaPost = ''
+        -- Automatically fix eslint issues on save
+        vim.api.nvim_create_autocmd('BufWritePre', {
+          pattern = { '*.js', '*.jsx', '*.ts', '*.tsx' },
+          callback = function(event)
+            if require('lspconfig.util').get_active_client_by_name(event.buf, 'eslint') then
+              vim.cmd 'EslintFixAll'
+            end
+          end,
+        })
+      '';
   };
 }

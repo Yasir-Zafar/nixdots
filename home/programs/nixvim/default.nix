@@ -1,8 +1,7 @@
 { pkgs, ...}:
 {
   imports = [
-    ./plugins/lsp.nix
-
+    ./plugins
   ];
   programs.nixvim = {
     enable = true;
