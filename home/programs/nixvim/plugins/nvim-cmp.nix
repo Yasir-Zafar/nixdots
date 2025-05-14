@@ -1,4 +1,4 @@
-{
+{lib, ...}: {
   programs.nixvim = {
     # `friendly-snippets` contains a variety of premade snippets
     #    See the README about individual language/framework/plugin snippets:
@@ -28,17 +28,17 @@
           completeopt = "menu,menuone,noinsert";
         };
 
-       formatting = {
-        format = ''
-          function(entry, vim_item)
-            return require("lspkind").cmp_format({
-              mode = "symbol_text", -- options: 'text', 'symbol', 'symbol_text'
-              maxwidth = 50,
-              ellipsis_char = '...',
-            })(entry, vim_item)
-          end
-        '';
-      };
+        formatting = {
+          format = lib.mkForce ''
+            function(entry, vim_item)
+              return require("lspkind").cmp_format({
+                mode = "symbol_text",
+                maxwidth = 50,
+                ellipsis_char = '...',
+              })(entry, vim_item)
+            end
+          '';
+        };
 
         # For an understanding of why these mappings were
         # chosen, you will need to read `:help ins-completion`

@@ -7,7 +7,13 @@
 
       # NOTE: Enabling these will cause errors unless these tools are installed
       lintersByFt = {
-        nix = ["nix"];
+        lua = ["luacheck"];
+        java = ["checkstyle"];
+        javascript = ["eslint"];
+        typescript = ["eslint"];
+        c = ["clang-tidy"];
+        cpp = ["clang-tidy"];
+        nix = ["statix"];
         markdown = [
           "markdownlint"
           #vale

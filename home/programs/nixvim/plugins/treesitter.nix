@@ -60,10 +60,10 @@
         #    - Show your current context: https://nix-community.github.io/nixvim/plugins/treesitter-context/index.html
         #    - Treesitter + textobjects: https://nix-community.github.io/nixvim/plugins/treesitter-textobjects/index.html
       };
-
-      plugins.treesitter-refactor.enable = true;
-      plugins.treesitter-textobjects.enable = true;
-      plugins.treesitter-context.enable = true;
     };
+
+    plugins.treesitter-refactor.enable = true;
+    plugins.treesitter-textobjects.enable = true;
+    plugins.treesitter-context.enable = true;
   };
 }
