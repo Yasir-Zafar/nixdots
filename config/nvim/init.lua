@@ -164,10 +164,10 @@ print('Loading plugins from:', vim.fn.stdpath 'config' .. '/lua/boi/plugins')
 
 require('lazy').setup {
   spec = {
-    { import = "kickstart.plugins" },
-    { import = "boi.plugins" },
-    { "tpope/vim-sleuth" },
+    { import = 'kickstart.plugins' },
+    { import = 'boi.plugins' },
   },
+  { 'tpope/vim-sleuth' },
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
