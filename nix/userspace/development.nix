@@ -59,8 +59,6 @@
     nodePackages.eslint
     nodePackages.prettier
     lua52Packages.luacheck
-
-    neovim
   ];
 
   environment.variables = {

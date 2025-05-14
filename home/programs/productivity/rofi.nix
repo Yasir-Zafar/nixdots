@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   programs.rofi = {
     enable = true;
-    package = pkgs.rofi;
+    package = pkgs.rofi-wayland;
     theme = "~/.config/rofi/themes/sidebar.rasi"; # We'll create this below
     font = "JetBrainsMono Nerd Font 12";
     terminal = "kitty";

@@ -1,6 +1,5 @@
 # *.nix
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
     ags
     libgtop
@@ -8,7 +7,6 @@
     wl-clipboard
     upower
 
-    power-profiles-daemon
     grimblast
     wf-recorder
 
