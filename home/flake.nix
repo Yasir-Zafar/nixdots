@@ -18,6 +18,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     hyprland.url = "github:hyprwm/Hyprland";
+    nixvim.url = "github:nix-community/nixvim";
   };
 
   outputs = { nixpkgs, home-manager, hyprland, ... }@inputs:
@@ -33,6 +34,7 @@
         boi = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
+             nixvim.homeManagerModules.nixvim
             ./default.nix
             {
               home = {
