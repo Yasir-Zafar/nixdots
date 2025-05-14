@@ -12,7 +12,7 @@
     ./jdtls.nix
     ./tss-tools.nix
     ./noice.nix
-    ./colorizor.nix
+    #./colorizor.nix
     ./trouble.nix
     ./kickstart
   ];
