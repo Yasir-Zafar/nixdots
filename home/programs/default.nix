@@ -7,5 +7,6 @@
     ./productivity
     ./theming
     ./wayland
+    ./nixvim/nixvim.nix
   ];
 }
