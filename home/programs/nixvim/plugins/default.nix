@@ -12,6 +12,8 @@
     ./jdtls.nix
     ./tss-tools.nix
     ./noice.nix
+    ./colorizor.nix
+    ./trouble.nix
     ./kickstart
   ];
 }

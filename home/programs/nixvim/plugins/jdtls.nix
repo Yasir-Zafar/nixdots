@@ -1,67 +1,78 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
-  programs.nixvim.plugins.jdtls = {
+  programs.nixvim = {
     enable = true;
+    plugins = {
+      jdtls = {
+        enable = true;
 
-    # Command to start the JDTLS server
-    cmd = [
-      "jdtls"
-      "--jvm-arg=-javaagent:${config.home.homeDirectory}/.local/share/nvim/mason/packages/jdtls/lombok.jar"
-      "-data"
-      "${config.home.homeDirectory}/.cache/jdtls-workspace"
-    ];
+        # Add additional package dependencies
+        jdtLanguageServerPackage = pkgs.jdt-language-server;
 
-    # Root directory detection
-    root_dir.__raw = "require('jdtls.setup').find_root { '.git', 'mvnw', 'gradlew', 'pom.xml', 'build.gradle' }";
+        # Java settings
+        settings = {
+          # Command to start the JDTLS server
+          cmd = [
+            "jdtls"
+            "--jvm-arg=-javaagent:${config.home.homeDirectory}/.local/share/nvim/mason/packages/jdtls/lombok.jar"
+            "-data"
+            "${config.home.homeDirectory}/.cache/jdtls-workspace"
+          ];
 
-    # Java settings
-    settings = {
-      java = {
-        format = {
-          enabled = true;
-          settings.__raw = "{ url = vim.fn.expand '$HOME/.local/share/nvim/mason/packages/google-java-format/google-java-format.xml' }";
+          root_dir.__raw = "vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw', 'pom.xml', 'build.gradle'}, { upward = true })[1])";
+
+          java = {
+            format = {
+              enabled = true;
+              settings.__raw = "{ url = vim.fn.expand '$HOME/.local/share/nvim/mason/packages/google-java-format/google-java-format.xml' }";
+            };
+            signatureHelp.enabled = true;
+            contentProvider.preferred = "fernflower";
+            completion.favoriteStaticMembers = [
+              "org.junit.Assert.*"
+              "org.junit.Assume.*"
+              "org.junit.jupiter.api.Assertions.*"
+              "org.junit.jupiter.api.Assumptions.*"
+              "org.junit.jupiter.api.DynamicContainer.*"
+              "org.junit.jupiter.api.DynamicTest.*"
+            ];
+            sources.organizeImports = {
+              starThreshold = 9999;
+              staticStarThreshold = 9999;
+            };
+            codeGeneration = {
+              toString.template = "\${object.className}{\${member.name()}=\${member.value}, \${otherMembers}}";
+              hashCodeEquals.useJava7Objects = true;
+              useBlocks = true;
+            };
+            configuration.runtimes = [
+              {
+                name = "JavaSE-17";
+                path.__raw = "vim.fn.expand '$JAVA_HOME'";
+                default = true;
+              }
+            ];
+          };
         };
-        signatureHelp.enabled = true;
-        contentProvider.preferred = "fernflower";
-        completion.favoriteStaticMembers = [
-          "org.junit.Assert.*"
-          "org.junit.Assume.*"
-          "org.junit.jupiter.api.Assertions.*"
-          "org.junit.jupiter.api.Assumptions.*"
-          "org.junit.jupiter.api.DynamicContainer.*"
-          "org.junit.jupiter.api.DynamicTest.*"
-        ];
-        sources.organizeImports = {
-          starThreshold = 9999;
-          staticStarThreshold = 9999;
-        };
-        codeGeneration = {
-          toString.template = "\${object.className}{\${member.name()}=\${member.value}, \${otherMembers}}";
-          hashCodeEquals.useJava7Objects = true;
-          useBlocks = true;
-        };
-        configuration.runtimes = [
-          {
-            name = "JavaSE-17";
-            path.__raw = "vim.fn.expand '$JAVA_HOME'";
-            default = true;
-          }
-        ];
+
+        # Set up autocommands for Java files
       };
     };
-
-    # Initialize with Java Debug and Test bundles
-    init_options = {
-      bundles.__raw = ''
-        {
-          vim.fn.glob(vim.fn.expand '$HOME/.local/share/nvim/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar', true),
-          unpack(vim.split(vim.fn.glob(vim.fn.expand '$HOME/.local/share/nvim/mason/packages/java-test/extension/server/*.jar', true), '\\n')),
-        }
-      '';
-    };
+    autoCmd = [
+      {
+        event = "FileType";
+        pattern = "java";
+        callback.__raw = ''
+          function()
+            require('jdtls.setup').find_root { '.git', 'mvnw', 'gradlew', 'pom.xml', 'build.gradle' }
+          end
+        '';
+      }
+    ];
 
     # Add keymaps and additional setup in on_attach
     extraConfigLua = ''
@@ -129,11 +140,11 @@
         end,
       })
     '';
-  };
 
-  # Add required dependencies
-  programs.nixvim.extraPlugins = with pkgs.vimPlugins; [
-    which-key-nvim
-    nvim-dap
-  ];
+    # Add required dependencies
+    extraPlugins = with pkgs.vimPlugins; [
+      which-key-nvim
+      nvim-dap
+    ];
+  };
 }
