@@ -25,7 +25,7 @@
         "video/mp4" = [ "mpv.desktop" ];
         "video/webm" = [ "mpv.desktop" ];
         "video/x-matroska" = [ "mpv.desktop" ];
-        "inode/directory" = [ "thunar.desktop" ];
+        "inode/directory" = [ "nautilus.desktop" ];
         "text/plain" = [ "nvim.desktop" ];
       };
     };
@@ -42,7 +42,6 @@
       music = "$HOME/Music";
       pictures = "$HOME/Pictures";
       videos = "$HOME/Videos";
-      desktop = "$HOME/Desktop";
       extraConfig = {
         XDG_PROJECTS_DIR = "$HOME/Projects";
         XDG_GAMES_DIR = "$HOME/Games";

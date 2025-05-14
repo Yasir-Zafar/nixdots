@@ -78,8 +78,8 @@
     # Aliases
     shellAliases = {
       "l" = "lsd --color=auto --group-dirs=first --blocks=name,git";
-      "ll" = "lsd --long --color=auto --group-dirs=first --blocks=date,name,git";
-      "la" = "lsd --long --all --color=auto --group-dirs=first --blocks=date,name,git";
+      "ll" = "lsd --long --all --color=auto --group-dirs=first --blocks=date,name,git";
+      "la" = "lsd --all --color=auto --group-dirs=first --blocks=date,name,git";
       "n" = "nvim";
       "c" = "clear";
       ".." = "cd ..";

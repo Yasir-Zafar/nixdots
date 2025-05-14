@@ -1,6 +1,8 @@
-{ pkgs, ... }:
+{pkgs, ...}: {
+  import = [
+    ./rofi.nix
+  ];
 
-{
   # Productivity applications
   home.packages = with pkgs; [
     # Note taking

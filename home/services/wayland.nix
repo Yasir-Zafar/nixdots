@@ -32,15 +32,10 @@
     };
   };
 
-  # Clipboard history manager
-  services.clipman = {
-    enable = true;
-    systemdTarget = "hyprland-session.target";
-  };
-
   # Install Wayland-specific utilities
   home.packages = with pkgs; [
     wl-clipboard
+    cliphist
     wl-color-picker
     wdisplays
     waypipe
@@ -49,7 +44,6 @@
     slurp
     grim
     swappy # Screenshot editor
-    xdg-desktop-portal-hyprland
     libsForQt5.qt5.qtwayland
     qt6.qtwayland
   ];

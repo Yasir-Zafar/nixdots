@@ -7,26 +7,37 @@
     # Media players
     mpv
 
-    # Image viewers/editors
-    imv
-
     # File managers
+    nautilus
     lf
-
-    # Terminal emulators
-    kitty
-
-    # System utilities
-    pavucontrol
-    gnome-disk-utility
-
-    # For GTK and Qt theming
-    adwaita-icon-theme
-    papirus-icon-theme
 
     # Utilities
     xdg-utils
     file-roller
+
+    # flatpak
+    pavucontrol
+    mission-center
+    gnome-usage
+    gnome-disk-utility
+    showtime
+    papers
+    amberol
+    gearlever
+    boxes
+    nicotine-plus
+    parabolic
+    cartridges
+    foliate
+    solanum
+    gnome-podcasts
+    gnome-mahjongg
+
+    # emulators
+    melonDS
+    dolphin-emu
+    azahar
+
   ];
 
   # Programs with special configuration

@@ -29,11 +29,9 @@
     };
   };
 
-  # Install GTK theme engines and related packages
-  xdg.enable = true;
-
   home.packages = with pkgs; [
     gsettings-desktop-schemas
     gnome-themes-extra
+    adwsteamgtk
   ];
 }

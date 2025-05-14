@@ -14,29 +14,29 @@ return {
       },
     },
     config = function()
-      local conform = require("conform")
-      
-      conform.setup({
+      local conform = require 'conform'
+
+      conform.setup {
         formatters_by_ft = {
           -- Lua
-          lua = { "stylua" },
-          
+          lua = { 'stylua' },
+
           -- Nix
-          nix = { "nixpkgs_fmt" },
-          
+          nix = { 'alejandra' },
+
           -- Java
-          java = { "google_java_format" },
-          
+          java = { 'google_java_format' },
+
           -- JavaScript/TypeScript
-          javascript = { "prettier" },
-          typescript = { "prettier" },
-          javascriptreact = { "prettier" },
-          typescriptreact = { "prettier" },
-          json = { "prettier" },
-          html = { "prettier" },
-          css = { "prettier" },
+          javascript = { 'prettier' },
+          typescript = { 'prettier' },
+          javascriptreact = { 'prettier' },
+          typescriptreact = { 'prettier' },
+          json = { 'prettier' },
+          html = { 'prettier' },
+          css = { 'prettier' },
         },
-        
+
         -- Auto-format on save
         format_on_save = {
           -- Customize per-filetype options
@@ -44,8 +44,8 @@ return {
           async = false,
           timeout_ms = 500,
         },
-      })
-      end,
+      }
+    end,
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)

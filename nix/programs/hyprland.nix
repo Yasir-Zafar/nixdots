@@ -49,7 +49,6 @@
     enable = true;
     wlr.enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    config.common.default = "*";
   };
 
   # Configure some services needed for Hyprland
@@ -62,18 +61,6 @@
 
     # Thumbnail service
     tumbler.enable = true;
-  };
-
-  # Enable some essential programs
-  programs = {
-    # For file browser and thumbnails
-    thunar = {
-      enable = true;
-      plugins = with pkgs.xfce; [
-        thunar-archive-plugin
-        thunar-volman
-      ];
-    };
   };
 
   # Environment variables for Wayland/Hyprland

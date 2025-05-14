@@ -9,97 +9,155 @@
 
     # Hyprland settings
     settings = {
+
       # Monitor configuration
+
       monitor = [
+
         "eDP-1,1920x1080@60,0x0,1"
         ",highres,auto,1"
         ",addreserved,0,0,0,0"
+
       ];
 
       # Input configuration
       input = {
+
         kb_layout = "us";
         kb_options = "ctrl:nocaps";
         numlock_by_default = true;
-        repeat_delay = 600;
+        repeat_delay = 500;
         repeat_rate = 50;
         follow_mouse = 1;
         sensitivity = 0.0;
+        scroll_factor = 1;
+        accel_profile = "adaptive";
+
         touchpad = {
+
           natural_scroll = true;
           disable_while_typing = true;
           tap-to-click = true;
           clickfinger_behavior = true;
-          scroll_factor = 0.5;
+          scroll_factor = 1;
+
         };
+
         scroll_method = "2fg";
+
       };
 
       # General settings
       general = {
+
         gaps_in = 10;
         gaps_out = 20;
-        border_size = 2;
-        "col.active_border" = "rgba(88c0d0ee) rgba(fb4934ff) 45deg";
-        "col.inactive_border" = "rgba(595959aa) rgba(8ec07cff) 45deg";
-        layout = "dwindle";
-        resize_on_border = false;
-        allow_tearing = true;
+
+        border_size = 3;
+        no_border_on_floating = true;
+        "col.active_border" = "rgba(8ec07ccc)";
+        "col.inactive_border" = "rgba(83a598cc)";
+        # "col.active_border" = " rgba(8ec07cacc) rgba(8ec07cacc) 90deg";
+        # "col.inactive_border" = "rgba(83a598cc) rgba(83a598cc) 90deg";
+
+        layout = "master";
+        resize_on_border = true;
+        hover_icon_on_border = true;
+        allow_tearing = false;
         no_focus_fallback = true;
+
+        snap = {
+
+          enabled = true;
+
+        };
+
       };
 
       # Decoration settings
       decoration = {
-        rounding = 10;
+
+        rounding = 15;
         active_opacity = 0.8;
         inactive_opacity = 0.8;
+        dim_inactive = true;
+        dim_special = 0.3;
+
         blur = {
+
           enabled = true;
           size = 5;
           passes = 3;
           new_optimizations = true;
-          noise = 0.03;
-          contrast = 0.9;
-          brightness = 0.8;
+          xray = true;
+          noise = 0.1;
+          contrast = 1;
+          brightness = 1;
+
         };
+
+        shadow = {
+          enabled = true;
+          render_power = 3;
+          ignore_window = true;
+          range = 12;
+          offset = "0 1";
+          color = "rgba(16161eff)";
+        };
+
       };
 
       # Animation settings
       animations = {
+
         enabled = true;
+        first_launch_animation = true;
+
         bezier = [
-          "overshot, 0.05, 0.9, 0.1, 1.1"
-          "myBezier, 0.05, 0.9, 0.1, 1.05"
+
+          "ease, 0.25, 1, 0.5, 1"
+
         ];
+
         animation = [
-          "windows, 1, 3, overshot"
-          "windowsOut, 1, 3, default, popin 80%"
-          "border, 1, 5, default"
-          "borderangle, 1, 5, default"
-          "fade, 1, 3, default"
-          "workspaces, 1, 3, overshot"
+
+          "windows, 1, 3, ease, slide"
+          "windowsOut, 1, 3, ease, slide"
+          "fade, 1, 3, ease"
+          "workspaces, 1, 4, ease, slide"
+          "border, 1, 10, ease"
+
         ];
+
       };
 
       # Cursor settings
       cursor = {
+
         inactive_timeout = 3;
+
       };
 
       # Layout settings
       dwindle = {
+
         pseudotile = true;
         preserve_split = true;
         smart_resizing = false;
+
       };
 
       # Master layout
       master = {
+
         new_status = "master";
+
       };
 
       # Miscellaneous
       misc = {
+
+        font_family = "JetBrainsMono Nerd Font";
         vfr = true;
         vrr = 1;
         focus_on_activate = true;
@@ -110,31 +168,39 @@
         disable_autoreload = true;
         new_window_takes_over_fullscreen = 2;
         force_default_wallpaper = 0;
+
       };
 
       # Gestures
       gestures = {
+
         workspace_swipe = true;
+
       };
 
       # Device-specific settings
       device = [
+
         {
+
           name = "epic-mouse-v1";
           sensitivity = -0.5;
+
         }
+
       ];
 
       # Variable definitions
       "$mainMod" = "SUPER";
       "$terminal" = "kitty";
       "$browser" = "firefox";
-      "$files" = "thunar";
+      "$files" = "nautilus";
       "$editor" = "nvim";
       "$reader" = "zathura";
 
       # Window rules
       windowrule = [
+
         "float,title:^(Picture-in-Picture)$"
         "float,title:^(Firefox — Sharing Indicator)$"
         "float,title:^(Open File)(.*)$"
@@ -143,23 +209,32 @@
         "float,title:^(Open Folder)(.*)$"
         "float,title:^(Save As)(.*)$"
         "float,title:^(Library)(.*)$"
+
       ];
 
       windowrulev2 = [
+
         "opacity 0.85 0.85,class:^(mako)$"
+
       ];
 
       # Layer rules
       layerrule = [
+
         "xray 1,.*"
         "noanim,selection"
         "noanim,overview"
         "noanim,noanim"
         "blur,noanim"
+        "blur, .hyprpanel-wrap"
+        #"ignorealpha 0.8, .hyprpanel-wrap"
+        "noanim, .hyprpanel-wrap"
+
       ];
 
       # Key bindings
       bind = [
+
         # App launchers
         "$mainMod, Return, exec, $terminal"
         "$mainMod, P, exec, rofi -show drun"
@@ -215,6 +290,8 @@
         # System commands
         "$mainMod CTRL, Q, exit,"
         "$mainMod SHIFT, R, exec, hyprctl reload"
+        "$mainMod, B, exec, hyprpanel toggle bar-0"
+        "$mainMod, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
         "$mainMod, Backspace, exec, powermenu"
 
         # Resize submap
@@ -224,11 +301,14 @@
         ", Print, exec, grimblast copy area"
         "SHIFT, Print, exec, grimblast save area"
         "CTRL, Print, exec, grimblast copy active"
+
       ];
 
       # Hardware controls
       bindl = [
+
         ", XF86AudioMute, exec, pactl set-source-mute 0 toggle || pactl set-source-mute 1 toggle"
+
       ];
 
       bindle = [
@@ -259,9 +339,11 @@
         "brightnessctl s 55%"
         "easyeffects --gapplication-service"
         "wl-clipboard-history -t"
-        #"gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'"
-        #"gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'"
-        "gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice'"
+        "gsettings set org.gnome.desktop.interface icon-theme 'Adwaita'"
+        "gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'"
+        "gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Classic'"
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
       ];
     };
   };
@@ -334,6 +416,14 @@
           valign = "center";
         }
       ];
+    };
+  };
+
+  dconf.settings = {
+    "org/gnome/nautilus/preferences" = {
+      show-hidden-files = true;
+      default-folder-viewer = "list-view";
+      sort-directories-first = true;
     };
   };
 

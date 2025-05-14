@@ -52,7 +52,7 @@
     # Linters & formatters
     luaformatter
     stylua # Lua formatter
-    nixpkgs-fmt # Nix formatter
+    alejandra
     statix # Nix linter
     checkstyle # Java linter
     google-java-format # Java formatter

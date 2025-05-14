@@ -4,7 +4,7 @@
 {
   # Mouse cursor configuration
   home.pointerCursor = {
-    name = "Bibata-Modern-Ice";
+    name = "Bibata-Modern-Classic";
     package = pkgs.bibata-cursors;
     size = 24;
     gtk.enable = true;
@@ -17,7 +17,7 @@
 
   # Make sure settings are also applied to Wayland
   home.sessionVariables = {
-    XCURSOR_THEME = "Bibata-Modern-Ice";
+    XCURSOR_THEME = "Bibata-Modern-Classic";
     XCURSOR_SIZE = "24";
   };
 }

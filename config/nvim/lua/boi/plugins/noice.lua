@@ -28,11 +28,20 @@ return {
   },
 
   -- Optional: Use Notify for Noice messages
+
   {
     'rcarriga/nvim-notify',
     lazy = true,
     config = function()
-      vim.notify = require 'notify'
+      local notify = require 'notify'
+
+      -- Set as global notify function
+      vim.notify = notify
+
+      -- Optional: configure notify appearance
+      notify.setup {
+        background_colour = '#000000', -- ← your preferred color here
+      }
     end,
   },
 }
