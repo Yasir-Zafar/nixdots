@@ -1,9 +1,12 @@
 # programs/desktop.nix
-{ pkgs, ... }:
-
 {
+  pkgs,
+  inputs,
+  ...
+}: {
   # Configure default applications
   environment.systemPackages = with pkgs; [
+    inputs.nix-software-center.packages.${system}.nix-software-center
     # Media players
     mpv
 
@@ -37,7 +40,6 @@
     melonDS
     dolphin-emu
     azahar
-
   ];
 
   # Programs with special configuration

@@ -1,17 +1,22 @@
-{ pkgs, ...}:
 {
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
+    inputs.nixvim.homeManagerModules.nixvim
     ./plugins
   ];
   programs.nixvim = {
     enable = true;
     defaultEditor = true;
+    package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
 
     colorschemes = {
       gruvbox = {
         enable = true;
         settings = {
-      	  transparent_mode = false;
+          transparent_mode = false;
         };
       };
     };
@@ -37,7 +42,7 @@
       register = "unnamedplus";
     };
 
-     # [[ Setting options ]]
+    # [[ Setting options ]]
     # See `:help vim.opt`
     #  For more options, you can see `:help option-list`
     # https://nix-community.github.io/nixvim/NeovimOptions/index.html?highlight=globals#opts

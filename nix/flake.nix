@@ -23,19 +23,25 @@
     # For Hyprland
     hyprland.url = "github:hyprwm/Hyprland";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
+
+    nix-software-center.url = "github:snowfallorg/nix-software-center";
   };
-  outputs = { nixpkgs, hyprland, flake-utils, ... }@inputs:
+  outputs = {
+    nixpkgs,
+    hyprland,
+    flake-utils,
+    ...
+  } @ inputs:
     flake-utils.lib.eachDefaultSystem
-      (system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-        in
-        {
-          packages.default = pkgs.hello;
-        }) // {
+    (system: let
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+    in {
+      packages.default = pkgs.hello;
+    })
+    // {
       nixosConfigurations.dpix720 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
@@ -53,7 +59,7 @@
           ./programs
           ./userspace
           ./services
-          { nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; }
+          {nixpkgs.overlays = [inputs.hyprpanel.overlay];}
         ];
       };
     };

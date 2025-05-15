@@ -2,7 +2,6 @@
   # Enable the Noice plugin
   programs.nixvim.plugins.noice = {
     enable = true;
-
     settings = {
       # LSP configuration
       lsp = {
@@ -34,7 +33,16 @@
   };
 
   # Add dependencies
-  programs.nixvim.extraPlugins = with pkgs.vimPlugins; [
-    nui-nvim # Required for noice
+  programs.nixvim.extraPlugins = [
+    (pkgs.vimUtils.buildVimPlugin {
+      pname = "nui.nvim";
+      version = "2024-05-14"; # Use today's date or latest tag if known
+      src = pkgs.fetchFromGitHub {
+        owner = "MunifTanjim";
+        repo = "nui.nvim";
+        rev = "f535005e6ad1016383f24e39559833759453564e"; # Or use a specific commit SHA for more stability
+        sha256 = "sha256-SJc9nfV6cnBKYwRWsv0iHy+RbET8frNV85reICf+pt8="; # Replace this
+      };
+    })
   ];
 }

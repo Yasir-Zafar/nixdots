@@ -18,47 +18,52 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     hyprland.url = "github:hyprwm/Hyprland";
+
     nixvim.url = "github:nix-community/nixvim";
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, home-manager, hyprland, nixvim, ... }@inputs:
-    let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
-    in
-    {
-      homeConfigurations = {
-        boi = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-             nixvim.homeManagerModules.nixvim
-            ./default.nix
-            {
-              home = {
-                username = "boi";
-                homeDirectory = "/home/boi";
-                stateVersion = "24.11";
-              };
-              programs.home-manager.enable = true;
+  outputs = {
+    nixpkgs,
+    home-manager,
+    hyprland,
+    nixvim,
+    ...
+  } @ inputs: let
+    system = "x86_64-linux";
+    pkgs = import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+    };
+  in {
+    homeConfigurations = {
+      boi = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [
+          ./default.nix
+          {
+            home = {
+              username = "boi";
+              homeDirectory = "/home/boi";
+              stateVersion = "24.11";
+            };
+            programs.home-manager.enable = true;
 
-              nix.package = pkgs.nix;
-              nixpkgs.config.allowUnfree = true;
-              _module.args = {
-                inherit inputs;
-                # You can also export individual inputs if needed
-                inherit hyprland;
-              };
-            }
-          ];
-          # You can also pass extraSpecialArgs to make inputs available
-          extraSpecialArgs = {
-            inherit inputs;
-          };
+            nix.package = pkgs.nix;
+            nixpkgs.config.allowUnfree = true;
+            _module.args = {
+              inherit inputs;
+              # You can also export individual inputs if needed
+              inherit hyprland;
+            };
+          }
+        ];
+        # You can also pass extraSpecialArgs to make inputs available
+        extraSpecialArgs = {
+          inherit inputs;
         };
       };
     };
+  };
 }
-
