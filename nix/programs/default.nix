@@ -5,5 +5,6 @@
     ./hyprland.nix
     ./shells.nix
     ./desktop.nix
+    ./sql.nix
   ];
 }

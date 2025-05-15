@@ -14,6 +14,13 @@
     # https://nix-community.github.io/nixvim/plugins/fidget/index.html
     plugins.fidget = {
       enable = true;
+      settings = {
+        notification = {
+          window = {
+            winblend = 0;
+          };
+        };
+      };
     };
 
     # https://nix-community.github.io/nixvim/NeovimOptions/index.html?highlight=extraplugi#extraplugins
@@ -94,20 +101,20 @@
             "--function-arg-placeholders"
             "--fallback-style=llvm"
           ];
-          
-          filetypes = [ "c" "cpp" "objc" "objcpp" ];
+
+          filetypes = ["c" "cpp" "objc" "objcpp"];
         };
-        
+
         rust_analyzer = {
           enable = true;
           installCargo = true;
           installRustc = true;
         };
-        
+
         nil_ls = {
           enable = true;
         };
-        
+
         jdtls = {
           enable = true;
           settings = {
@@ -117,25 +124,25 @@
                   url = "vim.fn.stdpath('config') .. '/lang-servers/java-format-settings.xml'";
                 };
               };
-              signatureHelp = { enabled = true; };
-              contentProvider = { preferred = "fernflower"; };
+              signatureHelp = {enabled = true;};
+              contentProvider = {preferred = "fernflower";};
             };
           };
         };
-        
+
         # For TypeScript/JavaScript
         ts_ls = {
           enable = true;
-          filetypes = [ "javascript" "typescript" "vue" ];
+          filetypes = ["javascript" "typescript" "vue"];
         };
-        
+
         eslint = {
           enable = true;
           settings = {
-            workingDirectories = [ { mode = "auto"; } ];
+            workingDirectories = [{mode = "auto";}];
           };
         };
-        
+
         cssls = {
           enable = true;
           settings = {
@@ -153,28 +160,28 @@
             };
           };
         };
-        
+
         html = {
           enable = true;
-          filetypes = [ "html" "javascriptreact" "typescriptreact" ];
+          filetypes = ["html" "javascriptreact" "typescriptreact"];
         };
-        
+
         jsonls = {
           enable = true;
           settings = {
             json = {
-              validate = { enable = true; };
+              validate = {enable = true;};
             };
           };
         };
 
         lua_ls = {
           enable = true;
-          
+
           settings = {
             Lua = {
               diagnostics = {
-                globals = [ "vim" ]; # Recognize 'vim' global in Neovim config
+                globals = ["vim"]; # Recognize 'vim' global in Neovim config
               };
               workspace = {
                 # Make the server aware of Neovim runtime files
@@ -196,7 +203,7 @@
           };
         };
       };
-      
+
       keymaps = {
         # Diagnostic keymaps
         diagnostic = {
@@ -358,17 +365,17 @@
       '';
     };
 
-      # Added from paste-2.txt for ESLint auto-fixing
-      extraConfigLuaPost = ''
-        -- Automatically fix eslint issues on save
-        vim.api.nvim_create_autocmd('BufWritePre', {
-          pattern = { '*.js', '*.jsx', '*.ts', '*.tsx' },
-          callback = function(event)
-            if require('lspconfig.util').get_active_client_by_name(event.buf, 'eslint') then
-              vim.cmd 'EslintFixAll'
-            end
-          end,
-        })
-      '';
+    # Added from paste-2.txt for ESLint auto-fixing
+    extraConfigLuaPost = ''
+      -- Automatically fix eslint issues on save
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        pattern = { '*.js', '*.jsx', '*.ts', '*.tsx' },
+        callback = function(event)
+          if require('lspconfig.util').get_active_client_by_name(event.buf, 'eslint') then
+            vim.cmd 'EslintFixAll'
+          end
+        end,
+      })
+    '';
   };
 }

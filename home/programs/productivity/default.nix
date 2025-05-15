@@ -45,5 +45,5 @@
   };
 
   # rofi source
-  home.file.".config/rofi".source = ./../../../config/rofi;
+  #home.file.".config/rofi".source = ./../../../config/rofi;
 }

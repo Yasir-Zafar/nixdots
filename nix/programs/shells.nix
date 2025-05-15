@@ -1,7 +1,5 @@
 # programs/shells.nix
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # Enable shells and set defaults
   programs = {
     # Bash configuration
@@ -15,7 +13,7 @@
         export HISTFILESIZE=50000
         export HISTCONTROL=ignoredups:erasedups
         export HISTIGNORE="ls:cd:exit:clear:history"
-        
+
         # Set a nice prompt
         PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
       '';
@@ -107,6 +105,6 @@
     PAGER = "less";
     BAT_THEME = "TwoDark";
     FZF_DEFAULT_COMMAND = "fd --type f --hidden --follow --exclude .git";
-    MANPAGER = "sh -c 'col -bx | bat -l man -p'";
+    MANPAGER = "nvim +Man!";
   };
 }

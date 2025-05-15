@@ -32,7 +32,7 @@
     parabolic
     cartridges
     foliate
-    solanum
+    gnome-solanum
     gnome-podcasts
     gnome-mahjongg
 

@@ -61,7 +61,7 @@
     imagebox {
         padding: 20px;
         background-color: transparent;
-        background-image: url("~/Pictures/S21/Bruh/brush.png", height);
+        background-image: url("~/Pictures/Wallpapers/23.png", height);
         orientation: vertical;
         children: [ "inputbar", "dummy", "mode-switcher" ];
     }

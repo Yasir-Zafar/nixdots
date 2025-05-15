@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # Wayland-specific programs and configurations
 
   # Hyprland configuration through home-manager (complements system installation)
@@ -9,20 +8,16 @@
 
     # Hyprland settings
     settings = {
-
       # Monitor configuration
 
       monitor = [
-
         "eDP-1,1920x1080@60,0x0,1"
         ",highres,auto,1"
         ",addreserved,0,0,0,0"
-
       ];
 
       # Input configuration
       input = {
-
         kb_layout = "us";
         kb_options = "ctrl:nocaps";
         numlock_by_default = true;
@@ -34,22 +29,18 @@
         accel_profile = "adaptive";
 
         touchpad = {
-
           natural_scroll = true;
           disable_while_typing = true;
           tap-to-click = true;
           clickfinger_behavior = true;
           scroll_factor = 1;
-
         };
 
         scroll_method = "2fg";
-
       };
 
       # General settings
       general = {
-
         gaps_in = 10;
         gaps_out = 20;
 
@@ -67,16 +58,12 @@
         no_focus_fallback = true;
 
         snap = {
-
           enabled = true;
-
         };
-
       };
 
       # Decoration settings
       decoration = {
-
         rounding = 15;
         active_opacity = 0.8;
         inactive_opacity = 0.8;
@@ -84,7 +71,6 @@
         dim_special = 0.3;
 
         blur = {
-
           enabled = true;
           size = 5;
           passes = 3;
@@ -93,7 +79,6 @@
           noise = 0.1;
           contrast = 1;
           brightness = 1;
-
         };
 
         shadow = {
@@ -104,59 +89,45 @@
           offset = "0 1";
           color = "rgba(16161eff)";
         };
-
       };
 
       # Animation settings
       animations = {
-
         enabled = true;
         first_launch_animation = true;
 
         bezier = [
-
           "ease, 0.25, 1, 0.5, 1"
-
         ];
 
         animation = [
-
           "windows, 1, 3, ease, slide"
           "windowsOut, 1, 3, ease, slide"
           "fade, 1, 3, ease"
           "workspaces, 1, 4, ease, slide"
           "border, 1, 10, ease"
-
         ];
-
       };
 
       # Cursor settings
       cursor = {
-
         inactive_timeout = 3;
-
       };
 
       # Layout settings
       dwindle = {
-
         pseudotile = true;
         preserve_split = true;
         smart_resizing = false;
-
       };
 
       # Master layout
       master = {
-
         new_status = "master";
-
       };
 
       # Miscellaneous
       misc = {
-
         font_family = "JetBrainsMono Nerd Font";
         vfr = true;
         vrr = 1;
@@ -168,26 +139,19 @@
         disable_autoreload = true;
         new_window_takes_over_fullscreen = 2;
         force_default_wallpaper = 0;
-
       };
 
       # Gestures
       gestures = {
-
         workspace_swipe = true;
-
       };
 
       # Device-specific settings
       device = [
-
         {
-
           name = "epic-mouse-v1";
           sensitivity = -0.5;
-
         }
-
       ];
 
       # Variable definitions
@@ -200,7 +164,6 @@
 
       # Window rules
       windowrule = [
-
         "float,title:^(Picture-in-Picture)$"
         "float,title:^(Firefox — Sharing Indicator)$"
         "float,title:^(Open File)(.*)$"
@@ -209,18 +172,14 @@
         "float,title:^(Open Folder)(.*)$"
         "float,title:^(Save As)(.*)$"
         "float,title:^(Library)(.*)$"
-
       ];
 
       windowrulev2 = [
-
         "opacity 0.85 0.85,class:^(mako)$"
-
       ];
 
       # Layer rules
       layerrule = [
-
         "xray 1,.*"
         "noanim,selection"
         "noanim,overview"
@@ -229,12 +188,11 @@
         "blur, .hyprpanel-wrap"
         #"ignorealpha 0.8, .hyprpanel-wrap"
         "noanim, .hyprpanel-wrap"
-
+        "blur, rofi"
       ];
 
       # Key bindings
       bind = [
-
         # App launchers
         "$mainMod, Return, exec, $terminal"
         "$mainMod, P, exec, rofi -show drun"
@@ -301,14 +259,11 @@
         ", Print, exec, grimblast copy area"
         "SHIFT, Print, exec, grimblast save area"
         "CTRL, Print, exec, grimblast copy active"
-
       ];
 
       # Hardware controls
       bindl = [
-
         ", XF86AudioMute, exec, pactl set-source-mute 0 toggle || pactl set-source-mute 1 toggle"
-
       ];
 
       bindle = [
@@ -442,6 +397,7 @@
     pamixer
     pavucontrol
     glib
+    eww
   ];
 
   # Ensure needed environment variables for Wayland/Hyprland
