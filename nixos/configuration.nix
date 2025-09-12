@@ -25,6 +25,7 @@
     neovim
     wget
     git
+    ghostty
   ];
 
   nixpkgs.config.allowUnfree = true;
