@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   services = {
     gnome = {
@@ -11,21 +11,24 @@
     desktopManager.gnome.enable = true;
     geoclue2.enable = true;
 
-    udev.packages = [pkgs.gnome-settings-deamon];
+    udev.packages = [pkgs.gnome-settings-daemon];
     sysprof.enable = true;
     gvfs.enable = true;
   };
 
-  enviroment.pathsToLink = ["share/thumbnailers"];
+  environment.pathsToLink = ["share/thumbnailers"];
   programs.xwayland.enable = false;
 
-  enviroment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; [
     gnome-tweaks
     gnome-extension-manager
     dconf-editor
+
+    inputs.zen-browser.packages."${system}".default
+    inputs.nix-software-center.packages.${system}.nix-software-center
   ];
 
-  enviroment.gnome.excludePackages = (with pkgs; [
+  environment.gnome.excludePackages = (with pkgs; [
     gnome-photos
     gnome-tour
     cheese
@@ -37,7 +40,7 @@
     iagno
     hitori
     atomix
-  )];
+  ]);
 
   programs = {
     dconf.enable = true;

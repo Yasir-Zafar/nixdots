@@ -3,9 +3,9 @@
   fonts.packages = with pkgs; [
     jetbrains-mono
     inter
-    robotto
+    roboto
     noto-fonts
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
     noto-fonts-emoji
   ];
 

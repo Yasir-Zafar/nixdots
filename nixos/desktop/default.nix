@@ -11,7 +11,7 @@
         wayland = true;
       };
   
-      autologin = {
+      autoLogin = {
         enable = true;
         user = "boi";
       };
@@ -26,6 +26,7 @@
     extraPortals = with pkgs; [
       xdg-desktop-portal-gnome
       xdg-desktop-portal-gtk
+    ];
   };
 
   security = {

@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 {
+  imports = [
+    ./dotfiles
+  ];
   home.username = "boi";
   home.homeDirectory = "/home/boi";
 

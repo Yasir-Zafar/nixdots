@@ -5,6 +5,7 @@
     [ 
       ./hardware
       ./boot
+      ./desktop
     ];
 
   networking.hostName = "mnt_bnd"; # Define your hostname.
@@ -22,7 +23,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    neovim
+    vim
     wget
     git
     ghostty
@@ -35,4 +36,3 @@
   system.stateVersion = "25.05"; # Did you read the comment?
 
 }
-

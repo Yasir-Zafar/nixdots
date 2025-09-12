@@ -7,9 +7,13 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixvim.url = "github:nix-community/nixvim";
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, nixvim, ... }@inputs: {
     homeConfigurations = {
       boi = home-manager.lib.homeManagerConfiguration {
 	pkgs = import nixpkgs {
@@ -18,7 +22,14 @@
 	};
 	modules = [
 	  ./home.nix
+	  {
+            _module.args = {
+              inherit inputs;
+            };
+	  }
 	];
+        extraSpecialArgs = {
+          inherit inputs;
       };
     };
   };

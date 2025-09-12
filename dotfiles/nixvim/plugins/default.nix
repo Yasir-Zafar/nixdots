@@ -1,0 +1,17 @@
+{
+  imports = [
+    ./lsp.nix
+    ./conform.nix
+    ./gitsigns.nix
+    ./nvim-cmp.nix
+    ./mini.nix
+    ./telescope.nix
+    ./treesitter.nix
+    ./which-key.nix
+    ./todo.nix
+    ./jdtls.nix
+    ./tss-tools.nix
+    ./trouble.nix
+    ./kickstart
+  ];
+}
