@@ -6,12 +6,12 @@
 
   boot.loader.systemd-boot.configurationLimit = 10;
 
-  boot.kernalParams = [
+  boot.kernelParams = [
     "quiet"
     "splash"
   ];
 
-  boot.kernalPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.supportedFilesystems = [ "ntfs" ];
 }

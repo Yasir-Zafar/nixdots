@@ -4,12 +4,8 @@
   imports =
     [ 
       ./hardware
+      ./boot
     ];
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.hostName = "mnt_bnd"; # Define your hostname.
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
