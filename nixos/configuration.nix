@@ -10,12 +10,11 @@
     ./desktop
     ./gaming
     ./development
+    ./users
+    ./security
+    ./services
   ];
 
-  networking.hostName = "mnt_bnd"; # Define your hostname.
-  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
-
-  time.timeZone = "Asia/Kararchi";
   environment.systemPackages = with pkgs; [
     vim
     wget

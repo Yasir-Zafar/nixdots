@@ -23,6 +23,6 @@
       "storage" # Storage devices
       "gamemode" # GameMode
     ];
-    shell = pkgs.zsh; # or pkgs.zsh if you prefer
+   # shell = pkgs.zsh; # or pkgs.zsh if you prefer
   };
 }

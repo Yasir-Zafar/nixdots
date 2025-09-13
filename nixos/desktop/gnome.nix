@@ -14,7 +14,6 @@
     };
 
     desktopManager.gnome.enable = true;
-    geoclue2.enable = true;
 
     udev.packages = [pkgs.gnome-settings-daemon];
     sysprof.enable = true;

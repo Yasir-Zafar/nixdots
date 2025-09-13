@@ -8,6 +8,8 @@
   # This file is imported by default.nix
   # Add any system-level configurations specific to this user
 
+  time.timeZone = "Asia/Karachi";
+
   # Example: User-specific system packages
   users.users.boi.packages = with pkgs; [
     # Replace "username"
