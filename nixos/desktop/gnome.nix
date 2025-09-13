@@ -25,7 +25,6 @@
     dconf-editor
 
     inputs.zen-browser.packages."${system}".default
-    inputs.nix-software-center.packages.${system}.nix-software-center
   ];
 
   environment.gnome.excludePackages = (with pkgs; [

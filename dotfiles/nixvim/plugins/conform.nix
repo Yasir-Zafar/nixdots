@@ -2,10 +2,11 @@
   programs.nixvim = {
     # Add required dependencies
     extraPackages = with pkgs; [
-      stylua                      # Lua formatter
-      alejandra                   # Nix formatter
-      nodePackages.prettier       # JS/TS/HTML/CSS/JSON formatter
-      google-java-format          # Java formatter
+      stylua # Lua formatter
+      alejandra # Nix formatter
+      nodePackages.prettier # JS/TS/HTML/CSS/JSON formatter
+      google-java-format # Java formatter
+      black
     ];
 
     # Conform.nvim formatter config
@@ -33,6 +34,7 @@
           json = ["prettier"];
           html = ["prettier"];
           css = ["prettier"];
+          python = ["black"];
           # Run multiple formatters sequentially: python = ["isort" "black"];
           # Use first available: javascript = [["prettierd" "prettier"]];
         };
@@ -45,8 +47,8 @@
         mode = "";
         key = "<leader>f";
         action.__raw = ''
-          function() 
-            require('conform').format { async = true, lsp_fallback = true } 
+          function()
+            require('conform').format { async = true, lsp_fallback = true }
           end
         '';
         options = {

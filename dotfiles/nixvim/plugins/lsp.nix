@@ -44,7 +44,7 @@
         capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
       '';
 
-      # servers = {
+      servers = {
       #   # Added from paste-2.txt
       #   clangd = {
       #     enable = true;
@@ -97,17 +97,17 @@
             "typescriptreact"
             "vue"
           ];
-          extraOptions = {
-            init_options = {
-              plugins = [
-                {
-                  name = "@vue/typescript-plugin";
-                  location = "${pkgs.vue-language-server}/lib/node_modules/@vue/language-server";
-                  languages = ["vue"];
-                }
-              ];
-            };
-          };
+        #  extraOptions = {
+        #    init_options = {
+        #      plugins = [
+        #        {
+        #          name = "@vue/typescript-plugin";
+        #          location = "${pkgs.vue-language-server}/lib/node_modules/@vue/language-server";
+        #          languages = ["vue"];
+        #        }
+        #      ];
+        #    };
+        #  };
         };
         volar = {
           enable = true;

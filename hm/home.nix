@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 {
   imports = [
-    ./dotfiles
+    ../dotfiles
   ];
   home.username = "boi";
   home.homeDirectory = "/home/boi";
