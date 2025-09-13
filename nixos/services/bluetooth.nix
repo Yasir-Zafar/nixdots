@@ -16,9 +16,6 @@
     };
   };
 
-  # Bluetooth services
-  services.blueman.enable = true;
-
   # Bluetooth packages
   environment.systemPackages = with pkgs; [
     bluez

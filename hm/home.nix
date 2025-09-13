@@ -7,6 +7,7 @@
   imports = [
     ../dotfiles
     ./desktop
+    ./development
   ];
 
   home = {
