@@ -6,8 +6,10 @@
 }: {
   imports = [
     ../dotfiles
+    ./scripts
     ./desktop
     ./development
+    ./applications
   ];
 
   home = {

@@ -13,7 +13,7 @@
   users.users.boi = {
     # Replace "username"
     isNormalUser = true;
-    description = "Your Name"; # Replace with your name
+    description = "Yasir Zafar"; # Replace with your name
     extraGroups = [
       "wheel" # Enable sudo
       "networkmanager" # Network management
@@ -23,6 +23,6 @@
       "storage" # Storage devices
       "gamemode" # GameMode
     ];
-   # shell = pkgs.zsh; # or pkgs.zsh if you prefer
+    # shell = pkgs.zsh; # or pkgs.zsh if you prefer
   };
 }

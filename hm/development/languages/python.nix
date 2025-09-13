@@ -9,12 +9,10 @@
     packages = with pkgs; [
       # Python interpreters
       python3
-      python311
 
       # Python tools
       python3Packages.pip
       python3Packages.virtualenv
-      python3Packages.pipenv
       poetry
 
       # Development tools

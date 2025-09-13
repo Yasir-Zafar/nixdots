@@ -8,12 +8,11 @@
     # JavaScript/Node.js development packages
     packages = with pkgs; [
       # Node.js and package managers
-      nodejs_20
+      nodejs
       yarn
       pnpm
 
       # Development tools
-      nodePackages.npm
       nodePackages.typescript
       nodePackages.eslint
       nodePackages.prettier
@@ -21,7 +20,6 @@
 
       # Build tools
       nodePackages.webpack-cli
-      nodePackages.vite
     ];
 
     # npm global packages directory
@@ -38,7 +36,7 @@
     file.".npmrc".text = ''
       prefix=''${HOME}/.npm-global
       init-author-name=Your Name
-      init-author-email=your.email@example.com
+      init-author-email=mntbnd720@proton.me
       init-license=MIT
     '';
   };

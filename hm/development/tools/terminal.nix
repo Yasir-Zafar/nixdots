@@ -69,14 +69,6 @@
         ps = "procs";
         du = "dust";
 
-        # Git aliases
-        gs = "git status";
-        ga = "git add";
-        gc = "git commit";
-        gp = "git push";
-        gl = "git pull";
-        gd = "git diff";
-
         # System aliases
         rebuild-nixos = "sudo nixos-rebuild switch --flake ~/nix-config/nixos";
         rebuild-home = "home-manager switch --flake ~/nix-config/hm";
@@ -122,8 +114,9 @@
     # Eza configuration
     eza = {
       enable = true;
-      enableAliases = true;
-      icons = true;
+      enableBashIntegration = true;
+      enableZshIntegration = true;
+      icons = "auto";
       git = true;
     };
   };
