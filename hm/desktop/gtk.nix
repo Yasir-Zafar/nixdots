@@ -19,7 +19,7 @@
     # };
     #
     cursorTheme = {
-      name = "Biabata-Modern-Classic";
+      name = "Bibata-Modern-Classic";
       package = pkgs.bibata-cursors;
     };
 

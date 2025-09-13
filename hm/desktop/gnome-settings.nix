@@ -5,38 +5,49 @@
   pkgs,
   ...
 }: {
-  # GNOME Shell extensions
-  home.packages = with pkgs.gnomeExtensions; [
-    appindicator
-    dash-to-dock
-    user-themes
-    vitals
-    clipboard-indicator
-    blur-my-shell
-    workspace-indicator
-    caffeine
-    just-perfection
-  ];
-
   # dconf settings for GNOME
   dconf.settings = {
     "org/gnome/shell" = {
-      disable-user-extensions = false;
+      disable-user-extensions = false; # enables user extensions
       enabled-extensions = [
-        "appindicatorsupport@rgcjonas.gmail.com"
-        "dash-to-dock@micxgx.gmail.com"
-        "user-theme@gnome-shell-extensions.gcampax.github.com"
-        "Vitals@CoreCoding.com"
-        "clipboard-indicator@tudmotu.com"
-        "caffeine@patapon.info"
-        "just-perfection-desktop@just-perfection"
+        pkgs.gnomeExtensions.appindicator.extensionUuid
+        pkgs.gnomeExtensions.dash-to-dock.extensionUuid
+        pkgs.gnomeExtensions.user-themes.extensionUuid
+        pkgs.gnomeExtensions.vitals.extensionUuid
+        # pkgs.gnomeExtensions.clipboard-indicator.extensionUuid
+        pkgs.gnomeExtensions.pano.extensionUuid
+        pkgs.gnomeExtensions.caffeine.extensionUuid
+        pkgs.gnomeExtensions.hide-top-bar.extensionUuid
+        pkgs.gnomeExtensions.media-progress.extensionUuid
+        pkgs.gnomeExtensions.just-perfection.extensionUuid
+        # pkgs.gnomeExtensions.forge.extensionUuid
       ];
+    };
+
+    "org/gnome/desktop/input-sources" = {
+      xkb-options = ["ctrl:nocaps"];
+    };
+
+    "org/gnome/desktop/privacy" = {
+      report-technical-problems = false;
+    };
+
+    "org/gnome/desktop/calendar" = {
+      show-weekdate = true;
+    };
+
+    "org/gnome/desktop/wm/preferences" = {
+      num-workspaces = 4;
+    };
+
+    "org/gnome/mutter" = {
+      dynamic-workspaces = false;
     };
 
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       enable-hot-corners = false;
-      show-battery-percentage = true;
+      show-battery-percentage = false;
     };
 
     "org/gnome/desktop/wm/preferences" = {
@@ -50,7 +61,7 @@
     };
 
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      binding = "<Super>t";
+      binding = "<Super>Return";
       command = "ghostty";
       name = "Open Terminal";
     };
@@ -67,6 +78,7 @@
       dash-max-icon-size = 48;
       show-trash = false;
       show-mounts = false;
+      hot-keys = false;
     };
 
     # Just Perfection settings
@@ -80,4 +92,18 @@
       workspace-switcher-should-show = false;
     };
   };
+
+  # GNOME Shell extensions
+  home.packages = with pkgs.gnomeExtensions; [
+    appindicator
+    dash-to-dock
+    user-themes
+    vitals
+    # clipboard-indicator
+    pano
+    caffeine
+    hide-top-bar
+    media-progress
+    just-perfection
+  ];
 }
