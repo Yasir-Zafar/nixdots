@@ -10,5 +10,4 @@
 
   # Enable 32-bit support for Steam
   hardware.graphics.enable32Bit = true;
-  hardware.pulseaudio.support32Bit = true;
 }

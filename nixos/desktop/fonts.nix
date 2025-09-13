@@ -7,7 +7,7 @@
   # Font packages
   fonts.packages = with pkgs; [
     # Programming fonts
-    (nerdfonts.override {fonts = ["FiraCode" "Meslo"];})
+    fira-code
 
     # System fonts
     jetbrains-mono

@@ -8,6 +8,5 @@
   environment.systemPackages = with pkgs; [
     #NixOS tools
     statix
-    nil_ls
   ];
 }
