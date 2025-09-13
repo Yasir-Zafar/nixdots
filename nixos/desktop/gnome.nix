@@ -1,6 +1,11 @@
-{ pkgs, inputs, ... }:
+# nixos/desktop/gnome.nix
 {
+  pkgs,
+  inputs,
+  ...
+}: {
   services = {
+    # GNOME services
     gnome = {
       gnome-keyring.enable = true;
       localsearch.enable = true;
@@ -16,30 +21,35 @@
     gvfs.enable = true;
   };
 
-  environment.pathsToLink = ["share/thumbnailers"];
   programs.xwayland.enable = false;
 
-  environment.systemPackages = with pkgs; [
-    gnome-tweaks
-    gnome-extension-manager
-    dconf-editor
+  environment = {
+    pathsToLink = ["share/thumbnailers"];
 
-    inputs.zen-browser.packages."${system}".default
-  ];
+    # Essential GNOME packages
+    systemPackages = with pkgs; [
+      gnome-tweaks
+      gnome-extension-manager
+      dconf-editor
 
-  environment.gnome.excludePackages = (with pkgs; [
-    gnome-photos
-    gnome-tour
-    cheese
-    gnome-music
-    epiphany
-    geary
-    gnome-characters
-    tali
-    iagno
-    hitori
-    atomix
-  ]);
+      inputs.zen-browser.packages."${system}".default
+    ];
+
+    # Remove some default GNOME applications you might not need
+    gnome.excludePackages = with pkgs; [
+      gnome-photos
+      gnome-tour
+      cheese
+      gnome-music
+      epiphany
+      geary
+      gnome-characters
+      tali
+      iagno
+      hitori
+      atomix
+    ];
+  };
 
   programs = {
     dconf.enable = true;

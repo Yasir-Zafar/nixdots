@@ -1,3 +1,4 @@
+# nixos/flake.nix
 {
   description = "NixOS system configuration";
 
@@ -10,20 +11,24 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
+  outputs = {
+    self,
+    nixpkgs,
+    ...
+  } @ inputs: {
     nixosConfigurations = {
       mntbnd = nixpkgs.lib.nixosSystem {
-	system = "x86_64-linux";
-	specialArgs = {
-	  inherit inputs;
-	  pkgs = import nixpkgs {
-	    system = "x86_64-linux";
-	    config.allowUnfree = true;
-	  };
-	};
-	modules = [
-	  ./configuration.nix
-	];
+        system = "x86_64-linux";
+        specialArgs = {
+          inherit inputs;
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+          };
+        };
+        modules = [
+          ./configuration.nix
+        ];
       };
     };
   };

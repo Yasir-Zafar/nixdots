@@ -1,16 +1,17 @@
-{ pkgs, ... }:
-{
+# nixos/desktop/default.nix
+{pkgs, ...}: {
   imports = [
     ./gnome.nix
     ./fonts.nix
   ];
   services = {
+    # Enable display manager
     displayManager = {
       gdm = {
         enable = true;
         wayland = true;
       };
-  
+
       autoLogin = {
         enable = true;
         user = "boi";

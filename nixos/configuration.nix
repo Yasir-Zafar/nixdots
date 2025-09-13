@@ -1,3 +1,4 @@
+# nixos/configuration.nix
 {
   config,
   pkgs,
@@ -7,6 +8,7 @@
     ./hardware
     ./boot
     ./desktop
+    ./gaming
   ];
 
   networking.hostName = "mnt_bnd"; # Define your hostname.
@@ -17,24 +19,29 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.boi = {
     isNormalUser = true;
-    extraGroups = ["wheel"]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel" "networkmanager"]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       tree
     ];
   };
 
+  security.sudo = {
+    enable = true;
+    wheelNeedsPassword = false;
+  };
+
   environment.systemPackages = with pkgs; [
     vim
     wget
-    git
     ghostty
-    statix
-    python313Packages.flake8
+    unrar
   ];
-
-  nixpkgs.config.allowUnfree = true;
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
-  system.stateVersion = "25.05"; # Did you read the comment?
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
+  # System state version
+  system.stateVersion = "25.05";
 }

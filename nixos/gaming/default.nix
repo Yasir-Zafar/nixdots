@@ -1,3 +1,4 @@
+# nixos/gaming/default.nix
 {pkgs, ...}: {
   imports = [
     ./steam.nix

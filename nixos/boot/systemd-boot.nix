@@ -1,17 +1,29 @@
-
-{ config, pkgs, ... }:
+# nixos/boot/systemd-boot.nix
 {
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  config,
+  pkgs,
+  ...
+}: {
+  boot = {
+    loader = {
+      # Use systemd-boot EFI boot loader
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
 
-  boot.loader.systemd-boot.configurationLimit = 10;
+      # Limit number of generations to keep boot partition clean
+      systemd-boot.configurationLimit = 10;
+    };
 
-  boot.kernelParams = [
-    "quiet"
-    "splash"
-  ];
+    # Kernel parameters for better performance and compatibility
+    kernelParams = [
+      "quiet"
+      "splash"
+    ];
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+    # Use latest kernel for better hardware support
+    kernelPackages = pkgs.linuxPackages_latest;
 
-  boot.supportedFilesystems = [ "ntfs" ];
+    # Enable support for NTFS (for gaming/dual boot)
+    supportedFilesystems = ["ntfs"];
+  };
 }
