@@ -1,3 +1,4 @@
+# hm/flake.nix
 {
   description = "Home Manager configuration";
 
@@ -13,25 +14,31 @@
     neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixvim, ... }@inputs: {
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    nixvim,
+    ...
+  } @ inputs: {
     homeConfigurations = {
       boi = home-manager.lib.homeManagerConfiguration {
-	pkgs = import nixpkgs {
-	  system = "x86_64-linux";
-	  config.allowUnfree = true;
-	};
-	modules = [
-	  ./home.nix
-	  {
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
+        modules = [
+          ./home.nix
+          {
             _module.args = {
               inherit inputs;
             };
-	  }
-	];
+          }
+        ];
         extraSpecialArgs = {
           inherit inputs;
+        };
       };
     };
   };
-};
 }

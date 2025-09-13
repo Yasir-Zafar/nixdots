@@ -1,12 +1,19 @@
-{ config, pkgs, ... }:
+# hm/home.nix
 {
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     ../dotfiles
   ];
-  home.username = "boi";
-  home.homeDirectory = "/home/boi";
 
-  home.stateVersion = "25.05";
+  home = {
+    username = "boi";
+    homeDirectory = "/home/boi";
+
+    stateVersion = "25.05";
+  };
 
   programs.home-manager.enable = true;
 
