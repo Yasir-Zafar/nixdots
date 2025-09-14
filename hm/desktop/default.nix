@@ -6,7 +6,7 @@
 }: {
   imports = [
     ./gnome-settings.nix
-    ./gtk.nix
+    # ./gtk.nix
     ./qt.nix
   ];
 
@@ -15,6 +15,12 @@
     # System monitoring
     htop
     btop
+
+    nwg-look
+    sassc
+    gnome-themes-extra
+    gtk-engine-murrine
+    bibata-cursors
 
     # File management
     nautilus-open-any-terminal

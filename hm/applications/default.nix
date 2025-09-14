@@ -7,5 +7,6 @@
   imports = [
     ./media.nix
     ./utilities.nix
+    ./ghostty.nix
   ];
 }

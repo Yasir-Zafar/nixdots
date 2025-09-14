@@ -8,16 +8,16 @@
   gtk = {
     enable = true;
 
-    # theme = {
-    #   name = "Adwaita-dark";
-    #   package = pkgs.gnome-themes-extra;
-    # };
-    #
-    # iconTheme = {
-    #   name = "Adwaita";
-    #   package = pkgs.adwaita-icon-theme;
-    # };
-    #
+    theme = {
+      name = "Gruvbox-Green-Dark-Soft";
+      package = pkgs.gruvbox-gtk-theme;
+    };
+
+    iconTheme = {
+      name = "Gruvbox-Dark";
+      package = pkgs.gruvbox-gtk-theme;
+    };
+
     cursorTheme = {
       name = "Bibata-Modern-Classic";
       package = pkgs.bibata-cursors;
@@ -27,18 +27,10 @@
       name = "Inter";
       size = 11;
     };
-
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
-
-    gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
   };
 
   # Dark theme for applications
-  home.sessionVariables = {
-    GTK_THEME = "Adwaita:dark";
-  };
+  # home.sessionVariables = {
+  #   GTK_THEME = "Adwaita:dark";
+  # };
 }
