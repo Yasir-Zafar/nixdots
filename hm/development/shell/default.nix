@@ -7,6 +7,6 @@
   imports = [
     ./bash.nix
     ./aliases.nix
-    ./environment.nix
+    ./enviroment.nix
   ];
 }

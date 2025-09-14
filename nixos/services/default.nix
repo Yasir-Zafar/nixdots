@@ -14,5 +14,5 @@
   # Enable location services
   services.geoclue2.enable = true;
 
-  sevices.tuned.enable = true;
+  services.tuned.enable = true;
 }

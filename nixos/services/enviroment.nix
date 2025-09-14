@@ -18,6 +18,9 @@
 
       # Hardware-specific variables
       VDPAU_DRIVER = "va_gl"; # For Intel graphics
+
+      VISUAL = "nvim";
+      MANPAGER = "nvim +Man!";
     };
 
     # Session variables (available in user sessions, including display managers)

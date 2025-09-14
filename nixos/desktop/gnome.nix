@@ -30,19 +30,44 @@
       gnome-tweaks
       gnome-extension-manager
       dconf-editor
+      gnome-calendar
+      gnome-calculator
+      gnome-usage
+      gnome-disk-utility
+      file-roller
+      refine
+
+      # Password management
+      bitwarden
+      libheif
+      libheif.out
 
       inputs.zen-browser.packages."${system}".default
     ];
 
     # Remove some default GNOME applications you might not need
     gnome.excludePackages = with pkgs; [
-      gnome-photos
       gnome-tour
-      cheese
+      gnome-connections
+      gnome-console
       gnome-music
+      gnome-photos
+      gnome-maps
+      gnome-weather
+      gnome-contacts
+      gnome-calendar
+      gnome-clocks
+      gnome-initial-setup
+      gnome-software
+      gnome-characters
+      gnome-logs
+      gnome-font-viewer
+      gnome-calculator
       epiphany
       geary
-      gnome-characters
+      evince
+      totem
+      cheese
       tali
       iagno
       hitori

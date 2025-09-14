@@ -13,16 +13,27 @@
       vaapiVdpau
       libvdpau-va-gl
       intel-compute-runtime # OpenCL support
+
+      vulkan-loader
+      vulkan-validation-layers
+      vulkan-extension-layer
+      vulkan-tools
     ];
   };
 
   # Intel GPU tools
   environment.systemPackages = with pkgs; [
     intel-gpu-tools
+    glxinfo
+    vulkan-tools
+    libva-utils
+    vdpauinfo
   ];
 
   # Environment variables for Intel graphics
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "iHD"; # or "i965" if you have issues
+    VDPAU_DRIVER = "va_gl";
+    MOZ_ACCELERATED = "1";
   };
 }
