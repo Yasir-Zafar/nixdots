@@ -63,8 +63,6 @@
 
   # Install font utilities
   environment.systemPackages = with pkgs; [
-    fontpreview
     glxinfo
-    font-manager
   ];
 }

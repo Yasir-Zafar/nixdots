@@ -7,24 +7,17 @@
   # Media applications
   home.packages = with pkgs; [
     # Video players
-    celluloid
     showtime
 
     # Image viewers/editors
-    eog # GNOME image viewer
     gimp
-    imagemagick
+    krita
 
     # Audio
-    audacity
     pavucontrol # PulseAudio/PipeWire volume control
 
-    # Media tools
-    ffmpeg
-    yt-dlp # YouTube downloader
-
     # Document viewers
-    papers # PDF viewer
+    papers
     libreoffice
     obsidian
 
@@ -39,13 +32,11 @@
     vesktop
 
     # Music
-    spotify
     amberol
     gnome-podcasts
 
     # Reading & Learning
     foliate
-    calibre
 
     # Media utilities
     ffmpeg

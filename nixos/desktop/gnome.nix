@@ -16,7 +16,6 @@
     desktopManager.gnome.enable = true;
 
     udev.packages = [pkgs.gnome-settings-daemon];
-    sysprof.enable = true;
     gvfs.enable = true;
   };
 
@@ -47,6 +46,10 @@
 
     # Remove some default GNOME applications you might not need
     gnome.excludePackages = with pkgs; [
+      yelp
+      gnome-user-docs
+      simple-scan
+      seahorse
       gnome-tour
       gnome-connections
       gnome-console
@@ -78,4 +81,16 @@
   programs = {
     dconf.enable = true;
   };
+
+  # Prevent creation of default XDG user directories
+  environment.etc."xdg/user-dirs.defaults".text = ''
+    DESKTOP=
+    DOWNLOAD=Downloads
+    TEMPLATES=
+    PUBLICSHARE=
+    DOCUMENTS=Documents
+    MUSIC=Music
+    PICTURES=Pictures
+    VIDEOS=Videos
+  '';
 }
