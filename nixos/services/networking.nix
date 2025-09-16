@@ -21,34 +21,34 @@
 
     # Enable wireless support via NetworkManager
     wireless.enable = false; # Disabled in favor of NetworkManager
-  };
 
-  firewall = {
-    enable = true;
-    allowPing = true; # Allows network troubleshooting
+    firewall = {
+      enable = true;
+      allowPing = true; # Allows network troubleshooting
 
-    # Minimal ports for average users (more secure)
-    allowedTCPPorts = [80 443]; # Just web browsing (HTTP/HTTPS)
-    allowedUDPPorts = [53]; # DNS queries
+      # Minimal ports for average users (more secure)
+      allowedTCPPorts = [80 443]; # Just web browsing (HTTP/HTTPS)
+      allowedUDPPorts = [53]; # DNS queries
 
-    # Enable if you need these services:
-    # allowedTCPPorts = [22 80 443]; # Add 22 for SSH if you're a developer
-    # allowedTCPPorts = [80 443 8080]; # Add 8080 for development servers
+      # Enable if you need these services:
+      # allowedTCPPorts = [22 80 443]; # Add 22 for SSH if you're a developer
+      # allowedTCPPorts = [80 443 8080]; # Add 8080 for development servers
 
-    # Allow local network discovery (printers, media servers, etc.)
-    trustedInterfaces = ["lo"]; # Loopback interface
-    allowedTCPPortRanges = [
-      {
-        from = 1714;
-        to = 1764;
-      } # KDE Connect
-    ];
-    allowedUDPPortRanges = [
-      {
-        from = 1714;
-        to = 1764;
-      } # KDE Connect
-    ];
+      # Allow local network discovery (printers, media servers, etc.)
+      trustedInterfaces = ["lo"]; # Loopback interface
+      allowedTCPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        } # KDE Connect
+      ];
+      allowedUDPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        } # KDE Connect
+      ];
+    };
   };
 
   services = {

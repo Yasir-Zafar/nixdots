@@ -8,8 +8,13 @@
 
   environment.systemPackages = with pkgs; [
     gamemode
-    mangohud
 
     bottles
+
+    # Gaming & Emulation
+    prismlauncher
+    lunar-client
+    cartridges
+    gnome-mahjongg
   ];
 }

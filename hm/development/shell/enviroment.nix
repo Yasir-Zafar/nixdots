@@ -19,7 +19,6 @@
 
     # User preferences
     BAT_THEME = "Gruvbox";
-    FZF_DEFAULT_COMMAND = "fd --type f";
 
     # Gaming optimizations (user-level)
     MANGOHUD = "1";

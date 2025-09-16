@@ -7,9 +7,8 @@
   # Media applications
   home.packages = with pkgs; [
     # Video players
-    vlc
-    mpv
     celluloid
+    showtime
 
     # Image viewers/editors
     eog # GNOME image viewer
@@ -27,14 +26,30 @@
     # Document viewers
     papers # PDF viewer
     libreoffice
+    obsidian
 
     # Streaming
     obs-studio
+    kooha
+
+    # Communication
+    vesktop
+    thunderbird
+    nicotine-plus
+    vesktop
 
     # Music
     spotify
     amberol
-    # rhythmbox  # GNOME music player alternative
+    gnome-podcasts
+
+    # Reading & Learning
+    foliate
+    calibre
+
+    # Media utilities
+    ffmpeg
+    yt-dlp
   ];
 
   # MPV configuration

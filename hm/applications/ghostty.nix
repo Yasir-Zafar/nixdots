@@ -27,26 +27,6 @@
       selection-background = 504945
       selection-foreground = ebdbb2
 
-      # Normal colors (0-7)
-      palette = 0=#282828   # black
-      palette = 1=#cc241d   # red
-      palette = 2=#98971a   # green
-      palette = 3=#d79921   # yellow
-      palette = 4=#458588   # blue
-      palette = 5=#b16286   # magenta
-      palette = 6=#689d6a   # cyan
-      palette = 7=#a89984   # white
-
-      # Bright colors (8-15)
-      palette = 8=#928374   # bright black
-      palette = 9=#fb4934   # bright red
-      palette = 10=#b8bb26  # bright green
-      palette = 11=#fabd2f  # bright yellow
-      palette = 12=#83a598  # bright blue
-      palette = 13=#d3869b  # bright magenta
-      palette = 14=#8ec07c  # bright cyan
-      palette = 15=#ebdbb2  # bright white
-
       # ===== FONT CONFIGURATION =====
 
       # Font family and size
@@ -101,16 +81,10 @@
 
       # ===== ADVANCED FEATURES =====
 
-      # Image support (if you want inline images)
-      image-storage-limit = 320000000  # 320MB
-
       # Clipboard
       clipboard-read = allow
       clipboard-write = allow
       clipboard-trim-trailing-spaces = true
-
-      # Bracketed paste
-      bracketed-paste = true
 
       # Confirm before closing
       confirm-close-surface = false
@@ -137,14 +111,6 @@
       # Cursor style that works well with Gruvbox
       cursor-style = block
       cursor-style-blink = true
-
-      # Underline colors for better visibility
-      underline-color = d79921  # Gruvbox yellow
-      underline-thickness = 1px
-
-      # Bell configuration (subtle for Gruvbox theme)
-      bell = false
-      visual-bell = false
     '';
   };
 
