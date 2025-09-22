@@ -9,6 +9,7 @@
     ./bluetooth.nix
     ./audio.nix
     ./enviroment.nix
+    ./syncthing.nix
   ];
 
   # Enable location services
