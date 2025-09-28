@@ -15,6 +15,9 @@
     # JavaScript/Web development
     jetbrains.webstorm
 
+    # c++
+    jetbrains.clion
+
     # Database management
     jetbrains.datagrip
   ];

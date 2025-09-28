@@ -171,6 +171,11 @@
       use-device-levels = true;
     };
 
+    # avatar settings
+    "org/gnome/shell/extensions/quick-settings-avatar" = {
+      avatar-position = 1;
+    };
+
     # vitals settings
     "org/gnome/shell/extensions/vitals" = {
       icon-style = 1;
@@ -198,7 +203,6 @@
         pkgs.gnomeExtensions.user-avatar-in-quick-settings.extensionUuid
         pkgs.gnomeExtensions.appindicator.extensionUuid
         pkgs.gnomeExtensions.removable-drive-menu.extensionUuid
-        pkgs.gnomeExtensions.syncthing-indicator.extensionUuid
         pkgs.gnomeExtensions.hide-cursor.extensionUuid
         pkgs.gnomeExtensions.just-perfection.extensionUuid
       ];
@@ -221,6 +225,5 @@
     wireless-hid
     user-avatar-in-quick-settings
     removable-drive-menu
-    syncthing-indicator
   ];
 }

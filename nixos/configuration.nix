@@ -17,6 +17,10 @@
 
   environment.systemPackages = with pkgs; [
     vim
+
+    wineWowPackages.stable
+
+    gnome-firmware
   ];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];

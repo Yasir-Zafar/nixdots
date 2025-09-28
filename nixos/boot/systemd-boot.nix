@@ -24,6 +24,9 @@
       "quiet"
       "loglevel=3"
       "mitigations=auto"
+      "intel_iommu=on"
+      "acpi_backlight=native"
+      "pci=noaer"
     ];
 
     # Use latest kernel for better hardware support
