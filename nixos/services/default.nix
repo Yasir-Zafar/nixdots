@@ -10,7 +10,6 @@
     ./audio.nix
     ./enviroment.nix
     ./syncthing.nix
-    ./easyeffect.nix
   ];
 
   # Enable location services
