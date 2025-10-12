@@ -5,6 +5,9 @@
   ...
 }: {
   home.packages = with pkgs; [
+    # Virtual machine
+    gnome-boxes
+
     # File managers
     nautilus
 
@@ -23,5 +26,9 @@
     parabolic
     fragments
     pinta
+    aria2
+
+    # Optional dependencies
+    gnome-epub-thumbnailer
   ];
 }

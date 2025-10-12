@@ -43,14 +43,14 @@
     # Mouse and touchpad settings
     "org/gnome/desktop/peripherals/mouse" = {
       natural-scroll = false;
-      speed = 0.5; # Adjust between -1.0 and 1.0
+      speed = 0.7; # Adjust between -1.0 and 1.0
     };
 
     "org/gnome/desktop/peripherals/touchpad" = {
       natural-scroll = true;
       tap-to-click = true;
       two-finger-scrolling-enabled = true;
-      speed = 0.6;
+      speed = 0.7;
     };
 
     # Additional window management settings
@@ -181,7 +181,6 @@
       icon-style = 1;
       menu-centered = true;
       show-gpu = false;
-      show-system = false;
       show-voltage = false;
     };
 
@@ -203,6 +202,7 @@
         pkgs.gnomeExtensions.user-avatar-in-quick-settings.extensionUuid
         pkgs.gnomeExtensions.appindicator.extensionUuid
         pkgs.gnomeExtensions.removable-drive-menu.extensionUuid
+        pkgs.gnomeExtensions.syncthing-indicator.extensionUuid
         pkgs.gnomeExtensions.hide-cursor.extensionUuid
         pkgs.gnomeExtensions.just-perfection.extensionUuid
       ];
@@ -225,5 +225,6 @@
     wireless-hid
     user-avatar-in-quick-settings
     removable-drive-menu
+    syncthing-indicator
   ];
 }

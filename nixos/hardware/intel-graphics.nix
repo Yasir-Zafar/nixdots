@@ -11,8 +11,7 @@
       intel-media-driver # LIBVA_DRIVER_NAME=iHD
       vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but sometimes more stable)
       vaapiVdpau
-      libvdpau-va-gl
-      intel-compute-runtime # OpenCL support
+      # intel-compute-runtime # OpenCL support
 
       vulkan-loader
       vulkan-validation-layers

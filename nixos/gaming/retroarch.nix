@@ -2,7 +2,6 @@
   retroarchWithCores = pkgs.retroarch.withCores (cores:
     with cores; [
       melonds
-      citra
       mgba
     ]);
 in {

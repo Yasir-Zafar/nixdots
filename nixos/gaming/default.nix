@@ -14,8 +14,11 @@
     # Gaming & Emulation
     prismlauncher
     lunar-client
-    dolphin-emu
+    # dolphin-emu
+
     cartridges
     gnome-mahjongg
+    gnome-chess
+    gnome-2048
   ];
 }

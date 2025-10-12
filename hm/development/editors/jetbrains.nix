@@ -4,27 +4,27 @@
   pkgs,
   ...
 }: {
-  # JetBrains IDEs
-  home.packages = with pkgs; [
-    # Java development
-    jetbrains.idea-ultimate
-
-    # Python development
-    jetbrains.pycharm-professional
-
-    # JavaScript/Web development
-    jetbrains.webstorm
-
-    # c++
-    jetbrains.clion
-
-    # Database management
-    jetbrains.datagrip
-  ];
+  # # JetBrains IDEs
+  # home.packages = with pkgs; [
+  #   # Java development
+  #   jetbrains.idea-ultimate
+  #
+  #   # Python development
+  #   jetbrains.pycharm-professional
+  #
+  #   # JavaScript/Web development
+  #   jetbrains.webstorm
+  #
+  #   # c++
+  #   jetbrains.clion
+  #
+  #   # Database management
+  #   jetbrains.datagrip
+  # ];
 
   # JetBrains Toolbox (alternative way to manage JetBrains IDEs)
   # Uncomment if you prefer using Toolbox
-  # home.packages = with pkgs; [
-  #   jetbrains-toolbox
-  # ];
+  home.packages = with pkgs; [
+    jetbrains-toolbox
+  ];
 }

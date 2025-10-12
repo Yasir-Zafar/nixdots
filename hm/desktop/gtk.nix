@@ -9,12 +9,12 @@
     enable = true;
 
     theme = {
-      name = "Gruvbox-Green-Dark-Soft";
+      name = "Gruvbox-Green-Light-Soft";
       package = pkgs.gruvbox-gtk-theme;
     };
 
     iconTheme = {
-      name = "Gruvbox-Dark";
+      name = "Gruvbox-Light";
       package = pkgs.gruvbox-gtk-theme;
     };
 

@@ -34,4 +34,6 @@
     polkit.enable = true;
     pam.services.gdm.enableGnomeKeyring = true;
   };
+
+  services.flatpak.enable = true;
 }
