@@ -105,5 +105,21 @@ in {
       '';
       executable = true;
     };
+
+    ".local/bin/battery_full_notify.sh" = {
+      text = ''
+        #!/usr/bin/env bash
+
+        BAT_PATH="/sys/class/power_supply/BAT1"
+        LEVEL=$(cat "$BAT_PATH/capacity")
+        STATUS=$(cat "$BAT_PATH/status")
+
+        if [[ "$STATUS" == "Full" || ( "$STATUS" == "Charging" && "$LEVEL" -ge 99 ) ]]; then
+            notify-send "🔋 Battery Full" "Unplug the charger to preserve battery health." \
+              --urgency=critical --expire-time=0
+        fi
+      '';
+      executable = true;
+    };
   };
 }

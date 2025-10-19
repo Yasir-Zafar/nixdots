@@ -20,5 +20,10 @@
     gnome-mahjongg
     gnome-chess
     gnome-2048
+    gnome-klotski
+    gnome-nibbles
+    gnome-mines
+    gnome-sudoku
+    gnome-taquin
   ];
 }

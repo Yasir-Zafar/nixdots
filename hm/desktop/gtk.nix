@@ -9,7 +9,7 @@
     enable = true;
 
     theme = {
-      name = "Gruvbox-Green-Light-Soft";
+      name = "Gruvbox-Green-Dark-Soft";
       package = pkgs.gruvbox-gtk-theme;
     };
 

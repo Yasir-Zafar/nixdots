@@ -11,8 +11,9 @@
     # File managers
     nautilus
 
-    # Calculator and productivity
+    # Productivity
     gnome-calculator
+    gnome-feeds
 
     # System Tools
     pavucontrol
@@ -27,6 +28,8 @@
     fragments
     pinta
     aria2
+    gnome-decoder
+    gnome-notes
 
     # Optional dependencies
     gnome-epub-thumbnailer

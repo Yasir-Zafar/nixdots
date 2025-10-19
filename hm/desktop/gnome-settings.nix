@@ -186,25 +186,39 @@
 
     "org/gnome/shell" = {
       disable-user-extensions = false; # enables user extensions
-      enabled-extensions = [
-        pkgs.gnomeExtensions.appindicator.extensionUuid
-        pkgs.gnomeExtensions.dash-to-dock.extensionUuid
-        pkgs.gnomeExtensions.user-themes.extensionUuid
-        pkgs.gnomeExtensions.vitals.extensionUuid
-        pkgs.gnomeExtensions.pano.extensionUuid
-        pkgs.gnomeExtensions.caffeine.extensionUuid
-        pkgs.gnomeExtensions.hide-top-bar.extensionUuid
-        pkgs.gnomeExtensions.media-controls.extensionUuid
-        pkgs.gnomeExtensions.just-perfection.extensionUuid
-        pkgs.gnomeExtensions.forge.extensionUuid
-        pkgs.gnomeExtensions.blur-my-shell.extensionUuid
-        pkgs.gnomeExtensions.wireless-hid.extensionUuid
-        pkgs.gnomeExtensions.user-avatar-in-quick-settings.extensionUuid
-        pkgs.gnomeExtensions.appindicator.extensionUuid
-        pkgs.gnomeExtensions.removable-drive-menu.extensionUuid
-        pkgs.gnomeExtensions.syncthing-indicator.extensionUuid
-        pkgs.gnomeExtensions.hide-cursor.extensionUuid
-        pkgs.gnomeExtensions.just-perfection.extensionUuid
+      enabled-extensions = with pkgs.gnomeExtensions; [
+        appindicator.extensionUuid
+        dash-to-dock.extensionUuid
+        user-themes.extensionUuid
+        # vitals.extensionUuid
+        pano.extensionUuid
+        caffeine.extensionUuid
+        hide-top-bar.extensionUuid
+        media-controls.extensionUuid
+        just-perfection.extensionUuid
+        forge.extensionUuid
+        blur-my-shell.extensionUuid
+        wireless-hid.extensionUuid
+        user-avatar-in-quick-settings.extensionUuid
+        appindicator.extensionUuid
+        removable-drive-menu.extensionUuid
+        hide-cursor.extensionUuid
+        just-perfection.extensionUuid
+        app-hider.extensionUuid
+        unmess.extensionUuid
+        simple-workspaces-bar.extensionUuid
+        steal-my-focus-window.extensionUuid
+        open-desktop-file-location.extensionUuid
+        easyeffects-preset-selector.extensionUuid
+        xwayland-indicator.extensionUuid
+        splash-indicator.extensionUuid
+        edit-desktop-files.extensionUuid
+        syncthing-toggle.extensionUuid
+        wellbeing-toggle.extensionUuid
+        pip-on-top.extensionUuid
+        hide-cursor.extensionUuid
+        date-menu-formatter.extensionUuid
+        quick-settings-audio-panel.extensionUuid
       ];
     };
   };
@@ -225,6 +239,20 @@
     wireless-hid
     user-avatar-in-quick-settings
     removable-drive-menu
-    syncthing-indicator
+    app-hider
+    unmess
+    simple-workspaces-bar
+    steal-my-focus-window
+    open-desktop-file-location
+    easyeffects-preset-selector
+    xwayland-indicator
+    splash-indicator
+    edit-desktop-files
+    syncthing-toggle
+    wellbeing-toggle
+    pip-on-top
+    hide-cursor
+    date-menu-formatter
+    quick-settings-audio-panel
   ];
 }

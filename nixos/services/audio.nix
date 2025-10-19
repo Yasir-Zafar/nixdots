@@ -20,7 +20,4 @@
     pavucontrol
     helvum # PipeWire graph editor
   ];
-
-  # Disable PulseAudio (replaced by PipeWire)
-  services.pulseaudio.enable = false;
 }

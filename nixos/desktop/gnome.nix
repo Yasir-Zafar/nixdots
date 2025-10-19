@@ -11,6 +11,8 @@
       localsearch.enable = true;
       gnome-online-accounts.enable = true;
       sushi.enable = true;
+      at-spi2-core.enable = true;
+      tinysparql.enable = true;
     };
 
     desktopManager.gnome.enable = true;
@@ -33,6 +35,8 @@
       gnome-calculator
       gnome-usage
       gnome-disk-utility
+      gnome-pomodoro
+      gnome-autoar
       file-roller
       refine
 
@@ -57,7 +61,6 @@
       gnome-photos
       gnome-maps
       gnome-weather
-      gnome-contacts
       gnome-calendar
       gnome-clocks
       gnome-initial-setup

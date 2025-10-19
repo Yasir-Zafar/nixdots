@@ -12,15 +12,15 @@
         wayland = true;
       };
 
-      autoLogin = {
-        enable = true;
-        user = "boi";
-      };
+      # autoLogin = {
+      #   enable = true;
+      #   user = "boi";
+      # };
     };
   };
 
-  systemd.services."getty@tty1".enable = false;
-  systemd.services."autovt@tty1".enable = false;
+  # systemd.services."getty@tty1".enable = false;
+  # systemd.services."autovt@tty1".enable = false;
 
   xdg.portal = {
     enable = true;
