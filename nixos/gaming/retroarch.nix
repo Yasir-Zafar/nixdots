@@ -8,5 +8,7 @@ in {
   # Gaming applications and utilities
   environment.systemPackages = with pkgs; [
     retroarchWithCores
+
+    ryubing
   ];
 }

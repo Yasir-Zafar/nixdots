@@ -38,7 +38,7 @@
     roboto
     source-sans-pro
     source-serif-pro
-    ubuntu_font_family
+    ubuntu-classic
 
     # Serif fonts
     atkinson-hyperlegible
@@ -57,12 +57,6 @@
     liberation_ttf
     noto-fonts
     noto-fonts-cjk-sans
-    noto-fonts-emoji
     noto-fonts-color-emoji
-  ];
-
-  # Install font utilities
-  environment.systemPackages = with pkgs; [
-    glxinfo
   ];
 }

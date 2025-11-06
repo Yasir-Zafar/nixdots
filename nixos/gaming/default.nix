@@ -10,6 +10,7 @@
     gamemode
 
     bottles
+    winetricks
 
     # Gaming & Emulation
     prismlauncher

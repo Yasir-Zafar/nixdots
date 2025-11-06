@@ -41,7 +41,7 @@
       refine
 
       # Password management
-      bitwarden
+      bitwarden-desktop
       libheif
       libheif.out
 

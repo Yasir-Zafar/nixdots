@@ -34,6 +34,7 @@
       color-scheme = "prefer-dark";
       enable-hot-corners = false;
       show-battery-percentage = false;
+      clock-format = "12h";
     };
 
     "org/gnome/desktop/wm/preferences" = {

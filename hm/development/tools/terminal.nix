@@ -33,7 +33,7 @@
     tree
     neofetch
     fastfetch
-    du-dust # Better du
+    dust # Better du
     procs # Better ps
 
     # Development utilities

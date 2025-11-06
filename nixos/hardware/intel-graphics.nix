@@ -9,8 +9,8 @@
     enable = true;
     extraPackages = with pkgs; [
       intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but sometimes more stable)
-      vaapiVdpau
+      intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but sometimes more stable)
+      libva-vdpau-driver
       # intel-compute-runtime # OpenCL support
 
       vulkan-loader
@@ -23,7 +23,7 @@
   # Intel GPU tools
   environment.systemPackages = with pkgs; [
     intel-gpu-tools
-    glxinfo
+    mesa-demos
     vulkan-tools
     libva-utils
     vdpauinfo

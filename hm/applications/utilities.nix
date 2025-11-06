@@ -28,6 +28,7 @@
     fragments
     pinta
     aria2
+    libnotify
     gnome-decoder
     gnome-notes
 

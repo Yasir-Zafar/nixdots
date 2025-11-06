@@ -30,6 +30,7 @@
     thunderbird
     nicotine-plus
     vesktop
+    zoom-us
 
     # Music
     amberol
