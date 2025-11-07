@@ -36,7 +36,7 @@
     # Create a default user (optional)
     ensureUsers = [
       {
-        name = "admin";
+        name = "webuser";
         ensurePermissions = {
           "testdb.*" = "ALL PRIVILEGES";
         };
