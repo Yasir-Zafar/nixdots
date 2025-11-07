@@ -6,23 +6,24 @@
 }: {
   # # JetBrains IDEs
   home.packages = with pkgs; [
-    #   # Java development
-    #   jetbrains.idea-ultimate
-    #
-    #   # Python development
-    #   jetbrains.pycharm-professional
-    #
-    #   # JavaScript/Web development
-    #   jetbrains.webstorm
-    #
-    #   # c++
-    #   jetbrains.clion
-    #
-    #   # Database management
-    #   jetbrains.datagrip
+    # Java development
+    jetbrains.idea-ultimate
 
-    jetbrains.rustrover
+    # Python development
+    jetbrains.pycharm-professional
 
-    jetbrains-toolbox
+    # JavaScript/Web development
+    jetbrains.webstorm
+
+    # c++
+    jetbrains.clion
+
+    # Database management
+    jetbrains.datagrip
+
+    # rust
+    jetbrains.rust-rover
+
+    # jetbrains-toolbox
   ];
 }

@@ -9,5 +9,6 @@
     ./terminal.nix
     ./version-control.nix
     ./sql.nix
+    ./bugzilla.nix
   ];
 }
