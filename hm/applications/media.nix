@@ -8,6 +8,7 @@
   home.packages = with pkgs; [
     # Video players
     showtime
+    youtube-music
 
     # Image viewers/editors
     gimp

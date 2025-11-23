@@ -11,6 +11,7 @@
 
     bottles
     winetricks
+    lutris
 
     # Gaming & Emulation
     prismlauncher

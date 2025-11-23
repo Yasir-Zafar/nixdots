@@ -5,11 +5,11 @@
   ...
 }: {
   imports = [
-    ../dotfiles
-    ./scripts
-    ./desktop
-    ./development
-    ./applications
+    ../dotfiles/default.nix
+    ./scripts/default.nix
+    ./desktop/default.nix
+    ./development/default.nix
+    ./applications/default.nix
   ];
 
   home = {

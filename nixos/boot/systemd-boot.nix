@@ -27,6 +27,9 @@
       "intel_iommu=on"
       "acpi_backlight=native"
       "pci=noaer"
+      "snd-intel-dspcfg.dsp_driver=1"
+      "i8042.nopnp"
+      "nvme_core.default_ps_max_latency_us=5500"
     ];
 
     # Use latest kernel for better hardware support

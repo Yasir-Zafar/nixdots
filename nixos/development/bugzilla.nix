@@ -3,24 +3,30 @@
   pkgs,
   ...
 }: {
-  # Enable Apache HTTP Server
   services.httpd = {
     enable = true;
-    adminAddr = "admin@localhost";
-
-    # Enable Perl CGI support
-    enablePerl = true;
-
-    # Virtual hosts configuration
+    adminAddr = "you@example.com";
+    enablePHP = false; # not needed
+    extraModules = ["cgi" "cgid" "perl"];
     virtualHosts."localhost" = {
-      documentRoot = "/var/www";
+      documentRoot = "/home/boi/Projects/Sem5/SQE/bugzilla";
       extraConfig = ''
-        <Directory "/var/www">
-          Options Indexes FollowSymLinks ExecCGI
+        <Directory "/home/boi/Projects/Sem5/SQE/bugzilla">
+          Options +ExecCGI +FollowSymLinks
+          AddHandler cgi-script .cgi .pl
+          DirectoryIndex index.cgi
           AllowOverride All
           Require all granted
-          AddHandler cgi-script .cgi .pl
         </Directory>
+
+        <IfModule mod_perl.c>
+          <Directory "/home/boi/Projects/Sem5/SQE/bugzilla">
+            SetHandler perl-script
+            PerlResponseHandler ModPerl::Registry
+            PerlOptions +ParseHeaders
+            Options +ExecCGI
+          </Directory>
+        </IfModule>
       '';
     };
   };
@@ -46,19 +52,34 @@
 
   # Install Perl and common modules
   environment.systemPackages = with pkgs; [
-    perl
-    perlPackages.DBI
-    perlPackages.DBDmysql
-    perlPackages.CGI
-    perlPackages.JSON
-    mysql
+    (perl.withPackages (p:
+      with p; [
+        mod_perl2
+        DBI
+        DBDmysql
+        DBDMariaDB
+        CGI
+        JSON
+        TemplateToolkit
+        EmailSender
+        EmailMIME
+        EmailMIMEEncodings
+        EmailMessageID
+        DateTime
+        DateTimeTimeZone
+        URI
+        ListMoreUtils
+        AppConfig
+        ClassXSAccessor
+      ]))
+    libxcrypt
   ];
+
+  # Make Perl available in environment PATH
+  environment.variables = {
+    PERL5LIB = "${pkgs.perl}/lib/perl5/site_perl";
+  };
 
   # Open firewall for HTTP
   networking.firewall.allowedTCPPorts = [80];
-
-  # Create web root directory
-  systemd.tmpfiles.rules = [
-    "d /var/www 0755 wwwrun wwwrun -"
-  ];
 }

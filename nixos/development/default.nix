@@ -8,7 +8,6 @@
     ./java.nix
     ./python.nix
     ./nix.nix
-    ./bugzilla.nix
   ];
 
   # Development tools that need system-level access

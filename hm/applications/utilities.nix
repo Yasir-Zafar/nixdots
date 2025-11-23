@@ -5,9 +5,6 @@
   ...
 }: {
   home.packages = with pkgs; [
-    # Virtual machine
-    gnome-boxes
-
     # File managers
     nautilus
 

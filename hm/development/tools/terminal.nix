@@ -386,7 +386,7 @@
         la = "eza -la --icons";
         lt = "eza --tree --icons";
         cat = "bat";
-        grep = "ripgrep";
+        grep = "rg";
         find = "fd";
         ps = "procs";
         du = "dust";
