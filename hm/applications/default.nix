@@ -8,6 +8,6 @@
     ./media.nix
     ./utilities.nix
     ./ghostty.nix
-    ./easyeffect.nix
+    # ./easyeffect.nix
   ];
 }

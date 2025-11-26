@@ -210,7 +210,6 @@
         simple-workspaces-bar.extensionUuid
         steal-my-focus-window.extensionUuid
         open-desktop-file-location.extensionUuid
-        easyeffects-preset-selector.extensionUuid
         xwayland-indicator.extensionUuid
         splash-indicator.extensionUuid
         edit-desktop-files.extensionUuid
@@ -245,7 +244,6 @@
     simple-workspaces-bar
     steal-my-focus-window
     open-desktop-file-location
-    easyeffects-preset-selector
     xwayland-indicator
     splash-indicator
     edit-desktop-files

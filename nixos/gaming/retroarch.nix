@@ -10,5 +10,6 @@ in {
     retroarchWithCores
 
     ryubing
+    pcsx2
   ];
 }

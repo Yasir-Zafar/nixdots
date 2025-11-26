@@ -6,75 +6,38 @@
 }: {
   # Terminal applications and tools
   home.packages = with pkgs; [
-    # Terminal file manager
-    yazi
+    # Modern core tools
+    eza
+    bat
+    fd
+    ripgrep
+    fzf
+    zoxide
 
-    # System monitoring
-    htop
-    iotop
-
-    # Archive tools
-    unzip
-    p7zip
-    unrar
-
-    # Network tools
-    curl
-    wget
-    httpie
-
-    # Text processing
-    jq
-    yq
-
-    # System tools
-    htop
-    btop # Modern htop alternative
+    # Utilities
     tree
-    neofetch
-    fastfetch
-    dust # Better du
-    procs # Better ps
-
-    # Development utilities
-    just # Command runner
-    direnv # Environment management
-    nix-direnv
-
-    # Core shell utilities
-    eza # Modern ls replacement
-    bat # Modern cat with syntax highlighting
-    fd # Modern find replacement
-    ripgrep # Modern grep replacement
-    fzf # Fuzzy finder
-    zoxide # Smart cd command
-
-    # System monitoring
-    btop # Modern top replacement
-    procs # Modern ps replacement
-    dust # Modern du replacement
-    duf # Modern df replacement
-
-    lazygit # Git TUI
-    gh # GitHub CLI
-
-    # Archive tools
+    dust
+    duf
+    procs
     unzip
     p7zip
-
-    # Network tools
-    wget
     curl
+    wget
 
-    # Terminal multiplexer
-    zellij
+    # Development helpers
+    just
+    direnv
+    nix-direnv
+    lazygit
+    gh
 
-    # Nix helpers
-    nh # Nix helper
-    nix-tree # Visualize nix dependencies
+    # Monitoring
+    htop
+    btop
 
-    # System utilities
-    lesspipe # Better less preprocessing
+    # Nix tools
+    nh
+    nix-tree
   ];
 
   programs = {
@@ -82,65 +45,35 @@
     zsh = {
       enable = true;
       enableCompletion = true; # You disabled this but use zsh-completions plugin - inconsistent!
-      autosuggestion.enable = false; # Handled by zplug plugin instead
-      syntaxHighlighting.enable = false; # Will use fast-syntax-highlighting instead
 
       # zplug configuration with better plugins
       zplug = {
         enable = true;
         plugins = [
-          # Enhanced completions
-          {
-            name = "zsh-users/zsh-completions";
-            tags = ["defer:0"];
-          }
-          # Better autosuggestions
-          {
-            name = "zsh-users/zsh-autosuggestions";
-            tags = ["defer:2"];
-          }
-          # Faster syntax highlighting
-          {
-            name = "zdharma-continuum/fast-syntax-highlighting";
-            tags = ["defer:2"];
-          }
+          # Completion enhancements
+          {name = "zsh-users/zsh-completions";}
+
+          # Lightweight + fast syntax highlighting
+          {name = "zdharma-continuum/fast-syntax-highlighting";}
+
+          # Autosuggestions
+          {name = "zsh-users/zsh-autosuggestions";}
+
+          # fzf-tab (actually useful)
+          {name = "Aloxaf/fzf-tab";}
+
           # Better history search
-          {
-            name = "zsh-users/zsh-history-substring-search";
-            tags = ["defer:2"];
-          }
-          # Enhanced tab completion with fzf
-          {
-            name = "Aloxaf/fzf-tab";
-            tags = ["defer:2"];
-          }
-          # Git extras
-          {
-            name = "wfxr/forgit";
-            tags = ["defer:2"];
-          }
-          # Directory jumping
-          {
-            name = "agkozak/zsh-z";
-            tags = ["defer:1"];
-          }
-          # Auto-pair brackets
-          {
-            name = "hlissner/zsh-autopair";
-            tags = ["defer:2"];
-          }
+          {name = "zsh-users/zsh-history-substring-search";}
         ];
       };
 
-      # Shell history configuration
+      # Minimal & fast history
       history = {
-        size = 10000; # Increased from 5000
+        size = 5000;
+        save = 5000;
         path = "${config.home.homeDirectory}/.zsh_history";
-        save = 10000;
+        share = true;
         ignoreDups = true;
-        ignoreSpace = true; # Ignore commands that start with space
-        extended = true; # Save timestamps
-        share = true; # Share history between sessions
       };
 
       # Environment variables
@@ -152,7 +85,6 @@
 
         # Less configuration for better bat integration
         LESS = "-R";
-        LESSOPEN = "|${pkgs.lesspipe}/bin/lesspipe.sh %s";
 
         # Zoxide configuration
         _ZO_ECHO = "1";

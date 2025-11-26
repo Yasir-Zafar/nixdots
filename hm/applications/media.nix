@@ -43,7 +43,6 @@
     # Media utilities
     ffmpeg
     yt-dlp
-    easyeffects
   ];
 
   # MPV configuration
