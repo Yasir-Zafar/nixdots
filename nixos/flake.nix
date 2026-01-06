@@ -1,4 +1,3 @@
-# nixos/flake.nix
 {
   description = "NixOS system configuration";
 
@@ -6,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
+      url = "github:0xc000022070/zen-browser-flake/beta";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -19,14 +18,20 @@
     nixosConfigurations = {
       mntbnd = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+
         specialArgs = {
           inherit inputs;
-          pkgs = import nixpkgs {
-            system = "x86_64-linux";
-            config.allowUnfree = true;
-          };
         };
+
         modules = [
+          ({
+            config,
+            pkgs,
+            ...
+          }: {
+            nixpkgs.config.allowUnfree = true;
+          })
+
           ./configuration.nix
         ];
       };

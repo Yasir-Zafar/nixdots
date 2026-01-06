@@ -15,6 +15,7 @@
     # System monitoring
     htop
     btop
+    powertop
 
     nwg-look
     sassc

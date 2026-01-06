@@ -17,7 +17,7 @@
 
     # Build tools
     gnumake
-    gcc
+    gcc-unwrapped
 
     # System development
     pkg-config

@@ -6,5 +6,8 @@
 }: {
   imports = [
     ./jetbrains.nix
+    ./cursor.nix
+    ./vscode.nix
+    ./android.nix
   ];
 }

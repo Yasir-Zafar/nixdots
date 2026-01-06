@@ -20,7 +20,7 @@
     };
 
     # Enable wireless support via NetworkManager
-    wireless.enable = false; # Disabled in favor of NetworkManager
+    # wireless.enable = false; # Disabled in favor of NetworkManager
 
     firewall = {
       enable = true;

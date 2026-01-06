@@ -54,7 +54,7 @@
               "sbc_xq"
             ];
 
-            "bluez5.hfphsp-backend" = "none";
+            "bluez5.hfphsp-backend" = "pipewire";
           };
         };
       };

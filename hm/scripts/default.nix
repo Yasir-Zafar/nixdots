@@ -114,7 +114,7 @@ in {
         LEVEL=$(cat "$BAT_PATH/capacity")
         STATUS=$(cat "$BAT_PATH/status")
 
-        if [[ "$STATUS" == "Full" || ( "$STATUS" == "Charging" && "$LEVEL" -ge 90 ) ]]; then
+        if [[ "$STATUS" == "Full" || ( "$STATUS" == "Charging" && "$LEVEL" -ge 80 ) ]]; then
             notify-send "🔋 Battery Full" "Unplug the charger to preserve battery health." \
               --urgency=critical --expire-time=0
         fi

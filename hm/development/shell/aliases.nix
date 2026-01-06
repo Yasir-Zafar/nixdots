@@ -82,5 +82,8 @@
     nvimrc = "nvim ~/.config/nvim/init.lua";
     nixos-config = "nvim ~/nix-config/nixos/configuration.nix";
     home-config = "nvim ~/nix-config/hm/home.nix";
+
+    # msc
+    pvz = "docker run --name pvzge -d -p 8080:80 gaozih/pvzge:latest";
   };
 }

@@ -21,7 +21,10 @@
     gvfs.enable = true;
   };
 
-  programs.xwayland.enable = false;
+  # services.displayManager.autoLogin.enable = true;
+  # services.displayManager.autoLogin.user = "account";
+
+  programs.xwayland.enable = true;
 
   environment = {
     pathsToLink = ["share/thumbnailers"];
@@ -39,13 +42,17 @@
       gnome-autoar
       file-roller
       refine
+      nwg-look
+      sassc
+      gtk-engine-murrine
+      gnome-themes-extra
 
       # Password management
       bitwarden-desktop
       libheif
       libheif.out
 
-      inputs.zen-browser.packages."${system}".default
+      inputs.zen-browser.packages."${stdenv.hostPlatform.system}".default
     ];
 
     # Remove some default GNOME applications you might not need

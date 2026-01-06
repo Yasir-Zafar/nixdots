@@ -23,6 +23,7 @@
     # Gaming optimizations (user-level)
     MANGOHUD = "1";
     __GL_THREADED_OPTIMIZATIONS = "1";
+    ANDROID_SDK_ROOT = "$HOME/Android/Sdk";
   };
 
   # Variables for specific programs

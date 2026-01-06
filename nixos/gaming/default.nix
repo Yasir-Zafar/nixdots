@@ -12,10 +12,13 @@
     bottles
     winetricks
     lutris
+    protonup-qt
+    docker
 
     # Gaming & Emulation
     prismlauncher
     lunar-client
+    heroic
     # dolphin-emu
 
     cartridges
@@ -28,4 +31,12 @@
     gnome-sudoku
     gnome-taquin
   ];
+
+  # In /etc/nixos/configuration.nix
+  virtualisation.docker = {
+    enable = true;
+  };
+
+  # Optional: Add your user to the "docker" group to run docker without sudo
+  users.users.boi.extraGroups = ["docker"];
 }
