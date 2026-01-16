@@ -30,6 +30,7 @@
     nix-direnv
     lazygit
     gh
+    ngrok
 
     # Monitoring
     htop

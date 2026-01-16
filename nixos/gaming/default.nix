@@ -19,7 +19,7 @@
     prismlauncher
     lunar-client
     heroic
-    # dolphin-emu
+    dolphin-emu
 
     cartridges
     gnome-mahjongg

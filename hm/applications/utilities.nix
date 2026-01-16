@@ -17,6 +17,7 @@
     mission-center
     btop
     htop
+    unrar
 
     # Utilities
     protonvpn-gui

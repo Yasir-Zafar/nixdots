@@ -43,6 +43,8 @@
     kernelModules = ["kvm-intel" "coretemp"];
   };
 
+  virtualisation.libvirtd.enable = true;
+
   # File system optimizations
   fileSystems."/".options = ["noatime" "commit=60"];
 }

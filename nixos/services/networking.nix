@@ -27,7 +27,14 @@
       allowPing = true; # Allows network troubleshooting
 
       # Minimal ports for average users (more secure)
-      allowedTCPPorts = [80 443]; # Just web browsing (HTTP/HTTPS)
+      allowedTCPPorts = [
+        8081 # Metro bundler
+        19000 # Expo
+        19001
+        19002
+        80
+        443
+      ];
       allowedUDPPorts = [53]; # DNS queries
 
       # Enable if you need these services:
@@ -119,5 +126,6 @@
     wget
     curl
     nmap
+    inetutils
   ];
 }

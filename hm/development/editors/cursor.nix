@@ -3,5 +3,6 @@
   # # JetBrains IDEs
   home.packages = with pkgs; [
     code-cursor
+    windsurf
   ];
 }
