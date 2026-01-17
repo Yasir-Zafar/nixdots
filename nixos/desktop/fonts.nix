@@ -39,6 +39,7 @@
     source-sans-pro
     source-serif-pro
     ubuntu-classic
+    freetype
 
     # Serif fonts
     atkinson-hyperlegible

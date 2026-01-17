@@ -14,6 +14,7 @@
     lutris
     protonup-qt
     docker
+    protontricks
 
     # Gaming & Emulation
     prismlauncher
