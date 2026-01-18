@@ -1,9 +1,5 @@
 # nixos/desktop/fonts.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {

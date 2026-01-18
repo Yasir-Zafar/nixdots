@@ -1,10 +1,5 @@
 # hm/desktop/gnome-settings.nix
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # dconf settings for GNOME
   dconf.settings = {
     "org/gnome/desktop/input-sources" = {

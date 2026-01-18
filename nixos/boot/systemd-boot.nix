@@ -1,9 +1,5 @@
 # nixos/boot/systemd-boot.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   boot = {
     loader = {
       efi.canTouchEfiVariables = true;

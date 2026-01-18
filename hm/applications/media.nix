@@ -1,9 +1,5 @@
 # hm/applications/media.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Media applications
   home.packages = with pkgs; [
     # Video players

@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   services.httpd = {
     enable = true;
     adminAddr = "you@example.com";

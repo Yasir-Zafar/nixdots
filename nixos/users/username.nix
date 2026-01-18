@@ -1,9 +1,5 @@
 # nixos/users/username.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # User-specific system configurations go here
   # This file is imported by default.nix
   # Add any system-level configurations specific to this user

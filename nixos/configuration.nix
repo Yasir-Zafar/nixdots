@@ -1,9 +1,5 @@
 # nixos/configuration.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ./hardware
     ./boot

@@ -1,5 +1,5 @@
 # nixos/gaming/steam.nix
-{pkgs, ...}: {
+{
   programs = {
     # Steam configuration
     steam = {

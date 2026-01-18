@@ -1,10 +1,5 @@
-# User-level environment variables
-# Location: hm/development/shell/environment.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+# hm/development/shell/environment.nix
+{config, ...}: {
   # User session variables (Home Manager)
   home.sessionVariables = {
     # User-specific development variables

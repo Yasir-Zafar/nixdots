@@ -1,9 +1,5 @@
 # hm/development/tools/version-control.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Additional version control tools
   home.packages = with pkgs; [
     # Git utilities

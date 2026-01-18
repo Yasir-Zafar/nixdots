@@ -1,9 +1,5 @@
 # nixos/security/default.nix
 {
-  config,
-  pkgs,
-  ...
-}: {
   imports = [
     ./firewall.nix
   ];

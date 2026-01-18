@@ -1,9 +1,5 @@
 # nixos/development/java.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # System-wide language runtimes
   environment.systemPackages = with pkgs; [
     # Java

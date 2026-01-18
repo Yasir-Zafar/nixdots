@@ -1,10 +1,6 @@
 # ===== GHOSTTY WITH GRUVBOX THEME =====
 # Location: hm/applications/ghostty.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home = {
     # Install Ghostty terminal
     packages = with pkgs; [

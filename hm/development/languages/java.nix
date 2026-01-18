@@ -1,9 +1,5 @@
 # hm/development/languages/java.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home = {
     # Java development packages
     packages = with pkgs; [

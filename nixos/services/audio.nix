@@ -1,9 +1,5 @@
 # nixos/services/audio.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Audio configuration with PipeWire
   security.rtkit.enable = true;
   services = {

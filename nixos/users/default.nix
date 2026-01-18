@@ -1,9 +1,5 @@
 # nixos/users/default.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Replace "username" with your actual username
   imports = [
     ./username.nix # Create this file with your username

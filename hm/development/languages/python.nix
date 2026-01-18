@@ -1,9 +1,5 @@
 # hm/development/languages/python.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home = {
     # Python development packages
     packages = with pkgs; [

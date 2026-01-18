@@ -1,9 +1,5 @@
 # hm/home.nix
 {
-  config,
-  pkgs,
-  ...
-}: {
   imports = [
     ../dotfiles/default.nix
     ./scripts/default.nix

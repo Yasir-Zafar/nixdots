@@ -1,9 +1,5 @@
 # hm/development/tools/git.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Git-related packages
   home.packages = with pkgs; [
     # Git tools

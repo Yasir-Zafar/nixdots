@@ -1,9 +1,5 @@
 # nixos/services/bluetooth.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Bluetooth configuration
   hardware.bluetooth = {
     enable = true;

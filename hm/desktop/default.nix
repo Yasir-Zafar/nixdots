@@ -1,9 +1,5 @@
 # hm/desktop/default.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ./gnome-settings.nix
     # ./gtk.nix

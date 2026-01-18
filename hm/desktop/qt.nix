@@ -1,9 +1,5 @@
 # hm/desktop/qt.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # QT configuration
   qt = {
     enable = true;

@@ -1,9 +1,5 @@
 # nixos/development/python.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # System-wide language runtimes
   environment.systemPackages = with pkgs; [
     # Python

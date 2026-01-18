@@ -1,9 +1,5 @@
 # nixos/security/firewall.nix
 {
-  config,
-  pkgs,
-  ...
-}: {
   # Firewall configuration
   networking.firewall = {
     enable = true;

@@ -1,9 +1,5 @@
 # hm/development/shell/aliases.nix
 {
-  config,
-  pkgs,
-  ...
-}: {
   # Shell aliases for development workflow
   programs.bash.shellAliases = {
     # File operations

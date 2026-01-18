@@ -1,9 +1,5 @@
 # nixos/services/networking.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Network configuration
   networking = {
     hostName = "mntbnd"; # Replace with your desired hostname

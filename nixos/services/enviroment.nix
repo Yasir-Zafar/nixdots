@@ -1,11 +1,5 @@
-# ===== ENVIRONMENT VARIABLES =====
-# System-wide environment variables (affects all users, system services)
-# Location: nixos/services/environment.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+# nixos/services/environment.nix
+{pkgs, ...}: {
   environment = {
     # System-wide environment variables
     variables = {

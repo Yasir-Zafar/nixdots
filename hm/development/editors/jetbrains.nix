@@ -1,9 +1,5 @@
 # hm/development/editors/jetbrains.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # # JetBrains IDEs
   home.packages = with pkgs; [
     # # Java development

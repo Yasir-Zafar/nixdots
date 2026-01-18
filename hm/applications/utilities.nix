@@ -1,9 +1,5 @@
 # ===== hm/applications/utilities.nix =====
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     # File managers
     nautilus

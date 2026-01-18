@@ -1,9 +1,5 @@
 # nixos/hardware/intel-graphics.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Intel graphics drivers
   hardware.graphics = {
     enable = true;

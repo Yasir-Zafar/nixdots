@@ -1,9 +1,5 @@
 # hm/development/languages/javascript.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home = {
     # JavaScript/Node.js development packages
     packages = with pkgs; [

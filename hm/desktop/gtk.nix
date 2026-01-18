@@ -1,9 +1,5 @@
 # hm/desktop/gtk.nix
 {
-  config,
-  pkgs,
-  ...
-}: {
   # GTK configuration
   gtk = {
     enable = true;

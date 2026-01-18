@@ -1,10 +1,5 @@
 # NixOS Tuned Service Configuration
 {
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
   services = {
     tuned = {
       enable = true;

@@ -1,9 +1,5 @@
 # hm/development/shell/bash.nix
 {
-  config,
-  pkgs,
-  ...
-}: {
   programs.bash = {
     enable = true;
     enableCompletion = true;

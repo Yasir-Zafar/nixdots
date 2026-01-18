@@ -1,9 +1,5 @@
 # nixos/development/default.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ./java.nix
     ./python.nix
