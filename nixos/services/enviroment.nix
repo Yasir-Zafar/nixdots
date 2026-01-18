@@ -1,45 +1,67 @@
 # nixos/services/environment.nix
+# System-wide environment variables and shell configuration
 {pkgs, ...}: {
   environment = {
-    # System-wide environment variables
+    # ============================================================================
+    # System-Wide Variables
+    # ============================================================================
+    # Available everywhere in the system (including systemd services)
     variables = {
-      # System-level variables that need to be available everywhere
+      # Default applications
       EDITOR = "nvim";
+      VISUAL = "nvim";
       BROWSER = "zen-beta";
+      MANPAGER = "nvim +Man!"; # Use nvim for man pages
 
-      # Development paths that should be system-wide
+      # Development paths
       PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
 
-      # Hardware-specific variables
-      VDPAU_DRIVER = "va_gl"; # For Intel graphics
-
-      VISUAL = "nvim";
-      MANPAGER = "nvim +Man!";
+      # Hardware acceleration (for Intel graphics)
+      VDPAU_DRIVER = "va_gl";
     };
 
-    # Session variables (available in user sessions, including display managers)
+    # ============================================================================
+    # Session Variables
+    # ============================================================================
+    # Available in user sessions and GUI applications
     sessionVariables = {
-      # Variables that need to be available in GUI sessions
-      MOZ_ENABLE_WAYLAND = "1";
-      QT_QPA_PLATFORM = "wayland";
-      SDL_VIDEODRIVER = "wayland";
+      # Wayland support for applications
+      MOZ_ENABLE_WAYLAND = "1"; # Firefox/Thunderbird Wayland
+      QT_QPA_PLATFORM = "wayland"; # Qt apps on Wayland
+      SDL_VIDEODRIVER = "wayland"; # SDL2 games on Wayland
 
-      # XDG variables
+      # Desktop environment
       XDG_CURRENT_DESKTOP = "GNOME";
       XDG_SESSION_TYPE = "wayland";
+
+      ELECTRON_OZONE_PLATFORM_HINT = "x11";
     };
 
-    # Variables for login shells
+    # ============================================================================
+    # Login Shell Initialization
+    # ============================================================================
+    # Runs when opening a login shell (e.g., via SSH, TTY)
     loginShellInit = ''
-      # Additional shell initialization
+      # Add user's local bin to PATH
       export PATH="$HOME/.local/bin:$PATH"
+
+      # Optional: Add custom paths
+      # export PATH="$HOME/.cargo/bin:$PATH"
+      # export PATH="$HOME/go/bin:$PATH"
     '';
 
-    # Variables for interactive shells
+    # ============================================================================
+    # Interactive Shell Initialization
+    # ============================================================================
+    # Runs for interactive shells (terminal windows)
     interactiveShellInit = ''
-      # Shell-specific initialization
+      # Shell history settings
       export HISTSIZE=10000
       export HISTFILESIZE=20000
+
+      # Optional: Bash-specific history control
+      # export HISTCONTROL=ignoreboth:erasedups
+      # export HISTTIMEFORMAT="%F %T "
     '';
   };
 }

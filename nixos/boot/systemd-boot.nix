@@ -1,46 +1,109 @@
 # nixos/boot/systemd-boot.nix
+# Boot configuration with systemd-boot and performance optimizations
 {pkgs, ...}: {
   boot = {
+    # ============================================================================
+    # Boot Loader Configuration
+    # ============================================================================
     loader = {
       efi.canTouchEfiVariables = true;
-      systemd-boot = {
-        # Use systemd-boot EFI boot loader
-        enable = true;
 
-        # Limit number of generations to keep boot partition clean
+      systemd-boot = {
+        enable = true;
+        # Limit generations to prevent boot partition from filling up
         configurationLimit = 10;
+        # Disable editor for security (prevents boot parameter modification)
         editor = false;
       };
+
+      # Quick boot timeout (1 second)
       timeout = 1;
     };
 
-    # Kernel parameters for better performance and compatibility
+    # ============================================================================
+    # Kernel Configuration
+    # ============================================================================
+    # Use latest kernel for better hardware support and security updates
+    kernelPackages = pkgs.linuxPackages_latest;
+
+    # Performance and compatibility kernel parameters
     kernelParams = [
+      # Boot appearance
       "splash"
       "quiet"
-      "loglevel=3"
-      "mitigations=auto"
-      "intel_iommu=on"
-      "acpi_backlight=native"
-      "pci=noaer"
-      "snd-intel-dspcfg.dsp_driver=1"
-      "i8042.nopnp"
-      "nvme_core.default_ps_max_latency_us=5500"
+      "loglevel=3" # Reduce boot message verbosity
+
+      # Security & Performance
+      "mitigations=auto" # Auto-enable CPU vulnerability mitigations
+
+      # Intel-specific
+      "intel_iommu=on" # Enable Intel IOMMU for virtualization
+      "kvm-intel.nested=1" # Enable nested virtualization (optional)
+
+      # Hardware fixes
+      "acpi_osi=Linux" # FIXED: Better ACPI compatibility
+      "acpi_backlight=native" # Fix backlight control on laptops
+      "pci=noaer" # Disable PCIe Advanced Error Reporting (reduces log spam)
+      "snd-intel-dspcfg.dsp_driver=1" # Intel audio DSP configuration
+      "i8042.nopnp" # Fix keyboard/mouse detection issues
+
+      # NVMe power management
+      "nvme_core.default_ps_max_latency_us=5500" # Optimize NVMe power states
     ];
 
-    # Use latest kernel for better hardware support
-    kernelPackages = pkgs.linuxPackages_latest;
-    tmp.cleanOnBoot = true;
+    # ============================================================================
+    # Initial RAM Disk Modules
+    # ============================================================================
+    initrd.kernelModules = [
+      "nvme" # NVMe drive support
+      "xhci_pci" # USB 3.0 support
+      "ahci" # SATA support
+    ];
 
-    # Enable support for NTFS (for gaming/dual boot)
+    # Runtime kernel modules
+    kernelModules = [
+      "kvm-intel" # Intel virtualization support
+      "coretemp" # CPU temperature monitoring
+    ];
+
+    # ============================================================================
+    # File System Configuration
+    # ============================================================================
+    # Enable NTFS support (useful for dual-boot Windows systems)
     supportedFilesystems = ["ntfs"];
 
-    initrd.kernelModules = ["nvme" "xhci_pci" "ahci"];
-    kernelModules = ["kvm-intel" "coretemp"];
+    # Clean /tmp on boot for security and disk space
+    tmp.cleanOnBoot = true;
   };
 
-  virtualisation.libvirtd.enable = true;
+  # Disable core dumps to reduce log spam from Electron crashes
+  systemd.coredump.enable = false;
 
-  # File system optimizations
-  fileSystems."/".options = ["noatime" "commit=60"];
+  # ============================================================================
+  # File System Optimizations
+  # ============================================================================
+  fileSystems."/" = {
+    options = [
+      "noatime" # Don't update access times (performance boost)
+      "commit=60" # Commit changes every 60 seconds (vs default 5)
+    ];
+  };
+
+  # Add to boot configuration for SSD optimization
+  services.fstrim.enable = true;
+
+  # Add to desktop for better performance
+  services.earlyoom.enable = true; # Prevents system freeze on low memory
+
+  # ============================================================================
+  # Virtualization
+  # ============================================================================
+  virtualisation.libvirtd = {
+    enable = true;
+    # Consider adding these for better VM performance:
+    qemu = {
+      package = pkgs.qemu_kvm;
+      swtpm.enable = true; # TPM emulation
+    };
+  };
 }

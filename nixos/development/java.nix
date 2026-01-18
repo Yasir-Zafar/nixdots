@@ -1,17 +1,32 @@
 # nixos/development/java.nix
+# Java development environment
 {pkgs, ...}: {
-  # System-wide language runtimes
+  # ============================================================================
+  # Java Packages
+  # ============================================================================
   environment.systemPackages = with pkgs; [
-    # Java
-    temurin-bin
+    # Java Development Kit
+    temurin-bin # Eclipse Temurin (formerly AdoptOpenJDK)
 
-    # Build tools
-    maven
-    gradle
+    # Build Tools
+    maven # Dependency management and build automation
+    gradle # Build automation tool (Groovy/Kotlin DSL)
+
+    # Optional: Additional Java tools
+    # javaPackages.openjfx  # JavaFX for GUI applications
+    # visualvm              # Visual profiler
   ];
 
-  # Java environment variables
+  # ============================================================================
+  # Environment Variables
+  # ============================================================================
   environment.variables = {
-    JAVA_HOME = "${pkgs.jdk21}";
+    JAVA_HOME = "${pkgs.temurin-bin}";
   };
+
+  # Optional: Set Java version alternatives
+  # programs.java = {
+  #   enable = true;
+  #   package = pkgs.jdk21;
+  # };
 }

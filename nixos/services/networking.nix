@@ -1,44 +1,63 @@
 # nixos/services/networking.nix
+# Network configuration with NetworkManager and enhanced DNS
 {pkgs, ...}: {
-  # Network configuration
+  # ============================================================================
+  # Network Configuration
+  # ============================================================================
   networking = {
-    hostName = "mntbnd"; # Replace with your desired hostname
+    hostName = "mntbnd";
+
+    # -------------------------------------------------------------------------
+    # NetworkManager
+    # -------------------------------------------------------------------------
     networkmanager = {
       enable = true;
-
-      # Better battery life for laptops (disable if you have connection issues)
-      wifi.powersave = true; # Change to false if you have WiFi performance issues
       dns = "systemd-resolved";
 
-      # Additional user-friendly settings
-      ethernet.macAddress = "preserve"; # Don't randomize MAC on Ethernet
-      wifi.macAddress = "preserve"; # Don't randomize WiFi MAC (some networks need this)
+      # WiFi settings
+      wifi = {
+        powersave = true; # Better battery life (disable if WiFi is slow)
+        macAddress = "preserve"; # Don't randomize MAC (some networks require this)
+      };
+
+      # Ethernet settings
+      ethernet.macAddress = "preserve"; # Preserve Ethernet MAC address
     };
 
-    # Enable wireless support via NetworkManager
-    # wireless.enable = false; # Disabled in favor of NetworkManager
-
+    # -------------------------------------------------------------------------
+    # Firewall Configuration
+    # -------------------------------------------------------------------------
     firewall = {
       enable = true;
-      allowPing = true; # Allows network troubleshooting
+      allowPing = true; # Allow ICMP for network diagnostics
 
-      # Minimal ports for average users (more secure)
+      # Loopback interface is always trusted
+      trustedInterfaces = ["lo"];
+
+      # TCP ports
       allowedTCPPorts = [
-        8081 # Metro bundler
+        # Development servers
+        8081 # React Native Metro bundler
         19000 # Expo
-        19001
-        19002
-        80
-        443
+        19001 # Expo DevTools
+        19002 # Expo tunnel
+
+        # Web services
+        80 # HTTP
+        443 # HTTPS
+
+        # Add these if needed:
+        # 22                                            # SSH
+        # 3000                                          # Common dev server
+        # 8080                                          # Alternative HTTP
       ];
-      allowedUDPPorts = [53]; # DNS queries
 
-      # Enable if you need these services:
-      # allowedTCPPorts = [22 80 443]; # Add 22 for SSH if you're a developer
-      # allowedTCPPorts = [80 443 8080]; # Add 8080 for development servers
+      # UDP ports
+      allowedUDPPorts = [
+        53 # DNS queries
+      ];
 
-      # Allow local network discovery (printers, media servers, etc.)
-      trustedInterfaces = ["lo"]; # Loopback interface
+      # Port ranges for specific services
       allowedTCPPortRanges = [
         {
           from = 1714;
@@ -54,74 +73,106 @@
     };
   };
 
-  services = {
-    # Enhanced DNS resolution with privacy and performance
-    resolved = {
-      enable = true;
+  # ============================================================================
+  # DNS Configuration (systemd-resolved)
+  # ============================================================================
+  services.resolved = {
+    enable = true;
 
-      # Security settings
-      dnssec = "allow-downgrade"; # Enable DNSSEC but allow fallback
+    # DNSSEC validation
+    dnssec = "allow-downgrade"; # Enable DNSSEC but allow fallback
 
-      # Privacy-focused DNS servers (faster than ISP DNS)
-      fallbackDns = [
-        "1.1.1.1" # Cloudflare (fast, privacy-focused)
-        "1.0.0.1" # Cloudflare secondary
-        "9.9.9.9" # Quad9 (security-focused, blocks malware)
-        "8.8.8.8" # Google (fast, widely compatible)
-      ];
+    # Privacy-focused DNS servers (faster and more private than ISP DNS)
+    fallbackDns = [
+      "1.1.1.1" # Cloudflare (privacy-focused, fast)
+      "1.0.0.1" # Cloudflare secondary
+      "9.9.9.9" # Quad9 (blocks malware/phishing)
+      "8.8.8.8" # Google (widely compatible)
+    ];
 
-      extraConfig = ''
-        # Privacy: Encrypt DNS when possible
-        DNSOverTLS=opportunistic
+    extraConfig = ''
+      # DNS over TLS for privacy
+      DNSOverTLS=opportunistic
 
-        # Local network discovery (find printers, etc.)
-        MulticastDNS=true
+      # Local network service discovery
+      MulticastDNS=true
+      LLMNR=true
 
-        # Better caching for faster browsing
-        Cache=yes
-        CacheFromLocalhost=yes
+      # DNS caching for faster browsing
+      Cache=yes
+      CacheFromLocalhost=yes
 
-        # Resolve local .local domains
-        LLMNR=true
-      '';
-    };
-
-    # Keep system time accurate (important for security certificates)
-    timesyncd = {
-      enable = true;
-      servers = [
-        "time.cloudflare.com" # Cloudflare NTP (fast, reliable)
-        "pool.ntp.org" # Global NTP pool
-      ];
-    };
-
-    # Enable SSH daemon (optional)
-    openssh = {
-      enable = false; # Set to true if you need SSH
-      settings = {
-        PasswordAuthentication = false;
-        KbdInteractiveAuthentication = false;
-      };
-    };
+      # Optional: Randomize DNS queries for privacy
+      # RandomizeStub=yes
+    '';
   };
 
-  # Optional: Better network performance tuning
+  # ============================================================================
+  # Time Synchronization (NTP)
+  # ============================================================================
+  services.timesyncd = {
+    enable = true;
+    servers = [
+      "time.cloudflare.com" # Cloudflare NTP (fast, reliable)
+      "pool.ntp.org" # Global NTP pool
+    ];
+  };
+
+  # ============================================================================
+  # SSH Server (Optional)
+  # ============================================================================
+  services.openssh = {
+    enable = false; # Enable if you need remote access
+
+    # Security settings (if enabled)
+    settings = {
+      PasswordAuthentication = false; # Only allow key-based auth
+      KbdInteractiveAuthentication = false; # Disable keyboard-interactive auth
+      PermitRootLogin = "no"; # Never allow root login
+
+      # Optional: Change default port
+      # Port = 2222;
+    };
+
+    # Optional: Restrict to specific interfaces
+    # listenAddresses = [
+    #   { addr = "192.168.1.100"; port = 22; }
+    # ];
+  };
+
+  # ============================================================================
+  # Network Performance Tuning
+  # ============================================================================
   boot.kernel.sysctl = {
-    # Improve network performance
-    "net.core.rmem_max" = 268435456;
-    "net.core.wmem_max" = 268435456;
-    "net.ipv4.tcp_rmem" = "4096 65536 268435456";
-    "net.ipv4.tcp_wmem" = "4096 65536 268435456";
+    # TCP/IP stack optimizations
+    "net.core.rmem_max" = 268435456; # Max receive buffer size
+    "net.core.wmem_max" = 268435456; # Max send buffer size
+    "net.ipv4.tcp_rmem" = "4096 65536 268435456"; # TCP receive buffer sizes
+    "net.ipv4.tcp_wmem" = "4096 65536 268435456"; # TCP send buffer sizes
 
-    # Better WiFi performance
-    "net.ipv4.tcp_congestion_control" = "bbr"; # Modern congestion control
+    # Modern congestion control algorithm (better performance)
+    "net.ipv4.tcp_congestion_control" = "bbr";
+
+    # Optional: Additional performance tuning
+    # "net.ipv4.tcp_fastopen" = 3;                      # Enable TCP Fast Open
+    # "net.core.netdev_max_backlog" = 16384;            # Increase packet queue
+    # "net.ipv4.tcp_max_syn_backlog" = 8192;            # Increase SYN backlog
   };
 
-  # Network tools
+  # ============================================================================
+  # Network Utilities
+  # ============================================================================
   environment.systemPackages = with pkgs; [
-    wget
-    curl
-    nmap
-    inetutils
+    wget # File downloader
+    curl # HTTP client
+    nmap # Network scanner
+    inetutils # Network tools (ping, traceroute, etc.)
+
+    # Additional tools to consider:
+    # dig                                               # DNS lookup
+    # whois                                             # Domain information
+    # mtr                                               # Network diagnostics (ping + traceroute)
+    # iperf                                             # Network performance testing
+    # wireguard-tools                                   # VPN tools
   ];
 }

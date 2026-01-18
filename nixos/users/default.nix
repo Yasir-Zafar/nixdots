@@ -1,26 +1,57 @@
 # nixos/users/default.nix
+# User account configuration
 {pkgs, ...}: {
-  # Replace "username" with your actual username
   imports = [
-    ./username.nix # Create this file with your username
+    ./username.nix # User-specific configuration
   ];
 
-  # User account configuration
+  # ============================================================================
+  # User Account Definition
+  # ============================================================================
   users.users.boi = {
-    # Replace "username"
     isNormalUser = true;
-    description = "Yasir Zafar"; # Replace with your name
+    description = "Yasir Zafar";
+
+    # User groups (permissions)
     extraGroups = [
-      "wheel" # Enable sudo
+      "wheel" # Sudo/doas privileges
       "networkmanager" # Network management
       "audio" # Audio devices
-      "video" # Video devices
-      "input" # Input devices
-      "storage" # Storage devices
-      "gamemode" # GameMode
+      "video" # Video devices (cameras, GPUs)
+      "input" # Input devices (keyboard, mouse)
+      "storage" # Storage devices (USB drives)
+      "gamemode" # GameMode optimization
+
+      # Additional groups to consider:
+      # "docker"                                        # Already in gaming/default.nix
+      # "libvirtd"                                      # Virtual machines
+      # "scanner"                                       # Scanner access
+      # "lp"                                            # Printer access
     ];
-    shell = pkgs.zsh; # or pkgs.zsh if you prefer
+
+    # Default shell
+    shell = pkgs.zsh;
+
+    # Optional: Set initial password (change after first login!)
+    # initialPassword = "changeme";
+
+    # Optional: User-specific packages (most should go in Home Manager)
+    # packages = with pkgs; [
+    #   # System-level user packages only
+    # ];
   };
 
-  programs.zsh.enable = true;
+  # ============================================================================
+  # Shell Configuration
+  # ============================================================================
+  # Enable Zsh system-wide
+  programs.zsh = {
+    enable = true;
+  };
+
+  # ============================================================================
+  # Additional User Management
+  # ============================================================================
+  # Optional: Default user shell for all users
+  users.defaultUserShell = pkgs.zsh;
 }

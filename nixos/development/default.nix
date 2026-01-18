@@ -1,32 +1,41 @@
 # nixos/development/default.nix
+# Development tools and environments
 {pkgs, ...}: {
+  # ============================================================================
+  # Language-Specific Configurations
+  # ============================================================================
   imports = [
-    ./java.nix
-    ./python.nix
-    ./nix.nix
-    ./android.nix
+    ./java.nix # Java development (JDK, Maven, Gradle)
+    ./python.nix # Python development (pip, virtualenv, linters)
+    ./nix.nix # Nix development tools (statix, deadnix)
+    ./android.nix # Android development (Android Studio, ADB)
   ];
 
-  # Development tools that need system-level access
+  # ============================================================================
+  # Core Development Tools
+  # ============================================================================
+  # Tools that need system-level access or are used across projects
   environment.systemPackages = with pkgs; [
-    # Version control
-    git
+    # Version Control
+    git # Distributed version control
 
-    # Build tools
-    gnumake
-    gcc-unwrapped
+    # Build Essentials
+    gnumake # GNU Make build automation
+    gcc-unwrapped # GNU Compiler Collection (C/C++)
+    pkg-config # Helper tool for compiling applications
 
-    # System development
-    pkg-config
-
-    # Debugging
-    gdb
-    valgrind
+    # Debugging & Profiling
+    gdb # GNU Debugger
+    valgrind # Memory debugging and profiling
   ];
 
-  # Enable development services
-  services.postgresql = {
-    enable = false; # Enable if you need PostgreSQL
-    package = pkgs.postgresql_15;
-  };
+  # ============================================================================
+  # Development Services
+  # ============================================================================
+
+  # Optional: Enable Docker for containerized development
+  # virtualisation.docker = {
+  #   enable = true;
+  #   enableOnBoot = true;
+  # };
 }
