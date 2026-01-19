@@ -1,8 +1,13 @@
-# hm/development/editors/cursor.nix
+# ============================================================================
+# Cursor AI Editor Configuration
+# Location: hm/development/editors/cursor.nix
+# ============================================================================
+# Cursor is an AI-powered code editor built on VSCode.
+# Windsurf is another AI coding assistant.
+# ============================================================================
 {pkgs, ...}: {
-  # # JetBrains IDEs
   home.packages = with pkgs; [
-    code-cursor
-    windsurf
+    code-cursor # Cursor AI editor
+    windsurf # Windsurf AI coding assistant
   ];
 }

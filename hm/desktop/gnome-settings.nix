@@ -1,80 +1,111 @@
-# hm/desktop/gnome-settings.nix
+# ============================================================================
+# GNOME Desktop Environment Configuration
+# Location: hm/desktop/gnome-settings.nix
+# ============================================================================
+# This file configures GNOME desktop settings using dconf, including:
+# - Window management and workspaces
+# - Keyboard shortcuts and keybindings
+# - Input devices (mouse, touchpad)
+# - GNOME Shell extensions
+# ============================================================================
 {pkgs, ...}: {
-  # dconf settings for GNOME
+  # ==========================================================================
+  # DCONF SETTINGS
+  # ==========================================================================
   dconf.settings = {
+    # ------------------------------------------------------------------------
+    # Input & Keyboard Configuration
+    # ------------------------------------------------------------------------
     "org/gnome/desktop/input-sources" = {
-      xkb-options = ["ctrl:nocaps"];
+      xkb-options = ["ctrl:nocaps"]; # Remap Caps Lock to Ctrl
     };
 
+    # ------------------------------------------------------------------------
+    # Privacy & Telemetry
+    # ------------------------------------------------------------------------
     "org/gnome/desktop/privacy" = {
-      report-technical-problems = false;
+      report-technical-problems = false; # Disable crash reporting
     };
 
+    # ------------------------------------------------------------------------
+    # Calendar & Time
+    # ------------------------------------------------------------------------
     "org/gnome/desktop/calendar" = {
-      show-weekdate = true;
+      show-weekdate = true; # Show week numbers in calendar
     };
 
+    # ------------------------------------------------------------------------
+    # Window Management
+    # ------------------------------------------------------------------------
     "org/gnome/desktop/wm/preferences" = {
-      focus-mode = "mouse"; # Options: "click", "sloppy", "mouse"
-      auto-raise = false; # Set to true if you want windows to auto-raise on focus
-      raise-on-click = true;
-      num-workspaces = 4;
+      focus-mode = "mouse"; # Focus follows mouse
+      auto-raise = false; # Don't auto-raise focused windows
+      raise-on-click = true; # Raise window when clicked
+      num-workspaces = 4; # Fixed number of workspaces
+      button-layout = "appmenu:"; # Remove window control buttons
     };
 
     "org/gnome/mutter" = {
-      dynamic-workspaces = false;
+      dynamic-workspaces = false; # Use fixed workspaces
     };
 
+    # ------------------------------------------------------------------------
+    # Interface Appearance
+    # ------------------------------------------------------------------------
     "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
-      enable-hot-corners = false;
-      show-battery-percentage = false;
-      clock-format = "12h";
+      color-scheme = "prefer-dark"; # Dark theme preference
+      enable-hot-corners = false; # Disable hot corners
+      show-battery-percentage = false; # Hide battery percentage
+      clock-format = "12h"; # 12-hour time format
     };
 
-    "org/gnome/desktop/wm/preferences" = {
-      button-layout = "appmenu:";
-    };
-
-    # Mouse and touchpad settings
+    # ------------------------------------------------------------------------
+    # Mouse Configuration
+    # ------------------------------------------------------------------------
     "org/gnome/desktop/peripherals/mouse" = {
-      natural-scroll = false;
-      speed = 0.7; # Adjust between -1.0 and 1.0
+      natural-scroll = false; # Traditional scroll direction
+      speed = 0.7; # Mouse sensitivity (-1.0 to 1.0)
     };
 
+    # ------------------------------------------------------------------------
+    # Touchpad Configuration
+    # ------------------------------------------------------------------------
     "org/gnome/desktop/peripherals/touchpad" = {
-      natural-scroll = true;
-      tap-to-click = true;
-      two-finger-scrolling-enabled = true;
-      speed = 0.7;
+      natural-scroll = true; # Natural (macOS-style) scrolling
+      tap-to-click = true; # Enable tap to click
+      two-finger-scrolling-enabled = true; # Two-finger scroll
+      speed = 0.7; # Touchpad sensitivity
     };
 
-    # Additional window management settings
+    # ------------------------------------------------------------------------
+    # Window Manager Keybindings
+    # ------------------------------------------------------------------------
     "org/gnome/desktop/wm/keybindings" = {
-      # Disable some default keybindings to avoid conflicts
+      # Desktop & Window Controls
       show-desktop = ["<Super>D"];
       toggle-maximized = ["<Super>Up"];
+      close = ["<Super>Q"];
 
-      # Workspace switching
+      # Workspace Switching
       switch-to-workspace-1 = ["<Super>1"];
       switch-to-workspace-2 = ["<Super>2"];
       switch-to-workspace-3 = ["<Super>3"];
       switch-to-workspace-4 = ["<Super>4"];
 
-      # Move window to workspace
+      # Move Window to Workspace
       move-to-workspace-1 = ["<Super><Shift>1"];
       move-to-workspace-2 = ["<Super><Shift>2"];
       move-to-workspace-3 = ["<Super><Shift>3"];
       move-to-workspace-4 = ["<Super><Shift>4"];
 
-      # Window tiling
+      # Window Tiling
       tile-to-side-e = ["<Super>Right"];
       tile-to-side-w = ["<Super>Left"];
-
-      # Close window
-      close = ["<Super>Q"];
     };
 
+    # ------------------------------------------------------------------------
+    # Custom Application Keybindings
+    # ------------------------------------------------------------------------
     "org/gnome/settings-daemon/plugins/media-keys" = {
       custom-keybindings = [
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
@@ -88,12 +119,14 @@
       ];
     };
 
+    # Terminal
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
       binding = "<Super>Return";
       command = "ghostty";
       name = "Open Terminal";
     };
 
+    # File Manager
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
       binding = "<Super>E";
       command = "nautilus";
@@ -103,14 +136,14 @@
     # Web Browser
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
       binding = "<Super>W";
-      command = "zen-beta"; # or "google-chrome", "chromium", etc.
+      command = "zen-beta";
       name = "Open Browser";
     };
 
     # Text Editor
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3" = {
       binding = "<Super><Shift>E";
-      command = "ghostty -e nvim"; # or "gedit", "vim", "nvim", etc.
+      command = "ghostty -e nvim";
       name = "Open Text Editor";
     };
 
@@ -142,7 +175,9 @@
       name = "System Monitor";
     };
 
-    # Dash to Dock settings
+    # ------------------------------------------------------------------------
+    # Extension Settings - Dash to Dock
+    # ------------------------------------------------------------------------
     "org/gnome/shell/extensions/dash-to-dock" = {
       dock-position = "BOTTOM";
       dash-max-icon-size = 48;
@@ -151,7 +186,9 @@
       hot-keys = false;
     };
 
-    # Just Perfection settings
+    # ------------------------------------------------------------------------
+    # Extension Settings - Just Perfection
+    # ------------------------------------------------------------------------
     "org/gnome/shell/extensions/just-perfection" = {
       accessibility-menu = false;
       activities-button = true;
@@ -162,17 +199,17 @@
       workspace-switcher-should-show = false;
     };
 
-    # wirelss-hid settings
+    # ------------------------------------------------------------------------
+    # Extension Settings - Other Extensions
+    # ------------------------------------------------------------------------
     "org/gnome/shell/extensions/wireless-hid" = {
       use-device-levels = true;
     };
 
-    # avatar settings
     "org/gnome/shell/extensions/quick-settings-avatar" = {
       avatar-position = 1;
     };
 
-    # vitals settings
     "org/gnome/shell/extensions/vitals" = {
       icon-style = 1;
       menu-centered = true;
@@ -180,13 +217,15 @@
       show-voltage = false;
     };
 
+    # ------------------------------------------------------------------------
+    # GNOME Shell Extensions List
+    # ------------------------------------------------------------------------
     "org/gnome/shell" = {
-      disable-user-extensions = false; # enables user extensions
+      disable-user-extensions = false;
       enabled-extensions = with pkgs.gnomeExtensions; [
         appindicator.extensionUuid
         dash-to-dock.extensionUuid
         user-themes.extensionUuid
-        # vitals.extensionUuid
         pano.extensionUuid
         caffeine.extensionUuid
         hide-top-bar.extensionUuid
@@ -196,10 +235,8 @@
         blur-my-shell.extensionUuid
         wireless-hid.extensionUuid
         user-avatar-in-quick-settings.extensionUuid
-        appindicator.extensionUuid
         removable-drive-menu.extensionUuid
         hide-cursor.extensionUuid
-        just-perfection.extensionUuid
         app-hider.extensionUuid
         unmess.extensionUuid
         simple-workspaces-bar.extensionUuid
@@ -211,42 +248,58 @@
         syncthing-toggle.extensionUuid
         wellbeing-toggle.extensionUuid
         pip-on-top.extensionUuid
-        hide-cursor.extensionUuid
         date-menu-formatter.extensionUuid
         quick-settings-audio-panel.extensionUuid
       ];
     };
   };
 
-  # GNOME Shell extensions
+  # ==========================================================================
+  # GNOME SHELL EXTENSIONS PACKAGES
+  # ==========================================================================
   home.packages = with pkgs.gnomeExtensions; [
-    appindicator
-    dash-to-dock
-    user-themes
-    vitals
-    pano
-    caffeine
-    hide-top-bar
-    media-controls
-    just-perfection
-    forge
-    blur-my-shell
-    wireless-hid
-    user-avatar-in-quick-settings
-    removable-drive-menu
-    app-hider
-    unmess
-    simple-workspaces-bar
-    steal-my-focus-window
-    open-desktop-file-location
-    xwayland-indicator
-    splash-indicator
-    edit-desktop-files
-    syncthing-toggle
-    wellbeing-toggle
-    pip-on-top
-    hide-cursor
-    date-menu-formatter
-    quick-settings-audio-panel
+    # Core functionality
+    appindicator # System tray support
+    dash-to-dock # Dock/taskbar
+    user-themes # Custom theme support
+
+    # Clipboard & productivity
+    pano # Clipboard manager
+    caffeine # Prevent screen lock
+
+    # UI enhancements
+    hide-top-bar # Auto-hide top bar
+    media-controls # Media playback controls
+    just-perfection # GNOME tweaks
+    forge # Window tiling
+    blur-my-shell # UI blur effects
+
+    # System utilities
+    wireless-hid # Wireless device battery
+    user-avatar-in-quick-settings # Avatar in quick settings
+    removable-drive-menu # Drive management
+    hide-cursor # Auto-hide cursor
+
+    # Workspace & window management
+    app-hider # Hide applications
+    unmess # Window management
+    simple-workspaces-bar # Workspace indicator
+    steal-my-focus-window # Window focus control
+
+    # Developer tools
+    open-desktop-file-location # File location shortcuts
+    xwayland-indicator # X11/Wayland indicator
+    splash-indicator # Application splash screen
+    edit-desktop-files # .desktop file editor
+
+    # Integration
+    syncthing-toggle # Syncthing control
+    wellbeing-toggle # Wellbeing features
+    pip-on-top # Picture-in-picture
+    date-menu-formatter # Custom date format
+    quick-settings-audio-panel # Audio controls
+
+    # Monitoring (commented out by default)
+    # vitals # System monitoring
   ];
 }

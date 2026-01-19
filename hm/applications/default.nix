@@ -1,9 +1,19 @@
-# hm/applications/default.nix
+# ============================================================================
+# Home Manager Applications Configuration
+# Location: hm/applications/default.nix
+# ============================================================================
 {
   imports = [
-    ./media.nix
-    ./utilities.nix
+    # Terminal emulator
     ./ghostty.nix
-    # ./easyeffect.nix
+
+    # Media applications (video, audio, images)
+    ./media.nix
+
+    # Utilities (file managers, system tools)
+    ./utilities.nix
+
+    # Audio effects daemon
+    # ./easyeffect.nix # Uncomment if needed
   ];
 }

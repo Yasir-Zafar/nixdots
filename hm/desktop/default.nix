@@ -1,25 +1,41 @@
-# hm/desktop/default.nix
+# ============================================================================
+# Desktop Environment Configuration
+# Location: hm/desktop/default.nix
+# ============================================================================
 {pkgs, ...}: {
   imports = [
-    ./gnome-settings.nix
-    # ./gtk.nix
-    ./qt.nix
+    ./gnome-settings.nix # GNOME desktop settings and extensions
+    ./gtk.nix # GTK theme configuration
+    ./qt.nix # Qt application theming
   ];
 
-  # Desktop packages
+  # ==========================================================================
+  # DESKTOP PACKAGES
+  # ==========================================================================
   home.packages = with pkgs; [
-    # System monitoring
-    htop
-    btop
-    powertop
+    # ------------------------------------------------------------------------
+    # System Monitoring
+    # ------------------------------------------------------------------------
+    htop # Interactive process viewer
+    btop # Modern resource monitor
+    powertop # Power consumption analyzer
 
-    nwg-look
-    sassc
-    gnome-themes-extra
-    gtk-engine-murrine
-    bibata-cursors
+    # ------------------------------------------------------------------------
+    # Theme & Appearance Tools
+    # ------------------------------------------------------------------------
+    nwg-look # GTK theme manager
+    sassc # Sass/SCSS compiler for themes
+    gnome-themes-extra # Additional GTK themes
+    gtk-engine-murrine # GTK theme engine
 
-    # File management
-    nautilus-open-any-terminal
+    # ------------------------------------------------------------------------
+    # Cursor Theme
+    # ------------------------------------------------------------------------
+    bibata-cursors # Modern cursor theme
+
+    # ------------------------------------------------------------------------
+    # File Manager Extensions
+    # ------------------------------------------------------------------------
+    nautilus-open-any-terminal # Open terminal from Nautilus
   ];
 }
