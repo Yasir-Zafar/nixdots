@@ -36,7 +36,6 @@
   # ==========================================================================
   # Install Qt theming tools if needed
   home.packages = with pkgs; [
-    qt5ct # Qt5 configuration tool
     qt6ct # Qt6 configuration tool
     libsForQt5.qtstyleplugins # Additional Qt5 styles
   ];
