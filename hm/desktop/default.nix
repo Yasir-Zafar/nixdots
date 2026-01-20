@@ -5,7 +5,7 @@
 {pkgs, ...}: {
   imports = [
     ./gnome-settings.nix # GNOME desktop settings and extensions
-    ./gtk.nix # GTK theme configuration
+    # ./gtk.nix # GTK theme configuration
     ./qt.nix # Qt application theming
   ];
 

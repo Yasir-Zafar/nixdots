@@ -129,8 +129,6 @@
       keybind = ctrl+shift+plus=increase_font_size:1
       keybind = ctrl+shift+minus=decrease_font_size:1
       keybind = ctrl+shift+zero=reset_font_size
-      keybind = ctrl+wheel_up=increase_font_size:1
-      keybind = ctrl+wheel_down=decrease_font_size:1
 
       # Fullscreen
       keybind = ctrl+shift+f=toggle_fullscreen

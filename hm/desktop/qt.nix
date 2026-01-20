@@ -27,7 +27,7 @@
     QT_STYLE_OVERRIDE = "adwaita-dark";
 
     # Additional Qt theming variables (optional)
-    QT_QPA_PLATFORMTHEME = "gtk3"; # Use GTK3 platform theme
+    QT_QPA_PLATFORMTHEME = "gtk2"; # Use GTK3 platform theme
     QT_AUTO_SCREEN_SCALE_FACTOR = "1"; # Enable HiDPI scaling
   };
 
@@ -36,7 +36,7 @@
   # ==========================================================================
   # Install Qt theming tools if needed
   home.packages = with pkgs; [
-    qt6ct # Qt6 configuration tool
+    qt6Packages.qt6ct # Qt6 configuration tool
     libsForQt5.qtstyleplugins # Additional Qt5 styles
   ];
 }

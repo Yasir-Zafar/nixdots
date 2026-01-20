@@ -63,4 +63,4 @@
       gtk-decoration-layout = "menu:close";
     };
   };
-
+}
