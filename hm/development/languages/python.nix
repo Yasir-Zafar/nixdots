@@ -21,7 +21,7 @@
       python3Packages.pip # Package installer
       python3Packages.virtualenv # Virtual environment tool
       python3Packages.pipx # Install Python apps in isolated environments
-      poetry # Modern dependency management
+      # poetry # Modern dependency management
       # pdm # Alternative: Python Development Master
       # rye # Alternative: Experimental Python tool
 

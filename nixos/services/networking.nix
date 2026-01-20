@@ -79,32 +79,34 @@
   services.resolved = {
     enable = true;
 
-    # DNSSEC validation
-    dnssec = "allow-downgrade"; # Enable DNSSEC but allow fallback
+    settings = {
+      Resolve = {
+        # DNS over TLS for privacy
+        DNSOverTLS = "opportunistic";
 
-    # Privacy-focused DNS servers (faster and more private than ISP DNS)
-    fallbackDns = [
-      "1.1.1.1" # Cloudflare (privacy-focused, fast)
-      "1.0.0.1" # Cloudflare secondary
-      "9.9.9.9" # Quad9 (blocks malware/phishing)
-      "8.8.8.8" # Google (widely compatible)
-    ];
+        # Local network service discovery
+        MulticastDNS = true;
+        LLMNR = true;
 
-    extraConfig = ''
-      # DNS over TLS for privacy
-      DNSOverTLS=opportunistic
+        # DNS caching for faster browsing
+        Cache = true;
+        CacheFromLocalhost = true;
 
-      # Local network service discovery
-      MulticastDNS=true
-      LLMNR=true
+        # DNSSEC validation
+        DNSSEC = "allow-downgrade"; # Enable DNSSEC but allow fallback
 
-      # DNS caching for faster browsing
-      Cache=yes
-      CacheFromLocalhost=yes
+        # Privacy-focused DNS servers (faster and more private than ISP DNS)
+        FallbackDNS = [
+          "1.1.1.1" # Cloudflare (privacy-focused, fast)
+          "1.0.0.1" # Cloudflare secondary
+          "9.9.9.9" # Quad9 (blocks malware/phishing)
+          "8.8.8.8" # Google (widely compatible)
+        ];
 
-      # Optional: Randomize DNS queries for privacy
-      # RandomizeStub=yes
-    '';
+        # Optional: Randomize DNS queries for privacy
+        # RandomizeStub=yes
+      };
+    };
   };
 
   # ============================================================================
