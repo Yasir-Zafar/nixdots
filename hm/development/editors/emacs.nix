@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs29-pgtk; # Modern Emacs with pure GTK
+    package = pkgs.emacs30-pgtk; # Modern Emacs with pure GTK
     extraPackages = epkgs:
       with epkgs; [
         # Core dependencies for literate config
@@ -101,12 +101,11 @@
 
     # Fonts
     emacs-all-the-icons-fonts
-    (nerdfonts.override {fonts = ["JetBrainsMono" "FiraCode"];})
   ];
 
   # Environment variables
-  home.sessionVariables = {
-    EDITOR = "emacs";
-    VISUAL = "emacs";
-  };
+  # home.sessionVariables = {
+  #   EDITOR = "emacs";
+  #   VISUAL = "emacs";
+  # };
 }

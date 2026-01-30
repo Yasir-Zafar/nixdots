@@ -1,5 +1,4 @@
-{pkgs, ...}:
-{
+{pkgs, ...}: {
   programs.nixvim = {
     # Highlight, edit, and navigate code
     # https://nix-community.github.io/nixvim/plugins/treesitter/index.html
@@ -62,7 +61,7 @@
       };
     };
 
-    plugins.treesitter-refactor.enable = true;
+    # plugins.treesitter-refactor.enable = true;
     plugins.treesitter-textobjects.enable = true;
     plugins.treesitter-context.enable = true;
   };

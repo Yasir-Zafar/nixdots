@@ -17,10 +17,16 @@
     bottles # Modern Wine prefix manager (GUI)
     winetricks # Wine configuration utility
     lutris # Universal game launcher
+    gst_all_1.gst-plugins-base
+    gst_all_1.gst-plugins-good
+    gst_all_1.gst-plugins-bad
+    gst_all_1.gst-plugins-ugly
+    gst_all_1.gst-libav
 
     # Proton Tools
     protonup-qt # Proton-GE installer (GUI)
     protontricks # Winetricks for Proton games
+    protonplus
 
     # ---------------------------------------------------------------------------
     # Game Performance
