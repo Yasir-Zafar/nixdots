@@ -46,28 +46,28 @@
 
       servers = {
         #   # Added from paste-2.txt
-        #   clangd = {
-        #     enable = true;
-        #     package = pkgs.llvmPackages_19.clang-tools;
-        #     cmd = [
-        #       "clangd"
-        #       "--background-index"
-        #       "--clang-tidy"
-        #       "--header-insertion=iwyu"
-        #       "--completion-style=detailed"
-        #       "--function-arg-placeholders"
-        #       "--fallback-style=llvm"
-        #     ];
-        #
-        #     filetypes = ["c" "cpp" "objc" "objcpp"];
-        #   };
-        #
-        #   rust_analyzer = {
-        #     enable = true;
-        #     installCargo = true;
-        #     installRustc = true;
-        #   };
-        #
+        clangd = {
+          enable = true;
+          package = pkgs.llvmPackages_19.clang-tools;
+          cmd = [
+            "clangd"
+            "--background-index"
+            "--clang-tidy"
+            "--header-insertion=iwyu"
+            "--completion-style=detailed"
+            "--function-arg-placeholders"
+            "--fallback-style=llvm"
+          ];
+
+          filetypes = ["c" "cpp" "objc" "objcpp"];
+        };
+
+        # rust_analyzer = {
+        #   enable = true;
+        #   installCargo = true;
+        #   installRustc = true;
+        # };
+
         nil_ls = {
           enable = true;
         };

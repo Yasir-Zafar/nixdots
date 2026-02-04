@@ -68,6 +68,7 @@
     # ---------------------------------------------------------------------------
     # Icon & Symbol Fonts
     # ---------------------------------------------------------------------------
+    nerd-fonts.symbols-only
     font-awesome # Popular icon font
     material-icons # Google Material Design icons
     material-design-icons # Extended Material Design icons

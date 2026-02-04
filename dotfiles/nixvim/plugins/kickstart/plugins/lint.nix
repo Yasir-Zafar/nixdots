@@ -11,8 +11,8 @@
         java = ["checkstyle"];
         javascript = ["eslint"];
         typescript = ["eslint"];
-        c = ["clang-tidy"];
-        cpp = ["clang-tidy"];
+        # c = ["clang-tidy"];
+        # cpp = ["clang-tidy"];
         nix = ["statix"];
         markdown = [
           "markdownlint"

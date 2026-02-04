@@ -37,5 +37,6 @@
     # File Manager Extensions
     # ------------------------------------------------------------------------
     nautilus-open-any-terminal # Open terminal from Nautilus
+    qpdf
   ];
 }
