@@ -21,6 +21,8 @@
       "input" # Input devices (keyboard, mouse)
       "storage" # Storage devices (USB drives)
       "gamemode" # GameMode optimization
+      "libvirtd"
+      "kvm"
 
       # Additional groups to consider:
       # "docker"                                        # Already in gaming/default.nix

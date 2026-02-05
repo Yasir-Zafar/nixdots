@@ -44,9 +44,7 @@
     go-tools
 
     # Formatters
-    nixpkgs-fmt
     alejandra # Better Nix formatter
-    rustfmt
     nodePackages.prettier
     nodePackages.eslint
     black
@@ -67,11 +65,16 @@
     sqlite # For org-roam
     tree-sitter
     git
+    emacs-lsp-booster
 
     # Spell checking
-    aspell
-    aspellDicts.en
-    aspellDicts.en-computers
+    (aspellWithDicts (dicts:
+      with dicts; [
+        fr
+        en
+        en-computers
+        en-science
+      ]))
     hunspell
 
     # PDF tools
@@ -101,5 +104,6 @@
     "$HOME/.local/bin"
     "$HOME/.cargo/bin"
     "$HOME/go/bin"
+    "${pkgs.aspell}/bin"
   ];
 }

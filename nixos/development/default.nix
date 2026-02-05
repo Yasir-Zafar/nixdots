@@ -10,6 +10,7 @@
     ./nix.nix # Nix development tools (statix, deadnix)
     ./android.nix # Android development (Android Studio, ADB)
     ./c.nix
+    ./virt.nix
   ];
 
   # ============================================================================
