@@ -430,7 +430,7 @@
         "ns" = "nh os switch ~/nix-config/nixos";
         "nb" = "nh os build ~/nix-config/nixos";
         "nt" = "nh os test ~/nix-config/nixos"; # New: test config
-        "nfu" = "nix flake update ~/nix-config/nixos && nix flake update ~/nix-config/hm"; # Keep this one
+        "nfu" = "nix flake update --flake ~/nix-config/nixos && nix flake update --flake ~/nix-config/hm"; # Keep this one
         "ncg" = "nh clean all"; # Better: keep 5 generations
         "nso" = "nix store optimise"; # Keep this one
 

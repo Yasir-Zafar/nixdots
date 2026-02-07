@@ -22,6 +22,7 @@
       "storage" # Storage devices (USB drives)
       "gamemode" # GameMode optimization
       "libvirtd"
+      "libvirt"
       "kvm"
 
       # Additional groups to consider:

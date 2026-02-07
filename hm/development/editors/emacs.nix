@@ -66,6 +66,7 @@
     tree-sitter
     git
     emacs-lsp-booster
+    libtool
 
     # Spell checking
     (aspellWithDicts (dicts:

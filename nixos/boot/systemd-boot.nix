@@ -94,16 +94,4 @@
 
   # Add to desktop for better performance
   services.earlyoom.enable = true; # Prevents system freeze on low memory
-
-  # ============================================================================
-  # Virtualization
-  # ============================================================================
-  virtualisation.libvirtd = {
-    enable = true;
-    # Consider adding these for better VM performance:
-    qemu = {
-      package = pkgs.qemu_kvm;
-      swtpm.enable = true; # TPM emulation
-    };
-  };
 }
