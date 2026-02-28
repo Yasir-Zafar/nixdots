@@ -24,6 +24,7 @@
       "libvirtd"
       "libvirt"
       "kvm"
+      "wireshark"
 
       # Additional groups to consider:
       # "docker"                                        # Already in gaming/default.nix

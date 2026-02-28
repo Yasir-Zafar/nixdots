@@ -77,7 +77,7 @@
   };
 
   # Disable core dumps to reduce log spam from Electron crashes
-  systemd.coredump.enable = false;
+  systemd.coredump.enable = true;
 
   # ============================================================================
   # File System Optimizations

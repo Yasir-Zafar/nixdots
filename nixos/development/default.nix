@@ -11,6 +11,7 @@
     ./android.nix # Android development (Android Studio, ADB)
     ./c.nix
     ./virt.nix
+    ./wireshark.nix
   ];
 
   # ============================================================================
