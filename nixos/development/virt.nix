@@ -9,6 +9,12 @@
     allowedBridges = ["virbr0"];
   };
 
+  virtualisation.waydroid.enable = true;
+
+  hardware.opengl.enable = true;
+
+  virtualisation.spiceUSBRedirection.enable = true;
+
   programs.virt-manager.enable = true;
 
   environment.systemPackages = with pkgs; [

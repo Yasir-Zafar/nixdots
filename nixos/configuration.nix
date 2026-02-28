@@ -22,7 +22,19 @@
     vim # Text editor (consider adding neovim as well)
     wineWowPackages.stable # Windows compatibility layer (64-bit + 32-bit)
     gnome-firmware # Firmware updater for GNOME
+    fuse
+    fuse3
   ];
+  programs.nix-ld.enable = true;
+  programs = {
+    appimage = {
+      enable = true;
+      binfmt = true;
+      package = pkgs.appimage-run.override {
+        extraPkgs = pkgs: [pkgs.xorg.libxshmfence];
+      };
+    };
+  };
 
   # ============================================================================
   # Nix Configuration
