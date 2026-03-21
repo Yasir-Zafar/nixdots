@@ -9,7 +9,6 @@
     krita
     pinta
 
-    pavucontrol
     amberol
     gnome-podcasts
 

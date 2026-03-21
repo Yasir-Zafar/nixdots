@@ -18,11 +18,5 @@
     "fs.file-max" = 2097152;
   };
 
-  environment.systemPackages = with pkgs; [
-    htop
-    iotop
-    btop
-  ];
-
   services.irqbalance.enable = false;
 }

@@ -1,21 +1,17 @@
 {pkgs, ...}: {
-  home = {
-    packages = with pkgs; [
-      rustup
-      cargo-edit
-      cargo-watch
-      cargo-audit
-      cargo-outdated
+  home.packages = with pkgs; [
+    rustup
+    cargo-edit
+    cargo-watch
+    cargo-audit
+    cargo-outdated
 
-      pkg-config
-      openssl
-      libiconv
+    openssl
+    libiconv
+    taplo
+  ];
 
-      taplo
-    ];
-
-    sessionPath = [
-      "$HOME/.cargo/bin"
-    ];
-  };
+  home.sessionPath = [
+    "$HOME/.cargo/bin"
+  ];
 }

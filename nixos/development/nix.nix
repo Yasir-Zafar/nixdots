@@ -3,5 +3,6 @@
     statix
     deadnix
     alejandra
+    nil
   ];
 }

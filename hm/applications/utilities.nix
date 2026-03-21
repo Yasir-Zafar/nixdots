@@ -7,9 +7,6 @@
 
     gnome-feeds
 
-    p7zip
-    unrar
-
     protonvpn-gui
 
     gearlever

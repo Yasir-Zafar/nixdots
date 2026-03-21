@@ -1,165 +1,109 @@
-{pkgs, ...}: {
-  programs.bash.shellAliases = {
-    ll = "eza -l --icons";
-    la = "eza -la --icons";
-    lt = "eza --tree --icons";
-    ls = "eza --icons";
-
-    cat = "bat";
-    less = "bat --paging=always";
-    grep = "rg";
-    find = "fd";
-    du = "dust";
-
-    g = "git";
-    gs = "git status";
-    gss = "git status -s";
-    ga = "git add";
-    gaa = "git add --all";
-    gap = "git add --patch";
-    gc = "git commit -v";
-    gca = "git commit -v -a";
-    gcm = "git commit -m";
-    gcam = "git commit -a -m";
-    gcan = "git commit --amend --no-edit";
-    gco = "git checkout";
-    gcb = "git checkout -b";
-    gb = "git branch";
-    gba = "git branch -a";
-    gbd = "git branch -d";
-    gd = "git diff";
-    gdc = "git diff --cached";
-    gdw = "git diff --word-diff";
-    gp = "git push";
-    gpf = "git push --force-with-lease";
-    gpl = "git pull";
-    gplr = "git pull --rebase";
-    gl = "git log --oneline --graph --decorate";
-    gla = "git log --oneline --graph --decorate --all";
-    glp = "git log --patch";
-    gst = "git stash";
-    gsta = "git stash apply";
-    gstl = "git stash list";
-    gstp = "git stash pop";
-    gstd = "git stash drop";
-    gf = "git fetch";
-    gfa = "git fetch --all";
-    grb = "git rebase";
-    grbi = "git rebase -i";
-    gclean = "git clean -fd";
-    greset = "git reset --hard HEAD";
-
-    rebuild = "sudo nixos-rebuild switch --flake ~/dotfiles";
-    rebuild-test = "sudo nixos-rebuild test --flake ~/dotfiles";
-    rebuild-boot = "sudo nixos-rebuild boot --flake ~/dotfiles";
-    hm = "home-manager switch --flake ~/dotfiles";
-    hm-test = "home-manager build --flake ~/dotfiles";
-    update-flakes = "nix flake update ~/dotfiles";
-    update-all = "cd ~/dotfiles && nix flake update && sudo nixos-rebuild switch --flake .";
-    nix-clean = "nix-collect-garbage -d";
-    nix-clean-all = "sudo nix-collect-garbage -d";
-    nix-optimize = "nix-store --optimize";
-    nix-search = "nix search nixpkgs";
-
-    n = "nvim";
-    v = "nvim";
-    vim = "nvim";
-
-    serve = "python -m http.server 8000";
-    serve-php = "php -S localhost:8000";
-    myip = "curl ifconfig.me";
-    localip = "ip addr show | grep 'inet ' | grep -v 127.0.0.1";
-    ports = "netstat -tulanp";
-
-    mvn-clean = "mvn clean";
-    mvn-install = "mvn clean install";
-    mvn-test = "mvn clean test";
-    mvn-package = "mvn clean package";
-    mvn-run = "mvn spring-boot:run";
-    mvn-skip-tests = "mvn clean install -DskipTests";
-    gw = "./gradlew";
-    gradle-build = "gradle build";
-    gradle-run = "gradle bootRun";
-    gradle-test = "gradle test";
-    gradle-clean = "gradle clean";
-
-    py = "python3";
-    python = "python3";
-    pip = "python3 -m pip";
-    venv-create = "python3 -m venv venv";
-    venv = "source venv/bin/activate";
-    activate = "source venv/bin/activate";
-    deactivate-venv = "deactivate";
-    pip-install = "pip install -r requirements.txt";
-    pip-freeze = "pip freeze > requirements.txt";
-    pip-upgrade = "pip install --upgrade pip";
-    poetry-install = "poetry install";
-    poetry-shell = "poetry shell";
-    poetry-run = "poetry run python";
-
-    ni = "npm install";
-    nid = "npm install --save-dev";
-    nis = "npm install --save";
-    ns = "npm start";
-    nt = "npm test";
-    nr = "npm run";
-    nb = "npm run build";
-    nw = "npm run watch";
-    yi = "yarn install";
-    ya = "yarn add";
-    yad = "yarn add --dev";
-    ys = "yarn start";
-    yt = "yarn test";
-    yr = "yarn run";
-    yb = "yarn build";
-    pn = "pnpm";
-    pni = "pnpm install";
-    pna = "pnpm add";
-    pns = "pnpm start";
-    pnt = "pnpm test";
-    pnr = "pnpm run";
-
-    d = "docker";
-    dc = "docker-compose";
-    dps = "docker ps";
-    dpsa = "docker ps -a";
-    di = "docker images";
-    dex = "docker exec -it";
-    dlogs = "docker logs -f";
-    dstop = "docker stop";
-    drm = "docker rm";
-    drmi = "docker rmi";
-    dprune = "docker system prune -a";
-
+{...}: let
+  aliases = {
+    # Navigation
     ".." = "cd ..";
     "..." = "cd ../..";
     "...." = "cd ../../..";
     "....." = "cd ../../../..";
-    "......" = "cd ../../../../..";
+    "-" = "cd -";
 
-    top = "btop";
-    htop = "btop";
-    df = "df -h";
-    free = "free -h";
-    ps = "procs";
-    ncdu = "ncdu --color dark";
+    # ls → eza
+    "l" = "eza --icons --group-directories-first";
+    "ll" = "eza --long --all --icons --group-directories-first --git";
+    "la" = "eza --all --icons --group-directories-first";
+    "lt" = "eza --tree --level=2 --icons";
+    "llt" = "eza --tree --long --icons";
 
-    bashrc = "nvim ~/.bashrc";
-    zshrc = "nvim ~/.zshrc";
-    nvimrc = "nvim ~/.config/nvim/init.lua";
-    nixos-config = "nvim ~/dotfiles/nixos/configuration.nix";
-    home-config = "nvim ~/dotfiles/hm/home.nix";
-    dotfiles = "cd ~/dotfiles && nvim .";
+    # Safety wrappers
+    "cp" = "cp -i";
+    "mv" = "mv -i";
+    "rm" = "rm -i";
+    "mkdir" = "mkdir -pv";
+    "diff" = "diff --color=auto";
 
-    update-system = "sudo nixos-rebuild switch --upgrade --flake ~/dotfiles";
+    # Modern tool replacements
+    "cat" = "bat --style=plain --paging=never";
+    "less" = "bat --style=full --paging=always";
+    "grep" = "rg";
+    "find" = "fd";
+    "ps" = "procs";
+    "du" = "dust";
+    "df" = "duf";
+    "top" = "btop";
 
-    rm = "rm -i";
-    cp = "cp -i";
-    mv = "mv -i";
-    mkdir = "mkdir -pv";
-    diff = "diff --color=auto";
+    # Editors
+    "n" = "nvim";
+    "v" = "nvim";
+    "e" = "emacs -nw";
 
-    weather = "curl wttr.in";
-    pvz = "docker run --name pvzge -d -p 8080:80 gaozih/pvzge:latest";
+    # Git
+    "g" = "git";
+    "ga" = "git add";
+    "gaa" = "git add --all";
+    "gap" = "git add --patch";
+    "gc" = "git commit -v";
+    "gcm" = "git commit -m";
+    "gca" = "git commit -v -a";
+    "gcan" = "git commit --amend --no-edit";
+    "gco" = "git checkout";
+    "gcb" = "git checkout -b";
+    "gd" = "git diff";
+    "gdc" = "git diff --cached";
+    "gl" = "git log --oneline --graph --decorate";
+    "gla" = "git log --oneline --graph --decorate --all";
+    "gp" = "git push";
+    "gpf" = "git push --force-with-lease";
+    "gpu" = "git pull";
+    "gs" = "git status -sb";
+    "gst" = "git stash";
+    "gstp" = "git stash pop";
+    "gstl" = "git stash list";
+    "gf" = "git fetch --all --prune";
+    "grb" = "git rebase";
+    "grbi" = "git rebase -i";
+    "lg" = "lazygit";
+
+    # Nix (via nh)
+    "hs" = "nh home switch ~/nix-config/hm";
+    "hb" = "nh home build ~/nix-config/hm";
+    "ns" = "nh os switch ~/nix-config/nixos";
+    "nb" = "nh os build ~/nix-config/nixos";
+    "nt" = "nh os test ~/nix-config/nixos";
+    "nfu" = "nix flake update --flake ~/nix-config/nixos && nix flake update --flake ~/nix-config/hm";
+    "ncg" = "nh clean all";
+    "nso" = "nix store optimise";
+
+    # Python
+    "py" = "python3";
+    "venv" = "source venv/bin/activate";
+    "mkvenv" = "python3 -m venv venv && source venv/bin/activate";
+
+    # Java / Maven
+    "mvni" = "mvn clean install";
+    "mvnt" = "mvn clean test";
+    "mvnr" = "mvn spring-boot:run";
+    "mvnsk" = "mvn clean install -DskipTests";
+
+    # npm only
+    "ni" = "npm install";
+    "nr" = "npm run";
+    "nb" = "npm run build";
+    "nrs" = "npm run start";
+
+    # FZF shortcuts
+    "ff" = "fd --type f | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'";
+    "fv" = "fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' --bind 'enter:execute(nvim {})'";
+
+    # Misc
+    "c" = "clear";
+    "reload" = "exec zsh";
+    "path" = "echo -e \${PATH//:/\\n}";
+    "myip" = "curl -s https://ipinfo.io/ip";
+    "weather" = "curl -s 'https://wttr.in?format=3'";
+    "serve" = "python3 -m http.server 8000";
+    "pvz" = "docker run --name pvzge -d -p 8080:80 gaozih/pvzge:latest";
   };
+in {
+  programs.zsh.shellAliases = aliases;
+  programs.bash.shellAliases = aliases;
 }

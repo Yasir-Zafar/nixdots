@@ -1,9 +1,12 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    git-lfs
     lazygit
     delta
     difftastic
+    git-lfs
+    git-filter-repo
+    git-crypt
+    git-absorb
   ];
 
   programs.git = {
@@ -11,7 +14,7 @@
 
     settings = {
       user.name = "Yasir-Zafar";
-      user.mail = "yasirzafar365@gmail.com";
+      user.email = "yasirzafar365@gmail.com";
 
       extraConfig = {
         init.defaultBranch = "main";
@@ -22,9 +25,7 @@
           followTags = true;
         };
 
-        pull = {
-          rebase = true;
-        };
+        pull.rebase = true;
 
         core = {
           editor = "nvim";
@@ -60,7 +61,6 @@
         };
 
         color.ui = "auto";
-
         interactive.diffFilter = "delta --color-only";
 
         delta = {
@@ -83,43 +83,30 @@
       };
 
       aliases = {
-        st = "status";
         s = "status -sb";
         co = "checkout";
         cob = "checkout -b";
-        br = "branch";
-        bra = "branch -a";
-        brd = "branch -d";
-        brD = "branch -D";
-        ci = "commit";
         cm = "commit -m";
         ca = "commit --amend";
         can = "commit --amend --no-edit";
         a = "add";
         aa = "add --all";
         ap = "add --patch";
-        df = "diff";
         dfc = "diff --cached";
         dft = "difftool";
         l = "log --oneline";
         lg = "log --oneline --graph --decorate --all";
         lp = "log --patch";
         last = "log -1 HEAD";
-        p = "push";
         pf = "push --force-with-lease";
-        pl = "pull";
         stl = "stash list";
         stp = "stash pop";
-        sta = "stash apply";
-        std = "stash drop";
         unstage = "reset HEAD --";
         undo = "reset --soft HEAD^";
-        aliases = "config --get-regexp alias";
-        filelog = "log -u";
-        ignored = "ls-files --others --ignored --exclude-standard";
         qc = "!git add -A && git commit -m";
         current = "rev-parse --abbrev-ref HEAD";
         cleanup = "!git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d";
+        ignored = "ls-files --others --ignored --exclude-standard";
       };
     };
 
@@ -132,19 +119,14 @@
       "*.swp"
       "*.swo"
       "*~"
-      ".vim/"
       "*.o"
       "*.so"
-      "*.dylib"
-      "*.dll"
       "*.class"
       "*.pyc"
       "__pycache__/"
       "*.log"
       "npm-debug.log*"
       "node_modules/"
-      ".pnp/"
-      ".pnp.js"
       ".env"
       ".env.local"
       "*.bak"
@@ -153,5 +135,24 @@
     ];
 
     lfs.enable = true;
+  };
+
+  programs.gh = {
+    enable = true;
+
+    settings = {
+      git_protocol = "ssh";
+      editor = "nvim";
+      prompt = "enabled";
+      pager = "delta";
+
+      aliases = {
+        co = "repo clone";
+        prc = "pr create --fill";
+        prw = "pr view --web";
+        prme = "pr list --author @me";
+        isme = "issue list --assignee @me";
+      };
+    };
   };
 }

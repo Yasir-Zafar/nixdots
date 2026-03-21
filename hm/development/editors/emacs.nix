@@ -5,7 +5,6 @@
   };
 
   home.packages = with pkgs; [
-    nil
     clang-tools
     nodePackages.typescript-language-server
     nodePackages.vscode-langservers-extracted
@@ -14,27 +13,13 @@
     nodePackages.yaml-language-server
     python314Packages.python-lsp-server
     pyright
-    gopls
     lua-language-server
-
-    nodejs
-    bun
-    yarn
-
-    gnumake
-    bear
     ccls
 
     alejandra
-    nodePackages.prettier
-    nodePackages.eslint
     stylua
     shfmt
 
-    ripgrep
-    fd
-    fzf
-    sqlite
     tree-sitter
     emacs-lsp-booster
     libtool

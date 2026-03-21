@@ -3,94 +3,51 @@
     enable = true;
     enableCompletion = true;
 
-    historyControl = [
-      "ignoredups"
-      "ignorespace"
-    ];
+    historyControl = ["ignoredups" "ignorespace"];
     historySize = 10000;
     historyFileSize = 10000;
-    historyFile = "$HOME/.bash_history";
+
+    sessionVariables = {
+      HISTCONTROL = "ignoreboth";
+      HISTSIZE = "10000";
+      HISTFILESIZE = "10000";
+      HISTTIMEFORMAT = "%F %T ";
+    };
 
     bashrcExtra = ''
       set -o vi
 
       bind '"\\e[A": history-search-backward'
       bind '"\\e[B": history-search-forward'
-      bind '"\\C-r": reverse-search-history'
-
       bind 'set completion-ignore-case on'
       bind 'set show-all-if-ambiguous on'
-      bind 'set mark-directories on'
-      bind 'set mark-symlinked-directories on'
       bind 'set colored-stats on'
 
-      shopt -s checkwinsize
-      shopt -s histappend
-      shopt -s cmdhist
-      shopt -s globstar
-      shopt -s cdspell
-      shopt -s dirspell
+      shopt -s checkwinsize histappend cmdhist globstar cdspell dirspell
 
-      mkcd() {
-          if [ -z "$1" ]; then echo "Usage: mkcd <directory>"; return 1; fi
-          mkdir -p "$1" && cd "$1"
+      function mkcd() {
+        [ -z "$1" ] && { echo "Usage: mkcd <dir>"; return 1; }
+        mkdir -p "$1" && cd "$1"
       }
 
-      extract() {
-          if [ -z "$1" ]; then echo "Usage: extract <archive>"; return 1; fi
-          if [ ! -f "$1" ]; then echo "Error: '$1' is not a valid file"; return 1; fi
-          case $1 in
-              *.tar.bz2)   tar xjf "$1"    ;;
-              *.tar.gz)    tar xzf "$1"    ;;
-              *.tar.xz)    tar xJf "$1"    ;;
-              *.bz2)       bunzip2 "$1"    ;;
-              *.rar)       unrar x "$1"    ;;
-              *.gz)        gunzip "$1"     ;;
-              *.tar)       tar xf "$1"     ;;
-              *.tbz2)      tar xjf "$1"    ;;
-              *.tgz)       tar xzf "$1"    ;;
-              *.zip)       unzip "$1"      ;;
-              *.Z)         uncompress "$1" ;;
-              *.7z)        7z x "$1"       ;;
-              *)           echo "Error: '$1' cannot be extracted via extract()" ;;
-          esac
-      }
-
-      backup() {
-          if [ -z "$1" ]; then echo "Usage: backup <file>"; return 1; fi
-          cp "$1" "$1.backup-$(date +%Y%m%d-%H%M%S)"
-      }
-
-      qfind() { find . -iname "*$1*"; }
-
-      mkexec() {
-          if [ -z "$1" ]; then echo "Usage: mkexec <file>"; return 1; fi
-          chmod +x "$1"
-      }
-
-      showpath() { echo $PATH | tr ':' '\n'; }
-
-      tmpd() {
-          local tmpdir=$(mktemp -d)
-          echo "Created temporary directory: $tmpdir"
-          cd "$tmpdir"
+      function extract() {
+        [ -z "$1" ]   && { echo "Usage: extract <archive>"; return 1; }
+        [ ! -f "$1" ] && { echo "Not a file: $1"; return 1; }
+        case $1 in
+          *.tar.bz2) tar xjf "$1" ;; *.tar.gz)  tar xzf "$1" ;;
+          *.tar.xz)  tar xJf "$1" ;; *.bz2)     bunzip2 "$1" ;;
+          *.rar)     unrar x "$1" ;; *.gz)       gunzip  "$1" ;;
+          *.tar)     tar xf  "$1" ;; *.zip)      unzip   "$1" ;;
+          *.7z)      7z x    "$1" ;;
+          *) echo "Don't know how to extract '$1'" ;;
+        esac
       }
     '';
 
     initExtra = ''
-      if command -v direnv > /dev/null 2>&1; then
-          eval "$(direnv hook bash)"
-      fi
-
-      if command -v zoxide > /dev/null 2>&1; then
-          eval "$(zoxide init bash)"
-      fi
+      eval "$(${pkgs.fzf}/bin/fzf --bash)"
+      eval "$(${pkgs.zoxide}/bin/zoxide init bash)"
+      eval "$(${pkgs.direnv}/bin/direnv hook bash)"
     '';
-
-    profileExtra = "";
   };
-
-  home.packages = with pkgs; [
-    bash-completion
-  ];
 }

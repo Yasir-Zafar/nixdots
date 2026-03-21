@@ -1,8 +1,7 @@
 {
   imports = [
     ./git.nix
-    ./terminal.nix
-    ./version-control.nix
+    ./tools.nix
     ./sql.nix
   ];
 }

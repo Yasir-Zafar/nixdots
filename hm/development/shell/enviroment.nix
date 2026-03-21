@@ -7,19 +7,14 @@
 
     GOPATH = "${config.home.homeDirectory}/go";
     GOBIN = "${config.home.homeDirectory}/go/bin";
-
     CARGO_HOME = "${config.home.homeDirectory}/.cargo";
     RUSTUP_HOME = "${config.home.homeDirectory}/.rustup";
-
     ANDROID_HOME = "${config.home.homeDirectory}/Android/Sdk";
     ANDROID_SDK_ROOT = "${config.home.homeDirectory}/Android/Sdk";
 
-    BAT_THEME = "Gruvbox";
+    BAT_THEME = "gruvbox-dark";
     LESS = "-R";
     RIPGREP_CONFIG_PATH = "${config.home.homeDirectory}/.ripgreprc";
-
-    MANGOHUD = "1";
-    __GL_THREADED_OPTIMIZATIONS = "1";
   };
 
   home.sessionPath = [
@@ -30,17 +25,6 @@
     "${config.home.homeDirectory}/Android/Sdk/emulator"
     "${config.home.homeDirectory}/Android/Sdk/platform-tools"
   ];
-
-  programs.bash.sessionVariables = {
-    HISTCONTROL = "ignoreboth";
-    HISTSIZE = "10000";
-    HISTFILESIZE = "10000";
-    HISTTIMEFORMAT = "%F %T ";
-  };
-
-  programs.zsh.sessionVariables = {
-    HIST_STAMPS = "yyyy-mm-dd";
-  };
 
   home.file.".ripgreprc".text = ''
     --hidden
