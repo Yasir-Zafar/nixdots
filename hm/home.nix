@@ -1,4 +1,3 @@
-# hm/home.nix
 {
   imports = [
     ../dotfiles/default.nix
@@ -11,7 +10,6 @@
   home = {
     username = "boi";
     homeDirectory = "/home/boi";
-
     stateVersion = "25.05";
   };
 

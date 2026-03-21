@@ -1,4 +1,3 @@
-# ===== hm/dotfiles/scripts/default.nix =====
 {pkgs, ...}: let
   # Custom scripts
   rebuild-system = pkgs.writeShellScriptBin "rebuild-system" ''

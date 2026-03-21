@@ -1,52 +1,20 @@
-# ============================================================================
-# System Utilities Configuration
-# Location: hm/applications/utilities.nix
-# ============================================================================
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    # ------------------------------------------------------------------------
-    # File Managers
-    # ------------------------------------------------------------------------
-    nautilus # GNOME Files (default file manager)
+    nautilus
 
-    # ------------------------------------------------------------------------
-    # System Monitoring
-    # ------------------------------------------------------------------------
-    mission-center # Modern system monitor (GUI)
-    btop # Beautiful terminal resource monitor
-    htop # Interactive process viewer
-    powertop # Power consumption monitor (for laptops)
+    mission-center
+    powertop
 
-    # ------------------------------------------------------------------------
-    # Productivity Tools
-    # ------------------------------------------------------------------------
-    gnome-calculator # Calculator
-    gnome-feeds # RSS feed reader
+    gnome-feeds
 
-    # ------------------------------------------------------------------------
-    # Archive & Compression
-    # ------------------------------------------------------------------------
     p7zip
-    unrar # RAR archive extraction
+    unrar
 
-    # ------------------------------------------------------------------------
-    # Network & VPN
-    # ------------------------------------------------------------------------
-    protonvpn-gui # ProtonVPN client
+    protonvpn-gui
 
-    # ------------------------------------------------------------------------
-    # Utilities
-    # ------------------------------------------------------------------------
-    gearlever # AppImage manager
-    libnotify # Desktop notifications (dependency)
-    gnome-decoder # QR code scanner
+    gearlever
+    libnotify
+    gnome-decoder
     impression
-    ventoy-full-gtk
-
-    # ------------------------------------------------------------------------
-    # Theme & Appearance Tools
-    # ------------------------------------------------------------------------
-    nwg-look # GTK theme configurator
-    sassc # Sass/SCSS compiler (for custom themes)
   ];
 }

@@ -24,9 +24,7 @@
     ...
   } @ inputs: let
     pkgs = import nixpkgs {
-      localSystem = {
-        system = "x86_64-linux";
-      };
+      localSystem.system = "x86_64-linux";
       config.allowUnfree = true;
     };
   in {
