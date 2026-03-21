@@ -14,7 +14,7 @@
     nodePackages."@tailwindcss/language-server"
     nodePackages.bash-language-server
     nodePackages.yaml-language-server
-    python311Packages.python-lsp-server
+    python314Packages.python-lsp-server
     pyright # Better Python LSP
     gopls # Go LSP
     lua-language-server
@@ -25,12 +25,12 @@
     yarn
 
     # Python tools
-    python313
-    python313Packages.black
-    python313Packages.isort
-    python313Packages.flake8
-    python313Packages.pylint
-    python313Packages.mypy
+    python314
+    python314Packages.black
+    python314Packages.isort
+    python314Packages.flake8
+    python314Packages.pylint
+    python314Packages.mypy
 
     # C/C++ tools
     cmake
@@ -47,14 +47,13 @@
     alejandra # Better Nix formatter
     nodePackages.prettier
     nodePackages.eslint
-    black
     stylua # Lua formatter
     shfmt # Shell formatter
 
     # Debuggers
     lldb
     gdb
-    python313Packages.debugpy
+    python314Packages.debugpy
     delve # Go debugger
 
     # Tools

@@ -2,7 +2,6 @@
 # System security configuration
 {
   imports = [
-    ./firewall.nix
   ];
 
   # ============================================================================

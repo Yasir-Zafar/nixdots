@@ -185,7 +185,7 @@
       # Run at the start of interactive sessions
 
       # Optional: Display system info on shell start
-      # ${pkgs.neofetch}/bin/neofetch
+      # ${pkgs.fastfetch}/bin/fastfetch
 
       # Optional: Load direnv if available
       if command -v direnv > /dev/null 2>&1; then

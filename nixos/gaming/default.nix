@@ -1,5 +1,3 @@
-# nixos/gaming/default.nix
-# Gaming setup with Steam, emulators, and performance tools
 {pkgs, ...}: {
   imports = [
     ./steam.nix
@@ -7,72 +5,31 @@
     ./retroarch.nix
   ];
 
-  # ============================================================================
-  # Gaming Applications
-  # ============================================================================
   environment.systemPackages = with pkgs; [
-    # ---------------------------------------------------------------------------
-    # Wine & Compatibility Layers
-    # ---------------------------------------------------------------------------
-    bottles # Modern Wine prefix manager (GUI)
-    winetricks # Wine configuration utility
-    lutris # Universal game launcher
+    bottles
+    winetricks
     gst_all_1.gst-plugins-base
     gst_all_1.gst-plugins-good
     gst_all_1.gst-plugins-bad
     gst_all_1.gst-plugins-ugly
     gst_all_1.gst-libav
 
-    # Proton Tools
-    protonup-qt # Proton-GE installer (GUI)
-    protontricks # Winetricks for Proton games
-    protonplus
+    protonup-qt
+    protontricks
 
-    # ---------------------------------------------------------------------------
-    # Game Performance
-    # ---------------------------------------------------------------------------
-    gamemode # CPU governor optimization for games
+    heroic
+    prismlauncher
+    # lunar-client
+    cartridges
 
-    # ---------------------------------------------------------------------------
-    # Game Launchers & Platforms
-    # ---------------------------------------------------------------------------
-    heroic # Epic Games & GOG launcher
-    prismlauncher # Minecraft launcher (open-source)
-    lunar-client # Minecraft PvP client
-    cartridges # Game library manager
+    dolphin-emu
 
-    # ---------------------------------------------------------------------------
-    # Emulators
-    # ---------------------------------------------------------------------------
-    dolphin-emu # GameCube & Wii emulator
-    # Note: Additional emulators in retroarch.nix
-
-    # ---------------------------------------------------------------------------
-    # GNOME Games (Casual Gaming)
-    # ---------------------------------------------------------------------------
-    gnome-mahjongg # Mahjong solitaire
-    gnome-chess # Chess game
-    gnome-2048 # 2048 puzzle game
-    gnome-klotski # Sliding block puzzle
-    gnome-nibbles # Snake game
-    gnome-mines # Minesweeper
-    gnome-sudoku # Sudoku puzzle
-    gnome-taquin # Sliding tile puzzle
+    gnome-mahjongg
+    gnome-chess
+    gnome-2048
+    gnome-mines
+    gnome-sudoku
   ];
 
-  # ============================================================================
-  # Docker Configuration
-  # ============================================================================
-  # Used for containerized game servers and some gaming tools
-  virtualisation.docker = {
-    enable = true;
-    # Optional: Enable automatic pruning of unused Docker resources
-    autoPrune = {
-      enable = true;
-      dates = "weekly";
-    };
-  };
-
-  # Add user to docker group for rootless docker commands
   users.users.boi.extraGroups = ["docker"];
 }

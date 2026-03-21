@@ -35,6 +35,13 @@
         inherit pkgs;
 
         modules = [
+          {
+            nixpkgs.overlays = [
+              (final: prev: {
+                dwarfs = prev.dwarfs.override {boost = prev.boost188;};
+              })
+            ];
+          }
           ./home.nix
         ];
 

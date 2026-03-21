@@ -21,7 +21,7 @@
     # jetbrains.idea-community # IntelliJ IDEA Community (Free)
 
     # Python Development
-    # jetbrains.pycharm-professional # PyCharm Professional
+    jetbrains.pycharm # PyCharm Professional
     # jetbrains.pycharm-community # PyCharm Community (Free)
 
     # JavaScript/Web Development

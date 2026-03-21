@@ -40,6 +40,8 @@
     gearlever # AppImage manager
     libnotify # Desktop notifications (dependency)
     gnome-decoder # QR code scanner
+    impression
+    ventoy-full-gtk
 
     # ------------------------------------------------------------------------
     # Theme & Appearance Tools

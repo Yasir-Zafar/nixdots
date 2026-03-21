@@ -37,6 +37,7 @@
       nodePackages.nodemon # Auto-restart on file changes
       nodePackages.npm-check-updates # Update package versions
       ngrok
+      postman
 
       # ------------------------------------------------------------------------
       # Framework CLIs (Uncomment as needed)
