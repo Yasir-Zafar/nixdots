@@ -78,18 +78,6 @@
     "venv" = "source venv/bin/activate";
     "mkvenv" = "python3 -m venv venv && source venv/bin/activate";
 
-    # Java / Maven
-    "mvni" = "mvn clean install";
-    "mvnt" = "mvn clean test";
-    "mvnr" = "mvn spring-boot:run";
-    "mvnsk" = "mvn clean install -DskipTests";
-
-    # npm only
-    "ni" = "npm install";
-    "nr" = "npm run";
-    "nb" = "npm run build";
-    "nrs" = "npm run start";
-
     # FZF shortcuts
     "ff" = "fd --type f | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'";
     "fv" = "fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' --bind 'enter:execute(nvim {})'";
