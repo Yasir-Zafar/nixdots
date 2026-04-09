@@ -117,13 +117,13 @@
       name = "System Monitor";
     };
 
-    "org/gnome/shell/extensions/dash-to-dock" = {
-      dock-position = "BOTTOM";
-      dash-max-icon-size = 48;
-      show-trash = false;
-      show-mounts = false;
-      hot-keys = false;
-    };
+    # "org/gnome/shell/extensions/dash-to-dock" = {
+    #   dock-position = "BOTTOM";
+    #   dash-max-icon-size = 48;
+    #   show-trash = false;
+    #   show-mounts = false;
+    #   hot-keys = false;
+    # };
 
     "org/gnome/shell/extensions/just-perfection" = {
       accessibility-menu = false;
@@ -154,15 +154,16 @@
       disable-user-extensions = false;
       enabled-extensions = with pkgs.gnomeExtensions; [
         appindicator.extensionUuid
-        dash-to-dock.extensionUuid
+        # dash-to-dock.extensionUuid
         user-themes.extensionUuid
-        pano.extensionUuid
+        # pano.extensionUuid
+        clipboard-indicator.extensionUuid
         caffeine.extensionUuid
         hide-top-bar.extensionUuid
         media-controls.extensionUuid
         just-perfection.extensionUuid
         forge.extensionUuid
-        blur-my-shell.extensionUuid
+        # blur-my-shell.extensionUuid
         wireless-hid.extensionUuid
         user-avatar-in-quick-settings.extensionUuid
         removable-drive-menu.extensionUuid
@@ -187,15 +188,16 @@
 
   home.packages = with pkgs.gnomeExtensions; [
     appindicator
-    dash-to-dock
+    # dash-to-dock
     user-themes
-    pano
+    # pano
+    clipboard-indicator
     caffeine
     hide-top-bar
     media-controls
     just-perfection
     forge
-    blur-my-shell
+    # blur-my-shell
     wireless-hid
     user-avatar-in-quick-settings
     removable-drive-menu

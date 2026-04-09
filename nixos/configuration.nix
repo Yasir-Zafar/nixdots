@@ -17,6 +17,7 @@
 
   nixpkgs.config.permittedInsecurePackages = [
     "ventoy-gtk3-1.1.10"
+    "cisco-packet-tracer-8.2.2"
   ];
 
   programs.nix-ld.enable = true;
