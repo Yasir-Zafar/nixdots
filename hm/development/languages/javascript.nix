@@ -2,11 +2,11 @@
   home.packages = with pkgs; [
     nodejs
 
-    nodePackages.typescript
-    nodePackages.eslint
-    nodePackages.prettier
-    nodePackages.nodemon
-    nodePackages.npm-check-updates
+    typescript
+    eslint
+    prettier
+    nodemon
+    npm-check-updates
     ngrok
     postman
   ];

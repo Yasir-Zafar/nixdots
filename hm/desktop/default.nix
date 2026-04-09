@@ -1,13 +1,12 @@
 {pkgs, ...}: {
   imports = [
-    # ./gnome-settings.nix
-    # ./qt.nix
+    ./gnome-settings.nix
+    ./qt.nix
     ./niri-config.nix
+    ./noctal.nix
   ];
 
   home.packages = with pkgs; [
-    fuzzel
-
     nwg-look
     sassc
     gnome-themes-extra

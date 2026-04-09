@@ -4,7 +4,7 @@
     extraPackages = with pkgs; [
       stylua # Lua formatter
       alejandra # Nix formatter
-      nodePackages.prettier # JS/TS/HTML/CSS/JSON formatter
+      prettier # JS/TS/HTML/CSS/JSON formatter
       google-java-format # Java formatter
       black
     ];

@@ -8,11 +8,16 @@
       url = "github:0xc000022070/zen-browser-flake/beta";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     self,
     nixpkgs,
+    niri,
     ...
   } @ inputs: {
     nixosConfigurations = {
@@ -25,6 +30,7 @@
 
         modules = [
           {nixpkgs.config.allowUnfree = true;}
+          niri.nixosModules.niri
           ./configuration.nix
         ];
       };

@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   imports = [
     ./niri.nix
-    ./noctal.nix
     ./fonts.nix
 
     # kept for reference — uncomment to switch back

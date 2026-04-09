@@ -15,12 +15,18 @@
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     self,
     nixpkgs,
     home-manager,
+    niri,
     ...
   } @ inputs: let
     pkgs = import nixpkgs {
@@ -33,13 +39,14 @@
         inherit pkgs;
 
         modules = [
-          {
-            nixpkgs.overlays = [
-              (final: prev: {
-                dwarfs = prev.dwarfs.override {boost = prev.boost188;};
-              })
-            ];
-          }
+          # {
+          #   nixpkgs.overlays = [
+          #     (final: prev: {
+          #       dwarfs = prev.dwarfs.override {boost = prev.boost188;};
+          #     })
+          #   ];
+          # }
+          niri.homeModules.niri
           ./home.nix
         ];
 

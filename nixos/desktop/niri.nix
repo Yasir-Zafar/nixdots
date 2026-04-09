@@ -9,7 +9,7 @@
 
   # Wayland session vars needed by many apps
   environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";     # hint Electron/Chromium apps to use Wayland
+    NIXOS_OZONE_WL = "1"; # hint Electron/Chromium apps to use Wayland
     MOZ_ENABLE_WAYLAND = "1"; # Firefox
     QT_QPA_PLATFORM = "wayland;xcb";
     SDL_VIDEODRIVER = "wayland";
@@ -36,17 +36,18 @@
 
   # common packages useful with any Wayland compositor
   environment.systemPackages = with pkgs; [
-    wl-clipboard    # wl-copy / wl-paste
-    wlr-randr       # xrandr equivalent for wlroots
-    cliphist        # clipboard history daemon
-    grim            # screenshot
-    slurp           # region selector (used with grim)
-    swappy          # screenshot annotation
-    brightnessctl   # backlight control
-    playerctl       # MPRIS media control
-    libnotify       # notify-send
-    xdg-utils       # xdg-open etc.
-    polkit_gnome    # polkit auth agent (GTK)
+    fuzzel
+    wl-clipboard # wl-copy / wl-paste
+    wlr-randr # xrandr equivalent for wlroots
+    cliphist # clipboard history daemon
+    grim # screenshot
+    slurp # region selector (used with grim)
+    swappy # screenshot annotation
+    brightnessctl # backlight control
+    playerctl # MPRIS media control
+    libnotify # notify-send
+    xdg-utils # xdg-open etc.
+    polkit_gnome # polkit auth agent (GTK)
     gnome-keyring
   ];
 

@@ -6,11 +6,11 @@
 
   home.packages = with pkgs; [
     clang-tools
-    nodePackages.typescript-language-server
-    nodePackages.vscode-langservers-extracted
-    nodePackages."@tailwindcss/language-server"
-    nodePackages.bash-language-server
-    nodePackages.yaml-language-server
+    typescript-language-server
+    vscode-langservers-extracted
+    tailwindcss-language-server
+    bash-language-server
+    yaml-language-server
     python314Packages.python-lsp-server
     pyright
     lua-language-server
