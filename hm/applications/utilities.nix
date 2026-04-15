@@ -6,8 +6,9 @@
     powertop
 
     gnome-feeds
+    gdm-settings
 
-    protonvpn-gui
+    proton-vpn
 
     gearlever
     libnotify

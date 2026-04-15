@@ -11,7 +11,7 @@
 
     sessionVariables = {
       MOZ_ENABLE_WAYLAND = "1";
-      QT_QPA_PLATFORM = "wayland";
+      QT_QPA_PLATFORM = "wayland;xcb";
       SDL_VIDEODRIVER = "wayland";
 
       ELECTRON_OZONE_PLATFORM_HINT = "auto";

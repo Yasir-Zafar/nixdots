@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   # niri is a scrollable-tiling Wayland compositor
   # programs.niri at the system level installs the binary and sets up
   # the session entry so greetd/display managers can see it
@@ -22,21 +26,30 @@
 
   xdg.portal = {
     enable = true;
-    wlr.enable = true; # wlroots portal (used by niri, sway, etc.)
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
     ];
+    config = {
+      niri = {
+        default = ["gtk"];
+        "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
+        "org.freedesktop.impl.portal.Screenshot" = ["wlr"];
+        "org.freedesktop.impl.portal.ScreenCast" = ["wlr"];
+      };
+      common = {
+        default = ["gtk"];
+      };
+    };
   };
 
   security = {
     polkit.enable = true;
-    # allow swaylock / any PAM-authenticated locker
     pam.services.swaylock = {};
   };
 
   # common packages useful with any Wayland compositor
   environment.systemPackages = with pkgs; [
-    fuzzel
+    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
     wl-clipboard # wl-copy / wl-paste
     wlr-randr # xrandr equivalent for wlroots
     cliphist # clipboard history daemon
@@ -49,6 +62,7 @@
     xdg-utils # xdg-open etc.
     polkit_gnome # polkit auth agent (GTK)
     gnome-keyring
+    xwayland-satellite
   ];
 
   # needed so polkit agent starts on login

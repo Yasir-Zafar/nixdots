@@ -55,7 +55,14 @@
 
       title = "Ghostty"
 
-      shell-integration = zsh
+      # launch fish without making it the login shell.
+      # zsh remains the login shell; fish inherits the login environment
+      # (PATH, env vars) from the zsh session that started the display server.
+      command = fish
+
+      # shell-integration tells ghostty to inject its fish integration
+      # (prompt marks, title updates, sudo passthrough, cursor shape).
+      shell-integration = fish
       shell-integration-features = cursor,sudo,title
 
       scrollback-limit = 50000

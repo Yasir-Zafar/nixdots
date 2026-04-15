@@ -1,13 +1,13 @@
 {...}: let
+  # shared across zsh, bash, and fish
   aliases = {
     # Navigation
     ".." = "cd ..";
     "..." = "cd ../..";
     "...." = "cd ../../..";
     "....." = "cd ../../../..";
-    "-" = "cd -";
 
-    # ls → eza
+    # ls -> eza
     "l" = "eza --icons --group-directories-first";
     "ll" = "eza --long --all --icons --group-directories-first --git";
     "la" = "eza --all --icons --group-directories-first";
@@ -75,8 +75,7 @@
 
     # Python
     "py" = "python3";
-    "venv" = "source venv/bin/activate";
-    "mkvenv" = "python3 -m venv venv && source venv/bin/activate";
+    "serve" = "python3 -m http.server 8000";
 
     # FZF shortcuts
     "ff" = "fd --type f | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'";
@@ -84,14 +83,36 @@
 
     # Misc
     "c" = "clear";
-    "reload" = "exec zsh";
-    "path" = "echo -e \${PATH//:/\\n}";
     "myip" = "curl -s https://ipinfo.io/ip";
     "weather" = "curl -s 'https://wttr.in?format=3'";
-    "serve" = "python3 -m http.server 8000";
     "pvz" = "docker run --name pvzge -d -p 8080:80 gaozih/pvzge:latest";
   };
+
+  # overrides for entries that are bash/zsh-specific
+  fishOverrides = {
+    # 'cd -' is not valid in fish; prevd is the equivalent
+    # reload fish (not zsh)
+    "reload" = "exec fish";
+
+    # fish PATH is a list; just print it
+    "path" = "string join \\n $PATH";
+
+    # venv activate uses the fish-specific script
+    "venv" = "source venv/bin/activate.fish";
+
+    # mkvenv: && is not fish syntax; defined as a function in fish.nix instead
+    # (omitted here so it doesn't land as a broken alias)
+  };
+
+  posixOverrides = {
+    "-" = "cd -";
+    "reload" = "exec zsh";
+    "path" = "echo -e \${PATH//:/\\n}";
+    "venv" = "source venv/bin/activate";
+    "mkvenv" = "python3 -m venv venv && source venv/bin/activate";
+  };
 in {
-  programs.zsh.shellAliases = aliases;
-  programs.bash.shellAliases = aliases;
+  programs.zsh.shellAliases = aliases // posixOverrides;
+  programs.bash.shellAliases = aliases // posixOverrides;
+  programs.fish.shellAliases = aliases // fishOverrides;
 }

@@ -2,6 +2,7 @@
   imports = [
     ./gnome.nix
     ./fonts.nix
+    ./niri.nix
   ];
 
   services.displayManager = {

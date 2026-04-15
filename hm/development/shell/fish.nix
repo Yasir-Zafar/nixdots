@@ -9,64 +9,64 @@
 
       # --------------------------------------------------------------- #
       # SHELL INIT                                                        #
-      # runs in every interactive shell (equivalent of zshrc)            #
+      # runs in every interactive shell                                   #
       # --------------------------------------------------------------- #
       interactiveShellInit = ''
-        # disable the default greeting
-        set fish_greeting
+        # disable greeting
+        set -g fish_greeting
 
-        # --- zoxide (cd replacement) ---
-        ${pkgs.zoxide}/bin/zoxide init --cmd cd fish | source
+        # vi key bindings
+        fish_default_key_bindings
 
-        # --- direnv ---
-        ${pkgs.direnv}/bin/direnv hook fish | source
+        # pure prompt — single line, gruvbox colors
+        set -g pure_prompt_single_line          true
+        set -g pure_show_system_time            false
+        set -g pure_show_jobs                   false
+        set -g pure_color_primary               brblue
+        set -g pure_color_success               brgreen
+        set -g pure_color_error                 brred
+        set -g pure_color_info                  bryellow
+        set -g pure_color_mute                  brblack
+        set -g pure_color_git_branch            green
+        set -g pure_color_git_dirty             yellow
+        set -g pure_color_git_unpulled_commits  yellow
+        set -g pure_color_git_unpushed_commits  yellow
+        set -g pure_symbol_prompt               "❯"
+        set -g pure_symbol_reverse_prompt       "❮"
+        set -g pure_symbol_git_dirty            "*"
 
-        # --- fzf key bindings ---
-        # fzf.fish plugin below handles this; listed here for visibility
+        # Syntax Highlighting Colors
+        set -g fish_color_normal ebdbb2
+        set -g fish_color_command b8bb26
+        set -g fish_color_quote d3869b
+        set -g fish_color_redirection d65d0e
+        set -g fish_color_end ffab10
+        set -g fish_color_error fb4934
+        set -g fish_color_param 83a598
+        set -g fish_color_comment 928374
+        set -g fish_color_match --background=brblue
+        set -g fish_color_selection white --bold --background=brblack
+        set -g fish_color_search_match bryellow --background=brblack
+        set -g fish_color_history_current --bold
+        set -g fish_color_operator 00a6b2
+        set -g fish_color_escape 00a6b2
+        set -g fish_color_cwd green
+        set -g fish_color_cwd_root red
+        set -g fish_color_valid_path --underline
 
-        # --- history options (fish handles dedup natively) ---
-        set -g fish_history_merge true
+        # sponge: don't clean history on startup, only on exit
+        set -g sponge_purge_only_on_exit true
+
+        # done: notify only for commands taking longer than 10s
+        set -g __done_min_cmd_duration 10000
       '';
 
-      # --------------------------------------------------------------- #
-      # ABBREVIATIONS (expand on space/enter; like zsh aliases)          #
-      # --------------------------------------------------------------- #
-      shellAbbrs = {
-        # navigation
-        ".."   = "cd ..";
-        "..."  = "cd ../..";
-        "...." = "cd ../../..";
-
-        # git
-        g   = "git";
-        ga  = "git add";
-        gc  = "git commit";
-        gco = "git checkout";
-        gd  = "git diff";
-        gf  = "git fetch";
-        gl  = "git log --oneline --graph --decorate";
-        gp  = "git push";
-        gs  = "git status";
-        gst = "git stash";
-
-        # eza
-        ls  = "eza";
-        la  = "eza -a";
-        ll  = "eza -lh";
-        lla = "eza -lha";
-        lt  = "eza --tree";
-
-        # misc
-        v   = "nvim";
-        vim = "nvim";
-        cat = "bat";
-      };
+      # aliases come from aliases.nix (shared + fish overrides)
 
       # --------------------------------------------------------------- #
       # FUNCTIONS                                                         #
       # --------------------------------------------------------------- #
       functions = {
-        # mkdir + cd in one shot
         mkcd = {
           description = "mkdir and cd";
           body = ''
@@ -78,7 +78,6 @@
           '';
         };
 
-        # extract common archive formats
         extract = {
           description = "extract common archive formats";
           body = ''
@@ -105,7 +104,6 @@
           '';
         };
 
-        # timestamped backup
         backup = {
           description = "copy file to <file>.bak-<timestamp>";
           body = ''
@@ -117,7 +115,15 @@
           '';
         };
 
-        # git worktree shorthand (gwt with no args = list; with args = add)
+        # mkvenv can't be a plain alias because it needs sequential commands.
+        # posix aliases use &&; fish uses 'and'.
+        mkvenv = {
+          description = "create venv and activate it";
+          body = ''
+            python3 -m venv venv; and source venv/bin/activate.fish
+          '';
+        };
+
         gwt = {
           description = "git worktree helper";
           body = ''
@@ -131,25 +137,39 @@
       };
 
       # --------------------------------------------------------------- #
-      # PLUGINS (via fisher-compatible pkgs or home-manager fish.plugins) #
+      # PLUGINS                                                           #
+      # home-manager installs these into the fish data dir at build time; #
+      # no fisher/runtime plugin manager needed.                          #
+      #                                                                   #
+      # fzf.fish       — rich fzf widgets (file, dir, process, var,      #
+      #                  history). Replaces plain fzf shell integration.  #
+      #                  Requires: fzf + fd in PATH (both in packages).   #
+      #                                                                   #
+      # autopair.fish  — auto-close brackets and quotes.                  #
+      #                                                                   #
+      # done           — desktop notification when a long command (>10s)  #
+      #                  finishes in the background.                       #
+      #                                                                   #
+      # sponge         — removes failed/interrupted commands from history  #
+      #                  automatically.                                    #
       # --------------------------------------------------------------- #
       plugins = [
-        # fzf.fish: Ctrl+R history, Ctrl+T files, Alt+C dirs — same as your zsh setup
+        {
+          name = "pure";
+          src = pkgs.fishPlugins.pure.src;
+        }
         {
           name = "fzf-fish";
           src = pkgs.fishPlugins.fzf-fish.src;
         }
-        # autopair: auto-close brackets/quotes
         {
           name = "autopair";
           src = pkgs.fishPlugins.autopair.src;
         }
-        # done: desktop notification when long commands finish
         {
           name = "done";
           src = pkgs.fishPlugins.done.src;
         }
-        # sponge: remove failed commands from history automatically
         {
           name = "sponge";
           src = pkgs.fishPlugins.sponge.src;
@@ -158,109 +178,23 @@
     };
 
     # ----------------------------------------------------------------- #
-    # STARSHIP — reuse your existing config untouched                    #
-    # ----------------------------------------------------------------- #
-    starship = {
-      enable = true;
-      enableFishIntegration = true;
-
-      settings = {
-        add_newline = false;
-        format = "$directory$git_branch$git_status$nix_shell$python$nodejs$rust$java$character";
-
-        character = {
-          success_symbol = "[❯](bold green)";
-          error_symbol = "[❯](bold red)";
-          vimcmd_symbol = "[❮](bold yellow)";
-        };
-
-        directory = {
-          truncation_length = 3;
-          truncate_to_repo = true;
-          style = "bold blue";
-          home_symbol = "~";
-        };
-
-        git_branch = {
-          format = "[$symbol$branch]($style) ";
-          style = "bold green";
-          symbol = " ";
-        };
-
-        git_status = {
-          format = "([\\[$all_status$ahead_behind\\]]($style) )";
-          style = "bold yellow";
-          conflicted = "⚡";
-          ahead = "⇡\${count}";
-          behind = "⇣\${count}";
-          diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
-          up_to_date = "";
-          untracked = "?\${count}";
-          modified = "!\${count}";
-          staged = "+\${count}";
-          deleted = "✘\${count}";
-        };
-
-        nix_shell = {
-          disabled = false;
-          format = "[$symbol$state]($style) ";
-          symbol = "❄️ ";
-          style = "bold cyan";
-          impure_msg = "impure";
-          pure_msg = "pure";
-        };
-
-        python = {
-          format = "[\${symbol}(\${version})(\\ \\(\$virtualenv\\))]($style) ";
-          style = "bold yellow";
-          symbol = " ";
-        };
-
-        nodejs = {
-          format = "[$symbol(\$version)]($style) ";
-          style = "bold green";
-          symbol = " ";
-        };
-
-        rust = {
-          format = "[$symbol(\$version)]($style) ";
-          style = "bold red";
-          symbol = " ";
-        };
-
-        java = {
-          format = "[$symbol(\$version)]($style) ";
-          style = "bold orange";
-          symbol = " ";
-        };
-
-        username.disabled = true;
-        hostname.disabled = true;
-        docker_context.disabled = true;
-        kubernetes.disabled = true;
-        ruby.disabled = true;
-        c.disabled = true;
-        cmake.disabled = true;
-        package.disabled = true;
-        golang.disabled = true;
-      };
-    };
-
-    # ----------------------------------------------------------------- #
-    # DIRENV — same as before                                            #
+    # DIRENV — hook injected by HM; no manual eval in interactiveShellInit
     # ----------------------------------------------------------------- #
     direnv = {
       enable = true;
-      enableFishIntegration = true; # also set enableBashIntegration if you keep bash
+      enableFishIntegration = true;
       nix-direnv.enable = true;
     };
 
     # ----------------------------------------------------------------- #
-    # FZF                                                                #
+    # FZF                                                                 #
+    # enableFishIntegration is OFF — fzf.fish plugin above provides the  #
+    # fish-side widgets and is richer. The HM fzf block still sets       #
+    # FZF_DEFAULT_COMMAND / FZF_DEFAULT_OPTS via the env vars it exports. #
     # ----------------------------------------------------------------- #
     fzf = {
       enable = true;
-      enableFishIntegration = true;
+      enableFishIntegration = false; # handled by fzf.fish plugin
 
       defaultCommand = "fd --type f --hidden --follow --exclude .git";
       defaultOptions = [
@@ -280,7 +214,16 @@
     };
 
     # ----------------------------------------------------------------- #
-    # BAT — unchanged                                                    #
+    # ZOXIDE — hook injected by HM; no manual eval needed                 #
+    # ----------------------------------------------------------------- #
+    zoxide = {
+      enable = true;
+      enableFishIntegration = true;
+      options = ["--cmd cd"];
+    };
+
+    # ----------------------------------------------------------------- #
+    # BAT                                                                  #
     # ----------------------------------------------------------------- #
     bat = {
       enable = true;
@@ -293,11 +236,13 @@
     };
 
     # ----------------------------------------------------------------- #
-    # EZA — unchanged                                                    #
+    # EZA                                                                  #
+    # enableFishIntegration is OFF — it would add its own aliases that    #
+    # conflict with the shellAbbrs above.                                  #
     # ----------------------------------------------------------------- #
     eza = {
       enable = true;
-      enableFishIntegration = true;
+      enableFishIntegration = false;
       icons = "auto";
       git = true;
       extraOptions = [
@@ -307,17 +252,11 @@
     };
   };
 
-  # extra packages used by the shell setup above
   home.packages = with pkgs; [
     fd
-    fzf
     zoxide
-    bat
-    eza
-    direnv
     unrar
     p7zip
-    # fishPlugins packages are referenced above via plugins list;
-    # no need to add them here separately
+    # fzf, bat, eza, direnv — declared via programs.* above
   ];
 }

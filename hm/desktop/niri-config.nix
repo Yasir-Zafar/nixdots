@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   programs.niri = {
     enable = true;
 
@@ -10,21 +14,17 @@
         keyboard = {
           xkb = {
             layout = "us";
-            # variant = "";
-            # model = "";
             options = "ctrl:nocaps";
           };
-          repeat-delay = 600;
-          repeat-rate = 25;
-          # track-layout = "global"; # global | per-window
+          repeat-delay = 500;
+          repeat-rate = 50;
         };
 
         touchpad = {
           tap = true;
-          # tap-button-map = "left-right-middle";
           natural-scroll = true;
-          scroll-factor = 1.0;
-          # accel-speed = 0.0;
+          scroll-factor = 0.8;
+          accel-speed = 0.9;
           # accel-profile = "adaptive";
           dwt = true;
           # dwtp = true;
@@ -33,30 +33,19 @@
 
         mouse = {
           natural-scroll = false;
-          # accel-speed = 0.0;
-          # accel-profile = "adaptive";
-          # scroll-factor = 1.0;
-          # scroll-method = "no-scroll";
-          # middle-button-emulation = false;
+          accel-speed = 0.5;
+          scroll-factor = 1.0;
         };
-
-        # trackpoint = { ... };
 
         tablet = {
-          map-to-output = "eDP-1";
-          # left-handed = false;
-        };
-
-        touch = {
           map-to-output = "eDP-1";
         };
 
         focus-follows-mouse = {
           enable = true;
-          max-scroll-amount = "0%";
+          max-scroll-amount = "20%";
         };
-
-        workspace-auto-back-and-forth = false;
+        workspace-auto-back-and-forth = true;
       };
 
       # ------------------------------------------------------------------ #
@@ -72,21 +61,24 @@
             x = 0;
             y = 0;
           };
-          # variable-refresh-rate = false;
+          variable-refresh-rate = "on-demand";
         };
 
-        # "HDMI-A-1" = {
-        #   enable = true;
-        #   scale = 1.0;
-        #   position = { x = 1920; y = 0; };
-        # };
+        "HDMI-A-1" = {
+          enable = true;
+          scale = 1.0;
+          position = {
+            x = 1920;
+            y = 0;
+          };
+        };
       };
 
       # ------------------------------------------------------------------ #
       # LAYOUT                                                               #
       # ------------------------------------------------------------------ #
       layout = {
-        gaps = 8;
+        gaps = 0;
 
         struts = {
           left = 0;
@@ -114,10 +106,10 @@
         ];
 
         focus-ring = {
-          enable = true;
+          enable = false;
           width = 2;
-          active.color = "#7fc8ff";
-          inactive.color = "#404040";
+          active.color = "#fe8019"; # bright-orange
+          inactive.color = "#504945"; # bg2
         };
 
         border = {
@@ -144,8 +136,7 @@
           # inactive.color = "#404040";
         };
 
-        # insert-hint takes color/gradient, not enable
-        # insert-hint.color = "#7fc8ff80";
+        always-center-single-column = true;
       };
 
       # ------------------------------------------------------------------ #
@@ -156,16 +147,17 @@
         "2" = {};
         "3" = {};
         "4" = {};
+        "5" = {};
       };
 
       # ------------------------------------------------------------------ #
       # CURSOR                                                               #
       # ------------------------------------------------------------------ #
       cursor = {
-        theme = "Adwaita";
+        theme = "Bibata-Modern-Classic";
         size = 24;
-        # hide-when-typing = false;
-        # hide-after-inactive-ms = null;
+        hide-when-typing = false;
+        hide-after-inactive-ms = 5000;
       };
 
       # ------------------------------------------------------------------ #
@@ -174,10 +166,10 @@
       window-rules = [
         # floating dialogs — is-dialog is niri-unstable only;
         # use app-id regex for stable
-        # {
-        #   matches = [{ app-id = "^(xdg-desktop-portal|polkit)"; }];
-        #   open-floating = true;
-        # }
+        {
+          matches = [{app-id = "^(xdg-desktop-portal|polkit)";}];
+          open-floating = true;
+        }
 
         # rounded corners + clip for all windows
         {
@@ -190,16 +182,44 @@
             bottom-right = 8.0;
           };
         }
+        {
+          matches = [
+            {app-id = "^zen-beta$";}
+            {app-id = "^firefox$";}
+            {app-id = "^ghostty";}
+            {app-id = "^emacs";}
+          ];
+          # This makes the column take up 100% of the screen width
+          default-column-width = {proportion = 1.0;};
+        }
+        {
+          matches = [{app-id = "^ghostty";} {app-id = "^emacs";}];
+          draw-border-with-background = false;
+        }
+        {
+          matches = [
+            {
+              app-id = "^steam$";
+              title = "^notificationtoasts_[0-9]+_desktop$";
+            }
+          ];
+          default-floating-position = {
+            x = 10;
+            y = 10;
+            relative-to = "bottom-right";
+          };
+        }
       ];
 
       # ------------------------------------------------------------------ #
       # LAYER RULES                                                          #
       # ------------------------------------------------------------------ #
       layer-rules = [
-        # {
-        #   matches = [{ namespace = "waybar"; }];
-        #   shadow.enable = true;
-        # }
+        {
+          matches = [{namespace = "^noctalia-overview*";}];
+          shadow.enable = true;
+          place-within-backdrop = true;
+        }
       ];
 
       # ------------------------------------------------------------------ #
@@ -207,49 +227,42 @@
       # ------------------------------------------------------------------ #
       animations = {
         enable = true;
-        # slowdown = 1.0;
 
-        workspace-switch.spring = {
+        workspace-switch.kind.spring = {
           damping-ratio = 1.0;
           stiffness = 1000;
           epsilon = 0.0001;
         };
-
-        window-open = {
-          duration-ms = 150;
-          curve = "ease-out-expo";
-        };
-
-        window-close = {
-          duration-ms = 150;
-          curve = "ease-out-quad";
-        };
-
-        horizontal-view-movement.spring = {
+        horizontal-view-movement.kind.spring = {
           damping-ratio = 1.0;
           stiffness = 800;
           epsilon = 0.0001;
         };
-
-        window-movement.spring = {
+        window-movement.kind.spring = {
           damping-ratio = 1.0;
           stiffness = 800;
           epsilon = 0.0001;
         };
-
-        window-resize.spring = {
+        window-resize.kind.spring = {
           damping-ratio = 1.0;
           stiffness = 800;
           epsilon = 0.0001;
         };
-
-        config-notification-open-close.spring = {
+        config-notification-open-close.kind.spring = {
           damping-ratio = 0.6;
           stiffness = 1000;
           epsilon = 0.001;
         };
 
-        screenshot-ui-open = {
+        window-open.kind.easing = {
+          duration-ms = 150;
+          curve = "ease-out-expo";
+        };
+        window-close.kind.easing = {
+          duration-ms = 150;
+          curve = "ease-out-quad";
+        };
+        screenshot-ui-open.kind.easing = {
           duration-ms = 200;
           curve = "ease-out-quad";
         };
@@ -272,9 +285,14 @@
         "Mod+Return".action.spawn = ["ghostty"];
         "Mod+W".action.spawn = ["zen-beta"];
         "Mod+E".action.spawn = ["nautilus"];
-        "Mod+Space".action.spawn = ["fuzzel"];
         "Mod+Shift+Return".action.spawn = ["ghostty" "-e" "nvim"];
         "Ctrl+Shift+Escape".action.spawn = ["missioncenter"];
+
+        # -- noctalia --
+        "Mod+Tab".action.toggle-overview = {};
+        "Mod+P".action.spawn = ["noctalia-shell" "ipc" "call" "launcher" "toggle"];
+        "Alt+Tab".action.spawn = ["noctalia-shell" "ipc" "call" "launcher" "windows"];
+        "Mod+Escape".action.spawn = ["noctalia-shell" "ipc" "call" "sessionMenu" "toggle"];
 
         # -- screenshots --
         "Print".action.screenshot = {};
@@ -314,11 +332,13 @@
         "Mod+2".action.focus-workspace = 2;
         "Mod+3".action.focus-workspace = 3;
         "Mod+4".action.focus-workspace = 4;
+        "Mod+5".action.focus-workspace = 5;
 
         "Mod+Shift+1".action.move-column-to-workspace = 1;
         "Mod+Shift+2".action.move-column-to-workspace = 2;
         "Mod+Shift+3".action.move-column-to-workspace = 3;
         "Mod+Shift+4".action.move-column-to-workspace = 4;
+        "Mod+Shift+5".action.move-column-to-workspace = 5;
 
         "Mod+BracketLeft".action.focus-workspace-down = {};
         "Mod+BracketRight".action.focus-workspace-up = {};
@@ -372,10 +392,7 @@
       # STARTUP                                                              #
       # ------------------------------------------------------------------ #
       spawn-at-startup = [
-        {command = ["fuzzel"];}
-        {command = ["noctal"];}
-        {command = ["sh" "-c" "wl-paste --watch cliphist store"];}
-        # { command = [ "swww-daemon" ]; }
+        {command = ["noctalia-shell"];}
       ];
 
       # ------------------------------------------------------------------ #
@@ -383,12 +400,16 @@
       # ------------------------------------------------------------------ #
       prefer-no-csd = true;
 
-      hotkey-overlay.skip-at-startup = false;
+      hotkey-overlay.skip-at-startup = true;
 
       environment = {
-        # DISPLAY is set automatically by xwayland-satellite — do not set it here
-        QT_QPA_PLATFORM = "wayland;xcb";
+        QT_QPA_PLATFORM = "wayland";
+        QT_QPA_PLATFORMTHEME = "gtk3";
         NIXOS_OZONE_WL = "1";
+      };
+
+      xwayland-satellite = {
+        enable = true;
       };
     };
   };

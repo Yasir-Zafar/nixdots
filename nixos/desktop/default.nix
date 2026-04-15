@@ -1,62 +1,88 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}: {
   imports = [
-    ./niri.nix
     ./fonts.nix
-
-    # kept for reference — uncomment to switch back
-    # ./gnome.nix
+    ./niri.nix
   ];
 
-  # greetd with regreet: a clean GTK4 Wayland greeter
-  # much nicer than lightdm; runs entirely on Wayland
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.greetd.regreet}/bin/regreet";
-        user = "greeter";
+  services.xserver = {
+    enable = true; # LightDM still lives under the xserver service
+    displayManager.lightdm = {
+      enable = true;
+      background = "/home/boi/Pictures/Wallpapers/10.png";
+      greeters.gtk = {
+        enable = true;
+        # Reference the files relative to this .nix file
+        theme.package = pkgs.runCommand "local-theme" {} ''
+          mkdir -p $out/share/themes
+          cp -r ${./../../assets/Gruvbox-Green-Dark-Medium} $out/share/themes/Gruvbox-Green-Dark-Medium
+        '';
+        theme.name = "Gruvbox-Green-Dark-Medium";
+
+        iconTheme.package = pkgs.runCommand "local-icons" {} ''
+          mkdir -p $out/share/icons
+          cp -r ${./../../assets/Gruvbox-Plus-Dark} $out/share/icons/Gruvbox-Plus-Dark
+        '';
+        iconTheme.name = "Gruvbox-Plus-Dark";
+        cursorTheme = {
+          name = "Bibata-Modern-Classic";
+          package = pkgs.bibata-cursors;
+          size = 24;
+        };
+        # LightDM can actually read your home folder easier,
+        # but using a nix path is still safer.
       };
     };
   };
 
-  # regreet is a GTK4 greeter for greetd
-  # configure it via programs.regreet (home-manager) or via its config file
-  programs.regreet = {
-    enable = true;
-
-    # regreet reads a TOML config; these are the available top-level keys
-    settings = {
-      background = {
-        # path to a background image; leave unset for solid color
-        # path = "/path/to/wallpaper.png";
-        fit = "Cover"; # Cover | Contain | Fill | ScaleDown
-      };
-
-      GTK = {
-        application_prefer_dark_theme = true;
-        cursor_theme_name = "Adwaita";
-        font_name = "sans 12";
-        icon_theme_name = "Adwaita";
-        theme_name = "Adwaita";
-      };
+  services = {
+    gnome = {
+      gnome-keyring.enable = true;
+      sushi.enable = true;
+      at-spi2-core.enable = true;
     };
+
+    gvfs.enable = true;
   };
 
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gnome # keep for GTK app compatibility
-      xdg-desktop-portal-gtk
+  services.flatpak.enable = true;
+
+  environment = {
+    pathsToLink = ["share/thumbnailers"];
+
+    systemPackages = with pkgs; [
+      gnome-calendar
+      gnome-calculator
+      gnome-usage
+      gnome-disk-utility
+      file-roller
+      gnome-autoar
+
+      sassc
+      gtk-engine-murrine
+      gnome-themes-extra
+
+      libheif
+      libheif.out
+
+      inputs.zen-browser.packages."${stdenv.hostPlatform.system}".default
+
+      cage
     ];
   };
 
-  security = {
-    polkit.enable = true;
-    # gnome-keyring still works fine without GDM
-    pam.services.greetd.enableGnomeKeyring = true;
-  };
-
-  services.gnome.gnome-keyring.enable = true;
-
-  services.flatpak.enable = true;
+  environment.etc."xdg/user-dirs.defaults".text = ''
+    DESKTOP=
+    DOWNLOAD=Downloads
+    TEMPLATES=
+    PUBLICSHARE=
+    DOCUMENTS=Documents
+    MUSIC=Music
+    PICTURES=Pictures
+    VIDEOS=Videos
+  '';
 }
