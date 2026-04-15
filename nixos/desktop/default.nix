@@ -9,37 +9,49 @@
     ./niri.nix
   ];
 
-  services.xserver = {
-    enable = true; # LightDM still lives under the xserver service
-    displayManager.lightdm = {
-      enable = true;
-      background = "/home/boi/Pictures/Wallpapers/10.png";
-      greeters.gtk = {
-        enable = true;
-        # Reference the files relative to this .nix file
-        theme.package = pkgs.runCommand "local-theme" {} ''
-          mkdir -p $out/share/themes
-          cp -r ${./../../assets/Gruvbox-Green-Dark-Medium} $out/share/themes/Gruvbox-Green-Dark-Medium
-        '';
-        theme.name = "Gruvbox-Green-Dark-Medium";
+  services = {
+    # This tells the system-wide accounts daemon which image to use
+    accounts-daemon.enable = true;
 
-        iconTheme.package = pkgs.runCommand "local-icons" {} ''
-          mkdir -p $out/share/icons
-          cp -r ${./../../assets/Gruvbox-Plus-Dark} $out/share/icons/Gruvbox-Plus-Dark
-        '';
-        iconTheme.name = "Gruvbox-Plus-Dark";
-        cursorTheme = {
-          name = "Bibata-Modern-Classic";
-          package = pkgs.bibata-cursors;
-          size = 24;
+    xserver = {
+      enable = true; # LightDM still lives under the xserver service
+      displayManager.lightdm = {
+        enable = true;
+        background = ./../../assets/10.png;
+        greeters.gtk = {
+          enable = true;
+          # Reference the files relative to this .nix file
+          theme.package = pkgs.runCommand "local-theme" {} ''
+            mkdir -p $out/share/themes
+            cp -r ${./../../assets/Gruvbox-Green-Dark-Medium} $out/share/themes/Gruvbox-Green-Dark-Medium
+          '';
+          theme.name = "Gruvbox-Green-Dark-Medium";
+
+          iconTheme.package = pkgs.runCommand "local-icons" {} ''
+            mkdir -p $out/share/icons
+            cp -r ${./../../assets/Gruvbox-Plus-Dark} $out/share/icons/Gruvbox-Plus-Dark
+          '';
+          iconTheme.name = "Gruvbox-Plus-Dark";
+          cursorTheme = {
+            name = "Bibata-Modern-Classic";
+            package = pkgs.bibata-cursors;
+            size = 24;
+          };
+          # LightDM can actually read your home folder easier,
+          # but using a nix path is still safer.
+          extraConfig = ''
+            # Set the cursor speed/sensitivity
+            # Note: LightDM uses X11 settings; 1 is default, higher is faster
+            cursor-speed = 0.5
+
+            # You can also set specific accessibility or input tweaks here
+            keyboard-opened = false
+            indicators = ~host;~spacer;~clock;~spacer;~session;~language;~a11y;~power
+          '';
         };
-        # LightDM can actually read your home folder easier,
-        # but using a nix path is still safer.
       };
     };
-  };
 
-  services = {
     gnome = {
       gnome-keyring.enable = true;
       sushi.enable = true;
@@ -47,9 +59,17 @@
     };
 
     gvfs.enable = true;
+
+    flatpak.enable = true;
   };
 
-  services.flatpak.enable = true;
+  # You can't easily set the image path per-user in basic NixOS options,
+  # so we manually place the icon where the daemon expects it.
+  system.activationScripts.userIcons = ''
+    mkdir -p /var/lib/AccountsService/icons
+    cp ${./../../assets/profile.jpg} /var/lib/AccountsService/icons/boi
+    echo -e "[User]\nIcon=/var/lib/AccountsService/icons/boi\n" > /var/lib/AccountsService/users/boi
+  '';
 
   environment = {
     pathsToLink = ["share/thumbnailers"];

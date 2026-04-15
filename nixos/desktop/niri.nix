@@ -60,6 +60,7 @@
     playerctl # MPRIS media control
     libnotify # notify-send
     xdg-utils # xdg-open etc.
+    jq
     polkit_gnome # polkit auth agent (GTK)
     gnome-keyring
     xwayland-satellite
