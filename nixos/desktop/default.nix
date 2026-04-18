@@ -17,7 +17,7 @@
       enable = true; # LightDM still lives under the xserver service
       displayManager.lightdm = {
         enable = true;
-        background = ./../../assets/10.png;
+        background = ./../../assets/wall.jpg;
         greeters.gtk = {
           enable = true;
           # Reference the files relative to this .nix file
