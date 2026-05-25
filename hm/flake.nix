@@ -9,7 +9,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixvim.url = "github:nix-community/nixvim";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs"; # This unifies the LuaJIT versions
+    };
 
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";

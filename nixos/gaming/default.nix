@@ -6,7 +6,6 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    bottles
     winetricks
     gst_all_1.gst-plugins-base
     gst_all_1.gst-plugins-good
@@ -19,7 +18,7 @@
 
     heroic
     prismlauncher
-    # lunar-client
+    lunar-client
     cartridges
 
     dolphin-emu

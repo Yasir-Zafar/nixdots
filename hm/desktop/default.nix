@@ -11,6 +11,7 @@
     sassc
     gnome-themes-extra
     gtk-engine-murrine
+    gnome-notes
 
     bibata-cursors
 

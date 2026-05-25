@@ -16,7 +16,8 @@
       "storage"
       "gamemode"
       "kvm"
-      "wireshark"
+      "input"
+      "uinput"
     ];
 
     shell = pkgs.zsh;

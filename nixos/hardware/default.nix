@@ -10,7 +10,7 @@
     cpu.intel.updateMicrocode = true;
   };
 
-  services.fwupd.enable = true;
+  services.fwupd.enable = false;
 
   services.fstrim.enable = true;
 }

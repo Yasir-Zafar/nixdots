@@ -13,11 +13,11 @@
     yaml-language-server
     python314Packages.python-lsp-server
     pyright
-    lua-language-server
+    # lua-language-server
     ccls
 
     alejandra
-    stylua
+    # stylua
     shfmt
 
     tree-sitter

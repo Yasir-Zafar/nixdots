@@ -13,22 +13,23 @@
   environment.systemPackages = with pkgs; [
     wineWow64Packages.stable
     gnome-firmware
+    theclicker
+    appimage-run
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
     "ventoy-gtk3-1.1.10"
-    "cisco-packet-tracer-8.2.2"
   ];
 
   programs.nix-ld.enable = true;
 
-  # programs.appimage = {
-  #   enable = true;
-  #   binfmt = true;
-  #   package = pkgs.appimage-run.override {
-  #     extraPkgs = pkgs: [pkgs.libxshmfence];
-  #   };
-  # };
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+    package = pkgs.appimage-run.override {
+      extraPkgs = pkgs: [pkgs.libxshmfence];
+    };
+  };
 
   nix.settings = {
     experimental-features = ["nix-command" "flakes"];

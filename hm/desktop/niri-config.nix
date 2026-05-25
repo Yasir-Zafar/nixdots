@@ -293,6 +293,11 @@
         "Mod+P".action.spawn = ["noctalia-shell" "ipc" "call" "launcher" "toggle"];
         "Alt+Tab".action.spawn = ["noctalia-shell" "ipc" "call" "launcher" "windows"];
         "Mod+Escape".action.spawn = ["noctalia-shell" "ipc" "call" "sessionMenu" "toggle"];
+        # -- power profile --
+        "Mod+Shift+B".action.spawn = ["noctalia-shell" "ipc" "call" "powerProfile" "cycle"];
+
+        # -- keep awake --
+        "Mod+Shift+I".action.spawn = ["noctalia-shell" "ipc" "call" "idleInhibitor" "toggle"];
 
         # -- screenshots --
         "Print".action.screenshot = {};

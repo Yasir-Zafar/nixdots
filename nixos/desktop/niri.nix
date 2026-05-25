@@ -18,7 +18,6 @@
     QT_QPA_PLATFORM = "wayland;xcb";
     SDL_VIDEODRIVER = "wayland";
     CLUTTER_BACKEND = "wayland";
-    GDK_BACKEND = "wayland,x11";
   };
 
   # XWayland for apps that still need X11
@@ -28,16 +27,15 @@
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
+      xdg-desktop-portal-gnome
     ];
     config = {
       niri = {
         default = ["gtk"];
         "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
-        "org.freedesktop.impl.portal.Screenshot" = ["wlr"];
-        "org.freedesktop.impl.portal.ScreenCast" = ["wlr"];
-      };
-      common = {
-        default = ["gtk"];
+        "org.freedesktop.impl.portal.ScreenCast" = ["gnome"];
+        "org.freedesktop.impl.portal.Screenshot" = ["gnome"];
+        "org.freedesktop.impl.portal.Inhibit" = ["gnome"];
       };
     };
   };
