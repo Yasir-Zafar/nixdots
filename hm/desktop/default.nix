@@ -4,6 +4,7 @@
     ./qt.nix
     ./niri-config.nix
     ./noctal.nix
+    ./nixcord.nix
   ];
 
   home.packages = with pkgs; [

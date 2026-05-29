@@ -18,7 +18,6 @@
     foliate
     gnome-notes
 
-    vesktop
     thunderbird
     nicotine-plus
     zoom-us

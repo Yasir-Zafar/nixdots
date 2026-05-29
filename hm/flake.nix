@@ -28,6 +28,11 @@
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixcord = {
+      url = "github:FlameFlag/nixcord";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -55,6 +60,7 @@
           #   ];
           # }
           niri.homeModules.niri
+          inputs.nixcord.homeModules.nixcord
           ./home.nix
         ];
 
