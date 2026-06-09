@@ -9,8 +9,8 @@
     ./treesitter.nix
     ./which-key.nix
     ./todo.nix
-    ./jdtls.nix
-    ./tss-tools.nix
+    # ./jdtls.nix
+    # ./tss-tools.nix
     ./trouble.nix
     ./kickstart
   ];

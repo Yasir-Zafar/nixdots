@@ -8,9 +8,9 @@
       # NOTE: Enabling these will cause errors unless these tools are installed
       lintersByFt = {
         lua = ["luacheck"];
-        java = ["checkstyle"];
-        javascript = ["eslint"];
-        typescript = ["eslint"];
+        # java = ["checkstyle"];
+        # javascript = ["eslint"];
+        # typescript = ["eslint"];
         # c = ["clang-tidy"];
         # cpp = ["clang-tidy"];
         nix = ["statix"];
@@ -23,7 +23,7 @@
         #dockerfile = ["hadolint"];
         #inko = ["inko"];
         #janet = ["janet"];
-        json = ["jsonlint"];
+        # json = ["jsonlint"];
         #rst = ["vale"];
         #ruby = ["ruby"];
         #terraform = ["tflint"];

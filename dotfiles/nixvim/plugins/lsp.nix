@@ -46,21 +46,21 @@
 
       servers = {
         #   # Added from paste-2.txt
-        clangd = {
-          enable = true;
-          package = pkgs.llvmPackages_19.clang-tools;
-          cmd = [
-            "clangd"
-            "--background-index"
-            "--clang-tidy"
-            "--header-insertion=iwyu"
-            "--completion-style=detailed"
-            "--function-arg-placeholders"
-            "--fallback-style=llvm"
-          ];
-
-          filetypes = ["c" "cpp" "objc" "objcpp"];
-        };
+        # clangd = {
+        #   enable = true;
+        #   package = pkgs.llvmPackages_19.clang-tools;
+        #   cmd = [
+        #     "clangd"
+        #     "--background-index"
+        #     "--clang-tidy"
+        #     "--header-insertion=iwyu"
+        #     "--completion-style=detailed"
+        #     "--function-arg-placeholders"
+        #     "--fallback-style=llvm"
+        #   ];
+        #
+        #   filetypes = ["c" "cpp" "objc" "objcpp"];
+        # };
 
         # rust_analyzer = {
         #   enable = true;
@@ -72,86 +72,86 @@
           enable = true;
         };
 
-        jdtls = {
-          enable = true;
-          settings = {
-            java = {
-              format = {
-                settings = {
-                  url = "vim.fn.stdpath('config') .. '/lang-servers/java-format-settings.xml'";
-                };
-              };
-              signatureHelp = {enabled = true;};
-              contentProvider = {preferred = "fernflower";};
-            };
-          };
-        };
-
-        # For TypeScript/JavaScript
-        ts_ls = {
-          enable = true;
-          filetypes = [
-            "typescript"
-            "javascript"
-            "javascriptreact"
-            "typescriptreact"
-            "vue"
-          ];
-          #  extraOptions = {
-          #    init_options = {
-          #      plugins = [
-          #        {
-          #          name = "@vue/typescript-plugin";
-          #          location = "${pkgs.vue-language-server}/lib/node_modules/@vue/language-server";
-          #          languages = ["vue"];
-          #        }
-          #      ];
-          #    };
-          #  };
-        };
-        vue_ls = {
-          enable = true;
-          package = pkgs.vue-language-server;
-        };
-
-        eslint = {
-          enable = true;
-          settings = {
-            workingDirectories = [{mode = "auto";}];
-          };
-        };
-
-        cssls = {
-          enable = true;
-          settings = {
-            css = {
-              validate = true;
-              lint = {
-                unknownAtRules = "ignore";
-              };
-            };
-            scss = {
-              validate = true;
-              lint = {
-                unknownAtRules = "ignore";
-              };
-            };
-          };
-        };
-
-        html = {
-          enable = true;
-          filetypes = ["html" "javascriptreact" "typescriptreact"];
-        };
-
-        jsonls = {
-          enable = true;
-          settings = {
-            json = {
-              validate = {enable = true;};
-            };
-          };
-        };
+        # jdtls = {
+        #   enable = true;
+        #   settings = {
+        #     java = {
+        #       format = {
+        #         settings = {
+        #           url = "vim.fn.stdpath('config') .. '/lang-servers/java-format-settings.xml'";
+        #         };
+        #       };
+        #       signatureHelp = {enabled = true;};
+        #       contentProvider = {preferred = "fernflower";};
+        #     };
+        #   };
+        # };
+        #
+        # # For TypeScript/JavaScript
+        # ts_ls = {
+        #   enable = true;
+        #   filetypes = [
+        #     "typescript"
+        #     "javascript"
+        #     "javascriptreact"
+        #     "typescriptreact"
+        #     "vue"
+        #   ];
+        #   #  extraOptions = {
+        #   #    init_options = {
+        #   #      plugins = [
+        #   #        {
+        #   #          name = "@vue/typescript-plugin";
+        #   #          location = "${pkgs.vue-language-server}/lib/node_modules/@vue/language-server";
+        #   #          languages = ["vue"];
+        #   #        }
+        #   #      ];
+        #   #    };
+        #   #  };
+        # };
+        # vue_ls = {
+        #   enable = true;
+        #   package = pkgs.vue-language-server;
+        # };
+        #
+        # eslint = {
+        #   enable = true;
+        #   settings = {
+        #     workingDirectories = [{mode = "auto";}];
+        #   };
+        # };
+        #
+        # cssls = {
+        #   enable = true;
+        #   settings = {
+        #     css = {
+        #       validate = true;
+        #       lint = {
+        #         unknownAtRules = "ignore";
+        #       };
+        #     };
+        #     scss = {
+        #       validate = true;
+        #       lint = {
+        #         unknownAtRules = "ignore";
+        #       };
+        #     };
+        #   };
+        # };
+        #
+        # html = {
+        #   enable = true;
+        #   filetypes = ["html" "javascriptreact" "typescriptreact"];
+        # };
+        #
+        # jsonls = {
+        #   enable = true;
+        #   settings = {
+        #     json = {
+        #       validate = {enable = true;};
+        #     };
+        #   };
+        # };
 
         lua_ls = {
           enable = true;

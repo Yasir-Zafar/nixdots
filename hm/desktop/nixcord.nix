@@ -14,6 +14,8 @@
       branch = "stable"; # "stable" | "ptb" | "canary" | "development"
       installPackage = true;
 
+      commandLineArgs = ["--enable-blink-features=MiddleClickAutoscroll"];
+
       vencord = {
         enable = true; # Vencord injection (default client mod)
         unstable = false; # true = master branch build of Vencord
@@ -23,7 +25,6 @@
       # equicord.enable = false;      # Alternative to Vencord (more plugins)
 
       openASAR.enable = true; # OpenASAR runtime replacement (perf boost)
-      autoscroll.enable = false; # Middle-click autoscrolling
       krisp.enable = false; # Krisp noise cancellation
 
       settings = {
@@ -765,19 +766,9 @@
 
         appleMusicRichPresence.enable = false; # Apple Music → Discord status
         customIdle.enable = false; # Customise idle timeout behaviour
-        CustomRPC.enable = false; # Manual custom Rich Presence
+        customRpc.enable = false; # Manual custom Rich Presence
         gameActivityToggle.enable = false; # Quick-toggle game activity
-        ignoreActivities = {
-          enable = false;
-          ignorePlaying = false; # Hide "Playing X" statuses
-          ignoreWatching = false;
-          ignoreListening = false;
-          ignoreCompeting = false;
-          ignoredActivities = [
-            # { id = "game-id"; name = "League of Legends"; type = 0; }
-          ];
-        };
-        LastFMRichPresence.enable = false; # Last.fm → Discord status
+        lastFmRichPresence.enable = false; # Last.fm → Discord status
         streamerModeOnStream.enable = false; # Auto streamer-mode when streaming
         webRichPresence.enable = false; # Browser-tab Rich Presence
 
@@ -786,11 +777,11 @@
         betterRoleContext.enable = false; # Better role right-click menu
         betterSessions.enable = false; # Improved sessions management
         betterUploadButton.enable = false; # Improved upload button
-        ClearURLs.enable = false; # Strip tracking params from links
+        clearUrls.enable = false; # Strip tracking params from links
         copyEmojiMarkdown.enable = false; # Copy emoji as markdown
         copyFileContents.enable = false; # Copy file text contents
         copyStickerLinks.enable = false; # Copy sticker URLs
-        CopyUserURLs.enable = false; # Copy user profile URLs
+        copyUserUrls.enable = false; # Copy user profile URLs
         customCommands.enable = false; # Add custom slash commands
         dearrow.enable = false; # Replace YouTube titles/thumbnails
         disableCallIdle.enable = false; # Prevent idle disconnect in calls
@@ -817,7 +808,7 @@
         keepCurrentChannel.enable = true; # Stay in current channel on reload
         messageLatency.enable = false; # Show message send latency
         messageLinkEmbeds.enable = false; # Embed linked messages inline
-        MutualGroupDMs.enable = false; # Show mutual group DMs on profiles
+        mutualGroupDms.enable = false; # Show mutual group DMs on profiles
         noMaskedUrlPaste.enable = false; # Paste raw URLs not masked links
         noMiddleClickPaste.enable = false; # Disable middle-click paste
         noReplyMention.enable = false; # Don't ping on reply by default
@@ -829,7 +820,7 @@
         pauseInvitesForever.enable = false; # Pause invites indefinitely
         permissionFreeWill.enable = true; # Ignore channel permission checks
         permissionsViewer.enable = true; # View channel permissions detail
-        PinDMs.enable = false; # Pin DMs to top of list
+        pinDms.enable = false; # Pin DMs to top of list
         quickMention.enable = true; # Quick-mention from user popout
         quickReply.enable = false; # Keyboard shortcut to reply
         readAllNotificationsButton.enable = false; # "Mark all read" button
@@ -849,7 +840,7 @@
         unsuppressEmbeds.enable = false; # Un-suppress hidden embeds
         userMessagesPronouns.enable = true; # Show pronouns in messages
         userVoiceShow.enable = false; # Show which VC users are in
-        USRBG.enable = true; # Custom user banner backgrounds
+        usrbg.enable = true; # Custom user banner backgrounds
         validReply.enable = true; # Fix invalid reply display
         validUser.enable = true; # Fix invalid user display
 
@@ -870,7 +861,7 @@
         crashHandler.enable = false; # Catch & recover from crashes
         noSystemBadge.enable = false; # Hide OS taskbar badge
         secretRingToneEnabler.enable = false; # Enable secret notification tones
-        XSOverlay.enable = false; # Send notifications to XSOverlay (VR)
+        xsOverlay.enable = false; # Send notifications to XSOverlay (VR)
 
         # ── Developer / Debug ────────────────────────────────────────────────
 
@@ -905,10 +896,10 @@
         alwaysExpandRoles.enable = true; # Always expand role list
         alwaysTrust.enable = true; # Skip external link warnings
         anonymiseFileNames.enable = false; # Anonymise uploaded filenames
-        AutoDNDWhilePlaying.enable = true; # Auto DND when in a game
+        autoDndWhilePlaying.enable = true; # Auto DND when in a game
         betterFolders.enable = true; # Improved server folders UI
         betterGifPicker.enable = true; # Improved GIF picker
-        BlurNSFW.enable = false; # Blur NSFW channel images
+        blurNsfw.enable = false; # Blur NSFW channel images
         callTimer.enable = true; # Show call duration timer
         devCompanion.enable = false; # Vencord plugin dev helper
         experiments.enable = false; # Enable Discord experiments tab
@@ -919,9 +910,9 @@
         newGuildSettings.enable = true; # Better new-server defaults
         noBlockedMessages.enable = false; # Hide blocked user messages
         oneko.enable = false; # Neko cursor follower
-        OnePingPerDM.enable = false; # One notification ping per DM
+        onePingPerDm.enable = false; # One notification ping per DM
         platformIndicators.enable = true; # Show platform (mobile/web/etc.)
-        ReviewDB.enable = false; # User review database
+        reviewDb.enable = false; # User review database
         serverInfo.enable = true; # Extra server info in sidebar
         showHiddenChannels.enable = true; # List locked/hidden channels
         showMeYourName.enable = true; # Show username alongside display name

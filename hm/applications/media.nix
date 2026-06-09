@@ -3,10 +3,10 @@
     showtime
     pear-desktop
     obs-studio
-    kooha
+    # kooha
 
-    gimp
-    krita
+    # gimp
+    # krita
     pinta
 
     amberol
@@ -18,9 +18,9 @@
     foliate
     gnome-notes
 
-    thunderbird
+    # thunderbird
     nicotine-plus
-    zoom-us
+    # zoom-us
 
     ffmpeg
     yt-dlp

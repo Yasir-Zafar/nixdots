@@ -23,12 +23,12 @@
         ];
         ensureInstalled = [
           "bash"
-          "c"
-          "cpp"
-          "java"
-          "h"
+          # "c"
+          # "cpp"
+          # "java"
+          # "h"
           "diff"
-          "html"
+          # "html"
           "lua"
           "luadoc"
           "markdown"
