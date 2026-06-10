@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{
   imports = [
     ./networking.nix
     ./bluetooth.nix
@@ -7,8 +7,4 @@
     ./power.nix
     ./syncthing.nix
   ];
-
-  services = {
-    geoclue2.enable = true;
-  };
 }

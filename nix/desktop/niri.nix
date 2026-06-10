@@ -3,24 +3,18 @@
   inputs,
   ...
 }: {
-  # niri is a scrollable-tiling Wayland compositor
-  # programs.niri at the system level installs the binary and sets up
-  # the session entry so greetd/display managers can see it
   programs.niri = {
     enable = true;
-    # package = pkgs.niri; # override if you want a different variant
   };
 
-  # Wayland session vars needed by many apps
   environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1"; # hint Electron/Chromium apps to use Wayland
-    MOZ_ENABLE_WAYLAND = "1"; # Firefox
+    NIXOS_OZONE_WL = "1";
+    MOZ_ENABLE_WAYLAND = "1";
     QT_QPA_PLATFORM = "wayland;xcb";
     SDL_VIDEODRIVER = "wayland";
     CLUTTER_BACKEND = "wayland";
   };
 
-  # XWayland for apps that still need X11
   programs.xwayland.enable = true;
 
   xdg.portal = {
@@ -45,26 +39,24 @@
     pam.services.swaylock = {};
   };
 
-  # common packages useful with any Wayland compositor
   environment.systemPackages = with pkgs; [
     inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-    wl-clipboard # wl-copy / wl-paste
-    wlr-randr # xrandr equivalent for wlroots
-    cliphist # clipboard history daemon
-    grim # screenshot
-    slurp # region selector (used with grim)
-    swappy # screenshot annotation
-    brightnessctl # backlight control
-    playerctl # MPRIS media control
-    libnotify # notify-send
-    xdg-utils # xdg-open etc.
+    wl-clipboard
+    wlr-randr
+    cliphist
+    grim
+    slurp
+    swappy
+    brightnessctl
+    playerctl
+    libnotify
+    xdg-utils
     jq
-    polkit_gnome # polkit auth agent (GTK)
+    polkit_gnome
     gnome-keyring
     xwayland-satellite
   ];
 
-  # needed so polkit agent starts on login
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
     description = "polkit-gnome-authentication-agent-1";
     wantedBy = ["graphical-session.target"];

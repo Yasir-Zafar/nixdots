@@ -1,7 +1,7 @@
 {
   imports = [
     ../dotfiles/default.nix
-    ./scripts/default.nix
+    #./scripts/default.nix
     ./desktop/default.nix
     ./development/default.nix
     ./applications/default.nix

@@ -9,7 +9,6 @@
     ninja
     gnumake
     pkg-config
-    bear
   ];
 
   environment.variables = {

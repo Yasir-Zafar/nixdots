@@ -10,13 +10,6 @@
     ./services
   ];
 
-  environment.systemPackages = with pkgs; [
-    wineWow64Packages.stable
-    gnome-firmware
-    theclicker
-    appimage-run
-  ];
-
   nixpkgs.config.permittedInsecurePackages = [
     "ventoy-gtk3-1.1.10"
   ];

@@ -64,12 +64,12 @@
     "lg" = "lazygit";
 
     # Nix (via nh)
-    "hs" = "nh home switch ~/nix-config/hm";
-    "hb" = "nh home build ~/nix-config/hm";
-    "ns" = "nh os switch ~/nix-config/nixos";
-    "nb" = "nh os build ~/nix-config/nixos";
-    "nt" = "nh os test ~/nix-config/nixos";
-    "nfu" = "nix flake update --flake ~/nix-config/nixos && nix flake update --flake ~/nix-config/hm";
+    "hs" = "nh home switch ~/dots/hm";
+    "hb" = "nh home build ~/dots/hm";
+    "ns" = "nh os switch ~/dots/nix";
+    "nb" = "nh os build ~/dots/nix";
+    "nt" = "nh os test ~/dots/nix";
+    "nfu" = "nix flake update --flake ~/dots/nix && nix flake update --flake ~/dots/hm";
     "ncg" = "nh clean all";
     "nso" = "nix store optimise";
 

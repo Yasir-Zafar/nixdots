@@ -2,7 +2,7 @@
   imports = [
     ./steam.nix
     ./performance.nix
-    ./retroarch.nix
+    # ./retroarch.nix
   ];
 
   environment.systemPackages = with pkgs; [
@@ -28,6 +28,7 @@
     gnome-2048
     gnome-mines
     gnome-sudoku
+    aisleriot
   ];
 
   users.users.boi.extraGroups = ["docker"];

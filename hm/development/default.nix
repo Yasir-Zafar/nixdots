@@ -1,7 +1,7 @@
 {
   imports = [
-    ./editors
-    ./languages
+    #./editors
+    #./languages
     ./tools
     ./shell
   ];

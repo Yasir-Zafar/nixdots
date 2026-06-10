@@ -6,7 +6,7 @@
       systemd-boot = {
         enable = true;
         configurationLimit = 10;
-        editor = false;
+        editor = true;
       };
 
       timeout = 1;
@@ -18,12 +18,12 @@
       "splash"
       "quiet"
       "loglevel=3"
+      "udev.log_level=3"
       "mitigations=auto"
       "intel_iommu=on"
       "kvm-intel.nested=1"
       "acpi_osi=Linux"
       "acpi_backlight=native"
-      "pci=noaer"
       "snd-intel-dspcfg.dsp_driver=1"
       "i8042.nopnp"
       "nvme_core.default_ps_max_latency_us=5500"

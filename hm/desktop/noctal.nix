@@ -9,7 +9,7 @@
   ];
 
   # configure options
-  programs.noctalia = {
+  programs.noctalia-shell = {
     enable = true;
   };
 }

@@ -15,7 +15,6 @@
       "input"
       "storage"
       "gamemode"
-      "kvm"
       "input"
       "uinput"
     ];

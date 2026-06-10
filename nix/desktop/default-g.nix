@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   imports = [
-    ./gnome.nix
+    #./gnome.nix
     ./fonts.nix
     ./niri.nix
   ];
@@ -8,7 +8,6 @@
   services.displayManager = {
     gdm = {
       enable = true;
-      wayland = true;
     };
   };
 

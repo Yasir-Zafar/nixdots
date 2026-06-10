@@ -1,9 +1,4 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ./fonts.nix
     ./niri.nix
@@ -15,14 +10,7 @@
       enable = true;
       settings = {
         default_session = {
-          command = ''
-            ${pkgs.tuigreet}/bin/tuigreet \
-              --time \
-              --remember \
-              --remember-session \
-              --sessions /run/current-system/sw/share/wayland-sessions \
-              --cmd niri-session
-          '';
+          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session --sessions /run/current-system/sw/share/wayland-sessions --cmd niri-session";
           user = "greeter";
         };
       };
@@ -37,17 +25,6 @@
     flatpak.enable = true;
   };
 
-  # Prevent garbled TTY output before greetd starts
-  systemd.services.greetd.serviceConfig = {
-    Type = "idle";
-    StandardInput = "tty";
-    StandardOutput = "tty";
-    StandardError = "journal";
-    TTYPath = "/dev/tty1";
-    TTYReset = true;
-    TTYVHangup = true;
-  };
-
   system.activationScripts.userIcons = ''
     mkdir -p /var/lib/AccountsService/icons
     cp ${./../../assets/profile.jpg} /var/lib/AccountsService/icons/boi
@@ -58,6 +35,7 @@
     pathsToLink = ["share/thumbnailers" "share/wayland-sessions"];
     systemPackages = with pkgs; [
       tuigreet
+
       gnome-calendar
       gnome-calculator
       gnome-usage
@@ -67,9 +45,10 @@
       sassc
       gtk-engine-murrine
       gnome-themes-extra
+
       libheif
       libheif.out
-      inputs.zen-browser.packages."${stdenv.hostPlatform.system}".default
+
       cage
     ];
   };
