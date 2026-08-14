@@ -6,41 +6,35 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    autosuggestion.enable = true;
+    autosuggestion.enable = true; # Native HM flag (handles zsh-autosuggestions)
 
-    # ----------------------------------------------------------------- #
-    # PLUGINS                                                             #
-    # Sourced from nixpkgs at build time — no runtime fetching (zplug    #
-    # removed). Order matters: completions first, then fzf-tab (needs    #
-    # compsys loaded), then syntax highlighting last.                     #
-    # ----------------------------------------------------------------- #
+    # --- Plugins ---
+    # Sourced safely via Nix packages. Order is maintained:
+    # Completions -> Framework Hooks -> Mid-tier logic -> Syntax Highlighting last.
     plugins = [
       {
         name = "zsh-completions";
-        src = "${pkgs.zsh-completions}/share/zsh/site-functions";
+        src = pkgs.zsh-completions;
+        file = "share/zsh-completions/zsh-completions.zsh";
       }
       {
         name = "fzf-tab";
-        src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
+        src = pkgs.zsh-fzf-tab;
+        file = "share/fzf-tab/fzf-tab.plugin.zsh";
       }
       {
         name = "zsh-history-substring-search";
-        src = "${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search";
+        src = pkgs.zsh-history-substring-search;
+        file = "share/zsh-history-substring-search/zsh-history-substring-search.zsh";
       }
       {
-        name = "zsh-autosuggestions";
-        src = "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions";
-      }
-      {
-        # must be last
         name = "fast-syntax-highlighting";
-        src = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions";
+        src = pkgs.zsh-fast-syntax-highlighting;
+        file = "share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
       }
     ];
 
-    # ----------------------------------------------------------------- #
-    # HISTORY                                                             #
-    # ----------------------------------------------------------------- #
+    # --- History Configuration ---
     history = {
       size = 10000;
       save = 10000;
@@ -54,53 +48,48 @@
 
     defaultKeymap = "emacs";
 
-    # ----------------------------------------------------------------- #
-    # INIT                                                                #
-    # zoxide / direnv / fzf hooks are injected by their own HM program   #
-    # blocks (enableZshIntegration = true on each). Only zsh-specific    #
-    # config lives here.                                                  #
-    # ----------------------------------------------------------------- #
+    # --- Interactive Shell Customization (.zshrc changes) ---
     initContent = ''
-      # --- prompt ---
-      # plain zsh, no framework.
-      # %F{color}...%f wraps color, %B...%b is bold
-      # %~ = cwd with ~ abbreviation, %(?.x.y) = branch on last exit code
+      # --- Prompt Layout ---
+      # No framework dependencies.
+      # %B...%b (bold), %F{color}...%f (foreground), %~ (CWD), %(?.success.fail) (exit evaluation)
       setopt PROMPT_SUBST
       PS1='%B%F{blue}%~%f%b %(?.%F{green}❯%f.%F{red}❯%f) '
 
-      # --- keybindings ---
+      # --- Keybindings & Substring Navigation ---
       bindkey '^p'   history-substring-search-up
       bindkey '^n'   history-substring-search-down
       bindkey '^[[A' history-substring-search-up
       bindkey '^[[B' history-substring-search-down
 
-      # --- options ---
+      # --- Core Shell Options ---
       setopt AUTO_CD AUTO_PUSHD PUSHD_IGNORE_DUPS PUSHD_SILENT
       setopt ALWAYS_TO_END AUTO_MENU COMPLETE_IN_WORD LIST_PACKED
       setopt HIST_VERIFY INC_APPEND_HISTORY SHARE_HISTORY
       setopt CORRECT EXTENDED_GLOB GLOB_DOTS
 
-      # --- completion ---
+      # --- Tab Completion System Styles ---
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-      zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
+      zstyle ':completion:*' list-colors "$\{(s.:.)LS_COLORS}"
       zstyle ':completion:*' rehash true
       zstyle ':completion:*' menu no
       zstyle ':completion:*' use-cache true
       zstyle ':completion:*' cache-path "$HOME/.zcompcache"
       zstyle ':completion:*:descriptions' format '%B%d%b'
-      zstyle ':completion:*' group-name '''
+      zstyle ':completion:*' group-name ""
 
-      # --- fzf-tab previews ---
-      zstyle ':fzf-tab:complete:cd:*'               fzf-preview 'eza -1 --color=always --icons $realpath'
-      zstyle ':fzf-tab:complete:__zoxide_z:*'       fzf-preview 'eza -1 --color=always --icons $realpath'
+      # --- Advanced fzf-tab Interactive Previews ---
+      zstyle ':fzf-tab:complete:cd:*'                fzf-preview 'eza -1 --color=always --icons $realpath'
+      zstyle ':fzf-tab:complete:__zoxide_z:*'        fzf-preview 'eza -1 --color=always --icons $realpath'
       zstyle ':fzf-tab:complete:kill:argument-rest'  fzf-preview 'ps --pid=$word -o cmd --no-headers -w -w'
       zstyle ':fzf-tab:complete:kill:argument-rest'  fzf-flags '--preview-window=down:3:wrap'
 
-      # --- autosuggestions ---
+      # --- Inline Autosuggestions Settings ---
       ZSH_AUTOSUGGEST_STRATEGY=(history completion)
       ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
       ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 
+      # --- External Credentials / Overrides Hook ---
       [[ -f ~/.zsh_private ]] && source ~/.zsh_private
     '';
   };

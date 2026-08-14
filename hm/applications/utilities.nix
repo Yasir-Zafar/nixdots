@@ -4,6 +4,7 @@
 
     mission-center
     powertop
+    btop
 
     gnome-feeds
     gdm-settings
@@ -14,5 +15,9 @@
     libnotify
     gnome-decoder
     impression
+    theclicker
+    qbittorrent
+
+    qpdf
   ];
 }

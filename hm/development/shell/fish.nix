@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   programs = {
     fish = {
       enable = true;
@@ -15,7 +11,7 @@
         # disable greeting
         set -g fish_greeting
 
-        # vi key bindings
+        # emacs key bindings
         fish_default_key_bindings
 
         # pure prompt — single line, gruvbox colors
@@ -81,25 +77,28 @@
         extract = {
           description = "extract common archive formats";
           body = ''
-            if test -z "$argv[1]"
+            if test (count $argv) -eq 0
               echo "Usage: extract <archive>"
               return 1
             end
+
             if not test -f "$argv[1]"
-              echo "Not a file: $argv[1]"
+              echo "File not found: $argv[1]"
               return 1
             end
-            switch $argv[1]
-              case "*.tar.bz2"  ; tar xjf $argv[1]
-              case "*.tar.gz"   ; tar xzf $argv[1]
-              case "*.tar.xz"   ; tar xJf $argv[1]
-              case "*.bz2"      ; bunzip2  $argv[1]
-              case "*.rar"      ; unrar e  $argv[1]
-              case "*.gz"       ; gunzip   $argv[1]
-              case "*.tar"      ; tar xf   $argv[1]
-              case "*.zip"      ; unzip    $argv[1]
-              case "*.7z"       ; 7z x     $argv[1]
-              case "*"          ; echo "Don't know how to extract '$argv[1]'"
+
+            set -l file $argv[1]
+            switch $file
+              case '*.tar.bz2' ; tar xjf $file
+              case '*.tar.gz'  ; tar xzf $file
+              case '*.tar.xz'  ; tar xJf $file
+              case '*.bz2'     ; bunzip2 $file
+              case '*.rar'     ; unrar e $file
+              case '*.gz'      ; gunzip $file
+              case '*.tar'     ; tar xf $file
+              case '*.zip'     ; unzip $file
+              case '*.7z'      ; 7z x $file
+              case '*'         ; echo "Don't know how to extract '$file'"
             end
           '';
         };
@@ -207,10 +206,10 @@
         "--color=info:#af87ff,prompt:#5fff87,pointer:#ff87d7,marker:#ff87d7,spinner:#ff87d7"
       ];
 
-      changeDirWidgetCommand = "fd --type d --hidden --follow --exclude .git";
-      changeDirWidgetOptions = ["--preview 'eza --tree --color=always {} | head -200'"];
-      fileWidgetCommand = "fd --type f --hidden --follow --exclude .git";
-      fileWidgetOptions = ["--preview 'bat --color=always --style=numbers --line-range=:500 {}'"];
+      changeDirWidget.command = "fd --type d --hidden --follow --exclude .git";
+      changeDirWidget.options = ["--preview 'eza --tree --color=always {} | head -200'"];
+      fileWidget.command = "fd --type f --hidden --follow --exclude .git";
+      fileWidget.options = ["--preview 'bat --color=always --style=numbers --line-range=:500 {}'"];
     };
 
     # ----------------------------------------------------------------- #
@@ -257,6 +256,7 @@
     zoxide
     unrar
     p7zip
+    coreutils # for `date` used in the backup function
     # fzf, bat, eza, direnv — declared via programs.* above
   ];
 }

@@ -13,10 +13,10 @@
     gnome-podcasts
 
     papers
-    libreoffice
+    # libreoffice
     obsidian
     foliate
-    gnome-notes
+    # gnome-notes
 
     # thunderbird
     nicotine-plus

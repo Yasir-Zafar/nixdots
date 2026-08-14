@@ -1,15 +1,9 @@
-{
-  pkgs,
-  inputs,
-  ...
-}: {
-  # import the home manager module
+{inputs, ...}: {
   imports = [
     inputs.noctalia.homeModules.default
   ];
 
-  # configure options
-  programs.noctalia-shell = {
+  programs.noctalia = {
     enable = true;
   };
 }

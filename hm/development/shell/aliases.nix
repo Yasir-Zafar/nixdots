@@ -1,5 +1,4 @@
 {...}: let
-  # shared across zsh, bash, and fish
   aliases = {
     # Navigation
     ".." = "cd ..";

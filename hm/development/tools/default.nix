@@ -2,6 +2,6 @@
   imports = [
     ./git.nix
     ./tools.nix
-    ./sql.nix
+    # ./sql.nix
   ];
 }

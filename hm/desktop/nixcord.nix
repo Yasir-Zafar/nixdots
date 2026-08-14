@@ -18,7 +18,6 @@
 
       vencord = {
         enable = true; # Vencord injection (default client mod)
-        unstable = false; # true = master branch build of Vencord
         # package = pkgs.callPackage ./vencord.nix {};   # override package
       };
 
@@ -768,7 +767,7 @@
         customIdle.enable = false; # Customise idle timeout behaviour
         customRpc.enable = false; # Manual custom Rich Presence
         gameActivityToggle.enable = false; # Quick-toggle game activity
-        lastFmRichPresence.enable = false; # Last.fm → Discord status
+        LastFMRichPresence.enable = false; # Last.fm → Discord status
         streamerModeOnStream.enable = false; # Auto streamer-mode when streaming
         webRichPresence.enable = false; # Browser-tab Rich Presence
 
@@ -794,7 +793,6 @@
         fixSpotifyEmbeds.enable = false; # Fix broken Spotify embeds
         fixYoutubeEmbeds.enable = false; # Fix broken YouTube embeds
         friendInvites.enable = false; # Manage friend invite links
-        friendsSince.enable = false; # Show when you became friends
         fullSearchContext.enable = false; # More context in message search
         fullUserInChatbox.enable = false; # Show full username in chatbox
         gifPaste.enable = false; # Paste GIFs directly
@@ -902,7 +900,7 @@
         blurNsfw.enable = false; # Blur NSFW channel images
         callTimer.enable = true; # Show call duration timer
         devCompanion.enable = false; # Vencord plugin dev helper
-        experiments.enable = false; # Enable Discord experiments tab
+        experiments.enable = true; # Enable Discord experiments tab
         favoriteEmojiFirst.enable = false; # Sort favourite emoji to top
         messageClickActions.enable = false; # Actions on message double-click
         messageLogger.enable = false; # Log deleted/edited messages

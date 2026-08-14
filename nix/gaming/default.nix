@@ -13,9 +13,6 @@
     gst_all_1.gst-plugins-ugly
     gst_all_1.gst-libav
 
-    protonup-qt
-    protontricks
-
     heroic
     prismlauncher
     lunar-client

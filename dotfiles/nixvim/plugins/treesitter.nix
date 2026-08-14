@@ -8,6 +8,7 @@
       # TODO: Don't think I need this as nixGrammars is true which should auto install these???
       settings = {
         grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+          rust
           bash
           json
           lua
@@ -22,6 +23,7 @@
           yaml
         ];
         ensureInstalled = [
+          "rust"
           "bash"
           # "c"
           # "cpp"

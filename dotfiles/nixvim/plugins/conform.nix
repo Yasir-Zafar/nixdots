@@ -7,6 +7,7 @@
       prettier # JS/TS/HTML/CSS/JSON formatter
       google-java-format # Java formatter
       black
+      rustfmt
     ];
 
     # Conform.nvim formatter config
@@ -24,6 +25,7 @@
           end
         '';
         formatters_by_ft = {
+          rust = ["rustfmt"];
           lua = ["stylua"];
           nix = ["alejandra"];
           # java = ["google_java_format"];

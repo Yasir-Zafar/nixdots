@@ -7,6 +7,7 @@
 
       # NOTE: Enabling these will cause errors unless these tools are installed
       lintersByFt = {
+        rust = ["rust-clippy"];
         lua = ["luacheck"];
         # java = ["checkstyle"];
         # javascript = ["eslint"];

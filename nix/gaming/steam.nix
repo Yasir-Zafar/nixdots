@@ -7,14 +7,18 @@
   programs = {
     steam = {
       enable = true;
-      package = pkgs.millennium-steam;
+
+      package = pkgs.millennium-steam.override {
+        extraArgs = "-system-composer";
+      };
+
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
       gamescopeSession.enable = true;
-    };
 
-    gamescope = {
-      enable = true;
+      extraCompatPackages = with pkgs; [
+        proton-ge-bin
+      ];
     };
   };
 

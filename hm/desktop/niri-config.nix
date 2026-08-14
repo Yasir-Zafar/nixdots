@@ -1,15 +1,9 @@
 {
-  pkgs,
-  lib,
-  ...
-}: {
   programs.niri = {
     enable = true;
 
     settings = {
-      # ------------------------------------------------------------------ #
-      # INPUT                                                                #
-      # ------------------------------------------------------------------ #
+      # --- Input ---
       input = {
         keyboard = {
           xkb = {
@@ -25,8 +19,8 @@
           natural-scroll = true;
           scroll-factor = 0.8;
           accel-speed = 0.9;
-          # accel-profile = "adaptive";
           dwt = true;
+          # accel-profile = "adaptive";
           # dwtp = true;
           # click-method = "clickfinger";
         };
@@ -37,31 +31,27 @@
           scroll-factor = 1.0;
         };
 
-        tablet = {
-          map-to-output = "eDP-1";
-        };
+        tablet.map-to-output = "eDP-1";
+        workspace-auto-back-and-forth = true;
 
         focus-follows-mouse = {
           enable = true;
           max-scroll-amount = "20%";
         };
-        workspace-auto-back-and-forth = true;
       };
 
-      # ------------------------------------------------------------------ #
-      # OUTPUTS                                                              #
-      # ------------------------------------------------------------------ #
+      # --- Outputs ---
       outputs = {
         "eDP-1" = {
           enable = true;
-          # mode = { width = 1920; height = 1080; refresh = 60.0; };
           scale = 1.0;
-          # transform = { rotation = 0; flipped = false; };
+          variable-refresh-rate = "on-demand";
           position = {
             x = 0;
             y = 0;
           };
-          variable-refresh-rate = "on-demand";
+          # mode = { width = 1920; height = 1080; refresh = 60.0; };
+          # transform = { rotation = 0; flipped = false; };
         };
 
         "HDMI-A-1" = {
@@ -74,11 +64,12 @@
         };
       };
 
-      # ------------------------------------------------------------------ #
-      # LAYOUT                                                               #
-      # ------------------------------------------------------------------ #
+      # --- Layout & Aesthetics ---
       layout = {
         gaps = 0;
+        center-focused-column = "never";
+        always-center-single-column = true;
+        default-column-width = {};
 
         struts = {
           left = 0;
@@ -86,10 +77,6 @@
           top = 0;
           bottom = 0;
         };
-
-        default-column-width = {};
-
-        center-focused-column = "never";
 
         preset-column-widths = [
           {proportion = 0.333;}
@@ -127,21 +114,17 @@
           # color = "#00000070";
         };
 
-        tab-indicator = {
-          enable = true;
-          # position = "left";
-          # gap = 4;
-          # width = 4;
-          # active.color = "#7fc8ff";
-          # inactive.color = "#404040";
-        };
-
-        always-center-single-column = true;
+        tab-indicator.enable = true;
+        # tab-indicator = {
+        #   position = "left";
+        #   gap = 4;
+        #   width = 4;
+        #   active.color = "#7fc8ff";
+        #   inactive.color = "#404040";
+        # };
       };
 
-      # ------------------------------------------------------------------ #
-      # WORKSPACES (named)                                                   #
-      # ------------------------------------------------------------------ #
+      # --- Workspaces ---
       workspaces = {
         "1" = {};
         "2" = {};
@@ -150,9 +133,7 @@
         "5" = {};
       };
 
-      # ------------------------------------------------------------------ #
-      # CURSOR                                                               #
-      # ------------------------------------------------------------------ #
+      # --- Cursor ---
       cursor = {
         theme = "Bibata-Modern-Classic";
         size = 24;
@@ -160,21 +141,17 @@
         hide-after-inactive-ms = 5000;
       };
 
-      # ------------------------------------------------------------------ #
-      # WINDOW RULES                                                         #
-      # ------------------------------------------------------------------ #
+      # --- Window Rules ---
       window-rules = [
-        # floating dialogs — is-dialog is niri-unstable only;
-        # use app-id regex for stable
+        # Floating dialogs (use app-id regex for stable, is-dialog is niri-unstable only)
         {
           matches = [{app-id = "^(xdg-desktop-portal|polkit)";}];
           open-floating = true;
         }
-
-        # rounded corners + clip for all windows
+        # Rounded corners + geometry clip for all windows
         {
           matches = [{}];
-          clip-to-geometry = true; # was clip-to-display-region (doesn't exist)
+          clip-to-geometry = true;
           geometry-corner-radius = {
             top-left = 8.0;
             top-right = 8.0;
@@ -182,6 +159,7 @@
             bottom-right = 8.0;
           };
         }
+        # Force full screen width for core productivity apps
         {
           matches = [
             {app-id = "^zen-beta$";}
@@ -189,13 +167,14 @@
             {app-id = "^ghostty";}
             {app-id = "^emacs";}
           ];
-          # This makes the column take up 100% of the screen width
           default-column-width = {proportion = 1.0;};
         }
+        # Flat background styling for terminal and editor
         {
           matches = [{app-id = "^ghostty";} {app-id = "^emacs";}];
           draw-border-with-background = false;
         }
+        # Steam notification positions
         {
           matches = [
             {
@@ -211,9 +190,7 @@
         }
       ];
 
-      # ------------------------------------------------------------------ #
-      # LAYER RULES                                                          #
-      # ------------------------------------------------------------------ #
+      # --- Layer Rules ---
       layer-rules = [
         {
           matches = [{namespace = "^noctalia-overview*";}];
@@ -222,9 +199,7 @@
         }
       ];
 
-      # ------------------------------------------------------------------ #
-      # ANIMATIONS                                                           #
-      # ------------------------------------------------------------------ #
+      # --- Animations ---
       animations = {
         enable = true;
 
@@ -268,43 +243,36 @@
         };
       };
 
-      # ------------------------------------------------------------------ #
-      # SCREENSHOT                                                           #
-      # ------------------------------------------------------------------ #
+      # --- Screenshot Path ---
       screenshot-path = "~/Pictures/Screenshots/Screenshot %Y-%m-%d %H-%M-%S.png";
 
-      # ------------------------------------------------------------------ #
-      # KEY BINDINGS                                                         #
-      # ------------------------------------------------------------------ #
+      # --- Key Bindings ---
       binds = {
-        # -- session --
+        # Session Management
         "Mod+Shift+E".action.quit = {};
         "Mod+Shift+P".action.power-off-monitors = {};
 
-        # -- apps --
+        # Applications
         "Mod+Return".action.spawn = ["ghostty"];
         "Mod+W".action.spawn = ["zen-beta"];
         "Mod+E".action.spawn = ["nautilus"];
         "Mod+Shift+Return".action.spawn = ["ghostty" "-e" "nvim"];
         "Ctrl+Shift+Escape".action.spawn = ["missioncenter"];
 
-        # -- noctalia --
+        # Noctalia Shell Integration
         "Mod+Tab".action.toggle-overview = {};
         "Mod+P".action.spawn = ["noctalia-shell" "ipc" "call" "launcher" "toggle"];
         "Alt+Tab".action.spawn = ["noctalia-shell" "ipc" "call" "launcher" "windows"];
         "Mod+Escape".action.spawn = ["noctalia-shell" "ipc" "call" "sessionMenu" "toggle"];
-        # -- power profile --
         "Mod+Shift+B".action.spawn = ["noctalia-shell" "ipc" "call" "powerProfile" "cycle"];
-
-        # -- keep awake --
         "Mod+Shift+I".action.spawn = ["noctalia-shell" "ipc" "call" "idleInhibitor" "toggle"];
 
-        # -- screenshots --
+        # Screenshots
         "Print".action.screenshot = {};
         "Shift+Print".action.screenshot-screen = {};
         "Ctrl+Print".action.screenshot-window = {};
 
-        # -- focus --
+        # Window/Column Focus (Vim keys + Arrows)
         "Mod+H".action.focus-column-left = {};
         "Mod+L".action.focus-column-right = {};
         "Mod+J".action.focus-window-down = {};
@@ -318,7 +286,7 @@
         "Mod+Home".action.focus-column-first = {};
         "Mod+End".action.focus-column-last = {};
 
-        # -- move --
+        # Moving Windows/Columns
         "Mod+Shift+H".action.move-column-left = {};
         "Mod+Shift+L".action.move-column-right = {};
         "Mod+Shift+J".action.move-window-down = {};
@@ -332,7 +300,7 @@
         "Mod+Shift+Home".action.move-column-to-first = {};
         "Mod+Shift+End".action.move-column-to-last = {};
 
-        # -- workspaces --
+        # Workspace Navigation & Assignment
         "Mod+1".action.focus-workspace = 1;
         "Mod+2".action.focus-workspace = 2;
         "Mod+3".action.focus-workspace = 3;
@@ -350,7 +318,7 @@
         "Mod+Shift+BracketLeft".action.move-column-to-workspace-down = {};
         "Mod+Shift+BracketRight".action.move-column-to-workspace-up = {};
 
-        # -- sizing --
+        # Sizing & Presets
         "Mod+Minus".action.set-column-width = "-10%";
         "Mod+Equal".action.set-column-width = "+10%";
         "Mod+Shift+Minus".action.set-window-height = "-10%";
@@ -362,18 +330,16 @@
         "Mod+Shift+F".action.fullscreen-window = {};
         "Mod+C".action.center-column = {};
 
-        # consume / expel (stack windows in a column)
+        # Window Stacking (Consume / Expel)
         "Mod+Comma".action.consume-window-into-column = {};
         "Mod+Period".action.expel-window-from-column = {};
 
-        # -- window management --
+        # Window Management (Unstable features noted)
         "Mod+Q".action.close-window = {};
-        # toggle-window-floating and toggle-column-tabbed-display
-        # are niri-unstable only; remove if using niri-stable
         "Mod+T".action.toggle-window-floating = {};
         "Mod+Shift+T".action.toggle-column-tabbed-display = {};
 
-        # -- media keys --
+        # Hardware Media Keys
         "XF86AudioRaiseVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
         "XF86AudioLowerVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
         "XF86AudioMute".action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
@@ -384,7 +350,7 @@
         "XF86AudioNext".action.spawn = ["playerctl" "next"];
         "XF86AudioPrev".action.spawn = ["playerctl" "previous"];
 
-        # -- scroll canvas --
+        # Mouse Wheel Canvas Scrolling
         "Mod+WheelScrollRight".action.focus-column-right = {};
         "Mod+WheelScrollLeft".action.focus-column-left = {};
         "Mod+Shift+WheelScrollRight".action.move-column-right = {};
@@ -393,28 +359,20 @@
         "Mod+WheelScrollUp".action.focus-workspace-up = {};
       };
 
-      # ------------------------------------------------------------------ #
-      # STARTUP                                                              #
-      # ------------------------------------------------------------------ #
+      # --- Startup Programs ---
       spawn-at-startup = [
         {command = ["noctalia-shell"];}
       ];
 
-      # ------------------------------------------------------------------ #
-      # MISC                                                                 #
-      # ------------------------------------------------------------------ #
+      # --- Environment & Misc ---
       prefer-no-csd = true;
-
       hotkey-overlay.skip-at-startup = true;
+      xwayland-satellite.enable = true;
 
       environment = {
         QT_QPA_PLATFORM = "wayland";
-        QT_QPA_PLATFORMTHEME = "gtk3";
+        QT_QPA_PLATFORMTHEME = "qt5ct";
         NIXOS_OZONE_WL = "1";
-      };
-
-      xwayland-satellite = {
-        enable = true;
       };
     };
   };

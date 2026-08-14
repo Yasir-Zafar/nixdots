@@ -45,6 +45,7 @@
       sassc
       gtk-engine-murrine
       gnome-themes-extra
+      nautilus-open-any-terminal
 
       libheif
       libheif.out

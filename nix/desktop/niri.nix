@@ -24,12 +24,12 @@
       xdg-desktop-portal-gnome
     ];
     config = {
-      niri = {
-        default = ["gtk"];
-        "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
-        "org.freedesktop.impl.portal.ScreenCast" = ["gnome"];
-        "org.freedesktop.impl.portal.Screenshot" = ["gnome"];
-        "org.freedesktop.impl.portal.Inhibit" = ["gnome"];
+      common = {
+        default = ["gnome"];
+        # "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
+        # "org.freedesktop.impl.portal.ScreenCast" = ["gnome"];
+        # "org.freedesktop.impl.portal.Screenshot" = ["gnome"];
+        # "org.freedesktop.impl.portal.Inhibit" = ["gnome"];
       };
     };
   };
@@ -37,6 +37,13 @@
   security = {
     polkit.enable = true;
     pam.services.swaylock = {};
+  };
+
+  programs.noctalia = {
+    enable = true;
+
+    # Enables NetworkManager, Bluetooth, UPower, and a power profile service.
+    recommendedServices.enable = true;
   };
 
   environment.systemPackages = with pkgs; [

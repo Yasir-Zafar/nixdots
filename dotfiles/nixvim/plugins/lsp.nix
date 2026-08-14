@@ -45,7 +45,26 @@
       '';
 
       servers = {
-        #   # Added from paste-2.txt
+        rust_analyzer = {
+          enable = true;
+          installCargo = true; # lets nixvim wire cargo into nvim's PATH
+          installRustc = true; # same for rustc
+
+          settings = {
+            rust-analyzer = {
+              check = {
+                command = "clippy"; # use clippy instead of check on save
+              };
+              cargo = {
+                allFeatures = true;
+              };
+              inlayHints = {
+                bindingModeHints.enable = true;
+                closureReturnTypeHints.enable = "with_block";
+              };
+            };
+          };
+        };
         # clangd = {
         #   enable = true;
         #   package = pkgs.llvmPackages_19.clang-tools;
