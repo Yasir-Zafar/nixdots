@@ -10,8 +10,8 @@
     };
 
     niri = {
-      url = "github:sodiboo/niri-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:epireyn/niri-flake";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     noctalia = {

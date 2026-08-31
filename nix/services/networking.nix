@@ -29,6 +29,7 @@
       ];
 
       allowedUDPPorts = [
+        7777
         53
       ];
 

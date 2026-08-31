@@ -62,6 +62,7 @@
     polkit_gnome
     gnome-keyring
     xwayland-satellite
+    libdisplay-info
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {

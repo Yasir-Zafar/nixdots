@@ -43,7 +43,6 @@
       file-roller
       gnome-autoar
       sassc
-      gtk-engine-murrine
       gnome-themes-extra
       nautilus-open-any-terminal
 

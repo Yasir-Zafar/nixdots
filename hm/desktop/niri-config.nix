@@ -67,7 +67,7 @@
       # --- Layout & Aesthetics ---
       layout = {
         gaps = 0;
-        center-focused-column = "never";
+        center-focused-column = "on-overflow";
         always-center-single-column = true;
         default-column-width = {};
 
@@ -95,8 +95,8 @@
         focus-ring = {
           enable = false;
           width = 2;
-          active.color = "#fe8019"; # bright-orange
-          inactive.color = "#504945"; # bg2
+          active.color = "#fe8019";
+          inactive.color = "#504945";
         };
 
         border = {
@@ -108,73 +108,51 @@
 
         shadow = {
           enable = false;
-          # softness = 30;
-          # spread = 5;
-          # offset = { x = 0; y = 5; };
-          # color = "#00000070";
         };
 
         tab-indicator.enable = true;
-        # tab-indicator = {
-        #   position = "left";
-        #   gap = 4;
-        #   width = 4;
-        #   active.color = "#7fc8ff";
-        #   inactive.color = "#404040";
-        # };
       };
 
-      # --- Workspaces ---
-      workspaces = {
-        "1" = {};
-        "2" = {};
-        "3" = {};
-        "4" = {};
-        "5" = {};
-      };
-
-      # --- Cursor ---
-      cursor = {
-        theme = "Bibata-Modern-Classic";
-        size = 24;
-        hide-when-typing = false;
-        hide-after-inactive-ms = 5000;
-      };
-
-      # --- Window Rules ---
       window-rules = [
-        # Floating dialogs (use app-id regex for stable, is-dialog is niri-unstable only)
+        # 1. Force portals and dialogs to steal focus so Niri pans to them.
+        # We explicitly DO NOT use open-floating so they tile and stay anchored.
         {
-          matches = [{app-id = "^(xdg-desktop-portal|polkit)";}];
-          open-floating = true;
+          matches = [
+            {app-id = "^(xdg-desktop-portal.*|polkit-.*)";}
+            {title = "^(Open|Save|Choose|Select|Browse).*";}
+          ];
+          open-focused = true;
+          default-column-width = {}; # Let the dialog dictate its own natural width
         }
-        # Rounded corners + geometry clip for all windows
+
+        # 2. Rounded corners + geometry clip for all windows
         {
           matches = [{}];
           clip-to-geometry = true;
           geometry-corner-radius = {
-            top-left = 8.0;
-            top-right = 8.0;
-            bottom-left = 8.0;
-            bottom-right = 8.0;
+            top-left = 0.0;
+            top-right = 0.0;
+            bottom-left = 0.0;
+            bottom-right = 0.0;
           };
         }
-        # Force full screen width for core productivity apps
+
+        # 3. Force full screen width for core productivity apps
         {
           matches = [
             {app-id = "^zen-beta$";}
             {app-id = "^firefox$";}
-            {app-id = "^ghostty";}
+            {app-id = "^com.mitchellh.ghostty";}
             {app-id = "^emacs";}
           ];
-          default-column-width = {proportion = 1.0;};
+          open-maximized = true;
         }
-        # Flat background styling for terminal and editor
+
+        # 4. Flat background styling for terminal and editor
         {
           matches = [{app-id = "^ghostty";} {app-id = "^emacs";}];
           draw-border-with-background = false;
         }
-        # Steam notification positions
         {
           matches = [
             {
@@ -182,6 +160,7 @@
               title = "^notificationtoasts_[0-9]+_desktop$";
             }
           ];
+          open-floating = true;
           default-floating-position = {
             x = 10;
             y = 10;
@@ -193,7 +172,7 @@
       # --- Layer Rules ---
       layer-rules = [
         {
-          matches = [{namespace = "^noctalia-overview*";}];
+          matches = [{namespace = "^noctalia-overview.*";}];
           shadow.enable = true;
           place-within-backdrop = true;
         }
@@ -261,11 +240,11 @@
 
         # Noctalia Shell Integration
         "Mod+Tab".action.toggle-overview = {};
-        "Mod+P".action.spawn = ["noctalia-shell" "ipc" "call" "launcher" "toggle"];
-        "Alt+Tab".action.spawn = ["noctalia-shell" "ipc" "call" "launcher" "windows"];
-        "Mod+Escape".action.spawn = ["noctalia-shell" "ipc" "call" "sessionMenu" "toggle"];
-        "Mod+Shift+B".action.spawn = ["noctalia-shell" "ipc" "call" "powerProfile" "cycle"];
-        "Mod+Shift+I".action.spawn = ["noctalia-shell" "ipc" "call" "idleInhibitor" "toggle"];
+        "Mod+P".action.spawn = ["noctalia" "msg" "panel-toggle" "launcher"];
+        "Alt+Tab".action.spawn = ["noctalia" "msg" "window-switcher"];
+        "Mod+Escape".action.spawn = ["noctalia" "msg" "panel-toggle" "session"];
+        "Mod+Shift+B".action.spawn = ["noctalia" "msg" "power-cycle"];
+        "Mod+Shift+I".action.spawn = ["noctalia" "msg" "caffeine-enable"];
 
         # Screenshots
         "Print".action.screenshot = {};
@@ -361,7 +340,7 @@
 
       # --- Startup Programs ---
       spawn-at-startup = [
-        {command = ["noctalia-shell"];}
+        {command = ["noctalia"];}
       ];
 
       # --- Environment & Misc ---

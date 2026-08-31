@@ -11,7 +11,7 @@
 
     discord = {
       enable = true; # Set false to use only Vesktop/Legcord/etc.
-      branch = "stable"; # "stable" | "ptb" | "canary" | "development"
+      branches = ["stable"]; # "stable" | "ptb" | "canary" | "development"
       installPackage = true;
 
       commandLineArgs = ["--enable-blink-features=MiddleClickAutoscroll"];
@@ -789,7 +789,6 @@
         expressionCloner.enable = false; # Clone emoji/stickers to own server
         fakeNitro.enable = false; # Send animated emoji / use Nitro features
         fakeProfileThemes.enable = false; # Fake Nitro profile themes
-        favoriteGifSearch.enable = false; # Search within favourite GIFs
         fixSpotifyEmbeds.enable = false; # Fix broken Spotify embeds
         fixYoutubeEmbeds.enable = false; # Fix broken YouTube embeds
         friendInvites.enable = false; # Manage friend invite links

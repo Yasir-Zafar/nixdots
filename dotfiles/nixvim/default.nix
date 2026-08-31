@@ -10,6 +10,7 @@
   programs.nixvim = {
     enable = true;
     defaultEditor = true;
+    nixpkgs.source = inputs.nixpkgs;
     package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
     colorschemes = {
