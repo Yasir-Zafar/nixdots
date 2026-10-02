@@ -1,6 +1,6 @@
 {
   imports = [
-    # ./jetbrains.nix
+    ./jetbrains.nix
     ./vscode.nix
     # ./emacs.nix
   ];

@@ -22,7 +22,7 @@
 
   fonts.packages = with pkgs; [
     jetbrains-mono
-    iosevka
+    iosevka-bin
     atkinson-monolegible
 
     inter

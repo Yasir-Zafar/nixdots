@@ -9,6 +9,8 @@
     ninja
     gnumake
     pkg-config
+
+    ispc
   ];
 
   environment.variables = {

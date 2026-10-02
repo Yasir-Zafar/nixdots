@@ -29,6 +29,7 @@
     aria2
 
     gnome-epub-thumbnailer
+    chromium
   ];
 
   programs.mpv = {

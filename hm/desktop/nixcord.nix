@@ -763,7 +763,6 @@
 
         # ── Rich Presence / Activity ─────────────────────────────────────────
 
-        appleMusicRichPresence.enable = false; # Apple Music → Discord status
         customIdle.enable = false; # Customise idle timeout behaviour
         customRpc.enable = false; # Manual custom Rich Presence
         gameActivityToggle.enable = false; # Quick-toggle game activity
@@ -830,7 +829,6 @@
         shikiCodeblocks.enable = false; # Shiki syntax highlighting
         silentMessageToggle.enable = false; # Toggle silent message sending
         stickerPaste.enable = false; # Paste stickers from clipboard
-        summaries.enable = false; # AI channel summaries
         superReactionTweaks.enable = false; # Tweak super-reaction behaviour
         translate.enable = false; # In-chat message translation
         unindent.enable = false; # Remove leading indent from code

@@ -167,6 +167,15 @@
             relative-to = "bottom-right";
           };
         }
+        {
+          matches = [
+            {
+              app-id = "^zen-beta$";
+              title = "^Picture-in-Picture$";
+            }
+          ];
+          open-floating = true;
+        }
       ];
 
       # --- Layer Rules ---
@@ -243,8 +252,11 @@
         "Mod+P".action.spawn = ["noctalia" "msg" "panel-toggle" "launcher"];
         "Alt+Tab".action.spawn = ["noctalia" "msg" "window-switcher"];
         "Mod+Escape".action.spawn = ["noctalia" "msg" "panel-toggle" "session"];
-        "Mod+Shift+B".action.spawn = ["noctalia" "msg" "power-cycle"];
+        "Mod+Shift+Escape".action.spawn = ["noctalia" "msg" "power-cycle"];
         "Mod+Shift+I".action.spawn = ["noctalia" "msg" "caffeine-enable"];
+
+        #  Completely hide or show the top bar
+        "Mod+Shift+B".action.spawn = ["noctalia" "msg" "bar-toggle"];
 
         # Screenshots
         "Print".action.screenshot = {};

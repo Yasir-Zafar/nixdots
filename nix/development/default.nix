@@ -2,8 +2,10 @@
   imports = [
     ./nix.nix
     ./py.nix
-    # ./c.nix
+    ./c.nix
   ];
+
+  virtualisation.docker.enable = true;
 
   environment.systemPackages = with pkgs; [
     vale
@@ -17,6 +19,6 @@
     pipewire
     python3Packages.pygobject3
     python3Packages.gst-python
-    xorg.xcbutilcursor
+    libxcb-cursor
   ];
 }
