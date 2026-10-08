@@ -8,9 +8,9 @@
     steam = {
       enable = true;
 
-      package = pkgs.millennium-steam.override {
-        extraArgs = "-system-composer";
-      };
+      # package = pkgs.millennium-steam.override {
+      #   extraArgs = "-system-composer";
+      # };
 
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;

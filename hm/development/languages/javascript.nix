@@ -9,6 +9,7 @@
     npm-check-updates
     ngrok
     postman
+    nginx
   ];
 
   home.sessionVariables = {
