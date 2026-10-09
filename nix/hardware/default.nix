@@ -2,6 +2,7 @@
   imports = [
     ./hardware-configuration.nix
     ./intel-graphics.nix
+    ./swap.nix
   ];
 
   hardware = {

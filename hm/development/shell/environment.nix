@@ -1,10 +1,5 @@
 {config, ...}: {
   home.sessionVariables = {
-    EDITOR = "nvim";
-    VISUAL = "nvim";
-    BROWSER = "zen-beta";
-    TERMINAL = "ghostty";
-
     GOPATH = "${config.home.homeDirectory}/go";
     GOBIN = "${config.home.homeDirectory}/go/bin";
     CARGO_HOME = "${config.home.homeDirectory}/.cargo";
@@ -12,8 +7,6 @@
     ANDROID_HOME = "${config.home.homeDirectory}/Android/Sdk";
     ANDROID_SDK_ROOT = "${config.home.homeDirectory}/Android/Sdk";
 
-    BAT_THEME = "gruvbox-dark";
-    MANPAGER = "nvim +Man!";
     LESS = "-R";
     RIPGREP_CONFIG_PATH = "${config.home.homeDirectory}/.ripgreprc";
   };

@@ -44,10 +44,6 @@
       }
     '';
 
-    initExtra = ''
-      eval "$(${pkgs.fzf}/bin/fzf --bash)"
-      eval "$(${pkgs.zoxide}/bin/zoxide init bash)"
-      eval "$(${pkgs.direnv}/bin/direnv hook bash)"
-    '';
+    # fzf, zoxide and direnv hook into bash via their programs.* modules
   };
 }

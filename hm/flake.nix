@@ -34,6 +34,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     antigravity-nix = {
       url = "github:jacopone/antigravity-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -74,6 +79,7 @@
           # }
           niri.homeModules.niri
           inputs.nixcord.homeModules.nixcord
+          inputs.stylix.homeModules.stylix
           ./home.nix
         ];
 

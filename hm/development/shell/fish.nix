@@ -227,7 +227,7 @@
     bat = {
       enable = true;
       config = {
-        theme = "gruvbox-dark";
+        # theme comes from stylix
         pager = "less -FR";
         style = "numbers,changes,header";
         italic-text = "always";

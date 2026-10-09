@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
     #./gnome-settings.nix
+    ./stylix.nix
     ./qt.nix
     ./niri-config.nix
     ./noctalia.nix

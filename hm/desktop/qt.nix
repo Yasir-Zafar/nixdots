@@ -1,21 +1,12 @@
+# theme (gruvbox kvantum + qtct) comes from stylix, see stylix.nix
 {pkgs, ...}: {
-  qt = {
-    enable = true;
-    # platformTheme.name = "gtk2";
-
-    style = {
-      name = "adwaita-dark";
-      package = pkgs.adwaita-qt;
-    };
-  };
+  qt.enable = true;
 
   home.sessionVariables = {
-    QT_STYLE_OVERRIDE = "adwaita-dark";
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
   };
 
   home.packages = with pkgs; [
     qt6Packages.qt6ct
-    libsForQt5.qtstyleplugins
   ];
 }

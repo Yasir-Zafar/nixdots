@@ -4,10 +4,10 @@
     #!/bin/bash
 
     echo "Rebuilding NixOS system configuration..."
-    sudo nixos-rebuild switch --flake ~/nix-config/nixos
+    sudo nixos-rebuild switch --flake ~/dots/nix
 
     echo "Rebuilding Home Manager configuration..."
-    home-manager switch --flake ~/nix-config/hm
+    home-manager switch --flake ~/dots/hm
 
     echo "System rebuild complete!"
   '';
@@ -16,8 +16,8 @@
     #!/bin/bash
 
     echo "Updating flake inputs..."
-    cd ~/nix-config/nixos && nix flake update
-    cd ~/nix-config/hm && nix flake update
+    cd ~/dots/nix && nix flake update
+    cd ~/dots/hm && nix flake update
 
     echo "Rebuilding with updates..."
     rebuild-system
