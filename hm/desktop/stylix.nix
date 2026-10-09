@@ -11,7 +11,15 @@
         package = pkgs.jetbrains-mono;
         name = "JetBrains Mono";
       };
-      sizes.terminal = 12;
+      # same default sans as the system (nix/desktop/fonts.nix), so qt and gtk match
+      sansSerif = {
+        package = pkgs.inter;
+        name = "Inter";
+      };
+      sizes = {
+        terminal = 12;
+        applications = 11;
+      };
     };
 
     cursor = {
@@ -25,7 +33,6 @@
       bat.enable = true;
       fzf.enable = true;
       qt.enable = true;
-      gtk.enable = true;
       fish.enable = true;
       lazygit.enable = true;
       zellij.enable = true;

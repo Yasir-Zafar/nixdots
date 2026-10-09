@@ -1,3 +1,4 @@
+# ascii cat by jgs (Joan G. Stark), via ascii.co.uk/art/cats
 # short fastfetch with a cat instead of the distro logo, shown when a ghostty window opens
 {lib, ...}: {
   programs.fastfetch = {
