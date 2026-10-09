@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ./fonts.nix
+    ./media-libs.nix
     ./niri.nix
   ];
   services = {

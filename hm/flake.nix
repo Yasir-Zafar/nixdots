@@ -57,7 +57,14 @@
       localSystem.system = "x86_64-linux";
       config.allowUnfree = true;
     };
+    antigravity = antigravity-nix.packages.x86_64-linux;
   in {
+    formatter.x86_64-linux = pkgs.alejandra;
+
+    devShells.x86_64-linux.default = pkgs.mkShell {
+      packages = with pkgs; [alejandra statix deadnix nh];
+    };
+
     homeConfigurations = {
       boi = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
@@ -65,9 +72,9 @@
         modules = [
           {
             home.packages = [
-              antigravity-nix.packages.x86_64-linux.default
-              antigravity-nix.packages.x86_64-linux.google-antigravity-ide
-              antigravity-nix.packages.x86_64-linux.google-antigravity-cli
+              antigravity.default
+              antigravity.google-antigravity-ide
+              antigravity.google-antigravity-cli
             ];
           }
           # {

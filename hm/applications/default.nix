@@ -1,8 +1,9 @@
 {
   imports = [
     ./preferred-apps.nix
-    ./ghostty.nix
     ./media.nix
+    ./documents.nix
+    ./network.nix
     ./utilities.nix
     #./easyeffect.nix
   ];

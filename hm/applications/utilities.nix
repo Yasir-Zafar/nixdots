@@ -1,26 +1,29 @@
+# files, thumbnails, monitoring, system helpers
 {pkgs, ...}: {
   home.packages = with pkgs; [
     nautilus
-    ffmpegthumbnailer
     loupe
-    papers
-    gnome-text-editor
+    ffmpegthumbnailer
+    gnome-epub-thumbnailer
 
     mission-center
     powertop
-    btop
 
     gnome-feeds
     gdm-settings
-
-    proton-vpn
-
-    (pkgs.gearlever.override {dwarfs = null;}) # only works if the package supports it
-    gnome-decoder
     impression
     theclicker
-    qbittorrent
-
-    qpdf
+    (pkgs.gearlever.override {dwarfs = null;}) # only works if the package supports it
   ];
+
+  programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "gruvbox_material_dark"; # btop's own theme, not stylix
+      theme_background = true;
+      truecolor = true;
+      rounded_corners = true;
+      update_ms = 2000;
+    };
+  };
 }

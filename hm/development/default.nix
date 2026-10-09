@@ -3,6 +3,5 @@
     ./editors
     ./languages
     ./tools
-    ./shell
   ];
 }

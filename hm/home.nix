@@ -3,6 +3,7 @@
     ../dotfiles/default.nix
     #./scripts/default.nix
     ./desktop/default.nix
+    ./terminal/default.nix
     ./development/default.nix
     ./applications/default.nix
   ];

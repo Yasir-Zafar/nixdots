@@ -194,6 +194,7 @@
     fzf = {
       enable = true;
       enableFishIntegration = false; # handled by fzf.fish plugin
+      historyWidget.command = ""; # ctrl+r belongs to atuin
 
       defaultCommand = "fd --type f --hidden --follow --exclude .git";
       defaultOptions = [

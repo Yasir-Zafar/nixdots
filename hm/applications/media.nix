@@ -2,33 +2,16 @@
   home.packages = with pkgs; [
     showtime
     pear-desktop
+    amberol
+    gnome-podcasts
+    ffmpeg
+
     obs-studio
     # kooha
 
     # gimp
     # krita
     pinta
-
-    amberol
-    gnome-podcasts
-
-    # libreoffice
-    obsidian
-    foliate
-    # gnome-notes
-
-    # thunderbird
-    nicotine-plus
-    # zoom-us
-
-    ffmpeg
-    yt-dlp
-    parabolic
-    fragments
-    aria2
-
-    gnome-epub-thumbnailer
-    # chromium
   ];
 
   programs.mpv = {

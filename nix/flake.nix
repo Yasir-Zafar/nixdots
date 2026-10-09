@@ -32,7 +32,15 @@
     nixpkgs,
     niri,
     ...
-  } @ inputs: {
+  } @ inputs: let
+    pkgs = nixpkgs.legacyPackages.x86_64-linux;
+  in {
+    formatter.x86_64-linux = pkgs.alejandra;
+
+    devShells.x86_64-linux.default = pkgs.mkShell {
+      packages = with pkgs; [alejandra statix deadnix nh];
+    };
+
     nixosConfigurations = {
       mntbnd = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";

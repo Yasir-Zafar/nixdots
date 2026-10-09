@@ -26,7 +26,6 @@
       fzf.enable = true;
       qt.enable = true;
       gtk.enable = true;
-      btop.enable = true;
       fish.enable = true;
       lazygit.enable = true;
       zellij.enable = true;
