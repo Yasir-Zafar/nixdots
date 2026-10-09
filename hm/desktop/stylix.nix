@@ -14,11 +14,22 @@
       sizes.terminal = 12;
     };
 
+    cursor = {
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Classic";
+      size = 24;
+    };
+
     targets = {
       ghostty.enable = true;
       bat.enable = true;
       fzf.enable = true;
       qt.enable = true;
+      gtk.enable = true;
+      btop.enable = true;
+      fish.enable = true;
+      lazygit.enable = true;
+      zellij.enable = true;
     };
   };
 }

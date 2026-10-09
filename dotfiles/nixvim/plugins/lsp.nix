@@ -91,21 +91,6 @@
           enable = true;
         };
 
-        # jdtls = {
-        #   enable = true;
-        #   settings = {
-        #     java = {
-        #       format = {
-        #         settings = {
-        #           url = "vim.fn.stdpath('config') .. '/lang-servers/java-format-settings.xml'";
-        #         };
-        #       };
-        #       signatureHelp = {enabled = true;};
-        #       contentProvider = {preferred = "fernflower";};
-        #     };
-        #   };
-        # };
-        #
         # # For TypeScript/JavaScript
         # ts_ls = {
         #   enable = true;

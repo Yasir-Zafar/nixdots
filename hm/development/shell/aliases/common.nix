@@ -30,6 +30,9 @@
   "df" = "duf";
   "top" = "btop";
 
+  # File manager
+  "spf" = "superfile";
+
   # Editors
   "n" = "nvim";
   "v" = "nvim";

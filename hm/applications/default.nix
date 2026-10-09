@@ -1,6 +1,6 @@
 {
   imports = [
-    ./defaults.nix
+    ./preferred-apps.nix
     ./ghostty.nix
     ./media.nix
     ./utilities.nix

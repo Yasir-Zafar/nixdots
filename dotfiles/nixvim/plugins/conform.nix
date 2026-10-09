@@ -5,7 +5,6 @@
       stylua # Lua formatter
       alejandra # Nix formatter
       prettier # JS/TS/HTML/CSS/JSON formatter
-      google-java-format # Java formatter
       black
       rustfmt
     ];
@@ -28,7 +27,6 @@
           rust = ["rustfmt"];
           lua = ["stylua"];
           nix = ["alejandra"];
-          # java = ["google_java_format"];
           # javascript = ["prettier"];
           # typescript = ["prettier"];
           # javascriptreact = ["prettier"];
