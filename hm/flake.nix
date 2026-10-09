@@ -33,6 +33,11 @@
       url = "github:FlameFlag/nixcord";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    antigravity-nix = {
+      url = "github:jacopone/antigravity-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -40,6 +45,7 @@
     nixpkgs,
     home-manager,
     niri,
+    antigravity-nix,
     ...
   } @ inputs: let
     pkgs = import nixpkgs {
@@ -52,6 +58,13 @@
         inherit pkgs;
 
         modules = [
+          {
+            home.packages = [
+              antigravity-nix.packages.x86_64-linux.default
+              antigravity-nix.packages.x86_64-linux.google-antigravity-ide
+              antigravity-nix.packages.x86_64-linux.google-antigravity-cli
+            ];
+          }
           # {
           #   nixpkgs.overlays = [
           #     (final: prev: {

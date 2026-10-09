@@ -3,7 +3,7 @@
     ./networking.nix
     ./bluetooth.nix
     ./audio.nix
-    ./enviroment.nix
+    ./environment.nix
     ./power.nix
     ./syncthing.nix
   ];

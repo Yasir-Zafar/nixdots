@@ -1,12 +1,18 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
+  programs.nh = {
+    enable = true;
+    osFlake = "${config.home.homeDirectory}/dots/nix";
+    homeFlake = "${config.home.homeDirectory}/dots/hm";
+  };
+
   home.packages = with pkgs; [
     # Modern core utilities
-    eza
-    bat
     fd
     ripgrep
-    fzf
-    zoxide
     procs
     dust
     duf
@@ -19,13 +25,11 @@
     unrar
 
     # Nix helpers
-    nh
     nix-tree
     nix-output-monitor
     nvd
 
     # Dev utilities
     just
-    direnv
   ];
 }

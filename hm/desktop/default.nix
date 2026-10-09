@@ -3,7 +3,7 @@
     #./gnome-settings.nix
     ./qt.nix
     ./niri-config.nix
-    ./noctal.nix
+    ./noctalia.nix
     ./nixcord.nix
   ];
 

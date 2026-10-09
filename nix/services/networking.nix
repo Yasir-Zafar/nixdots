@@ -17,7 +17,6 @@
     firewall = {
       enable = true;
       allowPing = true;
-      trustedInterfaces = ["lo"];
 
       allowedTCPPorts = [
         8081
@@ -30,7 +29,6 @@
 
       allowedUDPPorts = [
         7777
-        53
       ];
 
       allowedTCPPortRanges = [

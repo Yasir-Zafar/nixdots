@@ -6,10 +6,9 @@
   ];
 
   virtualisation.docker.enable = true;
+  users.users.boi.extraGroups = ["docker"];
 
   environment.systemPackages = with pkgs; [
-    vale
-
     glib
     gobject-introspection
     gst_all_1.gstreamer

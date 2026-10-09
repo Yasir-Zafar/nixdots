@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
-    ./username.nix
+    ./locale.nix
+    ./packages.nix
   ];
 
   users.users.boi = {
@@ -15,7 +16,6 @@
       "input"
       "storage"
       "gamemode"
-      "input"
       "uinput"
     ];
 

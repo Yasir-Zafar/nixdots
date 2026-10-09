@@ -252,10 +252,6 @@
   };
 
   home.packages = with pkgs; [
-    fd
-    zoxide
-    unrar
-    p7zip
     coreutils # for `date` used in the backup function
     # fzf, bat, eza, direnv — declared via programs.* above
   ];

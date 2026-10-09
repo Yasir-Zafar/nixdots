@@ -1,29 +1,12 @@
 {pkgs, ...}: {
   environment = {
     variables = {
-      EDITOR = "nvim";
-      VISUAL = "nvim";
-      BROWSER = "zen-beta";
-      MANPAGER = "nvim +Man!";
+      EDITOR = "nvim"; # root/sudo; the user session gets the rest from home-manager
 
       PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
     };
 
-    sessionVariables = {
-      MOZ_ENABLE_WAYLAND = "1";
-      QT_QPA_PLATFORM = "wayland;xcb";
-      SDL_VIDEODRIVER = "wayland";
-
-      ELECTRON_OZONE_PLATFORM_HINT = "auto";
-    };
-
-    loginShellInit = ''
-      export PATH="$HOME/.local/bin:$PATH"
-    '';
-
-    interactiveShellInit = ''
-      export HISTSIZE=10000
-      export HISTFILESIZE=20000
-    '';
+    # Wayland variables live in desktop/niri.nix
+    sessionVariables.ELECTRON_OZONE_PLATFORM_HINT = "auto";
   };
 }

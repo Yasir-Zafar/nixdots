@@ -16,7 +16,6 @@
     proton-vpn
 
     (pkgs.gearlever.override {dwarfs = null;}) # only works if the package supports it
-    libnotify
     gnome-decoder
     impression
     theclicker

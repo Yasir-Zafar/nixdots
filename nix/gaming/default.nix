@@ -27,6 +27,4 @@
     gnome-sudoku
     aisleriot
   ];
-
-  users.users.boi.extraGroups = ["docker"];
 }

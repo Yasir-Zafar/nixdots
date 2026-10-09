@@ -15,7 +15,6 @@
     kernelPackages = pkgs.linuxPackages_latest;
 
     kernelParams = [
-      "splash"
       "quiet"
       "loglevel=3"
       "udev.log_level=3"

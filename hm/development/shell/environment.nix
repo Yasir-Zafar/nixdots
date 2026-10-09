@@ -13,6 +13,7 @@
     ANDROID_SDK_ROOT = "${config.home.homeDirectory}/Android/Sdk";
 
     BAT_THEME = "gruvbox-dark";
+    MANPAGER = "nvim +Man!";
     LESS = "-R";
     RIPGREP_CONFIG_PATH = "${config.home.homeDirectory}/.ripgreprc";
   };

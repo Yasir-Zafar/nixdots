@@ -10,18 +10,18 @@
         rust = ["rust-clippy"];
         lua = ["luacheck"];
         # java = ["checkstyle"];
-        # javascript = ["eslint"];
-        # typescript = ["eslint"];
+        javascript = ["eslint"];
+        typescript = ["eslint"];
         # c = ["clang-tidy"];
         # cpp = ["clang-tidy"];
         nix = ["statix"];
         markdown = [
-          "markdownlint"
-          #vale
+          "markdownlint-cli2"
+          "vale"
         ];
         python = ["flake8"];
         #clojure = ["clj-kondo"];
-        #dockerfile = ["hadolint"];
+        dockerfile = ["hadolint"];
         #inko = ["inko"];
         #janet = ["janet"];
         # json = ["jsonlint"];

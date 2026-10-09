@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     ./hardware
     ./boot
@@ -8,10 +12,6 @@
     ./users
     ./security
     ./services
-  ];
-
-  nixpkgs.config.permittedInsecurePackages = [
-    "ventoy-gtk3-1.1.10"
   ];
 
   programs.nix-ld.enable = true;
@@ -31,9 +31,23 @@
     }
   ];
 
-  nix.settings = {
-    experimental-features = ["nix-command" "flakes"];
-    auto-optimise-store = true;
+  nix = {
+    settings = {
+      experimental-features = ["nix-command" "flakes"];
+      auto-optimise-store = true;
+    };
+
+    # pin `nix shell nixpkgs#foo` and <nixpkgs> to the system's nixpkgs
+    registry.nixpkgs.flake = inputs.nixpkgs;
+    nixPath = ["nixpkgs=flake:nixpkgs"];
+  };
+
+  programs.nh = {
+    enable = true;
+    clean = {
+      enable = true;
+      extraArgs = "--keep-since 7d --keep 5";
+    };
   };
 
   nixpkgs.config.allowUnfree = true;

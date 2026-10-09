@@ -3,7 +3,7 @@
     ./zsh.nix
     ./bash.nix
     ./fish.nix
-    ./aliases.nix
-    ./enviroment.nix
+    ./aliases
+    ./environment.nix
   ];
 }

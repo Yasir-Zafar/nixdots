@@ -60,7 +60,6 @@
     xdg-utils
     jq
     polkit_gnome
-    gnome-keyring
     xwayland-satellite
     libdisplay-info
   ];

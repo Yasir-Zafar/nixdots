@@ -12,7 +12,6 @@
     amberol
     gnome-podcasts
 
-    papers
     # libreoffice
     obsidian
     foliate
@@ -29,7 +28,7 @@
     aria2
 
     gnome-epub-thumbnailer
-    chromium
+    # chromium
   ];
 
   programs.mpv = {
