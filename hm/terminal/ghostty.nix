@@ -30,7 +30,7 @@
 
       # as in the original config: stylix would add a "Noto Color Emoji" family
       # here, which breaks emoji rendering; let fontconfig fall back instead
-      font-family = lib.mkForce "JetBrains Mono";
+      font-family = lib.mkForce "JetBrainsMono Nerd Font Mono";
 
       font-style = "regular";
       font-style-bold = "bold";

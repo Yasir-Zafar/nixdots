@@ -64,6 +64,10 @@
     libdisplay-info
   ];
 
+  # niri-flake ships its own polkit agent (kde); ours below already registers first,
+  # so the second one fails on every login ("an authentication agent already exists")
+  systemd.user.services.niri-flake-polkit.enable = false;
+
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
     description = "polkit-gnome-authentication-agent-1";
     wantedBy = ["graphical-session.target"];

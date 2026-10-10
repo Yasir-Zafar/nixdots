@@ -5,5 +5,6 @@
     ./tools.nix
     ./workflow.nix
     ./fetch.nix
+    ./nx.nix
   ];
 }

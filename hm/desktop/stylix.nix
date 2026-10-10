@@ -8,8 +8,9 @@
 
     fonts = {
       monospace = {
-        package = pkgs.jetbrains-mono;
-        name = "JetBrains Mono";
+        package = pkgs.nerd-fonts.jetbrains-mono;
+        # the "Mono" variant keeps icons single-width, which terminals want
+        name = "JetBrainsMono Nerd Font Mono";
       };
       # same default sans as the system (nix/desktop/fonts.nix), so qt and gtk match
       sansSerif = {

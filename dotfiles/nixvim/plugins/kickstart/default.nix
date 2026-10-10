@@ -1,5 +1,5 @@
 {
-    imports = [
-      ./plugins
-    ];
+  imports = [
+    ./plugins
+  ];
 }

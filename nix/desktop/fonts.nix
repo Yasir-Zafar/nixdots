@@ -5,7 +5,7 @@
     defaultFonts = {
       serif = ["Source Serif Pro" "DejaVu Serif"];
       sansSerif = ["Inter" "DejaVu Sans"];
-      monospace = ["JetBrains Mono" "DejaVu Sans Mono"];
+      monospace = ["JetBrainsMono Nerd Font" "DejaVu Sans Mono"];
       emoji = ["Noto Color Emoji"];
     };
 
@@ -21,7 +21,7 @@
   };
 
   fonts.packages = with pkgs; [
-    jetbrains-mono
+    nerd-fonts.jetbrains-mono # patched JetBrains Mono: includes the nerd font icons
     iosevka-bin
     atkinson-monolegible
 

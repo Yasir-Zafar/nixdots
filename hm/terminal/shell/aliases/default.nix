@@ -3,7 +3,6 @@
   aliases = lib.foldl' (a: f: a // import f) {} [
     ./common.nix
     ./git.nix
-    ./nix.nix
   ];
 
   # overrides for entries that are bash/zsh-specific

@@ -11,7 +11,7 @@
     cpu.intel.updateMicrocode = true;
   };
 
-  services.fwupd.enable = false;
+  services.fwupd.enable = true; # vendor firmware via LVFS: fwupdmgr refresh && fwupdmgr get-updates
 
   services.fstrim.enable = true;
 }
