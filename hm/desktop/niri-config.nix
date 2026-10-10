@@ -362,7 +362,7 @@
 
       environment = {
         QT_QPA_PLATFORM = "wayland";
-        QT_QPA_PLATFORMTHEME = "qt5ct";
+        QT_QPA_PLATFORMTHEME = "gtk3"; # keep in sync with qt.nix
         NIXOS_OZONE_WL = "1";
       };
     };

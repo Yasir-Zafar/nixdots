@@ -32,7 +32,6 @@
       ghostty.enable = true;
       bat.enable = true;
       fzf.enable = true;
-      qt.enable = true;
       fish.enable = true;
       lazygit.enable = true;
       zellij.enable = true;

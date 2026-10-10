@@ -19,6 +19,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sysc-greet = {
+      url = "github:Nomadcxx/sysc-greet";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     millennium.url = "github:SteamClientHomebrew/Millennium?dir=packages/nix";
   };
 
@@ -52,6 +57,7 @@
         modules = [
           {nixpkgs.config.allowUnfree = true;}
           niri.nixosModules.niri
+          inputs.sysc-greet.nixosModules.default
           ./configuration.nix
         ];
       };

@@ -1,13 +1,14 @@
-# ascii cat by jgs (Joan G. Stark), via ascii.co.uk/art/cats
-# short fastfetch with a cat instead of the distro logo, shown when a ghostty window opens
+# short fastfetch with a small nixos logo, shown when a ghostty window opens
+# (alternative: the cat in cat.txt, by jgs (Joan G. Stark) via ascii.co.uk/art/cats)
 {lib, ...}: {
   programs.fastfetch = {
     enable = true;
 
     settings = {
       logo = {
-        type = "file";
-        source = ./cat.txt;
+        type = "builtin";
+        source = "nixos_old_small"; # plain ascii; "NixOS_small" needs block-sextant glyphs
+        # type = "file"; source = ./cat.txt;
         padding.right = 3;
       };
 

@@ -44,7 +44,10 @@
     tmp.cleanOnBoot = true;
   };
 
-  systemd.coredump.enable = false;
+  systemd.coredump = {
+    enable = true;
+    settings.Coredump.MaxUse = "1G";
+  };
 
   fileSystems."/" = {
     options = [
