@@ -6,7 +6,7 @@
   nx = pkgs.writeShellApplication {
     name = "nx";
 
-    runtimeInputs = with pkgs; [nh nix nvd jq git statix deadnix alejandra coreutils findutils gnugrep gawk gnused home-manager fwupd];
+    runtimeInputs = with pkgs; [nh nix nvd jq git statix deadnix alejandra coreutils findutils gnugrep gawk gnused home-manager fwupd procps];
 
     text = ''
       dots="''${NX_DOTS:-$HOME/dots}"
@@ -30,6 +30,13 @@
         nx rollback [os|home]    list generations; `os [N]` / `home [N]` go back (previous one by default)
         nx try <greeter>         boot-test another desktop/greeter variant (tuigreet|ldm|g|l|sysc), see below
         nx firmware [action]     firmware via fwupd: check (default) | update | devices | history | bios
+        nx storage [report|clean] [flags]
+                                 report (default): what uses space and what is safe to delete (read-only)
+                                 clean: delete only regenerable caches after confirmation
+                                   flags: -y  skip the question
+                                          --browsers       also browser caches (zen, chromium)
+                                          --steam-shaders  also steam shader caches (games recompile them, brief stutter)
+                                          --trash          also empty the trash
         nx lint                  statix + deadnix over the repo
         nx fmt                   alejandra over the repo
         nx help                  this text
@@ -110,6 +117,83 @@
             ;;
           *) echo "nx firmware: check|update|devices|history|bios" >&2; exit 2 ;;
         esac
+      }
+
+      storage() {
+        local action="report" yes=0 browsers=0 steam=0 trash=0 arg
+        for arg in "$@"; do
+          case "$arg" in
+            report | clean) action="$arg" ;;
+            -y | --yes) yes=1 ;;
+            --browsers) browsers=1 ;;
+            --steam-shaders) steam=1 ;;
+            --trash) trash=1 ;;
+            *) echo "nx storage: unknown option '$arg'" >&2; exit 2 ;;
+          esac
+        done
+
+        local cache="$HOME/.cache" share="$HOME/.local/share"
+        # regenerable caches: safe to delete, programs rebuild them on demand
+        local -a paths=("$cache/uv" "$cache/JetBrains" "$cache/appimage-run" "$cache/mesa_shader_cache" "$cache/thumbnails" "$cache/nix" "$cache/pip")
+        [ "$browsers" = 1 ] && paths+=("$cache/zen" "$cache/chromium" "$cache/mozilla")
+        [ "$steam" = 1 ] && paths+=("$share/Steam/steamapps/shadercache")
+        [ "$trash" = 1 ] && paths+=("$share/Trash/files" "$share/Trash/info")
+
+        human() { numfmt --to=iec --suffix=B "$1"; }
+        size() { du -sb "$1" 2>/dev/null | cut -f1; }
+
+        local p b total=0
+        echo ":: disk"
+        df -h / | tail -n +2
+        echo
+        echo ":: safe to delete (regenerable caches)"
+        for p in "''${paths[@]}"; do
+          [ -d "$p" ] || continue
+          b=$(size "$p")
+          total=$((total + b))
+          printf '  %10s  %s\n' "$(human "$b")" "$p"
+        done
+        printf '  %10s  total\n' "$(human "$total")"
+
+        echo
+        echo ":: also cleaned by 'clean' (not counted above)"
+        echo "  journal:  $(journalctl --disk-usage | grep -o '[0-9.]*[MG]') -> vacuum to 200M"
+        if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+          echo "  docker:   prune stopped containers + dangling images (tagged images are kept; see 'docker system df')"
+        fi
+        if command -v flatpak >/dev/null 2>&1; then
+          echo "  flatpak:  $(flatpak list --unused 2>/dev/null | tail -n +2 | wc -l) unused runtime(s)"
+        fi
+        echo "  nix:      use 'nx clean' (old generations + store gc, needs sudo)"
+
+        echo
+        echo ":: big, but yours (never touched)"
+        for p in "$share/Steam/steamapps/common" "$share/Steam/steamapps/compatdata" "$share/PrismLauncher" "$HOME/Pictures" "$HOME/Projects" "$HOME/Games" "/var/lib/flatpak"; do
+          [ -d "$p" ] || continue
+          printf '  %10s  %s\n' "$(human "$(size "$p")")" "$p"
+        done
+        printf '  %10s  /nix/store\n' "$(human "$(size /nix/store)")"
+
+        [ "$action" = clean ] || { echo; echo "run 'nx storage clean' to delete the safe items above"; return 0; }
+
+        if [ "$yes" != 1 ]; then
+          echo
+          read -r -p "Delete the caches above, vacuum the journal, prune docker and flatpak? [y/N] " arg
+          [ "$arg" = y ] || { echo "aborted"; return 0; }
+        fi
+
+        local before after
+        before=$(df --output=used -B1 / | tail -n 1)
+        for p in "''${paths[@]}"; do
+          [ -d "$p" ] || continue
+          find "$p" -mindepth 1 -delete 2>/dev/null || true
+        done
+        sudo journalctl --vacuum-size=200M >/dev/null || true
+        if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then docker system prune -f >/dev/null || true; fi
+        if command -v flatpak >/dev/null 2>&1; then flatpak uninstall --unused --noninteractive >/dev/null 2>&1 || true; fi
+        after=$(df --output=used -B1 / | tail -n 1)
+        echo
+        echo "freed about $(human $((before - after)))"
       }
 
       doctor() {
@@ -245,6 +329,7 @@
         optimise | optimize | opt) nix store optimise ;;
         diff) nvd diff /run/booted-system /run/current-system ;;
         status | st) status ;;
+        storage | disk) storage "$@" ;;
         firmware | fw) firmware "$@" ;;
         doctor | dr) doctor ;;
         rollback | rb) rollback "$@" ;;
@@ -264,13 +349,14 @@
     '';
   };
 
-  commands = "update os home all build clean optimise diff status firmware doctor rollback try lint fmt help";
+  commands = "update os home all build clean optimise diff status storage firmware doctor rollback try lint fmt help";
 
   fishCompletions = pkgs.writeTextDir "share/fish/vendor_completions.d/nx.fish" ''
     complete -c nx -f
     complete -c nx -n __fish_use_subcommand -a "${commands}"
     complete -c nx -n "__fish_seen_subcommand_from os" -a "switch boot test build"
     complete -c nx -n "__fish_seen_subcommand_from home" -a "switch build -b"
+    complete -c nx -n "__fish_seen_subcommand_from storage" -a "report clean -y --browsers --steam-shaders --trash"
     complete -c nx -n "__fish_seen_subcommand_from firmware" -a "check update devices history bios"
     complete -c nx -n "__fish_seen_subcommand_from rollback" -a "os home"
     complete -c nx -n "__fish_seen_subcommand_from try" -a "tuigreet ldm g l sysc"
@@ -286,6 +372,8 @@
       _values 'mode' switch boot test build
     elif [[ $words[2] == home ]]; then
       _values 'mode' switch build -b
+    elif [[ $words[2] == storage ]]; then
+      _values 'option' report clean -y --browsers --steam-shaders --trash
     elif [[ $words[2] == firmware ]]; then
       _values 'action' check update devices history bios
     elif [[ $words[2] == rollback ]]; then
