@@ -1,0 +1,9 @@
+# statix: which files to skip.
+# hardware-configuration.nix is generated; the nixvim files are annotated kickstart
+# docs, and the other two are disabled variants, so their layout is kept as is.
+ignore = [
+  "dotfiles/nixvim",
+  "nix/desktop/default-l.nix",
+  "hm/development/editors/emacs.nix",
+  "nix/hardware/hardware-configuration.nix",
+]

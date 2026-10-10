@@ -46,43 +46,45 @@
     };
   };
 
-  services.resolved = {
-    enable = true;
+  services = {
+    resolved = {
+      enable = true;
 
-    settings = {
-      Resolve = {
-        DNSOverTLS = "opportunistic";
-        MulticastDNS = true;
-        LLMNR = true;
-        Cache = true;
-        CacheFromLocalhost = true;
-        DNSSEC = "allow-downgrade";
+      settings = {
+        Resolve = {
+          DNSOverTLS = "opportunistic";
+          MulticastDNS = true;
+          LLMNR = true;
+          Cache = true;
+          CacheFromLocalhost = true;
+          DNSSEC = "allow-downgrade";
 
-        FallbackDNS = [
-          "1.1.1.1"
-          "1.0.0.1"
-          "9.9.9.9"
-          "8.8.8.8"
-        ];
+          FallbackDNS = [
+            "1.1.1.1"
+            "1.0.0.1"
+            "9.9.9.9"
+            "8.8.8.8"
+          ];
+        };
       };
     };
-  };
 
-  services.timesyncd = {
-    enable = true;
-    servers = [
-      "time.cloudflare.com"
-      "pool.ntp.org"
-    ];
-  };
+    timesyncd = {
+      enable = true;
+      servers = [
+        "time.cloudflare.com"
+        "pool.ntp.org"
+      ];
+    };
 
-  services.openssh = {
-    enable = false;
+    openssh = {
+      enable = false;
 
-    settings = {
-      PasswordAuthentication = false;
-      KbdInteractiveAuthentication = false;
-      PermitRootLogin = "no";
+      settings = {
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+        PermitRootLogin = "no";
+      };
     };
   };
 

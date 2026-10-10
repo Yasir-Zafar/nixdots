@@ -29,7 +29,9 @@
     "mkvenv" = "python3 -m venv venv && source venv/bin/activate";
   };
 in {
-  programs.zsh.shellAliases = aliases // posixOverrides;
-  programs.bash.shellAliases = aliases // posixOverrides;
-  programs.fish.shellAliases = aliases // fishOverrides;
+  programs = {
+    zsh.shellAliases = aliases // posixOverrides;
+    bash.shellAliases = aliases // posixOverrides;
+    fish.shellAliases = aliases // fishOverrides;
+  };
 }

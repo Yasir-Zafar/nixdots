@@ -3,8 +3,16 @@
   inputs,
   ...
 }: {
-  programs.niri = {
-    enable = true;
+  programs = {
+    niri.enable = true;
+    xwayland.enable = true;
+
+    noctalia = {
+      enable = true;
+
+      # Enables NetworkManager, Bluetooth, UPower, and a power profile service.
+      recommendedServices.enable = true;
+    };
   };
 
   environment.sessionVariables = {
@@ -14,8 +22,6 @@
     SDL_VIDEODRIVER = "wayland";
     CLUTTER_BACKEND = "wayland";
   };
-
-  programs.xwayland.enable = true;
 
   xdg.portal = {
     enable = true;
@@ -37,13 +43,6 @@
   security = {
     polkit.enable = true;
     pam.services.swaylock = {};
-  };
-
-  programs.noctalia = {
-    enable = true;
-
-    # Enables NetworkManager, Bluetooth, UPower, and a power profile service.
-    recommendedServices.enable = true;
   };
 
   environment.systemPackages = with pkgs; [

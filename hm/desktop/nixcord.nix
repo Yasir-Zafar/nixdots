@@ -2,7 +2,7 @@
 # Import this in home.nix:  imports = [ inputs.nixcord.homeModules.nixcord ./nixcord.nix ];
 #
 # See flake setup instructions at the bottom of this file (in comments).
-{inputs, ...}: {
+{
   programs.nixcord = {
     enable = true;
 

@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{
   programs.bash = {
     enable = true;
     enableCompletion = true;
@@ -43,7 +43,5 @@
         esac
       }
     '';
-
-    # fzf, zoxide and direnv hook into bash via their programs.* modules
   };
 }

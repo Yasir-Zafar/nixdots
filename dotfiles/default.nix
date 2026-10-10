@@ -1,8 +1,5 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+# (add `config` / `pkgs` back to the arguments if the commented block below is revived)
+_: {
   imports = [
     ./nixvim
   ];

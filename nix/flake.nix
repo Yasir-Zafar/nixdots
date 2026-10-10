@@ -33,7 +33,6 @@
   };
 
   outputs = {
-    self,
     nixpkgs,
     niri,
     ...
