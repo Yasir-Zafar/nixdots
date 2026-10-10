@@ -9,6 +9,10 @@
 
     pulse.enable = true;
 
+    # pipewire's x11 bell module aborts (and dumps core) when xwayland-satellite
+    # closes the X display at logout; nothing here needs the X11 bell
+    extraConfig.pipewire."90-no-x11-bell"."context.properties"."module.x11.bell" = false;
+
     wireplumber = {
       extraConfig = {
         "50-bluez" = {

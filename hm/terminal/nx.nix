@@ -6,7 +6,7 @@
   nx = pkgs.writeShellApplication {
     name = "nx";
 
-    runtimeInputs = with pkgs; [nh nix nvd jq git statix deadnix alejandra coreutils findutils gnugrep gawk gnused home-manager];
+    runtimeInputs = with pkgs; [nh nix nvd jq git statix deadnix alejandra coreutils findutils gnugrep gawk gnused home-manager fwupd];
 
     text = ''
       dots="''${NX_DOTS:-$HOME/dots}"
@@ -29,6 +29,7 @@
         nx doctor                checks for the usual problems (env vars, stub flake, core dumps, backups, reboot needed)
         nx rollback [os|home]    list generations; `os [N]` / `home [N]` go back (previous one by default)
         nx try <greeter>         boot-test another desktop/greeter variant (tuigreet|ldm|g|l|sysc), see below
+        nx firmware [action]     firmware via fwupd: check (default) | update | devices | history | bios
         nx lint                  statix + deadnix over the repo
         nx fmt                   alejandra over the repo
         nx help                  this text
@@ -89,6 +90,26 @@
         echo
         echo ":: disk"
         df -h /
+      }
+
+      firmware() {
+        local action="''${1:-check}"
+        case "$action" in
+          check)
+            fwupdmgr refresh --force || true
+            # exit code 2 just means "nothing to update"
+            fwupdmgr get-updates || true
+            ;;
+          update) fwupdmgr update ;;
+          devices) fwupdmgr get-devices ;;
+          history) fwupdmgr get-history ;;
+          bios)
+            for f in sys_vendor product_name bios_vendor bios_version bios_date; do
+              printf '%-13s %s\n' "$f" "$(cat "/sys/class/dmi/id/$f" 2>/dev/null)"
+            done
+            ;;
+          *) echo "nx firmware: check|update|devices|history|bios" >&2; exit 2 ;;
+        esac
       }
 
       doctor() {
@@ -224,6 +245,7 @@
         optimise | optimize | opt) nix store optimise ;;
         diff) nvd diff /run/booted-system /run/current-system ;;
         status | st) status ;;
+        firmware | fw) firmware "$@" ;;
         doctor | dr) doctor ;;
         rollback | rb) rollback "$@" ;;
         try) try_greeter "$@" ;;
@@ -242,13 +264,14 @@
     '';
   };
 
-  commands = "update os home all build clean optimise diff status doctor rollback try lint fmt help";
+  commands = "update os home all build clean optimise diff status firmware doctor rollback try lint fmt help";
 
   fishCompletions = pkgs.writeTextDir "share/fish/vendor_completions.d/nx.fish" ''
     complete -c nx -f
     complete -c nx -n __fish_use_subcommand -a "${commands}"
     complete -c nx -n "__fish_seen_subcommand_from os" -a "switch boot test build"
     complete -c nx -n "__fish_seen_subcommand_from home" -a "switch build -b"
+    complete -c nx -n "__fish_seen_subcommand_from firmware" -a "check update devices history bios"
     complete -c nx -n "__fish_seen_subcommand_from rollback" -a "os home"
     complete -c nx -n "__fish_seen_subcommand_from try" -a "tuigreet ldm g l sysc"
     complete -c nx -n "__fish_seen_subcommand_from update" -a "nixpkgs home-manager niri noctalia nixcord nixvim stylix zen-browser"
@@ -263,6 +286,8 @@
       _values 'mode' switch boot test build
     elif [[ $words[2] == home ]]; then
       _values 'mode' switch build -b
+    elif [[ $words[2] == firmware ]]; then
+      _values 'action' check update devices history bios
     elif [[ $words[2] == rollback ]]; then
       _values 'target' os home
     elif [[ $words[2] == try ]]; then
