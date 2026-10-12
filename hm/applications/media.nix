@@ -1,3 +1,4 @@
+# playback, music, podcasts, recording
 {pkgs, ...}: {
   home.packages = with pkgs; [
     showtime
@@ -8,10 +9,6 @@
 
     obs-studio
     # kooha
-
-    # gimp
-    # krita
-    pinta
   ];
 
   programs.mpv = {

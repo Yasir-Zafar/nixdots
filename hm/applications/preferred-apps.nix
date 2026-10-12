@@ -2,7 +2,8 @@
 # Change an app here and both the env vars and the xdg mime handlers follow.
 {lib, ...}: let
   browser = "zen-beta.desktop";
-  video = "mpv.desktop";
+  video = "org.gnome.Showtime.desktop";
+  audio = "mpv.desktop";
   image = "org.gnome.Loupe.desktop";
   pdf = "org.gnome.Papers.desktop";
   text = "org.gnome.TextEditor.desktop";
@@ -35,6 +36,9 @@ in {
         "video/mp4"
         "video/x-matroska"
         "video/webm"
+      ])
+
+      (assign audio [
         "audio/mpeg"
         "audio/flac"
       ])

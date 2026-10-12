@@ -57,7 +57,7 @@
         set -g __done_min_cmd_duration 10000
       '';
 
-      # aliases come from aliases.nix (shared + fish overrides)
+      # aliases come from aliases/ (shared + fish overrides)
 
       # --------------------------------------------------------------- #
       # FUNCTIONS                                                         #
@@ -75,31 +75,24 @@
         };
 
         extract = {
-          description = "extract common archive formats";
+          description = "extract any archive (ouch)";
           body = ''
             if test (count $argv) -eq 0
-              echo "Usage: extract <archive>"
+              echo "Usage: extract <archive>..."
               return 1
             end
+            ouch decompress $argv
+          '';
+        };
 
-            if not test -f "$argv[1]"
-              echo "File not found: $argv[1]"
+        compress = {
+          description = "compress files into an archive, format from the extension (ouch)";
+          body = ''
+            if test (count $argv) -lt 2
+              echo "Usage: compress <files>... <archive.tar.zst|.zip|.7z|...>"
               return 1
             end
-
-            set -l file $argv[1]
-            switch $file
-              case '*.tar.bz2' ; tar xjf $file
-              case '*.tar.gz'  ; tar xzf $file
-              case '*.tar.xz'  ; tar xJf $file
-              case '*.bz2'     ; bunzip2 $file
-              case '*.rar'     ; unrar e $file
-              case '*.gz'      ; gunzip $file
-              case '*.tar'     ; tar xf $file
-              case '*.zip'     ; unzip $file
-              case '*.7z'      ; 7z x $file
-              case '*'         ; echo "Don't know how to extract '$file'"
-            end
+            ouch compress $argv
           '';
         };
 
@@ -236,7 +229,7 @@
     # ----------------------------------------------------------------- #
     # EZA                                                                  #
     # enableFishIntegration is OFF — it would add its own aliases that    #
-    # conflict with the shellAbbrs above.                                  #
+    # conflict with the aliases from aliases/.        #
     # ----------------------------------------------------------------- #
     eza = {
       enable = true;

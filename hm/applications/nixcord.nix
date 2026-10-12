@@ -1,5 +1,5 @@
 # nixcord.nix — Full Vencord configuration via Nixcord
-# Import this in home.nix:  imports = [ inputs.nixcord.homeModules.nixcord ./nixcord.nix ];
+# Imported from applications/default.nix; the module itself comes from inputs.nixcord in flake.nix.
 #
 # See flake setup instructions at the bottom of this file (in comments).
 {

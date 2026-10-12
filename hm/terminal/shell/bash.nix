@@ -31,16 +31,13 @@
       }
 
       function extract() {
-        [ -z "$1" ]   && { echo "Usage: extract <archive>"; return 1; }
-        [ ! -f "$1" ] && { echo "Not a file: $1"; return 1; }
-        case $1 in
-          *.tar.bz2) tar xjf "$1" ;; *.tar.gz)  tar xzf "$1" ;;
-          *.tar.xz)  tar xJf "$1" ;; *.bz2)     bunzip2 "$1" ;;
-          *.rar)     unrar x "$1" ;; *.gz)       gunzip  "$1" ;;
-          *.tar)     tar xf  "$1" ;; *.zip)      unzip   "$1" ;;
-          *.7z)      7z x    "$1" ;;
-          *) echo "Don't know how to extract '$1'" ;;
-        esac
+        [ -z "$1" ] && { echo "Usage: extract <archive>..."; return 1; }
+        ouch decompress "$@"
+      }
+
+      function compress() {
+        [ $# -lt 2 ] && { echo "Usage: compress <files>... <archive.tar.zst|.zip|.7z|...>"; return 1; }
+        ouch compress "$@"
       }
     '';
   };

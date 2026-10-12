@@ -30,6 +30,9 @@
   "df" = "duf";
   "top" = "btop";
 
+  # Markdown
+  "md" = "glow";
+
   # File manager
   "spf" = "superfile";
 

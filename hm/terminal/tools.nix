@@ -9,6 +9,12 @@
     homeFlake = "${config.home.homeDirectory}/dots/hm";
   };
 
+  # `tldr <cmd>`: short example-first man pages
+  programs.tealdeer = {
+    enable = true;
+    settings.updates.auto_update = true;
+  };
+
   home.packages = with pkgs; [
     # Modern core utilities
     fd
@@ -23,6 +29,10 @@
     unzip
     p7zip
     unrar
+    ouch # `extract` and `compress` use it
+
+    # Docs
+    glow # markdown in the terminal
 
     # Nix helpers
     nix-tree

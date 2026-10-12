@@ -4,7 +4,6 @@
     yt-dlp
     parabolic
     aria2
-    qbittorrent
     fragments
     nicotine-plus
     proton-vpn

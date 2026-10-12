@@ -1,5 +1,5 @@
 # terminal workflow: history, multiplexer, git ui, file manager
-{pkgs, ...}: {
+{
   programs = {
     atuin = {
       enable = true;
@@ -13,7 +13,14 @@
     };
 
     lazygit.enable = true; # `lg` alias lives in shell/aliases/git.nix
-  };
 
-  home.packages = [pkgs.superfile]; # `spf`
+    # `spf`; built-in themes: https://superfile.dev/list/theme-list
+    superfile = {
+      enable = true;
+      settings = {
+        theme = "gruvbox"; # gruvbox dark medium, same as stylix
+        ignore_missing_fields = true; # only overrides are set here, the rest stay default
+      };
+    };
+  };
 }

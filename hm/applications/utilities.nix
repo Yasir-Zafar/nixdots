@@ -7,6 +7,7 @@
     gnome-epub-thumbnailer
 
     mission-center
+    warehouse # flatpak manager
     powertop
 
     gnome-feeds
