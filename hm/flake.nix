@@ -45,6 +45,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # zen browser through its home-manager module (policies + extensions as config)
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake/beta";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
+    # claude code, rebuilt hourly from anthropic's releases (nixpkgs lags behind)
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     antigravity-nix = {
       url = "github:jacopone/antigravity-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -62,6 +75,8 @@
     pkgs = import nixpkgs {
       localSystem.system = "x86_64-linux";
       config.allowUnfree = true;
+      # pkgs.claude-code comes from claude-code-nix instead of nixpkgs
+      overlays = [inputs.claude-code.overlays.default];
     };
     antigravity = antigravity-nix.packages.x86_64-linux;
     my = import ../lib;

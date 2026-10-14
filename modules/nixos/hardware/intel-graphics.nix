@@ -1,4 +1,8 @@
 {pkgs, ...}: {
+  # early KMS: the display driver starts in the initrd, so the screen keeps one mode
+  # from boot to greeter (no flicker / mode switch when the real driver would load)
+  boot.initrd.kernelModules = ["i915"];
+
   hardware.graphics = {
     enable = true;
 

@@ -247,16 +247,60 @@
         "Mod+Shift+Return".action.spawn = ["ghostty" "-e" "nvim"];
         "Ctrl+Shift+Escape".action.spawn = ["missioncenter"];
 
-        # Noctalia Shell Integration
+        # `Mod+Shift+/` shows every bind with its title
+        "Mod+Shift+Slash".action.show-hotkey-overlay = {};
+
+        # Noctalia Shell Integration (commands: `noctalia msg --help`)
         "Mod+Tab".action.toggle-overview = {};
-        "Mod+P".action.spawn = ["noctalia" "msg" "panel-toggle" "launcher"];
         "Alt+Tab".action.spawn = ["noctalia" "msg" "window-switcher"];
-        "Mod+Escape".action.spawn = ["noctalia" "msg" "panel-toggle" "session"];
-        "Mod+Shift+Escape".action.spawn = ["noctalia" "msg" "power-cycle"];
-        "Mod+Shift+I".action.spawn = ["noctalia" "msg" "caffeine-enable"];
+        "Mod+Space" = {
+          action.spawn = ["noctalia" "msg" "panel-toggle" "launcher"];
+          hotkey-overlay.title = "Launcher";
+        };
+        "Mod+P" = {
+          action.spawn = ["noctalia" "msg" "panel-toggle" "launcher"];
+          hotkey-overlay.title = "Launcher";
+        };
+        "Mod+Semicolon" = {
+          action.spawn = ["noctalia" "msg" "panel-toggle" "launcher" "/emo"];
+          hotkey-overlay.title = "Emoji picker";
+        };
+        "Mod+V" = {
+          action.spawn = ["noctalia" "msg" "panel-toggle" "clipboard"];
+          hotkey-overlay.title = "Clipboard history";
+        };
+        "Mod+A" = {
+          action.spawn = ["noctalia" "msg" "panel-toggle" "control-center"];
+          hotkey-overlay.title = "Control center";
+        };
+        "Mod+Escape" = {
+          action.spawn = ["noctalia" "msg" "panel-toggle" "session"];
+          hotkey-overlay.title = "Session menu";
+        };
+        "Mod+Shift+Escape" = {
+          action.spawn = ["noctalia" "msg" "session" "lock"];
+          hotkey-overlay.title = "Lock screen";
+        };
+        # power profiles: was Mod+Shift+Escape
+        "Mod+B" = {
+          action.spawn = ["noctalia" "msg" "power-cycle"];
+          hotkey-overlay.title = "Cycle power profile";
+        };
+        # was Mod+Shift+I and could only switch it on
+        "Mod+I" = {
+          action.spawn = ["noctalia" "msg" "caffeine-toggle"];
+          hotkey-overlay.title = "Toggle caffeine (no sleep)";
+        };
+        "Mod+Shift+N" = {
+          action.spawn = ["noctalia" "msg" "notification-dnd-toggle"];
+          hotkey-overlay.title = "Toggle do-not-disturb";
+        };
 
         #  Completely hide or show the top bar
-        "Mod+Shift+B".action.spawn = ["noctalia" "msg" "bar-toggle"];
+        "Mod+Shift+B" = {
+          action.spawn = ["noctalia" "msg" "bar-toggle"];
+          hotkey-overlay.title = "Toggle bar";
+        };
 
         # Screenshots
         "Print".action.screenshot = {};
@@ -264,6 +308,16 @@
         "Ctrl+Print".action.screenshot-window = {};
         # select an area and annotate it (arrows, text, blur), then save or copy
         "Mod+Shift+S".action.spawn = ["sh" "-c" "grim -g \"$(slurp)\" - | satty --filename - --output-filename ~/Pictures/Screenshots/satty-$(date +%F_%H-%M-%S).png"];
+
+        # Monitors (laptop + HDMI): Ctrl = monitor, Ctrl+Shift = move the column there
+        "Mod+Ctrl+H".action.focus-monitor-left = {};
+        "Mod+Ctrl+L".action.focus-monitor-right = {};
+        "Mod+Ctrl+Left".action.focus-monitor-left = {};
+        "Mod+Ctrl+Right".action.focus-monitor-right = {};
+        "Mod+Ctrl+Shift+H".action.move-column-to-monitor-left = {};
+        "Mod+Ctrl+Shift+L".action.move-column-to-monitor-right = {};
+        "Mod+Ctrl+Shift+Left".action.move-column-to-monitor-left = {};
+        "Mod+Ctrl+Shift+Right".action.move-column-to-monitor-right = {};
 
         # Window/Column Focus (Vim keys + Arrows)
         "Mod+H".action.focus-column-left = {};
@@ -332,16 +386,43 @@
         "Mod+T".action.toggle-window-floating = {};
         "Mod+Shift+T".action.toggle-column-tabbed-display = {};
 
-        # Hardware Media Keys
-        "XF86AudioRaiseVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
-        "XF86AudioLowerVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
-        "XF86AudioMute".action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
-        "XF86AudioMicMute".action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
-        "XF86MonBrightnessUp".action.spawn = ["brightnessctl" "set" "10%+"];
-        "XF86MonBrightnessDown".action.spawn = ["brightnessctl" "set" "10%-"];
-        "XF86AudioPlay".action.spawn = ["playerctl" "play-pause"];
-        "XF86AudioNext".action.spawn = ["playerctl" "next"];
-        "XF86AudioPrev".action.spawn = ["playerctl" "previous"];
+        # Hardware Media Keys (also work on the lock screen)
+        "XF86AudioRaiseVolume" = {
+          allow-when-locked = true;
+          action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
+        };
+        "XF86AudioLowerVolume" = {
+          allow-when-locked = true;
+          action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
+        };
+        "XF86AudioMute" = {
+          allow-when-locked = true;
+          action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
+        };
+        "XF86AudioMicMute" = {
+          allow-when-locked = true;
+          action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
+        };
+        "XF86MonBrightnessUp" = {
+          allow-when-locked = true;
+          action.spawn = ["brightnessctl" "set" "10%+"];
+        };
+        "XF86MonBrightnessDown" = {
+          allow-when-locked = true;
+          action.spawn = ["brightnessctl" "set" "10%-"];
+        };
+        "XF86AudioPlay" = {
+          allow-when-locked = true;
+          action.spawn = ["playerctl" "play-pause"];
+        };
+        "XF86AudioNext" = {
+          allow-when-locked = true;
+          action.spawn = ["playerctl" "next"];
+        };
+        "XF86AudioPrev" = {
+          allow-when-locked = true;
+          action.spawn = ["playerctl" "previous"];
+        };
 
         # Mouse Wheel Canvas Scrolling
         "Mod+WheelScrollRight".action.focus-column-right = {};

@@ -21,14 +21,15 @@
     # gone on the next boot. Only move it here once it worked, then `nx os boot` and
     # reboot; the previous generation stays in the menu as the way back.
     kernelParams = [
-      # quiet boot
+      # quiet boot (the console log level itself is boot.consoleLogLevel below: a
+      # "loglevel=3" here was overridden by the loglevel=4 nixos appends after it)
       "quiet"
-      "loglevel=3"
       "udev.log_level=3"
 
-      # kernel defaults, written out for documentation (removing them changes nothing)
-      "mitigations=auto"
+      # NOT a default on this kernel (CONFIG_INTEL_IOMMU_DEFAULT_ON is not set): keeps
+      # the Intel IOMMU on (DMA protection, device passthrough for VMs)
       "intel_iommu=on"
+      # removed: "mitigations=auto" is already the kernel default (CONFIG_CPU_MITIGATIONS=y)
 
       # nested virtualisation for VMs inside VMs (harmless if unused)
       "kvm-intel.nested=1"
@@ -48,6 +49,8 @@
 
     # already in hardware-configuration.nix's availableKernelModules (ahci is for SATA,
     # this laptop is NVMe only); harmless, left as is
+    consoleLogLevel = 3; # errors only on the console during boot
+
     initrd.kernelModules = [
       "nvme"
       "xhci_pci"
@@ -63,13 +66,9 @@
 
     tmp.cleanOnBoot = true;
 
-    # Not enabled, possible later upgrades. Both are generally safe, but they change how
-    # the system boots, so try them with `nx os boot` + reboot and keep the old
-    # generation in the menu as the way back:
-    # initrd.systemd.enable = true; # systemd in the initrd (faster, nicer errors)
+    # systemd in the initrd and dbus-broker are already nixos defaults (checked with
+    # nix eval), so there is nothing to switch on here
   };
-
-  # services.dbus.implementation = "broker"; # faster dbus, same API (same testing as above)
 
   systemd.coredump = {
     enable = true;
@@ -83,5 +82,8 @@
     ];
   };
 
+  # earlyoom is the oom killer here. systemd-oomd (on by default) watches no slices in
+  # this config, so it only ran idle next to it
   services.earlyoom.enable = true;
+  systemd.oomd.enable = false;
 }

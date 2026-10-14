@@ -12,6 +12,7 @@
     ./fonts.nix
     ./media-libs.nix
     ./niri.nix
+    ./flatpak.nix
     ./greeters/common.nix
     ./greeters/sysc-greet.nix
   ];

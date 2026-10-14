@@ -3,7 +3,8 @@
     tuned = {
       enable = true;
       settings.daemon = true;
-      settings.dynamic_tuning = true;
+      # off: a polling loop tuned's own docs call resource-hungry; profiles work without it
+      settings.dynamic_tuning = false;
       ppdSupport = true;
 
       ppdSettings = {

@@ -17,7 +17,7 @@
 [![last commit](https://img.shields.io/github/last-commit/Yasir-Zafar/nixdots?style=for-the-badge&labelColor=282828&color=d65d0e)](https://github.com/Yasir-Zafar/nixdots/commits/main)
 [![repo size](https://img.shields.io/github/repo-size/Yasir-Zafar/nixdots?style=for-the-badge&labelColor=282828&color=cc241d)](https://github.com/Yasir-Zafar/nixdots)
 
-[Overview](#overview) · [Layout](#layout) · [Install](#install) · [nx](#nx) · [Greeters](#greeters) · [Usage guide](docs/USAGE.md) · [Preferences](docs/PREFERENCES.md) · [Credits](#credits)
+[Overview](#overview) · [Layout](#layout) · [Install](#install) · [nx](#nx) · [Greeters](#greeters) · [Usage guide](docs/USAGE.md) · [Apps](docs/APPS.md) · [Preferences](docs/PREFERENCES.md) · [Credits](#credits)
 
 </div>
 
@@ -31,14 +31,14 @@
 | **Compositor** | [niri](https://github.com/YaLTeR/niri) (scrollable tiling, Wayland) |
 | **Shell / bar** | [Noctalia](https://github.com/noctalia-dev/noctalia) |
 | **Greeter** | [sysc-greet](https://github.com/Nomadcxx/sysc-greet) on greetd, Gruvbox + ASCII rain |
-| **Terminal** | Ghostty, zellij, atuin, lazygit, fastfetch |
-| **Shells** | zsh (login), fish, bash |
-| **Editor** | Neovim via [nixvim](https://github.com/nix-community/nixvim) (kickstart-style, nightly), plus VS Code and JetBrains |
+| **Terminal** | Ghostty, starship prompt, zellij, atuin, lazygit, yazi, fastfetch |
+| **Shells** | fish (interactive, in Ghostty), zsh (login), bash |
+| **Editor** | Neovim via [nixvim](https://github.com/nix-community/nixvim) (kickstart-style, nightly), plus VS Code, Cursor, Antigravity and JetBrains |
 | **Theming** | [Stylix](https://github.com/nix-community/stylix) with `gruvbox-dark-medium`, opt-in per target |
 | **Fonts** | JetBrainsMono Nerd Font, Inter, Source Serif Pro |
 | **GTK / icons / cursor** | Gruvbox-Green-Dark, Gruvbox-Plus-Dark, Bibata Modern Classic |
-| **Browser** | [Zen](https://github.com/0xc000022070/zen-browser-flake) |
-| **Gaming** | Steam (+ [Millennium](https://github.com/SteamClientHomebrew/Millennium)), Heroic, Prism Launcher, Dolphin, gamemode |
+| **Browser** | [Zen](https://github.com/0xc000022070/zen-browser-flake), through its home-manager module (policies + extensions declared) |
+| **Gaming** | Steam + Proton-GE ([Millennium](https://github.com/SteamClientHomebrew/Millennium) wired up, currently off), Heroic, Prism Launcher, Dolphin, Sober (flatpak via [nix-flatpak](https://github.com/gmodena/nix-flatpak)), gamemode, MangoHud, ntsync |
 | **Discord** | Vencord via [nixcord](https://github.com/FlameFlag/nixcord) |
 | **Hardware** | HP OmniBook 5 16", Intel Core Ultra 7 255U, Intel graphics |
 
@@ -75,6 +75,7 @@ dots/
 ├── lib/default.nix       values both flakes share (user, host, emails, assets)
 ├── templates/            per-project dev shells (rust, python, node, c)
 ├── assets/               wallpaper, avatar, GTK and icon themes
+├── docs/                 usage guide, what every app is for, preferences
 └── statix.toml           lint ignores
 ```
 
@@ -98,7 +99,7 @@ sudo nixos-rebuild switch --flake ./nix#mntbnd
 nix run home-manager -- switch --flake ./hm#boi
 ```
 
-After the first switch, everything goes through `nx`. The full guide (everyday loop, every `nx` command, common tasks, recovery, key binds) is in [docs/USAGE.md](docs/USAGE.md); what to keep and what not to change is in [docs/PREFERENCES.md](docs/PREFERENCES.md).
+After the first switch, everything goes through `nx`. The full guide (everyday loop, every `nx` command, common tasks, recovery, key binds) is in [docs/USAGE.md](docs/USAGE.md); every installed app and what it is for is in [docs/APPS.md](docs/APPS.md); what to keep and what not to change is in [docs/PREFERENCES.md](docs/PREFERENCES.md).
 
 ## nx
 
@@ -159,6 +160,7 @@ CI runs the same statix, deadnix and alejandra checks on every push and pull req
 - [Noctalia](https://github.com/noctalia-dev/noctalia)
 - [sysc-greet](https://github.com/Nomadcxx/sysc-greet)
 - [Stylix](https://github.com/nix-community/stylix), [nixvim](https://github.com/nix-community/nixvim), [nixcord](https://github.com/FlameFlag/nixcord), [nh](https://github.com/nix-community/nh)
+- [zen-browser-flake](https://github.com/0xc000022070/zen-browser-flake), [claude-code-nix](https://github.com/sadjow/claude-code-nix), [nix-flatpak](https://github.com/gmodena/nix-flatpak), [nix-index-database](https://github.com/nix-community/nix-index-database)
 - [Gruvbox Plus icons](https://github.com/SylEleuth/gruvbox-plus-icon-pack) and [Gruvbox GTK theme](https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme)
 
 <div align="center">

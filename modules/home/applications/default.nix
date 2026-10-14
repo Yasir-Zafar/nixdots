@@ -6,6 +6,7 @@
     ./documents.nix
     ./communication.nix
     ./nixcord.nix
+    ./zen.nix
     ./network.nix
     ./utilities.nix
     #./easyeffect.nix

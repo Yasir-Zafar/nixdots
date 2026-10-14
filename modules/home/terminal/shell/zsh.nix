@@ -1,11 +1,27 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }: {
   programs.zsh = {
     enable = true;
     enableCompletion = true;
+    # A plain `compinit` re-checks every completion file on each start (~400 ms here).
+    # Trust the cached dump (`compinit -C`, ~7 ms) and only do the full check once the
+    # dump is a day old; a home switch also deletes it (activation below), so new
+    # completions show up right away.
+    completionInit = ''
+      autoload -U compinit
+      () {
+        setopt local_options extended_glob
+        if [[ -n ''${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+          compinit
+        else
+          compinit -C
+        fi
+      }
+    '';
     autosuggestion.enable = true; # Native HM flag (handles zsh-autosuggestions)
 
     # --- Plugins ---
@@ -94,4 +110,9 @@
       [[ -f ~/.zsh_private ]] && source ~/.zsh_private
     '';
   };
+
+  # new packages may bring new completions: start from a fresh dump after each switch
+  home.activation.zshCompdump = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    run rm -f "$HOME/.zcompdump"
+  '';
 }

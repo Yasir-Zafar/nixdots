@@ -16,9 +16,9 @@ How this config is meant to be kept, and what not to "fix". Read this before cha
 - **Passwordless sudo for wheel** stays.
 - **Firewall ports** stay as they are.
 - **Millennium** (Steam) stays commented out in `modules/nixos/gaming/steam.nix`. Upstream lags behind Steam versions.
-- **Swap and `vm.swappiness = 10`** stay. Modded Minecraft falls over the moment it loses focus otherwise.
+- **`vm.swappiness = 10` and the swapfile** stay. Modded Minecraft falls over the moment it loses focus otherwise. zram was added as a faster first swap tier (approved); swappiness was not touched.
 - **The GTK theme and icons in `assets/`** stay, applied with nwg-look. That theme isn't maintained in nixpkgs.
-- **Kernel parameters** change only after a one-boot test from the boot menu (see USAGE §6).
+- **Kernel parameters** change only after a one-boot test from the boot menu (see USAGE §6), or when it is proven from the kernel's own config that a parameter does nothing or is overridden. On that basis `mitigations=auto` (already the default) was removed and `loglevel=3` became `boot.consoleLogLevel` (nixos appended `loglevel=4` after it). `intel_iommu=on` is **not** a default on this kernel and stays; `acpi_osi`, `acpi_backlight`, the audio DSP override, `i8042.nopnp` and the NVMe latency cap stay until tested.
 
 ## Working style
 
@@ -27,6 +27,30 @@ How this config is meant to be kept, and what not to "fix". Read this before cha
 - **Be extra careful with anything that boots:** bootloader, kernel, initrd, greeter, session. Prefer `nx os test`, keep the previous generation as the way back, and verify where possible that boot artefacts are unchanged.
 - **Ask before heavy or networked nix commands** that aren't a normal build (e.g. `nix flake archive`).
 - **Commit messages and commits are mine** unless I ask.
+
+## Performance choices
+
+- One OOM killer: earlyoom. systemd-oomd is off (it watched no slices here).
+- Wi-Fi power saving is off (latency over a little battery).
+- tuned without `dynamic_tuning`. Picking a profile by hand (`Mod+Shift+Escape`) overrides the automatic battery profile until you switch back to balanced.
+- mpv drops to a lighter profile on battery and for > 1440p video.
+- zsh uses a cached completion dump (full check daily and after each home switch).
+- Gaming: `ntsync` loaded, plus the SteamOS sysctls (`split_lock_mitigate=0` and two others), done in place instead of adding nix-gaming as an input.
+- Early KMS (`i915` in the initrd) for a flicker-free boot. Proven by diffing the initrd: only i915 and its dependencies were added.
+
+## Flakes and sources
+
+- Prefer nixpkgs (it's cached). Pull an app from a flake only when that clearly helps: fresher releases (claude-code-nix), declarative config (Zen's home-manager module, nix-flatpak), or nothing else ships it (niri-flake, Noctalia, sysc-greet, Antigravity, nixcord).
+- nixos-hardware: not used. There's no OmniBook profile, and the generic modules duplicate what is already set.
+- **Zen: never set `programs.zen-browser.profiles`.** The module rewrites `profiles.ini` when it's set, and the live profile (`~/.config/zen/15738ebx.Default Profile`) must stay untouched. Declare things through `policies` instead.
+- Claude Code's data (`~/.claude/`, `~/.claude.json`, per-project memory) is never managed by the repo.
+
+## Key binds
+
+- One modifier family per job: plain `Mod` for windows and apps, `Mod+Shift` to move or for the "bigger" variant, `Mod+Ctrl` for monitors.
+- Noctalia features get short single keys (`Mod+Space/V/A/B/I`); rarely used or destructive ones need Shift (`Mod+Shift+E/P/N/B`).
+- Every spawn bind gets a `hotkey-overlay.title`, so `Mod+Shift+/` stays readable.
+- Media, volume and brightness keys work on the lock screen.
 
 ## Look and feel
 

@@ -1,6 +1,6 @@
 # Using this repo
 
-A practical guide to `~/dots`: how it is put together, how to change things, how to keep the machine updated and clean with `nx`, and how to get out of trouble. For *why* things are the way they are, see [PREFERENCES.md](PREFERENCES.md).
+A practical guide to `~/dots`: how it is put together, how to change things, how to keep the machine updated and clean with `nx`, and how to get out of trouble. For *why* things are the way they are, see [PREFERENCES.md](PREFERENCES.md); for what every installed app is for, see [APPS.md](APPS.md).
 
 - [1. How it fits together](#1-how-it-fits-together)
 - [2. Where things go](#2-where-things-go)
@@ -45,7 +45,7 @@ dots/
 ├── lib/default.nix        shared values (`my`)
 ├── templates/             per-project dev shells (rust, python, node, c)
 ├── assets/                wallpaper, avatar, GTK + icon themes (applied with nwg-look)
-├── docs/                  this guide + preferences
+├── docs/                  this guide, APPS.md (what every app is for), PREFERENCES.md
 └── statix.toml            lint ignores
 ```
 
@@ -85,7 +85,8 @@ After the first switch, use `nx` for everything. Manual leftovers after a reinst
 - **GTK theme / icons:** copy `assets/Gruvbox-Green-Dark-Medium` to `~/.themes/` and `assets/Gruvbox-Plus-Dark` to `~/.icons/`, then pick them in `nwg-look`. The theme isn't maintained in nixpkgs, which is why it lives in the repo.
 - **Proton mail bridge:** one-time login, see the comment at the top of `modules/home/applications/communication.nix`.
 - **Thunderbird theme:** the "Gruvbox Dark Thunderbird" add-on, installed by hand.
-- **Flatpaks** (Sober etc.): `flatpak install …` or the Warehouse app.
+- **Flatpaks:** nothing to do. The ones declared in `modules/nixos/desktop/flatpak.nix` (Sober) install themselves on the first switch (the first time takes a while: it downloads the runtimes).
+- **Zen:** the extensions declared in `modules/home/applications/zen.nix` install themselves on first start. The profile itself (tabs, logins, history, workspaces) is not in the repo: restore `~/.config/zen` from a backup or sync if you want it back.
 
 ## 4. The everyday loop
 
@@ -297,6 +298,18 @@ Never put an untested parameter in the config.
 
 The comments in that file say what each current parameter does and which ones are worth re-testing.
 
+### Add a flatpak
+
+Add its app ID (from [flathub.org](https://flathub.org)) to `services.flatpak.packages` in `modules/nixos/desktop/flatpak.nix`, then `nx os`. It installs in the background during activation. Flatpaks you install by hand are left alone, and all of them update weekly.
+
+### Add a Zen extension
+
+Install it in Zen as usual, then put its ID in `ExtensionSettings` in `modules/home/applications/zen.nix` so a reinstall brings it back. The ID is in `about:support` → Extensions, or:
+
+```sh
+jq -r '.addons[] | select(.location=="app-profile") | "\(.id)  \(.defaultLocale.name)"' ~/.config/zen/*/extensions.json
+```
+
 ### Change the theme
 
 - **Terminal, shell and CLI colours:** Stylix, `modules/home/desktop/stylix.nix`. Only the targets listed there are themed.
@@ -314,6 +327,7 @@ The comments in that file say what each current parameter does and which ones ar
 | journal capped at 500 MB | always | `modules/nixos/nix.nix` |
 | docker: stopped containers, dangling images, unused networks older than a week | weekly | `modules/nixos/development/default.nix` |
 | thumbnails not used for 30 days | daily | `modules/home/applications/utilities.nix` |
+| `flatpak update` | weekly | `modules/nixos/desktop/flatpak.nix` |
 | SSD trim | weekly | `modules/nixos/hardware/default.nix` |
 | tldr pages refresh | on use | `modules/home/terminal/tools.nix` |
 
@@ -330,6 +344,7 @@ Firmware is **not** updated automatically; run `nx firmware`.
 | Something broke after `nx os` / `nx os switch` | `nx rollback os` |
 | The desktop doesn't come up / greeter broken | at the boot menu, choose the previous generation; once in, `nx rollback os` or fix and `nx os` |
 | Home looks wrong (prompt, colours, apps) | `nx rollback home` |
+| Laptop hot, fans loud, stutter on battery | the power profile was probably set to *performance* by hand (`Mod+B`); a manual pick overrides the automatic battery profile. Cycle back to *balanced*. `tuned-adm active` shows the current one |
 | Disk full | `nx storage` to see why; `nx storage clean`; `nx clean`; `--hard` as a last resort |
 | A service keeps failing | `nx doctor`, then `journalctl -b -u <unit>` (system) or `journalctl --user -u <unit>` |
 | A missing command | type it anyway: command-not-found suggests the package; `, <cmd>` runs it once |
@@ -344,15 +359,20 @@ The boot menu keeps the last 10 system generations (`configurationLimit`), so an
 |---|---|
 | `Mod+Return` / `Mod+Shift+Return` | Ghostty / Ghostty with nvim |
 | `Mod+W` / `Mod+E` | Zen / Nautilus |
-| `Mod+P` | Noctalia launcher |
+| `Mod+Space` (or `Mod+P`) / `Mod+;` | launcher / emoji picker |
+| `Mod+V` / `Mod+A` | clipboard history / control center |
 | `Mod+Tab` / `Alt+Tab` | overview / window switcher |
-| `Mod+Escape` / `Mod+Shift+Escape` | session menu / cycle power profiles |
-| `Mod+Shift+B` / `Mod+Shift+I` | hide/show bar / caffeine |
+| `Mod+Escape` / `Mod+Shift+Escape` | session menu / lock screen |
+| `Mod+B` | cycle power profile (balanced → performance → power-saver) |
+| `Mod+I` / `Mod+Shift+N` | caffeine on/off (no sleep) / do-not-disturb on/off |
+| `Mod+Shift+B` | hide/show bar |
+| `Mod+Shift+/` | show all binds (niri's overlay, with titles) |
 | `Ctrl+Shift+Escape` | Mission Center |
 | `Mod+H J K L` (or arrows) | focus left / down / up / right |
 | `Mod+Shift+H J K L` | move column/window |
 | `Mod+Home` / `Mod+End` (+`Shift` to move) | first / last column |
 | `Mod+1…5` / `Mod+Shift+1…5` | go to / move to workspace |
+| `Mod+Ctrl+H/L` (or arrows) / `+Shift` | focus the other monitor / move the column there |
 | `Mod+[` / `Mod+]` (+`Shift` to move) | workspace down / up |
 | `Mod+R` / `Mod+Shift+R` | cycle column width / window height presets |
 | `Mod+-` / `Mod+=` (+`Shift` for height) | width −10% / +10% |
@@ -361,6 +381,7 @@ The boot menu keeps the last 10 system generations (`configurationLimit`), so an
 | `Mod+T` / `Mod+Shift+T` | float / tabbed column |
 | `Mod+Q` | close window |
 | `Print` / `Shift+Print` / `Ctrl+Print` | screenshot: interactive / screen / window |
+| volume, mic, brightness, media keys | work everywhere, including the lock screen |
 | `Mod+Shift+S` | select an area and annotate it in satty |
 | `Mod+Shift+P` / `Mod+Shift+E` | monitors off / quit niri |
 | `Mod`+scroll | move between columns / workspaces |

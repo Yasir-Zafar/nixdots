@@ -47,9 +47,8 @@
           set -g __done_min_cmd_duration 10000
         ''
 
-        # colours: after stylix's base16 script (default order 1000), which sets the same
-        # names as universal (-U) variables; setting ours (-g) afterwards avoids fish's
-        # "shadowed by a global" warning. fastfetch (terminal/fetch.nix, mkAfter) stays last.
+        # colours: the whole gruvbox set lives here (stylix's fish target is off). Ordered
+        # after the default-position hooks; fastfetch (terminal/fetch.nix, mkAfter) is last.
         (lib.mkOrder 1100 ''
           # Syntax Highlighting Colors
           set -g fish_color_normal ebdbb2
@@ -69,6 +68,15 @@
           set -g fish_color_cwd green
           set -g fish_color_cwd_root red
           set -g fish_color_valid_path --underline
+          # the rest of the gruvbox set (these used to come from stylix's fish target)
+          set -g fish_color_autosuggestion 665c54
+          set -g fish_color_cancel -r
+          set -g fish_color_host normal
+          set -g fish_color_status red
+          set -g fish_color_user brgreen
+          set -g fish_pager_color_completion normal
+          set -g fish_pager_color_description yellow --dim
+          set -g fish_pager_color_prefix white --bold
         '')
       ];
 

@@ -4,6 +4,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    # zen is installed by home-manager now (hm/flake.nix); this input only backs the
+    # commented system install in modules/nixos/users/packages.nix
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake/beta";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,6 +25,9 @@
       url = "github:Nomadcxx/sysc-greet";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # flatpaks as config (Sober); see modules/nixos/desktop/flatpak.nix
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
 
     millennium.url = "github:SteamClientHomebrew/Millennium?dir=packages/nix";
   };
@@ -77,6 +82,7 @@
         modules = [
           niri.nixosModules.niri
           inputs.sysc-greet.nixosModules.default
+          inputs.nix-flatpak.nixosModules.nix-flatpak
           ../hosts/${my.host}
         ];
       };

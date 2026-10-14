@@ -11,7 +11,8 @@
       dns = "systemd-resolved";
 
       wifi = {
-        powersave = true;
+        # off: wifi power saving adds latency spikes (games, ssh); costs a little battery
+        powersave = false;
         macAddress = "preserve";
       };
 

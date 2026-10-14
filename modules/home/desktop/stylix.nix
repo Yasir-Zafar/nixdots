@@ -33,7 +33,9 @@
       ghostty.enable = true;
       bat.enable = true;
       fzf.enable = true;
-      fish.enable = true;
+      # fish: off. Its base16 script re-wrote ~25 universal variables on every new
+      # terminal, and shell/fish.nix sets all of those colours itself anyway
+      fish.enable = false;
       lazygit.enable = true;
       zellij.enable = true;
       yazi.enable = true;

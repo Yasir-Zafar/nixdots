@@ -30,7 +30,7 @@
     procs
     dust
     duf
-    claude-code
+    claude-code # from claude-code-nix (overlay in hm/flake.nix), not nixpkgs
 
     # File tools
     tree
