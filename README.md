@@ -109,7 +109,7 @@ After the first switch, everything goes through `nx`.
 | `nx doctor` | checks env vars, stray flakes, failed units, core dumps, `.bak` files, pending reboot, nixpkgs drift between the two flakes |
 | `nx rollback [os\|home] [N]` | list generations or go back |
 | `nx clean` / `nx optimise` | garbage-collect (keep 7 days / 5 gens) and dedupe the store |
-| `nx storage [report\|clean]` | show what's eating disk and clear only caches that rebuild themselves |
+| `nx storage [report\|clean] [--hard]` | show what's eating disk and clear only caches that rebuild themselves; `--hard` also drops the nix fetch cache, unused docker images and every old generation |
 | `nx firmware [check\|update\|…]` | firmware updates through fwupd / LVFS |
 | `nx try <greeter>` | boot-test another greeter (see below) |
 | `nx lint` / `nx fmt` | statix + deadnix, and alejandra |
@@ -120,13 +120,15 @@ Every greeter has its own problems, so the alternatives stay in the repo next to
 
 | Variant | File |
 | --- | --- |
-| **sysc-greet** (active) | [`nix/desktop/default.nix`](nix/desktop/default.nix) |
-| tuigreet | [`default-tuigreet.nix`](nix/desktop/default-tuigreet.nix) |
-| LightDM | [`default-ldm.nix`](nix/desktop/default-ldm.nix) |
-| GDM | [`default-g.nix`](nix/desktop/default-g.nix) |
-| ly | [`default-l.nix`](nix/desktop/default-l.nix) |
+| **sysc-greet** (active) | [`greeters/sysc-greet.nix`](nix/desktop/greeters/sysc-greet.nix) |
+| tuigreet | [`greeters/tuigreet.nix`](nix/desktop/greeters/tuigreet.nix) |
+| LightDM | [`greeters/lightdm.nix`](nix/desktop/greeters/lightdm.nix) |
+| GDM | [`greeters/gdm.nix`](nix/desktop/greeters/gdm.nix) |
+| ly | [`greeters/ly.nix`](nix/desktop/greeters/ly.nix) |
 
-`nx try ldm` swaps the import, builds, and with your OK makes that variant the default boot entry. It restores `configuration.nix` afterwards and never touches the running session. Go back with `nx os boot`.
+What every greeter shares (desktop services, avatar, gnome utility apps, xdg dirs) is in [`greeters/common.nix`](nix/desktop/greeters/common.nix). The active one is picked by a single import line in [`nix/desktop/default.nix`](nix/desktop/default.nix).
+
+`nx try lightdm` swaps that line, builds, and with your OK makes that variant the default boot entry. It restores `desktop/default.nix` afterwards and never touches the running session. Go back with `nx os boot`.
 
 ## Development
 

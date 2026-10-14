@@ -54,7 +54,6 @@
         };
 
         modules = [
-          {nixpkgs.config.allowUnfree = true;}
           niri.nixosModules.niri
           inputs.sysc-greet.nixosModules.default
           ./configuration.nix

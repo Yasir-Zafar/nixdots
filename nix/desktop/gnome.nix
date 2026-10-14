@@ -43,7 +43,7 @@
       nwg-look
 
       sassc
-      gtk-engine-murrine
+      # gtk-engine-murrine: removed from nixpkgs with gtk2
       gnome-themes-extra
 
       libheif

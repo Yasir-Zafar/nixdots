@@ -12,6 +12,10 @@
       dots="''${NX_DOTS:-$HOME/dots}"
       os="$dots/nix"
       hm="$dots/hm"
+      # `nh … build` would otherwise drop a ./result link wherever nx runs;
+      # these links also keep the last build from being garbage-collected
+      links="''${XDG_CACHE_HOME:-$HOME/.cache}/nx"
+      mkdir -p "$links"
 
       usage() {
         cat <<'USAGE'
@@ -28,7 +32,7 @@
         nx status                lock ages, nixpkgs revs, uncommitted changes, disk space
         nx doctor                checks for the usual problems (env vars, stub flake, core dumps, backups, reboot needed)
         nx rollback [os|home]    list generations; `os [N]` / `home [N]` go back (previous one by default)
-        nx try <greeter>         boot-test another desktop/greeter variant (tuigreet|ldm|g|l|sysc), see below
+        nx try <greeter>         boot-test another greeter (tuigreet|lightdm|gdm|ly|sysc), see below
         nx firmware [action]     firmware via fwupd: check (default) | update | devices | history | bios
         nx storage [report|clean] [flags]
                                  report (default): what uses space and what is safe to delete (read-only)
@@ -37,11 +41,14 @@
                                           --browsers       also browser caches (zen, chromium)
                                           --steam-shaders  also steam shader caches (games recompile them, brief stutter)
                                           --trash          also empty the trash
+                                          --hard           all of the above, plus ~/.cache/nix (inputs are
+                                                           re-downloaded), every docker image not in use, and
+                                                           all old generations (no rollback left)
         nx lint                  statix + deadnix over the repo
         nx fmt                   alejandra over the repo
         nx help                  this text
 
-      nx try swaps the ./desktop import in nix/configuration.nix, builds, and (after you confirm)
+      nx try swaps the greeter import in nix/desktop/default.nix, builds, and (after you confirm)
       runs `nh os boot`, then restores the file. It makes the variant the DEFAULT boot entry, but
       it never touches the running session. Revert with `nx os boot` (or pick the old generation
       in the boot menu). Greeters only appear after a reboot, so nothing is hot-swapped.
@@ -52,7 +59,8 @@
         local mode="''${1:-switch}"
         shift || true
         case "$mode" in
-          switch | boot | test | build) nh os "$mode" "$os" "$@" ;;
+          build) nh os build "$os" -o "$links/os" "$@" ;;
+          switch | boot | test) nh os "$mode" "$os" "$@" ;;
           *) echo "nx os: unknown mode '$mode' (switch|boot|test|build)" >&2; exit 2 ;;
         esac
       }
@@ -66,10 +74,12 @@
             *) echo "nx home: unknown option '$arg' (switch|build|-b)" >&2; exit 2 ;;
           esac
         done
+        local -a extra=()
+        [ "$mode" = build ] && extra=(-o "$links/home")
         if [ "$backup" = 1 ]; then
-          HOME_MANAGER_BACKUP_EXT=bak nh home "$mode" "$hm"
+          HOME_MANAGER_BACKUP_EXT=bak nh home "$mode" "$hm" "''${extra[@]}"
         else
-          nh home "$mode" "$hm"
+          nh home "$mode" "$hm" "''${extra[@]}"
         fi
       }
 
@@ -120,7 +130,7 @@
       }
 
       storage() {
-        local action="report" yes=0 browsers=0 steam=0 trash=0 arg
+        local action="report" yes=0 browsers=0 steam=0 trash=0 hard=0 arg
         for arg in "$@"; do
           case "$arg" in
             report | clean) action="$arg" ;;
@@ -128,14 +138,25 @@
             --browsers) browsers=1 ;;
             --steam-shaders) steam=1 ;;
             --trash) trash=1 ;;
+            --hard) hard=1 browsers=1 steam=1 trash=1 ;;
             *) echo "nx storage: unknown option '$arg'" >&2; exit 2 ;;
           esac
         done
 
         local cache="$HOME/.cache" share="$HOME/.local/share"
         # regenerable caches: safe to delete, programs rebuild them on demand
-        local -a paths=("$cache/uv" "$cache/JetBrains" "$cache/appimage-run" "$cache/mesa_shader_cache" "$cache/thumbnails" "$cache/nix" "$cache/pip")
-        [ "$browsers" = 1 ] && paths+=("$cache/zen" "$cache/chromium" "$cache/mozilla")
+        # ~/.cache/nix (flake + tarball fetcher cache) is only in --hard: wiping it makes the
+        # next rebuild download every input again
+        local -a paths=("$cache/uv" "$cache/JetBrains" "$cache/appimage-run" "$cache/mesa_shader_cache" "$cache/thumbnails" "$cache/pip")
+        [ "$hard" = 1 ] && paths+=("$cache/nix")
+        if [ "$browsers" = 1 ]; then
+          # wiping a running browser's cache can corrupt its state
+          if pgrep '^\.?(zen|firefox|chromium)' >/dev/null 2>&1; then
+            echo "nx storage: a browser is running, skipping browser caches (close it and rerun)" >&2
+          else
+            paths+=("$cache/zen" "$cache/chromium" "$cache/mozilla")
+          fi
+        fi
         [ "$steam" = 1 ] && paths+=("$share/Steam/steamapps/shadercache")
         [ "$trash" = 1 ] && paths+=("$share/Trash/files" "$share/Trash/info")
 
@@ -164,7 +185,12 @@
         if command -v flatpak >/dev/null 2>&1; then
           echo "  flatpak:  $(flatpak list --unused 2>/dev/null | tail -n +2 | wc -l) unused runtime(s)"
         fi
-        echo "  nix:      use 'nx clean' (old generations + store gc, needs sudo)"
+        if [ "$hard" = 1 ]; then
+          echo "  docker:   --hard also removes every image no container uses (docker system prune -a)"
+          echo "  nix:      --hard keeps only the current generation, gc's the store, refreshes the boot menu"
+        else
+          echo "  nix:      use 'nx clean' (old generations + store gc, needs sudo), or --hard here"
+        fi
 
         echo
         echo ":: big, but yours (never touched)"
@@ -189,8 +215,15 @@
           find "$p" -mindepth 1 -delete 2>/dev/null || true
         done
         sudo journalctl --vacuum-size=200M >/dev/null || true
-        if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then docker system prune -f >/dev/null || true; fi
+        if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+          if [ "$hard" = 1 ]; then docker system prune -a -f >/dev/null || true; else docker system prune -f >/dev/null || true; fi
+        fi
         if command -v flatpak >/dev/null 2>&1; then flatpak uninstall --unused --noninteractive >/dev/null 2>&1 || true; fi
+        if [ "$hard" = 1 ]; then
+          nh clean all --keep 1
+          # drop the deleted generations from the boot menu without rebuilding anything
+          sudo /run/current-system/bin/switch-to-configuration boot
+        fi
         after=$(df --output=used -B1 / | tail -n 1)
         echo
         echo "freed about $(human $((before - after)))"
@@ -277,31 +310,29 @@
       }
 
       try_greeter() {
-        local variant="''${1:-}" file cfg="$os/configuration.nix" bak
+        local variant="''${1:-}" file cfg="$os/desktop/default.nix" bak
         case "$variant" in
-          tuigreet) file=default-tuigreet.nix ;;
-          ldm | lightdm) file=default-ldm.nix ;;
-          g | gdm) file=default-g.nix ;;
-          l | ly) file=default-l.nix ;;
-          sysc | default | sysc-greet) file="" ;;
-          *) echo "nx try: choose tuigreet|ldm|g|l|sysc" >&2; exit 2 ;;
+          tuigreet) file=tuigreet.nix ;;
+          ldm | lightdm) file=lightdm.nix ;;
+          g | gdm) file=gdm.nix ;;
+          l | ly) file=ly.nix ;;
+          sysc | default | sysc-greet) file=sysc-greet.nix ;;
+          *) echo "nx try: choose tuigreet|lightdm|gdm|ly|sysc" >&2; exit 2 ;;
         esac
-        [ -z "$file" ] || [ -e "$os/desktop/$file" ] || { echo "nx try: $os/desktop/$file not found" >&2; exit 1; }
+        [ -e "$os/desktop/greeters/$file" ] || { echo "nx try: $os/desktop/greeters/$file not found" >&2; exit 1; }
 
         bak=$(mktemp)
         cp "$cfg" "$bak"
-        # always put configuration.nix back, whatever happens below
+        # always put desktop/default.nix back, whatever happens below
         trap 'cp "$bak" "$cfg"; rm -f "$bak"; git -C "$dots" add -N "$cfg" 2>/dev/null || true' EXIT
 
-        if [ -n "$file" ]; then
-          sed -i "s#\./desktop\([^a-z-]\|$\)#./desktop/$file\1#" "$cfg"
-          grep -q "desktop/$file" "$cfg" || { echo "nx try: could not find the ./desktop import in $cfg" >&2; exit 1; }
-        fi
+        sed -i "s#\./greeters/sysc-greet\.nix#./greeters/$file#" "$cfg"
+        grep -q "greeters/$file" "$cfg" || { echo "nx try: could not find the greeter import in $cfg" >&2; exit 1; }
         echo ":: building $variant (nothing is activated yet)"
-        nh os build "$os"
+        nh os build "$os" -o "$links/os"
 
         read -r -p "Make '$variant' the default boot entry (reboot to try it)? [y/N] " answer
-        [ "$answer" = y ] || { echo "aborted, configuration.nix restored"; exit 0; }
+        [ "$answer" = y ] || { echo "aborted, desktop/default.nix restored"; exit 0; }
         nh os boot "$os"
         echo
         echo "Reboot to see $variant. To go back: nx os boot  (or choose the previous generation in the boot menu)."
@@ -357,11 +388,12 @@
     complete -c nx -n __fish_use_subcommand -a "${commands}"
     complete -c nx -n "__fish_seen_subcommand_from os" -a "switch boot test build"
     complete -c nx -n "__fish_seen_subcommand_from home" -a "switch build -b"
-    complete -c nx -n "__fish_seen_subcommand_from storage" -a "report clean -y --browsers --steam-shaders --trash"
+    complete -c nx -n "__fish_seen_subcommand_from storage" -a "report clean -y --browsers --steam-shaders --trash --hard"
     complete -c nx -n "__fish_seen_subcommand_from firmware" -a "check update devices history bios"
     complete -c nx -n "__fish_seen_subcommand_from rollback" -a "os home"
-    complete -c nx -n "__fish_seen_subcommand_from try" -a "tuigreet ldm g l sysc"
-    complete -c nx -n "__fish_seen_subcommand_from update" -a "nixpkgs home-manager niri noctalia nixcord nixvim stylix zen-browser"
+    complete -c nx -n "__fish_seen_subcommand_from try" -a "tuigreet lightdm gdm ly sysc"
+    # inputs are read from both lock files, so new flake inputs complete without editing this
+    complete -c nx -n "__fish_seen_subcommand_from update" -a "(${pkgs.jq}/bin/jq -r '.nodes.root.inputs | keys[]' ~/dots/nix/flake.lock ~/dots/hm/flake.lock 2>/dev/null | sort -u)"
   '';
 
   zshCompletions = pkgs.writeTextDir "share/zsh/site-functions/_nx" ''
@@ -374,13 +406,16 @@
     elif [[ $words[2] == home ]]; then
       _values 'mode' switch build -b
     elif [[ $words[2] == storage ]]; then
-      _values 'option' report clean -y --browsers --steam-shaders --trash
+      _values 'option' report clean -y --browsers --steam-shaders --trash --hard
     elif [[ $words[2] == firmware ]]; then
       _values 'action' check update devices history bios
     elif [[ $words[2] == rollback ]]; then
       _values 'target' os home
     elif [[ $words[2] == try ]]; then
-      _values 'greeter' tuigreet ldm g l sysc
+      _values 'greeter' tuigreet lightdm gdm ly sysc
+    elif [[ $words[2] == update ]]; then
+      local -a inputs=(''${(f)"$(${pkgs.jq}/bin/jq -r '.nodes.root.inputs | keys[]' ~/dots/nix/flake.lock ~/dots/hm/flake.lock 2>/dev/null | sort -u)"})
+      _describe 'input' inputs
     fi
   '';
 in {

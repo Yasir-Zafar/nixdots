@@ -3,6 +3,7 @@
   pkgs,
   ...
 }: {
+  # user side of nh: NH_OS_FLAKE / NH_HOME_FLAKE. The gc timer lives in nix/nix.nix.
   programs.nh = {
     enable = true;
     osFlake = "${config.home.homeDirectory}/dots/nix";

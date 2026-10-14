@@ -16,5 +16,6 @@
 
   programs.home-manager.enable = true;
 
-  nixpkgs.config.allowUnfree = true;
+  # allowUnfree is set where pkgs is imported (flake.nix); setting nixpkgs.config here
+  # as well would make home-manager import nixpkgs a second time
 }

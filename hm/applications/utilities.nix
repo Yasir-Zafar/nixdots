@@ -17,6 +17,11 @@
     (pkgs.gearlever.override {dwarfs = null;}) # only works if the package supports it
   ];
 
+  # age out thumbnails nobody looked at in 30 days (systemd-tmpfiles-clean, daily)
+  systemd.user.tmpfiles.rules = [
+    "e %h/.cache/thumbnails - - - 30d"
+  ];
+
   programs.btop = {
     enable = true;
     settings = {
