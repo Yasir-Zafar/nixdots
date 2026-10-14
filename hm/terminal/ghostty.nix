@@ -10,13 +10,12 @@
 
       window-width = 100;
       window-height = 30;
-      window-save-state = "always";
 
       window-padding-x = 10;
       window-padding-y = 8;
       window-padding-balance = true;
 
-      title = "Ghostty";
+      # no fixed `title`: it would override the shell-integration title updates below
 
       # launch fish without making it the login shell.
       # zsh remains the login shell; fish inherits the login environment

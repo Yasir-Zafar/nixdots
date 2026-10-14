@@ -3,8 +3,10 @@
     enable = true;
 
     extraPackages = with pkgs; [
-      intel-media-driver
-      libva-vdpau-driver
+      intel-media-driver # VA-API (iHD)
+      libvdpau-va-gl # VDPAU on top of VA-API, matches VDPAU_DRIVER below
+      vpl-gpu-rt # Quick Sync (oneVPL) for Arrow Lake: ffmpeg/obs qsv encoders
+      intel-compute-runtime # OpenCL / Level Zero (blender, darktable…)
       vulkan-loader
       vulkan-validation-layers
       vulkan-extension-layer

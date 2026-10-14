@@ -16,6 +16,6 @@
   environment.variables = {
     CC = "clang";
     CXX = "clang++";
-    PATH = "${pkgs.clang-tools}/bin:\${PATH}";
+    # clang-tools is in systemPackages above, so clangd/clang-format are already on PATH
   };
 }

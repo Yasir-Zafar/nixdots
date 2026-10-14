@@ -9,7 +9,6 @@
         ControllerMode = "dual";
         Name = "mntbnd-bt";
         Class = "0x000100";
-        AutoEnable = true;
       };
 
       Policy = {

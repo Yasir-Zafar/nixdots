@@ -37,10 +37,20 @@
           ];
 
           "monitor.bluez.properties" = {
+            # one list: a separate fragment used to add the headset roles,
+            # which made the effective value depend on merge order
             "bluez5.roles" = [
               "a2dp_sink"
               "a2dp_source"
+              "hsp_hs"
+              "hsp_ag"
+              "hfp_hf"
+              "hfp_ag"
             ];
+
+            "bluez5.enable-sbc-xq" = true;
+            "bluez5.enable-msbc" = true;
+            "bluez5.enable-hw-volume" = true;
 
             "bluez5.codecs" = [
               "ldac"
@@ -59,30 +69,6 @@
 
             "bluez5.hfphsp-backend" = "pipewire";
           };
-        };
-
-        "bluetoothEnhancements" = {
-          "monitor.bluez.properties" = {
-            "bluez5.enable-sbc-xq" = true;
-            "bluez5.enable-msbc" = true;
-            "bluez5.enable-hw-volume" = true;
-
-            "bluez5.roles" = [
-              "hsp_hs"
-              "hsp_ag"
-              "hfp_hf"
-              "hfp_ag"
-            ];
-          };
-        };
-
-        "51-disable-x11-bell" = {
-          "monitor.alsa.rules" = [
-            {
-              matches = [{"node.name" = "~alsa_.*";}];
-              actions.update-props."api.alsa.disable-x11-bell" = true;
-            }
-          ];
         };
       };
     };

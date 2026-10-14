@@ -30,7 +30,7 @@
       maplocalleader = " ";
 
       # Set to true if you have a Nerd Font installed and selected in the terminal
-      have_nerd_font = false;
+      have_nerd_font = true; # JetBrainsMono Nerd Font is the terminal font
     };
 
     clipboard = {
@@ -202,14 +202,14 @@
     autoCmd = [
       # Highlight when yanking (copying) text
       #  Try it with `yap` in normal mode
-      #  See `:help vim.highlight.on_yank()`
+      #  See `:help vim.hl.on_yank()`
       {
         event = ["TextYankPost"];
         desc = "Highlight when yanking (copying) text";
         group = "kickstart-highlight-yank";
         callback.__raw = ''
           function()
-            vim.highlight.on_yank()
+            vim.hl.on_yank()
           end
         '';
       }
@@ -227,19 +227,10 @@
     };
 
     # https://nix-community.github.io/nixvim/NeovimOptions/index.html?highlight=extraplugins#extraplugins
+    # nvim-web-devicons comes from plugins.web-devicons above (it also runs setup)
     extraPlugins = with pkgs.vimPlugins; [
-      # Useful for getting pretty icons, but requires a Nerd Font.
-      nvim-web-devicons # TODO: Figure out how to configure using this with telescope
       yuck-vim
     ];
-
-    # TODO: Figure out where to move this
-    # https://nix-community.github.io/nixvim/NeovimOptions/index.html?highlight=extraplugins#extraconfigluapre
-    extraConfigLuaPre = ''
-      if vim.g.have_nerd_font then
-        require('nvim-web-devicons').setup {}
-      end
-    '';
 
     # The line beneath this is called `modeline`. See `:help modeline`
     # https://nix-community.github.io/nixvim/NeovimOptions/index.html?highlight=extraplugins#extraconfigluapost

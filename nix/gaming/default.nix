@@ -11,7 +11,6 @@
     heroic
     prismlauncher
     lunar-client
-    cartridges
 
     dolphin-emu
 

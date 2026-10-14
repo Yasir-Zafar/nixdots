@@ -54,7 +54,7 @@
         Resolve = {
           DNSOverTLS = "opportunistic";
           MulticastDNS = true;
-          LLMNR = true;
+          LLMNR = false; # spoofable on public wifi; mDNS covers .local names
           Cache = true;
           CacheFromLocalhost = true;
           DNSSEC = "allow-downgrade";

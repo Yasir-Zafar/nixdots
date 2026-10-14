@@ -70,7 +70,7 @@
 
       # --- Tab Completion System Styles ---
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-      zstyle ':completion:*' list-colors "$\{(s.:.)LS_COLORS}"
+      zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
       zstyle ':completion:*' rehash true
       zstyle ':completion:*' menu no
       zstyle ':completion:*' use-cache true
@@ -86,7 +86,7 @@
 
       # --- Inline Autosuggestions Settings ---
       ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-      ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+      ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=100 # stop suggesting for pasted blobs, not normal commands
       ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 
       # --- External Credentials / Overrides Hook ---

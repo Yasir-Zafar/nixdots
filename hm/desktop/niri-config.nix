@@ -360,10 +360,9 @@
       hotkey-overlay.skip-at-startup = true;
       xwayland-satellite.enable = true;
 
+      # QT_QPA_PLATFORM / NIXOS_OZONE_WL come from nix/desktop/niri.nix (session-wide)
       environment = {
-        QT_QPA_PLATFORM = "wayland";
         QT_QPA_PLATFORMTHEME = "gtk3"; # keep in sync with qt.nix
-        NIXOS_OZONE_WL = "1";
       };
     };
   };

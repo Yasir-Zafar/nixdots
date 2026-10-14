@@ -49,6 +49,12 @@
     echo -e "[User]\nIcon=/var/lib/AccountsService/icons/boi\n" > /var/lib/AccountsService/users/boi
   '';
 
+  # "Open in terminal" in nautilus; the bare package alone doesn't register the extension
+  programs.nautilus-open-any-terminal = {
+    enable = true;
+    terminal = "ghostty";
+  };
+
   environment = {
     pathsToLink = ["share/thumbnailers" "share/wayland-sessions"];
     systemPackages = with pkgs; [
@@ -60,7 +66,6 @@
       gnome-autoar
       sassc
       gnome-themes-extra
-      nautilus-open-any-terminal
 
       libheif
       libheif.out

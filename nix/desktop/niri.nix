@@ -1,8 +1,4 @@
-{
-  pkgs,
-  inputs,
-  ...
-}: {
+{pkgs, ...}: {
   programs = {
     niri.enable = true;
     xwayland.enable = true;
@@ -17,10 +13,10 @@
 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
-    MOZ_ENABLE_WAYLAND = "1";
+    # MOZ_ENABLE_WAYLAND and CLUTTER_BACKEND dropped: firefox/zen default to wayland, clutter is gone
     QT_QPA_PLATFORM = "wayland;xcb";
-    SDL_VIDEODRIVER = "wayland";
-    CLUTTER_BACKEND = "wayland";
+    # x11 fallback: old/bundled SDL2 games without wayland support fail with plain "wayland"
+    SDL_VIDEODRIVER = "wayland,x11";
   };
 
   xdg.portal = {
@@ -46,7 +42,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+    # noctalia itself: installed by the home-manager module (hm/desktop/noctalia.nix)
     wl-clipboard
     wlr-randr
     cliphist

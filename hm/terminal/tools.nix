@@ -22,6 +22,7 @@
     procs
     dust
     duf
+    claude-code
 
     # File tools
     tree
