@@ -1,9 +1,9 @@
-{
+{my, ...}: {
   services.syncthing = {
     enable = true;
-    user = "boi";
-    dataDir = "/home/boi";
-    configDir = "/home/boi/.config/syncthing";
+    inherit (my) user;
+    dataDir = my.home;
+    configDir = "${my.home}/.config/syncthing";
     openDefaultPorts = true;
   };
 }

@@ -1,9 +1,10 @@
 {
   pkgs,
   inputs,
+  my,
   ...
 }: {
-  users.users.boi.packages = with pkgs; [
+  users.users.${my.user}.packages = with pkgs; [
     inputs.zen-browser.packages."${stdenv.hostPlatform.system}".default
     wineWow64Packages.stable
     git

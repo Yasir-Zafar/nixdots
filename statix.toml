@@ -2,7 +2,7 @@
 # hardware-configuration.nix is generated; the nixvim files are annotated kickstart
 # docs, and emacs.nix is a disabled module, so their layout is kept as is.
 ignore = [
-  "dotfiles/nixvim",
-  "hm/development/editors/emacs.nix",
-  "nix/hardware/hardware-configuration.nix",
+  "modules/home/nixvim",
+  "modules/home/development/editors/emacs.nix",
+  "hosts/mntbnd/hardware-configuration.nix",
 ]

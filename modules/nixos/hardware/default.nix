@@ -1,6 +1,6 @@
 {
   imports = [
-    ./hardware-configuration.nix
+    # hardware-configuration.nix is per machine: hosts/mntbnd/ imports it
     ./intel-graphics.nix
     ./swap.nix
   ];

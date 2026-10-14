@@ -9,9 +9,13 @@
 #   2. open Thunderbird, enter that bridge password, and accept the bridge's self-signed
 #      certificate once (also for smtp port 1025)
 # Theme: the "Gruvbox Dark Thunderbird" add-on, installed by hand (no stylix target).
-{pkgs, ...}: let
-  address = "mntbnd720@proton.me";
-  realName = "Yasir Zafar";
+{
+  pkgs,
+  my,
+  ...
+}: let
+  address = my.mail;
+  realName = my.fullName;
 
   bridgeTls = {
     enable = true;

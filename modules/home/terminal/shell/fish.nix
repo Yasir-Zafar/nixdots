@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
   programs = {
     fish = {
       enable = true;
@@ -7,57 +11,66 @@
       # SHELL INIT                                                        #
       # runs in every interactive shell                                   #
       # --------------------------------------------------------------- #
-      interactiveShellInit = ''
-        # disable greeting
-        set -g fish_greeting
+      interactiveShellInit = lib.mkMerge [
+        # main part: default position, i.e. before the atuin/zoxide/starship hooks, so
+        # fish_default_key_bindings can't wipe atuin's ctrl+r
+        ''
+          # disable greeting
+          set -g fish_greeting
 
-        # emacs key bindings
-        fish_default_key_bindings
+          # emacs key bindings
+          fish_default_key_bindings
 
-        # pure prompt settings: unused while starship draws the prompt (terminal/prompt.nix),
-        # kept so re-enabling the pure plugin below brings the old prompt back as it was
-        # pure prompt — single line, gruvbox colors
-        set -g pure_prompt_single_line          true
-        set -g pure_show_system_time            false
-        set -g pure_show_jobs                   false
-        set -g pure_color_primary               brblue
-        set -g pure_color_success               brgreen
-        set -g pure_color_error                 brred
-        set -g pure_color_info                  bryellow
-        set -g pure_color_mute                  brblack
-        set -g pure_color_git_branch            green
-        set -g pure_color_git_dirty             yellow
-        set -g pure_color_git_unpulled_commits  yellow
-        set -g pure_color_git_unpushed_commits  yellow
-        set -g pure_symbol_prompt               "❯"
-        set -g pure_symbol_reverse_prompt       "❮"
-        set -g pure_symbol_git_dirty            "*"
+          # pure prompt settings: unused while starship draws the prompt (terminal/prompt.nix),
+          # kept so re-enabling the pure plugin below brings the old prompt back as it was
+          # pure prompt — single line, gruvbox colors
+          set -g pure_prompt_single_line          true
+          set -g pure_show_system_time            false
+          set -g pure_show_jobs                   false
+          set -g pure_color_primary               brblue
+          set -g pure_color_success               brgreen
+          set -g pure_color_error                 brred
+          set -g pure_color_info                  bryellow
+          set -g pure_color_mute                  brblack
+          set -g pure_color_git_branch            green
+          set -g pure_color_git_dirty             yellow
+          set -g pure_color_git_unpulled_commits  yellow
+          set -g pure_color_git_unpushed_commits  yellow
+          set -g pure_symbol_prompt               "❯"
+          set -g pure_symbol_reverse_prompt       "❮"
+          set -g pure_symbol_git_dirty            "*"
 
-        # Syntax Highlighting Colors
-        set -g fish_color_normal ebdbb2
-        set -g fish_color_command b8bb26
-        set -g fish_color_quote d3869b
-        set -g fish_color_redirection d65d0e
-        set -g fish_color_end ffab10
-        set -g fish_color_error fb4934
-        set -g fish_color_param 83a598
-        set -g fish_color_comment 928374
-        set -g fish_color_match --background=brblue
-        set -g fish_color_selection white --bold --background=brblack
-        set -g fish_color_search_match bryellow --background=brblack
-        set -g fish_color_history_current --bold
-        set -g fish_color_operator 00a6b2
-        set -g fish_color_escape 00a6b2
-        set -g fish_color_cwd green
-        set -g fish_color_cwd_root red
-        set -g fish_color_valid_path --underline
+          # sponge: don't clean history on startup, only on exit
+          set -g sponge_purge_only_on_exit true
 
-        # sponge: don't clean history on startup, only on exit
-        set -g sponge_purge_only_on_exit true
+          # done: notify only for commands taking longer than 10s
+          set -g __done_min_cmd_duration 10000
+        ''
 
-        # done: notify only for commands taking longer than 10s
-        set -g __done_min_cmd_duration 10000
-      '';
+        # colours: after stylix's base16 script (default order 1000), which sets the same
+        # names as universal (-U) variables; setting ours (-g) afterwards avoids fish's
+        # "shadowed by a global" warning. fastfetch (terminal/fetch.nix, mkAfter) stays last.
+        (lib.mkOrder 1100 ''
+          # Syntax Highlighting Colors
+          set -g fish_color_normal ebdbb2
+          set -g fish_color_command b8bb26
+          set -g fish_color_quote d3869b
+          set -g fish_color_redirection d65d0e
+          set -g fish_color_end ffab10
+          set -g fish_color_error fb4934
+          set -g fish_color_param 83a598
+          set -g fish_color_comment 928374
+          set -g fish_color_match --background=brblue
+          set -g fish_color_selection white --bold --background=brblack
+          set -g fish_color_search_match bryellow --background=brblack
+          set -g fish_color_history_current --bold
+          set -g fish_color_operator 00a6b2
+          set -g fish_color_escape 00a6b2
+          set -g fish_color_cwd green
+          set -g fish_color_cwd_root red
+          set -g fish_color_valid_path --underline
+        '')
+      ];
 
       # aliases come from aliases/ (shared + fish overrides)
 

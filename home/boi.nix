@@ -1,16 +1,12 @@
-{
+# boi: user-level settings; the modules themselves are in modules/home.
+{my, ...}: {
   imports = [
-    ../dotfiles/default.nix
-    #./scripts/default.nix
-    ./desktop/default.nix
-    ./terminal/default.nix
-    ./development/default.nix
-    ./applications/default.nix
+    ../modules/home
   ];
 
   home = {
-    username = "boi";
-    homeDirectory = "/home/boi";
+    username = my.user;
+    homeDirectory = my.home;
     stateVersion = "25.05";
   };
 

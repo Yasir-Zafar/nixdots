@@ -1,4 +1,4 @@
-_: {
+{my, ...}: {
   imports = [
     ./nix.nix
     ./py.nix
@@ -14,5 +14,5 @@ _: {
       flags = ["--filter=until=168h"];
     };
   };
-  users.users.boi.extraGroups = ["docker"];
+  users.users.${my.user}.extraGroups = ["docker"];
 }

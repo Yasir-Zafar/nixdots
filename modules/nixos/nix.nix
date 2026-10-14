@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  my,
+  ...
+}: {
   nix = {
     settings = {
       experimental-features = ["nix-command" "flakes"];
@@ -9,7 +13,7 @@
       min-free = 5 * 1024 * 1024 * 1024;
       max-free = 20 * 1024 * 1024 * 1024;
 
-      trusted-users = ["root" "boi"];
+      trusted-users = ["root" my.user];
       extra-substituters = ["https://noctalia.cachix.org"];
       extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
     };

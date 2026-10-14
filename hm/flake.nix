@@ -64,6 +64,7 @@
       config.allowUnfree = true;
     };
     antigravity = antigravity-nix.packages.x86_64-linux;
+    my = import ../lib;
   in {
     formatter.x86_64-linux = pkgs.alejandra;
 
@@ -72,7 +73,7 @@
     };
 
     homeConfigurations = {
-      boi = home-manager.lib.homeManagerConfiguration {
+      ${my.user} = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         modules = [
@@ -94,11 +95,11 @@
           inputs.nixcord.homeModules.nixcord
           inputs.stylix.homeModules.stylix
           inputs.nix-index-database.homeModules.default
-          ./home.nix
+          ../home/${my.user}.nix
         ];
 
         extraSpecialArgs = {
-          inherit inputs;
+          inherit inputs my;
         };
       };
     };

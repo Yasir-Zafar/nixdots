@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  my,
+  ...
+}: {
   home.packages = with pkgs; [
     lazygit
     difftastic
@@ -14,8 +18,8 @@
 
       settings = {
         # `settings` is the gitconfig itself: top-level keys become [sections]
-        user.name = "Yasir-Zafar";
-        user.email = "yasirzafar365@gmail.com";
+        user.name = my.git.name;
+        user.email = my.git.email;
 
         init.defaultBranch = "main";
 

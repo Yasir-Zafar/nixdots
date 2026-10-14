@@ -1,14 +1,9 @@
+# mntbnd: HP OmniBook 5 16" (Core Ultra 7 255U). The only host.
+# Machine-specific bits live here; everything else comes from modules/nixos.
 {
   imports = [
-    ./nix.nix
-    ./hardware
-    ./boot
-    ./desktop
-    ./gaming
-    ./development
-    ./users
-    ./security
-    ./services
+    ./hardware-configuration.nix
+    ../../modules/nixos
   ];
 
   nixpkgs.config.allowUnfree = true;

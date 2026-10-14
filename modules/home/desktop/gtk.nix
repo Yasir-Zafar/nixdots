@@ -3,8 +3,8 @@
 {pkgs, ...}: let
   themeName = "Gruvbox-Green-Dark-Medium";
   iconName = "Gruvbox-Plus-Dark";
-  theme = ../../assets + "/${themeName}";
-  icons = ../../assets + "/${iconName}";
+  theme = ../../../assets + "/${themeName}";
+  icons = ../../../assets + "/${iconName}";
 in {
   gtk = {
     enable = true;

@@ -1,6 +1,10 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  my,
+  ...
+}: {
   networking = {
-    hostName = "mntbnd";
+    hostName = my.host;
 
     networkmanager = {
       enable = true;

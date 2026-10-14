@@ -44,29 +44,36 @@
 
 ## Layout
 
-The system and the user environment are **two independent flakes**, so a broken home config never blocks a system rebuild and the other way round.
+The system and the user environment are **two independent flakes** with their own lock files, so a broken home config never blocks a system rebuild and the other way round. The flakes themselves are tiny; the modules they load live in the shared tree next to them.
 
 ```text
 dots/
-├── nix/                  NixOS flake  ->  nixosConfigurations.mntbnd
-│   ├── flake.nix
-│   ├── configuration.nix  imports every module below
-│   ├── boot/              systemd-boot, kernel params
-│   ├── hardware/          generated config, Intel graphics, swap, firmware
-│   ├── desktop/           niri, sysc-greet, fonts (+ alternate greeters)
-│   ├── services/          audio, bluetooth, networking, power, syncthing
-│   ├── gaming/            steam, gamemode, launchers, emulators
-│   ├── development/       system-level toolchains
-│   ├── security/
-│   └── users/
+├── nix/                  NixOS flake         ->  nixosConfigurations.mntbnd (+ devshell templates)
+│   └── flake.nix, flake.lock
 ├── hm/                   Home Manager flake  ->  homeConfigurations.boi
-│   ├── flake.nix
-│   ├── home.nix
-│   ├── desktop/           niri config, noctalia, stylix, gtk/qt, nixcord
-│   ├── terminal/          ghostty, shells + aliases, tools, nx
-│   ├── development/       editors, languages, git
-│   └── applications/      media, documents, network, utilities
-├── dotfiles/nixvim/      Neovim, written in Nix
+│   └── flake.nix, flake.lock
+├── hosts/mntbnd/         the machine: hardware-configuration.nix, stateVersion
+├── home/boi.nix          the user: username, home dir, stateVersion
+├── modules/
+│   ├── nixos/            system modules
+│   │   ├── nix.nix        nix settings, gc, store optimise
+│   │   ├── boot/          systemd-boot, kernel params (documented, test-first)
+│   │   ├── hardware/      Intel graphics, swap, firmware
+│   │   ├── desktop/       niri, fonts, greeters/ (sysc-greet active + alternates), gnome
+│   │   ├── services/      audio, bluetooth, networking, power, syncthing
+│   │   ├── gaming/        steam, gamemode, launchers, emulators
+│   │   ├── development/   system-level toolchains, docker
+│   │   ├── security/
+│   │   └── users/
+│   └── home/             home-manager modules
+│       ├── desktop/       niri config, noctalia, stylix, gtk/qt, gnome settings
+│       ├── terminal/      ghostty, shells + aliases, prompt, tools
+│       ├── development/   editors, languages, git
+│       ├── applications/  media, documents, network, utilities, nixcord
+│       └── nixvim/        Neovim, written in Nix
+├── pkgs/nx/              the nx CLI: nx.sh + completions
+├── lib/default.nix       values both flakes share (user, host, emails, assets)
+├── templates/            per-project dev shells (rust, python, node, c)
 ├── assets/               wallpaper, avatar, GTK and icon themes
 └── statix.toml           lint ignores
 ```
@@ -76,7 +83,7 @@ Every directory has a `default.nix` that only imports its siblings. To turn some
 ## Install
 
 > [!WARNING]
-> This is a personal config. It hardcodes the user `boi`, the host `mntbnd` and this laptop's `hardware-configuration.nix`. Read it and borrow pieces rather than applying it blind.
+> This is a personal config. The user `boi`, the host `mntbnd` and the addresses are set once in [`lib/default.nix`](lib/default.nix), and `hosts/mntbnd/` holds this laptop's `hardware-configuration.nix`. Read it and borrow pieces rather than applying it blind.
 
 ```sh
 # 1. clone to ~/dots (nx expects that path; override with NX_DOTS)
@@ -84,7 +91,7 @@ git clone https://github.com/Yasir-Zafar/nixdots ~/dots
 cd ~/dots
 
 # 2. swap in your own hardware config
-nixos-generate-config --show-hardware-config > nix/hardware/hardware-configuration.nix
+nixos-generate-config --show-hardware-config > hosts/mntbnd/hardware-configuration.nix
 
 # 3. build the system, then the home
 sudo nixos-rebuild switch --flake ./nix#mntbnd
@@ -95,7 +102,7 @@ After the first switch, everything goes through `nx`.
 
 ## nx
 
-`nx` is one command for the whole update lifecycle. It lives in [`hm/terminal/nx.nix`](hm/terminal/nx.nix), wraps [`nh`](https://github.com/nix-community/nh), and ships zsh and fish completions.
+`nx` is one command for the whole update lifecycle. It lives in [`pkgs/nx/`](pkgs/nx/) (plain bash in `nx.sh`), wraps [`nh`](https://github.com/nix-community/nh), and ships zsh and fish completions.
 
 | Command | What it does |
 | --- | --- |
@@ -120,13 +127,13 @@ Every greeter has its own problems, so the alternatives stay in the repo next to
 
 | Variant | File |
 | --- | --- |
-| **sysc-greet** (active) | [`greeters/sysc-greet.nix`](nix/desktop/greeters/sysc-greet.nix) |
-| tuigreet | [`greeters/tuigreet.nix`](nix/desktop/greeters/tuigreet.nix) |
-| LightDM | [`greeters/lightdm.nix`](nix/desktop/greeters/lightdm.nix) |
-| GDM | [`greeters/gdm.nix`](nix/desktop/greeters/gdm.nix) |
-| ly | [`greeters/ly.nix`](nix/desktop/greeters/ly.nix) |
+| **sysc-greet** (active) | [`greeters/sysc-greet.nix`](modules/nixos/desktop/greeters/sysc-greet.nix) |
+| tuigreet | [`greeters/tuigreet.nix`](modules/nixos/desktop/greeters/tuigreet.nix) |
+| LightDM | [`greeters/lightdm.nix`](modules/nixos/desktop/greeters/lightdm.nix) |
+| GDM | [`greeters/gdm.nix`](modules/nixos/desktop/greeters/gdm.nix) |
+| ly | [`greeters/ly.nix`](modules/nixos/desktop/greeters/ly.nix) |
 
-What every greeter shares (desktop services, avatar, gnome utility apps, xdg dirs) is in [`greeters/common.nix`](nix/desktop/greeters/common.nix). The active one is picked by a single import line in [`nix/desktop/default.nix`](nix/desktop/default.nix).
+What every greeter shares (desktop services, avatar, gnome utility apps, xdg dirs) is in [`greeters/common.nix`](modules/nixos/desktop/greeters/common.nix). The active one is picked by a single import line in [`modules/nixos/desktop/default.nix`](modules/nixos/desktop/default.nix).
 
 `nx try lightdm` swaps that line, builds, and with your OK makes that variant the default boot entry. It restores `desktop/default.nix` afterwards and never touches the running session. Go back with `nx os boot`.
 
@@ -135,6 +142,13 @@ What every greeter shares (desktop services, avatar, gnome utility apps, xdg dir
 ```sh
 nix develop ./nix   # alejandra, statix, deadnix, nh
 nx fmt && nx lint
+```
+
+New projects get their toolchain from a template instead of the global profile:
+
+```sh
+nix flake init -t ~/dots/nix#rust   # or python, node, c
+direnv allow
 ```
 
 CI runs the same statix, deadnix and alejandra checks on every push and pull request.

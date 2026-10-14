@@ -1,12 +1,16 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  my,
+  ...
+}: {
   imports = [
     ./locale.nix
     ./packages.nix
   ];
 
-  users.users.boi = {
+  users.users.${my.user} = {
     isNormalUser = true;
-    description = "Yasir Zafar";
+    description = my.fullName;
 
     extraGroups = [
       "wheel"

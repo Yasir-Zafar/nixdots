@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  my,
+  ...
+}: {
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
@@ -7,7 +11,7 @@
       General = {
         Experimental = true;
         ControllerMode = "dual";
-        Name = "mntbnd-bt";
+        Name = "${my.host}-bt";
         Class = "0x000100";
       };
 

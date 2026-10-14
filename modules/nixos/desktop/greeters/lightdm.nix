@@ -1,22 +1,26 @@
 # LightDM with the gtk greeter, themed from the repo's assets/
-{pkgs, ...}: {
+{
+  pkgs,
+  my,
+  ...
+}: {
   services.xserver = {
     enable = true; # LightDM still lives under the xserver service
     displayManager.lightdm = {
       enable = true;
-      background = ../../../assets/wall.jpg;
+      background = my.assets + "/wall.jpg";
       greeters.gtk = {
         enable = true;
         # Reference the files relative to this .nix file
         theme.package = pkgs.runCommand "local-theme" {} ''
           mkdir -p $out/share/themes
-          cp -r ${../../../assets/Gruvbox-Green-Dark-Medium} $out/share/themes/Gruvbox-Green-Dark-Medium
+          cp -r ${my.assets + "/Gruvbox-Green-Dark-Medium"} $out/share/themes/Gruvbox-Green-Dark-Medium
         '';
         theme.name = "Gruvbox-Green-Dark-Medium";
 
         iconTheme.package = pkgs.runCommand "local-icons" {} ''
           mkdir -p $out/share/icons
-          cp -r ${../../../assets/Gruvbox-Plus-Dark} $out/share/icons/Gruvbox-Plus-Dark
+          cp -r ${my.assets + "/Gruvbox-Plus-Dark"} $out/share/icons/Gruvbox-Plus-Dark
         '';
         iconTheme.name = "Gruvbox-Plus-Dark";
         cursorTheme = {
