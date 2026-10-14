@@ -47,7 +47,7 @@ How this config is meant to be kept, and what not to "fix". Read this before cha
 
 ## Privacy and secrets
 
-- The repo is public, so **personal values go in `secrets/secrets.yaml` (sops-nix)**, not in `.nix` files or `lib/`. Today that's git's email and the Proton address.
+- The repo is public, so **personal values go in `secrets/secrets.yaml` (sops-nix)**, not in `.nix` files or `lib/`. Today that's git's email and the Proton address. Git commits use the GitHub **noreply** address (`<id>+Yasir-Zafar@users.noreply.github.com`), so new commits don't publish a real address; the old Gmail author email stays in past commits unless history is rewritten.
 - The age key (`~/.config/sops/age/keys.txt`) never goes in the repo. It's backed up separately.
 - Values a module needs *while building* can't be secrets (they'd end up in the public store and the repo). In that case the setting moves out of Nix instead: the Thunderbird account now lives only in the Thunderbird profile.
 - This is about privacy, not hardening: the "no LUKS / Secure Boot / sudo password" rule below still stands.

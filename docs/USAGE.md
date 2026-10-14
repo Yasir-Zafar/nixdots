@@ -309,7 +309,7 @@ The comments in that file say what each current parameter does and which ones ar
 
 ### Secrets (sops)
 
-Personal values that shouldn't be in a public repo (right now: git's email, the Proton address) live in `secrets/secrets.yaml`, encrypted with [sops](https://github.com/getsops/sops). The age key that decrypts it is `~/.config/sops/age/keys.txt`. It is **not** in the repo: **keep a backup** (password manager, USB). Without it the secrets are gone.
+Personal values that shouldn't be in a public repo (right now: git's email, which is the GitHub noreply address, and the Proton address) live in `secrets/secrets.yaml`, encrypted with [sops](https://github.com/getsops/sops). The age key that decrypts it is `~/.config/sops/age/keys.txt`. It is **not** in the repo: **keep a backup** (password manager, USB). Without it the secrets are gone.
 
 ```sh
 sops ~/dots/secrets/secrets.yaml     # opens it decrypted in $EDITOR, re-encrypts on save
