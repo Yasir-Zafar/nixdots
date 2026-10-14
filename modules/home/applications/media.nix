@@ -16,8 +16,8 @@
 
     config = {
       hwdec = "auto-safe";
-      vo = "gpu";
-      profile = "gpu-hq";
+      vo = "gpu-next"; # libplacebo renderer, mpv's recommended one
+      profile = "high-quality"; # renamed from gpu-hq
       scale = "ewa_lanczossharp";
       cscale = "ewa_lanczossharp";
       video-sync = "display-resample";

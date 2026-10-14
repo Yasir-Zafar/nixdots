@@ -7,6 +7,7 @@
 
   environment.systemPackages = with pkgs; [
     winetricks
+    mangohud # overlay: steam launch options `mangohud %command%`
 
     heroic
     prismlauncher

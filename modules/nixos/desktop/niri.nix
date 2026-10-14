@@ -48,7 +48,8 @@
     cliphist
     grim
     slurp
-    swappy
+    # swappy # replaced by satty (Mod+Shift+S in niri-config.nix)
+    satty
     brightnessctl
     playerctl
     libnotify

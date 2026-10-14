@@ -262,6 +262,8 @@
         "Print".action.screenshot = {};
         "Shift+Print".action.screenshot-screen = {};
         "Ctrl+Print".action.screenshot-window = {};
+        # select an area and annotate it (arrows, text, blur), then save or copy
+        "Mod+Shift+S".action.spawn = ["sh" "-c" "grim -g \"$(slurp)\" - | satty --filename - --output-filename ~/Pictures/Screenshots/satty-$(date +%F_%H-%M-%S).png"];
 
         # Window/Column Focus (Vim keys + Arrows)
         "Mod+H".action.focus-column-left = {};

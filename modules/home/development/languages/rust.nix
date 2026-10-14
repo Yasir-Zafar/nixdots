@@ -3,7 +3,8 @@
     packages = with pkgs; [
       rustup
       cargo-edit
-      cargo-watch
+      # cargo-watch # unmaintained; bacon is the replacement
+      bacon
       cargo-audit
       cargo-outdated
 

@@ -36,7 +36,7 @@
     systemPackages = with pkgs; [
       gnome-calendar
       gnome-calculator
-      gnome-usage
+      # gnome-usage # mission-center (home: applications/utilities.nix) covers it
       gnome-disk-utility
       file-roller
       gnome-autoar

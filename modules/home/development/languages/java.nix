@@ -1,11 +1,7 @@
+# programs.java installs the JDK and sets JAVA_HOME (previously done by hand)
 {pkgs, ...}: {
-  home = {
-    packages = with pkgs; [
-      javaPackages.compiler.temurin-bin.jdk-21
-    ];
-
-    sessionVariables = {
-      JAVA_HOME = "${pkgs.javaPackages.compiler.temurin-bin.jdk-21}";
-    };
+  programs.java = {
+    enable = true;
+    package = pkgs.javaPackages.compiler.temurin-bin.jdk-21;
   };
 }

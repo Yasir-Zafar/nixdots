@@ -10,11 +10,11 @@
       typescript
       eslint
       prettier
-      nodemon
+      # nodemon # node --watch does this natively
       npm-check-updates
       ngrok
       postman
-      nginx
+      # nginx # a server belongs in a project devshell or services.nginx, not the user profile
     ];
 
     # ~/.npm-global/bin is on PATH via shell/environment.nix

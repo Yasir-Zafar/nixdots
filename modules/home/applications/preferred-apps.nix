@@ -9,6 +9,7 @@
   text = "org.gnome.TextEditor.desktop";
   files = "org.gnome.Nautilus.desktop";
   archive = "org.gnome.FileRoller.desktop";
+  mail = "thunderbird.desktop";
 
   assign = app: types: lib.genAttrs types (_: [app]);
 in {
@@ -36,21 +37,31 @@ in {
         "video/mp4"
         "video/x-matroska"
         "video/webm"
+        "video/quicktime"
+        "video/x-msvideo"
       ])
 
       (assign audio [
         "audio/mpeg"
         "audio/flac"
+        "audio/ogg"
+        "audio/opus"
+        "audio/x-wav"
+        "audio/mp4"
       ])
 
       (assign image [
         "image/jpeg"
         "image/png"
         "image/gif"
+        "image/webp"
+        "image/avif"
+        "image/svg+xml"
       ])
 
       (assign pdf ["application/pdf"])
-      (assign text ["text/plain"])
+      (assign text ["text/plain" "text/markdown"])
+      (assign mail ["x-scheme-handler/mailto"])
       (assign files ["inode/directory"])
       (assign archive [
         "application/zip"

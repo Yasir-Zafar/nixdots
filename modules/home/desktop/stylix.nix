@@ -36,6 +36,7 @@
       fish.enable = true;
       lazygit.enable = true;
       zellij.enable = true;
+      yazi.enable = true;
     };
   };
 }

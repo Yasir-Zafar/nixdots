@@ -22,5 +22,16 @@
         ignore_missing_fields = true; # only overrides are set here, the rest stay default
       };
     };
+
+    # yazi: faster terminal file manager with previews (images in ghostty, pdf, video);
+    # `y` opens it and cds to wherever you quit. Colours from stylix.
+    yazi = {
+      enable = true;
+      shellWrapperName = "y";
+      settings.mgr = {
+        show_hidden = false;
+        sort_dir_first = true;
+      };
+    };
   };
 }

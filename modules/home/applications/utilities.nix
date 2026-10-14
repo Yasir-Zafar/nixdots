@@ -11,7 +11,7 @@
     powertop
 
     gnome-feeds
-    gdm-settings
+    # gdm-settings # only useful with the gdm greeter (modules/nixos/desktop/greeters/gdm.nix)
     impression
     theclicker
     (pkgs.gearlever.override {dwarfs = null;}) # only works if the package supports it
