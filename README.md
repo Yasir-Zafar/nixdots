@@ -17,7 +17,7 @@
 [![last commit](https://img.shields.io/github/last-commit/Yasir-Zafar/nixdots?style=for-the-badge&labelColor=282828&color=d65d0e)](https://github.com/Yasir-Zafar/nixdots/commits/main)
 [![repo size](https://img.shields.io/github/repo-size/Yasir-Zafar/nixdots?style=for-the-badge&labelColor=282828&color=cc241d)](https://github.com/Yasir-Zafar/nixdots)
 
-[Overview](#overview) · [Layout](#layout) · [Install](#install) · [nx](#nx) · [Greeters](#greeters) · [Credits](#credits)
+[Overview](#overview) · [Layout](#layout) · [Install](#install) · [nx](#nx) · [Greeters](#greeters) · [Usage guide](docs/USAGE.md) · [Preferences](docs/PREFERENCES.md) · [Credits](#credits)
 
 </div>
 
@@ -98,7 +98,7 @@ sudo nixos-rebuild switch --flake ./nix#mntbnd
 nix run home-manager -- switch --flake ./hm#boi
 ```
 
-After the first switch, everything goes through `nx`.
+After the first switch, everything goes through `nx`. The full guide (everyday loop, every `nx` command, common tasks, recovery, key binds) is in [docs/USAGE.md](docs/USAGE.md); what to keep and what not to change is in [docs/PREFERENCES.md](docs/PREFERENCES.md).
 
 ## nx
 
