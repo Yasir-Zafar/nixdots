@@ -14,6 +14,8 @@
         # emacs key bindings
         fish_default_key_bindings
 
+        # pure prompt settings: unused while starship draws the prompt (terminal/prompt.nix),
+        # kept so re-enabling the pure plugin below brings the old prompt back as it was
         # pure prompt — single line, gruvbox colors
         set -g pure_prompt_single_line          true
         set -g pure_show_system_time            false
@@ -146,10 +148,11 @@
       #                  automatically.                                    #
       # --------------------------------------------------------------- #
       plugins = [
-        {
-          name = "pure";
-          src = pkgs.fishPlugins.pure.src;
-        }
+        # pure: replaced by starship (terminal/prompt.nix), which all three shells share
+        # {
+        #   name = "pure";
+        #   src = pkgs.fishPlugins.pure.src;
+        # }
         {
           name = "fzf-fish";
           src = pkgs.fishPlugins.fzf-fish.src;

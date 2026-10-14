@@ -28,10 +28,33 @@
     "venv" = "source venv/bin/activate";
     "mkvenv" = "python3 -m venv venv && source venv/bin/activate";
   };
+
+  # aliases that shadow a real command (du -> dust, grep -> rg, rm -> rm -i, ...).
+  # In fish they become abbreviations: `du` expands to `dust` on screen when typed,
+  # while scripts, `fish -c` and other programs still get the real du.
+  shadowing = [
+    "cp"
+    "mv"
+    "rm"
+    "mkdir"
+    "diff"
+    "cat"
+    "less"
+    "grep"
+    "find"
+    "ps"
+    "du"
+    "df"
+    "top"
+  ];
+  fishAll = aliases // fishOverrides;
 in {
   programs = {
     zsh.shellAliases = aliases // posixOverrides;
     bash.shellAliases = aliases // posixOverrides;
-    fish.shellAliases = aliases // fishOverrides;
+    fish = {
+      shellAliases = removeAttrs fishAll shadowing;
+      shellAbbrs = lib.getAttrs shadowing fishAll;
+    };
   };
 }

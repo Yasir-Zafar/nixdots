@@ -3,17 +3,24 @@
   pkgs,
   ...
 }: {
-  # user side of nh: NH_OS_FLAKE / NH_HOME_FLAKE. The gc timer lives in nix/nix.nix.
-  programs.nh = {
-    enable = true;
-    osFlake = "${config.home.homeDirectory}/dots/nix";
-    homeFlake = "${config.home.homeDirectory}/dots/hm";
-  };
+  programs = {
+    # user side of nh: NH_OS_FLAKE / NH_HOME_FLAKE. The gc timer lives in nix/nix.nix.
+    nh = {
+      enable = true;
+      osFlake = "${config.home.homeDirectory}/dots/nix";
+      homeFlake = "${config.home.homeDirectory}/dots/hm";
+    };
 
-  # `tldr <cmd>`: short example-first man pages
-  programs.tealdeer = {
-    enable = true;
-    settings.updates.auto_update = true;
+    # `, cowsay hi` runs a package without installing it; typing a missing command
+    # suggests the package that has it (database comes prebuilt from the flake input)
+    nix-index.enable = true;
+    nix-index-database.comma.enable = true;
+
+    # `tldr <cmd>`: short example-first man pages
+    tealdeer = {
+      enable = true;
+      settings.updates.auto_update = true;
+    };
   };
 
   home.packages = with pkgs; [

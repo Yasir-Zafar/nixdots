@@ -65,21 +65,21 @@
             };
           };
         };
-        # clangd = {
-        #   enable = true;
-        #   package = pkgs.llvmPackages_19.clang-tools;
-        #   cmd = [
-        #     "clangd"
-        #     "--background-index"
-        #     "--clang-tidy"
-        #     "--header-insertion=iwyu"
-        #     "--completion-style=detailed"
-        #     "--function-arg-placeholders"
-        #     "--fallback-style=llvm"
-        #   ];
-        #
-        #   filetypes = ["c" "cpp" "objc" "objcpp"];
-        # };
+        # C/C++ (clang-tools from nixpkgs; matches nix/development/c.nix)
+        clangd = {
+          enable = true;
+          cmd = [
+            "clangd"
+            "--background-index"
+            "--clang-tidy"
+            "--header-insertion=iwyu"
+            "--completion-style=detailed"
+            "--function-arg-placeholders"
+            "--fallback-style=llvm"
+          ];
+
+          filetypes = ["c" "cpp" "objc" "objcpp"];
+        };
 
         # rust_analyzer = {
         #   enable = true;
@@ -91,7 +91,25 @@
           enable = true;
         };
 
-        # # For TypeScript/JavaScript
+        # Python
+        basedpyright.enable = true;
+
+        # TypeScript/JavaScript (the vue-aware variant is kept commented below)
+        ts_ls = {
+          enable = true;
+          filetypes = [
+            "typescript"
+            "javascript"
+            "javascriptreact"
+            "typescriptreact"
+          ];
+        };
+
+        bashls.enable = true;
+
+        jsonls.enable = true;
+
+        # # For TypeScript/JavaScript + vue (enable vue_ls below with it)
         # ts_ls = {
         #   enable = true;
         #   filetypes = [
@@ -148,7 +166,7 @@
         #   filetypes = ["html" "javascriptreact" "typescriptreact"];
         # };
         #
-        # jsonls = {
+        # jsonls = { # (enabled above without the extra settings)
         #   enable = true;
         #   settings = {
         #     json = {

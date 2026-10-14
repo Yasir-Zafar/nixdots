@@ -53,8 +53,9 @@
       # --- Prompt Layout ---
       # No framework dependencies.
       # %B...%b (bold), %F{color}...%f (foreground), %~ (CWD), %(?.success.fail) (exit evaluation)
-      setopt PROMPT_SUBST
-      PS1='%B%F{blue}%~%f%b %(?.%F{green}❯%f.%F{red}❯%f) '
+      # prompt comes from starship (terminal/prompt.nix); the old hand-written one:
+      # setopt PROMPT_SUBST
+      # PS1='%B%F{blue}%~%f%b %(?.%F{green}❯%f.%F{red}❯%f) '
 
       # --- Keybindings & Substring Navigation ---
       bindkey '^p'   history-substring-search-up

@@ -17,6 +17,8 @@
     # pin `nix shell nixpkgs#foo` and <nixpkgs> to the system's nixpkgs
     registry.nixpkgs.flake = inputs.nixpkgs;
     nixPath = ["nixpkgs=flake:nixpkgs"];
+    # no nix-channel: everything comes from the flakes, and nixPath above covers <nixpkgs>
+    channel.enable = false;
 
     optimise = {
       automatic = true;
@@ -26,6 +28,9 @@
 
   # cap the journal instead of vacuuming it by hand (it was ~390M)
   services.journald.settings.Journal.SystemMaxUse = "500M";
+
+  # needs a channel database; nix-index (hm/terminal/tools.nix) does this job instead
+  programs.command-not-found.enable = false;
 
   # system side of nh: the weekly gc timer (runs as root, so it also cleans home-manager
   # and user profiles). hm/terminal/tools.nix sets the flake paths for the user side.

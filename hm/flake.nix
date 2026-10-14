@@ -39,6 +39,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # prebuilt nix-index database: `, <cmd>` (comma) and command-not-found
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     antigravity-nix = {
       url = "github:jacopone/antigravity-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -87,6 +93,7 @@
           niri.homeModules.niri
           inputs.nixcord.homeModules.nixcord
           inputs.stylix.homeModules.stylix
+          inputs.nix-index-database.homeModules.default
           ./home.nix
         ];
 

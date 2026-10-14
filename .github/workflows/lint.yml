@@ -24,3 +24,19 @@ jobs:
 
       - name: alejandra
         run: nix run nixpkgs#alejandra -- --check --quiet nix hm dotfiles
+
+  eval:
+    # catches evaluation errors (removed packages, renamed options) that lint can't see;
+    # it only instantiates the derivations, nothing is built or downloaded beyond inputs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: experimental-features = nix-command flakes
+
+      - name: system (nix/)
+        run: nix eval --raw ./nix#nixosConfigurations.mntbnd.config.system.build.toplevel.drvPath
+
+      - name: home (hm/)
+        run: nix eval --raw ./hm#homeConfigurations.boi.activationPackage.drvPath
