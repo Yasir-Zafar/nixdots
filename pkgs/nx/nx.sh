@@ -22,7 +22,7 @@ nx - nix update management
   nx optimise              nix store optimise                                                   [nso]
   nx diff                  package changes since boot (booted vs current system)
   nx status                lock ages, nixpkgs revs, uncommitted changes, disk space
-  nx doctor                checks for the usual problems (env vars, stub flake, core dumps, backups, reboot needed)
+  nx doctor                checks for the usual problems (env vars, stub flake, sops key, core dumps, backups, reboot needed)
   nx rollback [os|home]    list generations; `os [N]` / `home [N]` go back (previous one by default)
   nx try <greeter>         boot-test another greeter (tuigreet|lightdm|gdm|ly|sysc), see below
   nx firmware [action]     firmware via fwupd: check (default) | update | devices | history | bios
@@ -229,6 +229,8 @@ doctor() {
   echo ":: session"
   if [ -n "${NH_OS_FLAKE:-}" ] && [ -n "${NH_HOME_FLAKE:-}" ]; then ok "NH_OS_FLAKE / NH_HOME_FLAKE set"; else warn "NH_OS_FLAKE/NH_HOME_FLAKE not set: log out and in (nx always passes paths explicitly, so it is unaffected)"; fi
   if [ -e "$HOME/.config/home-manager/flake.nix" ]; then warn "stub flake at ~/.config/home-manager: a bare 'nh home switch' would use it instead of ~/dots/hm"; else ok "no stub home-manager flake"; fi
+
+  if [ -r "$HOME/.config/sops/age/keys.txt" ]; then ok "sops age key present"; else warn "no sops age key at ~/.config/sops/age/keys.txt: secrets (git email) can't be decrypted; restore it from your backup"; fi
 
   echo ":: system"
   if [ "$(readlink /run/booted-system/kernel)" != "$(readlink /run/current-system/kernel)" ] ||

@@ -8,15 +8,12 @@
       cargo-audit
       cargo-outdated
 
-      openssl
-      pkg-config
-      libiconv
       taplo
+      # openssl, pkg-config, libiconv: native deps belong in the project's dev shell
+      # (templates/rust wires openssl + pkg-config); globally they never linked anyway
     ];
 
     # ~/.cargo/bin is on PATH via shell/environment.nix
-    sessionVariables = {
-      PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
-    };
+    # sessionVariables.PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
   };
 }

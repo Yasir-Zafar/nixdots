@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   my,
   ...
@@ -19,7 +20,7 @@
       settings = {
         # `settings` is the gitconfig itself: top-level keys become [sections]
         user.name = my.git.name;
-        user.email = my.git.email;
+        # user.email: from the sops template (modules/home/secrets.nix), see `includes`
 
         init.defaultBranch = "main";
 
@@ -102,6 +103,9 @@
           ignored = "ls-files --others --ignored --exclude-standard";
         };
       };
+
+      # [user] email, decrypted at login by sops-nix
+      includes = [{inherit (config.sops.templates."git-identity") path;}];
 
       ignores = [
         ".DS_Store"

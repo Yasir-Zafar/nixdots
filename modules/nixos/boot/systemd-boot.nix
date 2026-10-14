@@ -34,17 +34,20 @@
       # nested virtualisation for VMs inside VMs (harmless if unused)
       "kvm-intel.nested=1"
 
-      # hardware workarounds. Candidates to re-test one at a time with the boot editor:
-      # acpi_osi=Linux is an old workaround that modern firmware usually doesn't want;
-      # dsp_driver=1 forces the legacy HDA audio driver instead of SOF (Core Ultra
-      # laptops often need SOF for the built-in mic: if the mic works now, keep it);
-      # the nvme cap keeps the SSD out of its deepest power state (costs some battery,
-      # only needed if the drive has resume problems).
-      "acpi_osi=Linux"
-      "acpi_backlight=native"
-      "snd-intel-dspcfg.dsp_driver=1"
+      "acpi_backlight=native" # only intel_backlight exists; keeps it that way
       "i8042.nopnp" # keyboard/touchpad controller probing
-      "nvme_core.default_ps_max_latency_us=5500"
+
+      # Removed 2026-10-15 (at my request, without a test boot first). If something
+      # below breaks, press `e` at the boot menu, add the param back for one boot to
+      # confirm, then restore it here:
+      #   "acpi_osi=Linux"  old firmware workaround. Symptoms if needed: odd fan,
+      #                     thermal or brightness behaviour, missing hotkeys
+      #   "snd-intel-dspcfg.dsp_driver=1"  forced legacy HDA audio. Without it the SOF
+      #                     driver runs, which also drives the built-in digital mics
+      #                     (firmware ships them). Symptom if needed: no sound at all
+      #   "nvme_core.default_ps_max_latency_us=5500"  kept the SSD out of its deepest
+      #                     power state. Symptoms if needed: nvme timeouts/resets in
+      #                     `journalctl -k`, hangs after suspend
     ];
 
     # already in hardware-configuration.nix's availableKernelModules (ahci is for SATA,

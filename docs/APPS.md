@@ -90,7 +90,7 @@ For how to add or remove things, see [USAGE.md](USAGE.md#6-common-tasks). For ch
 |---|---|---|---|
 | **Discord** + **Vencord** + **OpenASAR** | Discord, with a client mod (plugins, themes) and a faster startup shim | Chat. Plugins and the Gruvbox quick-CSS are declared in Nix via nixcord | `applications/nixcord.nix` (home) |
 | **Beeper** | One app for many chat networks (WhatsApp, Telegram, Signal, …) | Everything that isn't Discord, in one place | `applications/communication.nix` (home) |
-| **Thunderbird** | Mail client | Proton mail through the local bridge. Account and settings are declared; also the `mailto:` handler | `applications/communication.nix` (home) |
+| **Thunderbird** | Mail client | Proton mail through the local bridge. Settings are declared; the account lives in the Thunderbird profile (its address is a secret, see USAGE "Secrets"); also the `mailto:` handler | `applications/communication.nix` (home) |
 | **Proton Mail Bridge** | Local IMAP/SMTP server for an encrypted Proton account | Lets Thunderbird read Proton mail; runs as a user service | `applications/communication.nix` (home) |
 
 ## Media
@@ -226,6 +226,7 @@ All home, from `terminal/tools.nix` unless noted.
 | **comma** (`,`) + **nix-index** | Run any package once without installing it; "command not found" suggests the package | `terminal/tools.nix`, input `nix-index-database` |
 | **statix**, **deadnix**, **alejandra** | Nix linter, unused-code finder, formatter (`nx lint`, `nx fmt`) | `development/nix.nix` (sys) |
 | **nil** | Nix language server (nvim) | `development/nix.nix` (sys) |
+| **sops-nix** + **sops** + **age** | Encrypted secrets in the repo (`secrets/secrets.yaml`), decrypted at login by a user service; `sops` edits them, `age` makes keys. Holds git's email and the Proton address | `modules/home/secrets.nix` |
 | **nix-ld** | Lets downloaded, non-Nix binaries find their libraries | `services/compat.nix` (sys) |
 | **appimage-run** (binfmt) | Run AppImages directly | `services/compat.nix` (sys) |
 | **Flatpak** + **nix-flatpak** | Second app source, sandboxed. nix-flatpak makes the list declarative (Sober is declared) and updates weekly | `desktop/greeters/common.nix`, `desktop/flatpak.nix` (sys) |
@@ -246,9 +247,9 @@ All home, from `terminal/tools.nix` unless noted.
 
 | Area | Tools | Notes | From |
 |---|---|---|---|
-| **C / C++** | gcc, clang, clang-tools (clangd, clang-format), lldb, cmake, meson, ninja, make, pkg-config, ispc (SIMD compiler) | `CC=clang` system-wide; new projects: `templates/c` | `development/c.nix` (sys) |
-| **Python** | python3 with numpy, pandas, requests, matplotlib | quick scripts; projects use `templates/python` (uv) | `development/py.nix` (sys) |
-| **Rust** | rustup, cargo-edit (`cargo upgrade`), bacon (watch/check loop), cargo-audit (vulnerabilities), cargo-outdated, taplo (TOML), openssl/pkg-config/libiconv (native deps) | projects: `templates/rust` | `development/languages/rust.nix` |
+| **C / C++** | gcc, clang, clang-tools (clangd, clang-format), lldb, cmake, meson, ninja, make, pkg-config, ispc (SIMD compiler) | compilers installed globally, but `CC` isn't forced any more; projects that want clang use `templates/c` | `development/c.nix` (sys) |
+| **Python** | plain python3, no global libraries | quick scripts, `py`, `serve`, `mkvenv`; libraries per project with `templates/python` (uv) | `development/py.nix` (sys) |
+| **Rust** | rustup, cargo-edit (`cargo upgrade`), bacon (watch/check loop), cargo-audit (vulnerabilities), cargo-outdated, taplo (TOML) | native deps (openssl…) come from the project shell: `templates/rust` | `development/languages/rust.nix` |
 | **JavaScript / TS** | nodejs, typescript, eslint, prettier, npm-check-updates, ngrok (expose localhost), Postman (API client) | global npm prefix `~/.npm-global` | `development/languages/javascript.nix` |
 | **Java** | Temurin JDK 21 | `JAVA_HOME` set by `programs.java` | `development/languages/java.nix` |
 | **Writing / config linting** | markdownlint-cli2, vale (prose linter), hadolint (Dockerfiles) | | `development/languages/plugins.nix` |
@@ -321,6 +322,7 @@ All in `hardware/intel-graphics.nix` (sys); the laptop has Intel Arc (Arrow Lake
 | **Docker** | Container daemon | `development/default.nix` |
 | **Proton Mail Bridge** | User service for mail | `applications/communication.nix` (home) |
 | **systemd-coredump** | Keeps crash dumps (max 1 GB) for debugging | `boot/systemd-boot.nix` |
+| **sops-nix** | Decrypts secrets into RAM at login (user service) | `modules/home/secrets.nix` |
 | Automatic maintenance | gc, store optimise, journal cap, docker prune, thumbnail ageing ([USAGE §7](USAGE.md#7-what-runs-on-its-own)) | various |
 
 ## Fonts and theming

@@ -6,13 +6,9 @@
   home = "/home/boi";
   host = "mntbnd";
 
-  git = {
-    name = "Yasir-Zafar";
-    email = "yasirzafar365@gmail.com";
-  };
-
-  # Proton address: mail (thunderbird via the bridge) and npm init
-  mail = "mntbnd720@proton.me";
+  # e-mail addresses are not here: they're in secrets/secrets.yaml (sops), so the
+  # public repo doesn't carry them
+  git.name = "Yasir-Zafar";
 
   # repo assets. Use `my.assets + "/file"` so only that file is copied to the store,
   # not the whole folder with the icon theme.

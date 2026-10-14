@@ -9,19 +9,7 @@
 #   2. open Thunderbird, enter that bridge password, and accept the bridge's self-signed
 #      certificate once (also for smtp port 1025)
 # Theme: the "Gruvbox Dark Thunderbird" add-on, installed by hand (no stylix target).
-{
-  pkgs,
-  my,
-  ...
-}: let
-  address = my.mail;
-  realName = my.fullName;
-
-  bridgeTls = {
-    enable = true;
-    useStartTls = true; # bridge listens in plain on localhost and upgrades with STARTTLS
-  };
-in {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     beeper
   ];
@@ -48,27 +36,35 @@ in {
     };
   };
 
-  accounts.email.accounts.proton = {
-    inherit address realName;
-    userName = address;
-    primary = true;
-    flavor = "plain";
-
-    imap = {
-      host = "127.0.0.1";
-      port = 1143;
-      tls = bridgeTls;
-    };
-
-    smtp = {
-      host = "127.0.0.1";
-      port = 1025;
-      tls = bridgeTls;
-    };
-
-    thunderbird = {
-      enable = true;
-      profiles = ["default"];
-    };
-  };
+  # The Proton account was declared here. The address now lives only in
+  # secrets/secrets.yaml (proton_address), so the public repo doesn't carry it, and an
+  # e-mail account can't be built from a runtime secret. Thunderbird keeps the account
+  # in its own profile (prefs.js), so mail works as before. To recreate it on a new
+  # machine: Thunderbird → new account → IMAP 127.0.0.1:1143 / SMTP 127.0.0.1:1025,
+  # STARTTLS, user = the proton address, password from `protonmail-bridge --cli` → info.
+  # The old declaration, for reference (address = the proton address, realName = my
+  # full name, bridgeTls = { enable = true; useStartTls = true; }):
+  # accounts.email.accounts.proton = {
+  #   inherit address realName;
+  #   userName = address;
+  #   primary = true;
+  #   flavor = "plain";
+  #
+  #   imap = {
+  #     host = "127.0.0.1";
+  #     port = 1143;
+  #     tls = bridgeTls;
+  #   };
+  #
+  #   smtp = {
+  #     host = "127.0.0.1";
+  #     port = 1025;
+  #     tls = bridgeTls;
+  #   };
+  #
+  #   thunderbird = {
+  #     enable = true;
+  #     profiles = ["default"];
+  #   };
+  # };
 }

@@ -1,8 +1,4 @@
-{
-  pkgs,
-  my,
-  ...
-}: {
+{pkgs, ...}: {
   home = {
     packages = with pkgs; [
       nodejs
@@ -24,7 +20,6 @@
 
     file.".npmrc".text = ''
       prefix=''${HOME}/.npm-global
-      init-author-email=${my.mail}
       init-license=MIT
       init-version=0.1.0
       engine-strict=false

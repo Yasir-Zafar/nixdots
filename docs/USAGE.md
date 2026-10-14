@@ -44,6 +44,7 @@ dots/
 ├── pkgs/nx/               the nx command: nx.sh (plain bash) + completions
 ├── lib/default.nix        shared values (`my`)
 ├── templates/             per-project dev shells (rust, python, node, c)
+├── secrets/secrets.yaml   encrypted personal values (sops); key: ~/.config/sops/age/keys.txt
 ├── assets/                wallpaper, avatar, GTK + icon themes (applied with nwg-look)
 ├── docs/                  this guide, APPS.md (what every app is for), PREFERENCES.md
 └── statix.toml            lint ignores
@@ -58,7 +59,8 @@ dots/
 | change session-wide env vars (Wayland, Qt, SDL…) | `modules/nixos/desktop/niri.nix` |
 | change default apps (what opens what) | `modules/home/applications/preferred-apps.nix` |
 | change a kernel param | **test first**, see [§6](#test-a-kernel-parameter), then `modules/nixos/boot/systemd-boot.nix` |
-| change the user, host or an e-mail | `lib/default.nix` only |
+| change the user or host | `lib/default.nix` only |
+| change an e-mail, token or anything private | `sops secrets/secrets.yaml` (see [§6](#secrets-sops)) |
 | change hardware-specific things | `hosts/mntbnd/` (generated file) or `modules/nixos/hardware/` |
 | add a script | a `writeShellApplication` in a module (preferred) or `pkgs/` if it is bigger |
 
@@ -72,11 +74,16 @@ cd ~/dots
 # 2. on a reinstall or new disk: regenerate the hardware config
 nixos-generate-config --show-hardware-config > hosts/mntbnd/hardware-configuration.nix
 
-# 3. first build of the system, then the home
+# 3. restore the sops age key (from your backup) BEFORE the home switch,
+#    otherwise secrets (git's email) can't be decrypted
+mkdir -p ~/.config/sops/age && cp /path/to/backup/keys.txt ~/.config/sops/age/keys.txt
+chmod 600 ~/.config/sops/age/keys.txt
+
+# 4. first build of the system, then the home
 sudo nixos-rebuild switch --flake ./nix#mntbnd
 nix run home-manager -- switch --flake ./hm#boi
 
-# 4. log out and back in (session vars, NH_OS_FLAKE / NH_HOME_FLAKE), then:
+# 5. log out and back in (session vars, NH_OS_FLAKE / NH_HOME_FLAKE), then:
 nx doctor
 ```
 
@@ -84,6 +91,7 @@ After the first switch, use `nx` for everything. Manual leftovers after a reinst
 
 - **GTK theme / icons:** copy `assets/Gruvbox-Green-Dark-Medium` to `~/.themes/` and `assets/Gruvbox-Plus-Dark` to `~/.icons/`, then pick them in `nwg-look`. The theme isn't maintained in nixpkgs, which is why it lives in the repo.
 - **Proton mail bridge:** one-time login, see the comment at the top of `modules/home/applications/communication.nix`.
+- **Thunderbird account:** not declared any more (the address is a secret). Add it once in Thunderbird: IMAP `127.0.0.1:1143`, SMTP `127.0.0.1:1025`, STARTTLS, user = your Proton address (`sops -d ~/dots/secrets/secrets.yaml` shows it), password from the bridge. The full recipe is in `communication.nix`.
 - **Thunderbird theme:** the "Gruvbox Dark Thunderbird" add-on, installed by hand.
 - **Flatpaks:** nothing to do. The ones declared in `modules/nixos/desktop/flatpak.nix` (Sober) install themselves on the first switch (the first time takes a while: it downloads the runtimes).
 - **Zen:** the extensions declared in `modules/home/applications/zen.nix` install themselves on first start. The profile itself (tabs, logins, history, workspaces) is not in the repo: restore `~/.config/zen` from a backup or sync if you want it back.
@@ -172,6 +180,7 @@ Checks for the usual problems and prints `ok` or `WARN` for each:
 
 | Check | What a WARN means / what to do |
 |---|---|
+| sops age key present | `~/.config/sops/age/keys.txt` is missing: restore it from your backup, then `nx home` (until then git has no email) |
 | `NH_OS_FLAKE` / `NH_HOME_FLAKE` set | the session predates the home config; log out and in (nx itself doesn't care) |
 | stub flake in `~/.config/home-manager` | a bare `nh home switch` would build that instead; delete it |
 | booted kernel matches current | you switched to a new kernel/initrd; reboot when convenient |
@@ -298,6 +307,24 @@ Never put an untested parameter in the config.
 
 The comments in that file say what each current parameter does and which ones are worth re-testing.
 
+### Secrets (sops)
+
+Personal values that shouldn't be in a public repo (right now: git's email, the Proton address) live in `secrets/secrets.yaml`, encrypted with [sops](https://github.com/getsops/sops). The age key that decrypts it is `~/.config/sops/age/keys.txt`. It is **not** in the repo: **keep a backup** (password manager, USB). Without it the secrets are gone.
+
+```sh
+sops ~/dots/secrets/secrets.yaml     # opens it decrypted in $EDITOR, re-encrypts on save
+sops -d ~/dots/secrets/secrets.yaml  # print decrypted
+```
+
+At login the `sops-nix` user service decrypts the declared secrets into RAM (`$XDG_RUNTIME_DIR/secrets.d`, linked from `~/.config/sops-nix/secrets/`). To use a new secret:
+
+1. `sops secrets/secrets.yaml` and add `my_token: …`.
+2. Declare it in `modules/home/secrets.nix`: `sops.secrets.my_token = {};`.
+3. Use `config.sops.secrets.my_token.path` (a file path) or a template (`sops.templates.<name>.content` with `${config.sops.placeholder.my_token}`), like git's identity.
+4. `nx home`.
+
+A secret is a *file at runtime*, not a value at build time. Options that need the plain value while building (an e-mail account's address, for example) can't use it.
+
 ### Add a flatpak
 
 Add its app ID (from [flathub.org](https://flathub.org)) to `services.flatpak.packages` in `modules/nixos/desktop/flatpak.nix`, then `nx os`. It installs in the background during activation. Flatpaks you install by hand are left alone, and all of them update weekly.
@@ -347,6 +374,9 @@ Firmware is **not** updated automatically; run `nx firmware`.
 | Laptop hot, fans loud, stutter on battery | the power profile was probably set to *performance* by hand (`Mod+B`); a manual pick overrides the automatic battery profile. Cycle back to *balanced*. `tuned-adm active` shows the current one |
 | Disk full | `nx storage` to see why; `nx storage clean`; `nx clean`; `--hard` as a last resort |
 | A service keeps failing | `nx doctor`, then `journalctl -b -u <unit>` (system) or `journalctl --user -u <unit>` |
+| `git commit`: "Please tell me who you are" | git's email comes from sops: `systemctl --user status sops-nix` and `nx doctor` (is the age key there?) |
+| No sound after the kernel-param cleanup | boot once with `snd-intel-dspcfg.dsp_driver=1` (boot menu, `e`); if that fixes it, put it back in `modules/nixos/boot/systemd-boot.nix`. Same idea for the other removed params, listed with symptoms in that file |
+| Built-in mic missing | `wpctl status` should list a "Digital Microphone" source; if not, check `journalctl -k -b | grep -i sof` |
 | A missing command | type it anyway: command-not-found suggests the package; `, <cmd>` runs it once |
 
 The boot menu keeps the last 10 system generations (`configurationLimit`), so an older working one is always one reboot away.

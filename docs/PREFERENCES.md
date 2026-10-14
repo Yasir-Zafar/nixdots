@@ -18,7 +18,7 @@ How this config is meant to be kept, and what not to "fix". Read this before cha
 - **Millennium** (Steam) stays commented out in `modules/nixos/gaming/steam.nix`. Upstream lags behind Steam versions.
 - **`vm.swappiness = 10` and the swapfile** stay. Modded Minecraft falls over the moment it loses focus otherwise. zram was added as a faster first swap tier (approved); swappiness was not touched.
 - **The GTK theme and icons in `assets/`** stay, applied with nwg-look. That theme isn't maintained in nixpkgs.
-- **Kernel parameters** change only after a one-boot test from the boot menu (see USAGE §6), or when it is proven from the kernel's own config that a parameter does nothing or is overridden. On that basis `mitigations=auto` (already the default) was removed and `loglevel=3` became `boot.consoleLogLevel` (nixos appended `loglevel=4` after it). `intel_iommu=on` is **not** a default on this kernel and stays; `acpi_osi`, `acpi_backlight`, the audio DSP override, `i8042.nopnp` and the NVMe latency cap stay until tested.
+- **Kernel parameters** change only after a one-boot test from the boot menu (see USAGE §6), or when it is proven from the kernel's own config that a parameter does nothing or is overridden. On that basis `mitigations=auto` (already the default) was removed and `loglevel=3` became `boot.consoleLogLevel` (nixos appended `loglevel=4` after it). `intel_iommu=on` is **not** a default on this kernel and stays. On 2026-10-15 I also had `acpi_osi=Linux`, the audio DSP override (`dsp_driver=1`) and the NVMe latency cap removed **without** a test boot, by choice; `systemd-boot.nix` lists each with the symptoms that mean it's needed back. `acpi_backlight=native` and `i8042.nopnp` stay.
 
 ## Working style
 
@@ -32,7 +32,7 @@ How this config is meant to be kept, and what not to "fix". Read this before cha
 
 - One OOM killer: earlyoom. systemd-oomd is off (it watched no slices here).
 - Wi-Fi power saving is off (latency over a little battery).
-- tuned without `dynamic_tuning`. Picking a profile by hand (`Mod+Shift+Escape`) overrides the automatic battery profile until you switch back to balanced.
+- tuned without `dynamic_tuning`. Picking a profile by hand (`Mod+B`) overrides the automatic battery profile until you switch back to balanced.
 - mpv drops to a lighter profile on battery and for > 1440p video.
 - zsh uses a cached completion dump (full check daily and after each home switch).
 - Gaming: `ntsync` loaded, plus the SteamOS sysctls (`split_lock_mitigate=0` and two others), done in place instead of adding nix-gaming as an input.
@@ -44,6 +44,13 @@ How this config is meant to be kept, and what not to "fix". Read this before cha
 - nixos-hardware: not used. There's no OmniBook profile, and the generic modules duplicate what is already set.
 - **Zen: never set `programs.zen-browser.profiles`.** The module rewrites `profiles.ini` when it's set, and the live profile (`~/.config/zen/15738ebx.Default Profile`) must stay untouched. Declare things through `policies` instead.
 - Claude Code's data (`~/.claude/`, `~/.claude.json`, per-project memory) is never managed by the repo.
+
+## Privacy and secrets
+
+- The repo is public, so **personal values go in `secrets/secrets.yaml` (sops-nix)**, not in `.nix` files or `lib/`. Today that's git's email and the Proton address.
+- The age key (`~/.config/sops/age/keys.txt`) never goes in the repo. It's backed up separately.
+- Values a module needs *while building* can't be secrets (they'd end up in the public store and the repo). In that case the setting moves out of Nix instead: the Thunderbird account now lives only in the Thunderbird profile.
+- This is about privacy, not hardening: the "no LUKS / Secure Boot / sudo password" rule below still stands.
 
 ## Key binds
 
@@ -72,8 +79,8 @@ These were reviewed, and the current choice is deliberate:
 | GNOME Feeds | Newsflash | low-activity but still maintained |
 | superfile **and** yazi | one file manager | both available: `spf`, `y` |
 | media-libs, all fonts, tree, ncdu | pruning | low value, risk of breaking something |
-| Python libs in the system python | only per-project | templates exist for new projects; the global one stays |
-| global `CC=clang`, `PKG_CONFIG_PATH` | devshell only | still relied on; templates are the way forward |
+
+Reversed on 2026-10-15: the global Python libraries, `CC=clang` and `PKG_CONFIG_PATH` are gone. Python is plain `python3`, and projects get their libraries and native deps from `templates/` dev shells.
 
 ## Not wanted
 
@@ -81,4 +88,4 @@ These were reviewed, and the current choice is deliberate:
 - a niri focus ring or border
 - removing documented-but-unused modules
 - merging the flakes, or generalising for other hosts or architectures
-- storage, boot or security hardening (LUKS, Secure Boot, password for sudo)
+- storage, boot or security hardening (LUKS, Secure Boot, password for sudo). Secrets via sops-nix are wanted (privacy), see above

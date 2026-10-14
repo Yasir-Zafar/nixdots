@@ -72,7 +72,8 @@ dots/
 │       ├── applications/  media, documents, network, utilities, nixcord
 │       └── nixvim/        Neovim, written in Nix
 ├── pkgs/nx/              the nx CLI: nx.sh + completions
-├── lib/default.nix       values both flakes share (user, host, emails, assets)
+├── lib/default.nix       values both flakes share (user, host, assets)
+├── secrets/              encrypted personal values (sops-nix); the key is not in the repo
 ├── templates/            per-project dev shells (rust, python, node, c)
 ├── assets/               wallpaper, avatar, GTK and icon themes
 ├── docs/                 usage guide, what every app is for, preferences
@@ -84,7 +85,7 @@ Every directory has a `default.nix` that only imports its siblings. To turn some
 ## Install
 
 > [!WARNING]
-> This is a personal config. The user `boi`, the host `mntbnd` and the addresses are set once in [`lib/default.nix`](lib/default.nix), and `hosts/mntbnd/` holds this laptop's `hardware-configuration.nix`. Read it and borrow pieces rather than applying it blind.
+> This is a personal config. The user `boi` and the host `mntbnd` are set once in [`lib/default.nix`](lib/default.nix), personal values are encrypted in `secrets/` (sops-nix, with a key that isn't in the repo), and `hosts/mntbnd/` holds this laptop's `hardware-configuration.nix`. Read it and borrow pieces rather than applying it blind.
 
 ```sh
 # 1. clone to ~/dots (nx expects that path; override with NX_DOTS)
@@ -93,6 +94,9 @@ cd ~/dots
 
 # 2. swap in your own hardware config
 nixos-generate-config --show-hardware-config > hosts/mntbnd/hardware-configuration.nix
+
+# 2b. restore the sops age key to ~/.config/sops/age/keys.txt (secrets/ needs it;
+#     someone else's fork: replace secrets/ and .sops.yaml with your own)
 
 # 3. build the system, then the home
 sudo nixos-rebuild switch --flake ./nix#mntbnd
@@ -160,7 +164,7 @@ CI runs the same statix, deadnix and alejandra checks on every push and pull req
 - [Noctalia](https://github.com/noctalia-dev/noctalia)
 - [sysc-greet](https://github.com/Nomadcxx/sysc-greet)
 - [Stylix](https://github.com/nix-community/stylix), [nixvim](https://github.com/nix-community/nixvim), [nixcord](https://github.com/FlameFlag/nixcord), [nh](https://github.com/nix-community/nh)
-- [zen-browser-flake](https://github.com/0xc000022070/zen-browser-flake), [claude-code-nix](https://github.com/sadjow/claude-code-nix), [nix-flatpak](https://github.com/gmodena/nix-flatpak), [nix-index-database](https://github.com/nix-community/nix-index-database)
+- [zen-browser-flake](https://github.com/0xc000022070/zen-browser-flake), [claude-code-nix](https://github.com/sadjow/claude-code-nix), [nix-flatpak](https://github.com/gmodena/nix-flatpak), [nix-index-database](https://github.com/nix-community/nix-index-database), [sops-nix](https://github.com/Mic92/sops-nix)
 - [Gruvbox Plus icons](https://github.com/SylEleuth/gruvbox-plus-icon-pack) and [Gruvbox GTK theme](https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme)
 
 <div align="center">
