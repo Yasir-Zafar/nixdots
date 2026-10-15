@@ -68,6 +68,13 @@
       url = "github:jacopone/antigravity-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # VS Code extensions that nixpkgs doesn't ship (programs.vscode in
+    # modules/home/development/editors/vscode.nix); nixpkgs is used wherever it has them
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
