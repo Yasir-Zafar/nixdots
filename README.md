@@ -71,7 +71,7 @@ dots/
 │       ├── development/   editors, languages, git
 │       ├── applications/  media, documents, network, utilities, nixcord
 │       └── nixvim/        Neovim, written in Nix
-├── pkgs/nx/              the nx CLI: nx.sh + completions
+├── pkgs/nx-sh/           the nx CLI (bash): src/*.sh, one file per command + completions
 ├── lib/default.nix       values both flakes share (user, host, assets)
 ├── secrets/              encrypted personal values (sops-nix); the key is not in the repo
 ├── templates/            per-project dev shells (rust, python, node, c)
@@ -107,7 +107,7 @@ After the first switch, everything goes through `nx`. The full guide (everyday l
 
 ## nx
 
-`nx` is one command for the whole update lifecycle. It lives in [`pkgs/nx/`](pkgs/nx/) (plain bash in `nx.sh`), wraps [`nh`](https://github.com/nix-community/nh), and ships zsh and fish completions.
+`nx` is one command for the whole update lifecycle. It lives in [`pkgs/nx-sh/`](pkgs/nx-sh/) (plain bash in `src/`, one file per command), wraps [`nh`](https://github.com/nix-community/nh), and ships zsh and fish completions.
 
 | Command | What it does |
 | --- | --- |

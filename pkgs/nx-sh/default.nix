@@ -1,4 +1,4 @@
-# nx: one command for update management, replaces the ns/hs/nfu/... aliases.
+# nx (bash version): one command for update management, replaces the ns/hs/nfu/... aliases.
 #   nx <command> [option]   see `nx help`
 # It always passes ~/dots/nix and ~/dots/hm explicitly, so it does not depend on
 # NH_OS_FLAKE / NH_HOME_FLAKE being set in the current session.
@@ -9,8 +9,22 @@
 
     runtimeInputs = with pkgs; [nh nix nvd jq git statix deadnix alejandra coreutils findutils gnugrep gawk gnused home-manager fwupd procps];
 
-    # the script itself is plain bash in ./nx.sh (shellcheck runs on it at build time)
-    text = builtins.readFile ./nx.sh;
+    # plain bash in ./src, one file per command, joined in this order (lib first, the
+    # dispatcher last); shellcheck runs on the result at build time
+    text = pkgs.lib.concatMapStringsSep "\n" (f: builtins.readFile (./src + "/${f}")) [
+      "lib.sh"
+      "usage.sh"
+      "rebuild.sh"
+      "update.sh"
+      "status.sh"
+      "firmware.sh"
+      "storage.sh"
+      "apps.sh"
+      "doctor.sh"
+      "rollback.sh"
+      "try.sh"
+      "main.sh"
+    ];
   };
 
   commands = "update os home all build clean optimise diff status apps storage firmware doctor rollback try lint fmt help";

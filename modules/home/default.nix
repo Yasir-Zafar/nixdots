@@ -3,7 +3,7 @@
   imports = [
     ./secrets.nix # sops-nix: secrets/secrets.yaml
     ./dotfiles.nix # nixvim
-    #./scripts/default.nix # superseded by nx (pkgs/nx), kept for reference
+    #./scripts/default.nix # superseded by nx (pkgs/nx-sh), kept for reference
     ./desktop/default.nix
     ./terminal/default.nix
     ./development/default.nix
