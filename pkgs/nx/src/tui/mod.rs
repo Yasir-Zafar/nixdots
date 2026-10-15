@@ -73,7 +73,7 @@ pub struct Action {
     pub label: String,
     pub args: Vec<String>,
     /// needs sudo (nh activation, gc of the system profile, journal vacuum)
-    root: bool,
+    pub root: bool,
 }
 
 pub struct App {
@@ -242,14 +242,15 @@ impl App {
         if let Some(job) = &mut self.job {
             let running = job.finished.is_none();
             let lines = job.screen.lock().map(|s| s.lines.len()).unwrap_or(0);
+            // the last line shown can't go above a screenful, or the pane empties out
+            let top = job.height.get().min(lines);
+            let now = job.scroll.unwrap_or(lines);
+            let up = |by: usize| (lines > top).then(|| now.saturating_sub(by).max(top));
             match k.code {
                 _ if ctrl_c && running => job.stop(),
-                KeyCode::Up | KeyCode::Char('k') => {
-                    job.scroll = Some(job.scroll.unwrap_or(lines).saturating_sub(1))
-                }
-                KeyCode::PageUp => {
-                    job.scroll = Some(job.scroll.unwrap_or(lines).saturating_sub(20))
-                }
+                KeyCode::Up | KeyCode::Char('k') => job.scroll = up(1),
+                KeyCode::PageUp => job.scroll = up(20),
+                KeyCode::Home | KeyCode::Char('g') => job.scroll = up(lines),
                 KeyCode::Down | KeyCode::Char('j') | KeyCode::PageDown => {
                     let step = if k.code == KeyCode::PageDown { 20 } else { 1 };
                     job.scroll = job.scroll.map(|s| s + step).filter(|s| *s < lines);
@@ -476,7 +477,7 @@ pub fn run(paths: &Paths) -> Result<()> {
                         continue;
                     }
                 }
-                match Job::start(&action.label, &action.args) {
+                match Job::start(&action.label, &action.args, &app.paths.links) {
                     Ok(job) => app.job = Some(job),
                     Err(e) => app.message = Some(format!("could not start: {e:#}")),
                 }

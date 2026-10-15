@@ -1,12 +1,16 @@
 //! Terminal output in nh's style: a green `>` for each step, bold headings, ✔ / ! for
-//! results. Colours only when stdout is a terminal and NO_COLOR is unset.
+//! results. Colours only when stdout is a terminal (or NX_COLOR is set, as the TUI does
+//! for the commands it runs in its pane) and NO_COLOR is unset.
 
 use std::io::IsTerminal;
 use std::sync::OnceLock;
 
 fn enabled() -> bool {
     static ON: OnceLock<bool> = OnceLock::new();
-    *ON.get_or_init(|| std::io::stdout().is_terminal() && std::env::var_os("NO_COLOR").is_none())
+    *ON.get_or_init(|| {
+        (std::io::stdout().is_terminal() || std::env::var_os("NX_COLOR").is_some())
+            && std::env::var_os("NO_COLOR").is_none()
+    })
 }
 
 fn code(c: &'static str) -> &'static str {

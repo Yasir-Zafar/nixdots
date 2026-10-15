@@ -3,7 +3,6 @@
 use ratatui::style::{Color, Modifier, Style};
 
 pub const BG0: Color = Color::Rgb(0x28, 0x28, 0x28);
-pub const BG1: Color = Color::Rgb(0x3c, 0x38, 0x36);
 pub const BG2: Color = Color::Rgb(0x50, 0x49, 0x45);
 pub const GRAY: Color = Color::Rgb(0x92, 0x83, 0x74);
 pub const FG: Color = Color::Rgb(0xeb, 0xdb, 0xb2);

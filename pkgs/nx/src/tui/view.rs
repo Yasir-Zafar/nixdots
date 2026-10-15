@@ -1,9 +1,8 @@
 //! Drawing, in gruvbox (see theme.rs).
 
-use super::theme::{
-    self as t, AQUA, BG1, BG2, BLUE, FG, FG4, GRAY, GREEN, ORANGE, PURPLE, RED, YELLOW,
-};
-use super::{App, Load, SortBy, Tab, job::Job};
+use super::job::{self, Cells, Job};
+use super::theme::{self as t, AQUA, BG2, BLUE, FG, FG4, GRAY, GREEN, ORANGE, PURPLE, RED, YELLOW};
+use super::{App, Load, SortBy, Tab};
 use crate::cmd::apps::Class;
 use crate::ui::{human, human_binary};
 use ratatui::Frame;
@@ -72,14 +71,18 @@ pub fn draw(f: &mut Frame, app: &mut App) {
     ])
     .areas(f.area());
 
-    // tabs centred across the whole width; the nx badge sits on the left
+    // tabs centred across the whole width; the nx badge sits on the left. While a job
+    // runs they can't be used, so they step back.
+    let busy = app.job.as_ref().is_some_and(|j| j.finished.is_none());
     let mut spans = vec![];
     for (i, tab) in Tab::ALL.iter().enumerate() {
         if i > 0 {
             spans.push(Span::styled("   ", Style::new()));
         }
         let label = format!(" {} {} ", i + 1, tab.title());
-        let style = if *tab == app.tab {
+        let style = if busy {
+            Style::new().fg(BG2)
+        } else if *tab == app.tab {
             t::key(YELLOW)
         } else {
             Style::new().fg(FG4)
@@ -104,7 +107,7 @@ pub fn draw(f: &mut Frame, app: &mut App) {
 
     key_panel(f, app, keys);
     if let Some(action) = &app.confirm {
-        confirm(f, &action.label, &action.args.join(" "));
+        confirm(f, &action.label, &action.args.join(" "), action.root);
     }
 }
 
@@ -126,6 +129,7 @@ fn key_panel(f: &mut Frame, app: &App, area: Rect) {
                 &[
                     ("↑↓", "scroll", BLUE),
                     ("PgUp/PgDn", "page", BLUE),
+                    ("Home", "top", BLUE),
                     ("End", "follow", BLUE),
                 ],
             ),
@@ -186,33 +190,45 @@ fn key_panel(f: &mut Frame, app: &App, area: Rect) {
     );
 }
 
-fn confirm(f: &mut Frame, label: &str, command: &str) {
-    let area = f.area();
-    let w = (label.len().max(command.len()) as u16 + 8).clamp(44, area.width.saturating_sub(4));
-    let rect = Rect::new(
-        area.width.saturating_sub(w) / 2,
-        (area.height / 2).saturating_sub(3),
-        w,
-        6,
+fn confirm(f: &mut Frame, label: &str, command: &str, root: bool) {
+    let runs = format!(
+        "runs nx {command}{}",
+        if root { "  ·  needs sudo" } else { "" }
     );
-    f.render_widget(Clear, rect);
+    let keys = Line::from(vec![
+        Span::styled(" y ", t::key(GREEN)),
+        Span::styled(" or ", t::muted()),
+        Span::styled(" Enter ", t::key(GREEN)),
+        Span::styled(" go", t::text()),
+        Span::styled("     any other key cancels", t::muted()),
+    ]);
     let text = vec![
         Line::styled(label.to_string(), Style::new().fg(FG).bold()),
-        Line::styled(format!("runs: nx {command}"), t::muted()),
+        Line::styled(runs.clone(), t::muted()),
         Line::from(""),
-        Line::from(vec![
-            Span::styled(" y ", t::key(GREEN)),
-            Span::styled(" / ", t::muted()),
-            Span::styled(" Enter ", t::key(GREEN)),
-            Span::styled(" go    ", t::text()),
-            Span::styled(" any other key ", t::key(RED)),
-            Span::styled(" cancel", t::text()),
-        ]),
+        keys.clone(),
     ];
+    // content, plus two columns of padding and the border on each side
+    let content = [label.chars().count(), runs.chars().count(), keys.width()]
+        .into_iter()
+        .max()
+        .unwrap_or(0) as u16;
+    let area = f.area();
+    let w = (content + 6).min(area.width);
+    let h = (text.len() as u16 + 4).min(area.height);
+    let rect = Rect::new(
+        area.x + area.width.saturating_sub(w) / 2,
+        area.y + area.height.saturating_sub(h) / 2,
+        w,
+        h,
+    );
+    f.render_widget(Clear, rect);
     f.render_widget(
-        Paragraph::new(text)
-            .style(Style::new().bg(BG1))
-            .block(block("Run?").border_style(Style::new().fg(YELLOW))),
+        Paragraph::new(text).block(
+            block("Run?")
+                .border_style(Style::new().fg(YELLOW))
+                .padding(ratatui::widgets::Padding::symmetric(2, 1)),
+        ),
         rect,
     );
 }
@@ -613,6 +629,54 @@ fn code(f: &mut Frame, app: &App, area: Rect) {
     f.render_widget(table, area);
 }
 
+/// What the log says so far: its length, nx/nh steps, warnings and errors.
+struct Summary {
+    lines: usize,
+    steps: Vec<String>,
+    warnings: usize,
+    errors: usize,
+}
+
+fn summary(job: &Job) -> Summary {
+    let mut sum = Summary {
+        lines: 0,
+        steps: vec![],
+        warnings: 0,
+        errors: 0,
+    };
+    let Ok(screen) = job.screen.lock() else {
+        return sum;
+    };
+    sum.lines = screen.lines.len();
+    for l in &screen.lines {
+        let text = job::text(l);
+        let trimmed = text.trim_start();
+        // nh also uses `>` for a few remarks that aren't steps
+        if let Some(step) = trimmed
+            .strip_prefix("> ")
+            .filter(|s| !s.starts_with("No version or size changes"))
+        {
+            sum.steps.push(step.trim().to_string());
+        }
+        let lower = trimmed.to_lowercase();
+        if lower.starts_with("warning:") {
+            sum.warnings += 1;
+        } else if lower.starts_with("error") {
+            sum.errors += 1;
+        }
+    }
+    sum
+}
+
+fn clock(secs: u64) -> String {
+    format!("{}:{:02}", secs / 60, secs % 60)
+}
+
+fn spinner(job: &Job) -> &'static str {
+    const FRAMES: [&str; 10] = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+    FRAMES[(job.elapsed().as_millis() / 100) as usize % FRAMES.len()]
+}
+
 /// A running (or finished) action: output on top, system stats below.
 fn job_view(f: &mut Frame, job: &Job, area: Rect) {
     let [out_area, stats_area] =
@@ -620,35 +684,46 @@ fn job_view(f: &mut Frame, job: &Job, area: Rect) {
 
     let elapsed = job.elapsed().as_secs();
     let elapsed = format!("{}:{:02}", elapsed / 60, elapsed % 60);
-    let (state, style) = match job.finished {
-        None => ("running", Style::new().fg(BG1).bg(YELLOW).bold()),
-        Some((true, _)) => ("done", t::key(GREEN)),
-        Some((false, _)) => ("failed", t::key(RED)),
+    // quiet while it runs; the outcome gets the colour
+    let (state, style, border) = match job.finished {
+        None => (
+            format!("{} running", spinner(job)),
+            Style::new().fg(YELLOW),
+            BG2,
+        ),
+        Some((true, _)) => (" done ".to_string(), t::key(GREEN), GREEN),
+        Some((false, _)) => (" failed ".to_string(), t::key(RED), RED),
     };
-    let b = block(&job.label)
-        .border_style(Style::new().fg(match job.finished {
-            None => YELLOW,
-            Some((true, _)) => GREEN,
-            Some((false, _)) => RED,
-        }))
+    let b = Block::bordered()
+        .border_type(BorderType::Rounded)
+        .border_style(Style::new().fg(border))
+        .title(Span::styled(
+            format!(" {} ", job.label),
+            if job.finished.is_none() {
+                Style::new().fg(FG4).bold()
+            } else {
+                Style::new().fg(border).bold()
+            },
+        ))
         .title_top(
             Line::from(vec![
                 Span::styled(format!(" {} ", job.command), t::muted()),
-                Span::styled(format!(" {state} "), style),
-                Span::styled(format!(" {elapsed} "), t::number()),
+                Span::styled(state, style),
+                Span::styled(format!(" {elapsed} "), t::muted()),
             ])
             .right_aligned(),
         );
     let inner = b.inner(out_area);
     f.render_widget(b, out_area);
     let height = inner.height as usize;
+    job.height.set(height);
     let lines: Vec<Line> = job
         .screen
         .lock()
         .map(|s| {
             let end = job.scroll.unwrap_or(s.lines.len()).min(s.lines.len());
             let start = end.saturating_sub(height);
-            s.lines[start..end].iter().map(|l| output_line(l)).collect()
+            s.lines[start..end].iter().map(output_line).collect()
         })
         .unwrap_or_default();
     f.render_widget(Paragraph::new(lines), inner);
@@ -656,8 +731,28 @@ fn job_view(f: &mut Frame, job: &Job, area: Rect) {
     stats(f, job, stats_area);
 }
 
-/// Colour nh / nvd / nx output lines by what they are.
-fn output_line(l: &str) -> Line<'static> {
+/// A line as it was printed, colours and progress bars included; lines that came
+/// without any colour get one from what they look like.
+fn output_line(cells: &Cells) -> Line<'static> {
+    if cells.iter().all(|(_, s)| *s == Style::default()) {
+        return plain_line(&job::text(cells));
+    }
+    let mut spans: Vec<Span> = vec![];
+    let mut run = String::new();
+    let mut style = cells[0].1;
+    for (c, s) in cells {
+        if *s != style {
+            spans.push(Span::styled(std::mem::take(&mut run), style));
+            style = *s;
+        }
+        run.push(*c);
+    }
+    spans.push(Span::styled(run, style));
+    Line::from(spans)
+}
+
+/// Colour uncoloured nh / nvd / nx output lines by what they are.
+fn plain_line(l: &str) -> Line<'static> {
     let lower = l.to_lowercase();
     let trimmed = l.trim_start();
     if let Some(rest) = trimmed.strip_prefix("> ") {
@@ -691,19 +786,33 @@ fn output_line(l: &str) -> Line<'static> {
     Line::styled(l.to_string(), style)
 }
 
+/// Under the output: network on the left, the machine in the middle, this run on the
+/// right.
 fn stats(f: &mut Frame, job: &Job, area: Rect) {
     let b = block("System");
     let inner = b.inner(area);
     f.render_widget(b, area);
-    let [net, side] =
-        Layout::horizontal([Constraint::Percentage(62), Constraint::Percentage(38)]).areas(inner);
+    let [net, _, side, _, run] = Layout::horizontal([
+        Constraint::Percentage(42),
+        Constraint::Length(2),
+        Constraint::Percentage(26),
+        Constraint::Length(3),
+        Constraint::Fill(1),
+    ])
+    .areas(inner);
+    network(f, job, net);
+    machine(f, job, side);
+    this_run(f, job, run);
+}
+
+fn network(f: &mut Frame, job: &Job, area: Rect) {
     let [down_label, down, up_label, up] = Layout::vertical([
         Constraint::Length(1),
         Constraint::Length(2),
         Constraint::Length(1),
         Constraint::Length(2),
     ])
-    .areas(net);
+    .areas(area);
     let rate = |q: &std::collections::VecDeque<u64>| q.back().copied().unwrap_or(0);
     let (rx, tx) = job.stats.totals();
     let label = |name: &str, colour: Color, now: u64, total: u64| {
@@ -734,15 +843,11 @@ fn stats(f: &mut Frame, job: &Job, area: Rect) {
             .style(Style::new().fg(PURPLE)),
         up,
     );
+}
 
-    let [cpu_label, cpu, mem_label, mem, load] = Layout::vertical([
-        Constraint::Length(1),
-        Constraint::Length(1),
-        Constraint::Length(1),
-        Constraint::Length(1),
-        Constraint::Length(2),
-    ])
-    .areas(side);
+/// cpu (with load), memory and the store's disk, each a label over a gauge.
+fn machine(f: &mut Frame, job: &Job, area: Rect) {
+    let rows: [Rect; 6] = Layout::vertical([Constraint::Length(1); 6]).areas(area);
     let gauge = |ratio: f64, colour: Color| {
         LineGauge::default()
             .filled_style(Style::new().fg(colour))
@@ -752,45 +857,135 @@ fn stats(f: &mut Frame, job: &Job, area: Rect) {
             .label("")
             .ratio(ratio.clamp(0.0, 1.0))
     };
+    let ratio = |part: u64, whole: u64| {
+        if whole > 0 {
+            part as f64 / whole as f64
+        } else {
+            0.0
+        }
+    };
     let s = &job.stats;
     let cpu_col = match s.cpu_percent {
         p if p >= 85.0 => RED,
         p if p >= 50.0 => YELLOW,
         _ => GREEN,
     };
-    f.render_widget(
-        Line::from(vec![
-            Span::styled(" cpu ", Style::new().fg(BLUE).bold()),
-            Span::styled(format!("{:.0}%", s.cpu_percent), Style::new().fg(FG).bold()),
-        ]),
-        cpu_label,
-    );
-    f.render_widget(
-        gauge(s.cpu_percent / 100.0, cpu_col),
-        cpu.inner(ratatui::layout::Margin::new(1, 0)),
-    );
-    let mem_ratio = if s.mem_total > 0 {
-        s.mem_used as f64 / s.mem_total as f64
-    } else {
-        0.0
+    let mem = ratio(s.mem_used, s.mem_total);
+    let store_used = s.store_total.saturating_sub(s.store_free);
+    let disk = ratio(store_used, s.store_total);
+    let low = s.store_total > 0 && s.store_free < 10 << 30;
+    let items = [
+        (
+            Line::from(vec![
+                Span::styled("cpu ", Style::new().fg(BLUE).bold()),
+                Span::styled(format!("{:.0}%", s.cpu_percent), Style::new().fg(FG).bold()),
+                Span::styled(format!("   load {}", s.load), t::muted()),
+            ]),
+            gauge(s.cpu_percent / 100.0, cpu_col),
+        ),
+        (
+            Line::from(vec![
+                Span::styled("mem ", Style::new().fg(BLUE).bold()),
+                Span::styled(human(s.mem_used), Style::new().fg(FG).bold()),
+                Span::styled(format!(" of {}", human(s.mem_total)), t::muted()),
+            ]),
+            gauge(mem, if mem > 0.85 { RED } else { PURPLE }),
+        ),
+        (
+            Line::from(vec![
+                Span::styled("/nix ", Style::new().fg(BLUE).bold()),
+                Span::styled(
+                    human(s.store_free),
+                    if low {
+                        t::bad()
+                    } else {
+                        Style::new().fg(FG).bold()
+                    },
+                ),
+                Span::styled(format!(" free of {}", human(s.store_total)), t::muted()),
+            ]),
+            gauge(disk, if low { RED } else { AQUA }),
+        ),
+    ];
+    for (i, (label, g)) in items.into_iter().enumerate() {
+        f.render_widget(label, rows[i * 2]);
+        f.render_widget(g, rows[i * 2 + 1]);
+    }
+}
+
+/// Time against the last run, what the log holds, then the steps so far (newest last).
+fn this_run(f: &mut Frame, job: &Job, area: Rect) {
+    let sum = summary(job);
+    let running = job.finished.is_none();
+    let elapsed = job.elapsed().as_secs();
+    let sep = || Span::styled("  ·  ", Style::new().fg(BG2));
+
+    let mut time = vec![
+        Span::styled("time ", Style::new().fg(BLUE).bold()),
+        Span::styled(clock(elapsed), Style::new().fg(FG).bold()),
+    ];
+    match job.previous {
+        Some(prev) => {
+            time.push(sep());
+            time.push(Span::styled(
+                format!("last {}", clock(prev.as_secs())),
+                t::muted(),
+            ));
+            if running {
+                time.push(sep());
+                time.push(match prev.as_secs().checked_sub(elapsed) {
+                    Some(left) => Span::styled(format!("~{} left", clock(left)), t::text()),
+                    None => Span::styled("longer than last time", Style::new().fg(YELLOW)),
+                });
+            }
+        }
+        None => {
+            time.push(sep());
+            time.push(Span::styled("first timed run", t::muted()));
+        }
+    }
+
+    let count = |n: usize, what: &str, hot: Style| {
+        vec![
+            Span::styled(n.to_string(), if n > 0 { hot } else { t::muted() }),
+            Span::styled(format!(" {what}"), t::muted()),
+        ]
     };
-    f.render_widget(
-        Line::from(vec![
-            Span::styled(" mem ", Style::new().fg(BLUE).bold()),
-            Span::styled(human(s.mem_used), Style::new().fg(FG).bold()),
-            Span::styled(format!(" of {}", human(s.mem_total)), t::muted()),
-        ]),
-        mem_label,
-    );
-    f.render_widget(
-        gauge(mem_ratio, if mem_ratio > 0.85 { RED } else { PURPLE }),
-        mem.inner(ratatui::layout::Margin::new(1, 0)),
-    );
-    f.render_widget(
-        Line::from(vec![
-            Span::styled(" load ", Style::new().fg(BLUE).bold()),
-            Span::styled(s.load.clone(), t::text()),
-        ]),
-        load,
-    );
+    let mut log = vec![
+        Span::styled("log ", Style::new().fg(BLUE).bold()),
+        Span::styled(sum.lines.to_string(), Style::new().fg(FG).bold()),
+        Span::styled(" lines", t::muted()),
+        sep(),
+    ];
+    log.extend(count(sum.warnings, "warnings", t::warn()));
+    log.push(sep());
+    log.extend(count(sum.errors, "errors", t::bad()));
+    if let Some(n) = job.scroll {
+        log.push(sep());
+        log.push(Span::styled(format!("at {n}"), Style::new().fg(BLUE)));
+    }
+
+    let mut lines = vec![Line::from(time), Line::from(log), Line::from("")];
+    let room = (area.height as usize).saturating_sub(lines.len());
+    let shown = sum.steps.len().saturating_sub(room);
+    for (i, step) in sum.steps.iter().enumerate().skip(shown) {
+        let last = i + 1 == sum.steps.len();
+        let (mark, mark_style, text_style) = match (last, job.finished) {
+            (true, None) => (
+                spinner(job),
+                Style::new().fg(YELLOW).bold(),
+                Style::new().fg(FG).bold(),
+            ),
+            (true, Some((false, _))) => ("✗", t::bad(), Style::new().fg(RED)),
+            _ => ("✓", Style::new().fg(GREEN), t::muted()),
+        };
+        lines.push(Line::from(vec![
+            Span::styled(mark.to_string(), mark_style),
+            Span::styled(format!(" {step}"), text_style),
+        ]));
+    }
+    if sum.steps.is_empty() {
+        lines.push(Line::styled("waiting for the first step…", t::muted()));
+    }
+    f.render_widget(Paragraph::new(lines), area);
 }
