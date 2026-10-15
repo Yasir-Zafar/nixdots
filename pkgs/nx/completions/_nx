@@ -1,0 +1,23 @@
+#compdef nx
+# nx completions (zsh). @jq@ is replaced at build time.
+local -a cmds=(update os home all build clean optimise diff status apps storage firmware doctor rollback try loc lint fmt tui help)
+if (( CURRENT == 2 )); then
+  _describe 'command' cmds
+elif [[ $words[2] == os ]]; then
+  _values 'mode' switch boot test build
+elif [[ $words[2] == home ]]; then
+  _values 'mode' switch build -b
+elif [[ $words[2] == apps ]]; then
+  _values 'option' --all --home --system
+elif [[ $words[2] == storage ]]; then
+  _values 'option' report clean -y --browsers --steam-shaders --trash --hard
+elif [[ $words[2] == firmware ]]; then
+  _values 'action' check update devices history bios
+elif [[ $words[2] == rollback ]]; then
+  _values 'target' os home
+elif [[ $words[2] == try ]]; then
+  _values 'greeter' tuigreet lightdm gdm ly sysc
+elif [[ $words[2] == update ]]; then
+  local -a inputs=(${(f)"$(@jq@ -r '.nodes.root.inputs | keys[]' ~/dots/nix/flake.lock ~/dots/hm/flake.lock 2>/dev/null | sort -u)"})
+  _describe 'input' inputs
+fi

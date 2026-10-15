@@ -8,7 +8,7 @@ nx - nix update management
   nx home [mode] [-b]      home-manager via nh: switch (default) | build; -b backs up conflicts  [hs]
   nx all                   update, then os switch, then home switch
   nx build                 build os and home without activating (safe check)
-  nx clean [nh args]       nh clean all, keeping 7 days / 5 generations by default              [ncg]
+  nx clean [nh args]       nh clean all, keeping the newest 4 generations by default             [ncg]
   nx optimise              nix store optimise                                                   [nso]
   nx diff                  package changes since boot (booted vs current system)
   nx status                lock ages, nixpkgs revs, uncommitted changes, disk space

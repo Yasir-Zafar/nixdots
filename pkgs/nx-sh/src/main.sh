@@ -17,7 +17,7 @@ case "$cmd" in
     run_home build
     ;;
   clean | gc)
-    if [ "$#" -eq 0 ]; then nh clean all --keep-since 7d --keep 5; else nh clean all "$@"; fi
+    if [ "$#" -eq 0 ]; then nh clean all --keep 4; else nh clean all "$@"; fi
     ;;
   optimise | optimize | opt)
     step "Optimising the store (hard-linking identical files)"
