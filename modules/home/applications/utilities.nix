@@ -10,7 +10,7 @@
     warehouse # flatpak manager
     powertop
 
-    gnome-feeds
+    newsflash
     # gdm-settings # only useful with the gdm greeter (modules/nixos/desktop/greeters/gdm.nix)
     impression
     theclicker

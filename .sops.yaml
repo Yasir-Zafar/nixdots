@@ -1,5 +1,3 @@
-# sops: which keys can decrypt which files. The private key is NOT in the repo:
-# ~/.config/sops/age/keys.txt (back it up; without it secrets/ can't be decrypted).
 keys:
   - &boi age16wh5g4q7zhnka80lyq77ly85pfzhzmmh88yf0p6dy5ezhfccgg2s9zsmd2
 creation_rules:

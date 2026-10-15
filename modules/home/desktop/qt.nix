@@ -1,4 +1,4 @@
-# Qt apps follow the GTK theme (set with nwg-look) through Qt's own GTK3 platform
+# Qt apps follow the GTK theme (set in gtk.nix) through Qt's own GTK3 platform
 # theme: GTK fonts, icons, dialogs and colours. There is no `style`: the gtk2 style
 # (qt6gtk2) was removed from nixpkgs with gtk2, and kvantum/adwaita would override GTK.
 {

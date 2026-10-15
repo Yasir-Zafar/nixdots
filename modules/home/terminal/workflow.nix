@@ -1,5 +1,5 @@
 # terminal workflow: history, multiplexer, git ui, file manager
-{
+{pkgs, ...}: {
   programs = {
     atuin = {
       enable = true;
@@ -14,23 +14,44 @@
 
     lazygit.enable = true; # `lg` alias lives in shell/aliases/git.nix
 
-    # `spf`; built-in themes: https://superfile.dev/list/theme-list
-    superfile = {
-      enable = true;
-      settings = {
-        theme = "gruvbox"; # gruvbox dark medium, same as stylix
-        ignore_missing_fields = true; # only overrides are set here, the rest stay default
-      };
-    };
-
     # yazi: faster terminal file manager with previews (images in ghostty, pdf, video);
-    # `y` opens it and cds to wherever you quit. Colours from stylix.
+    # `y` opens it and cds to wherever you quit. Colours and icons come from stylix
+    # (gruvbox-dark-medium); the rest of the look is added here: rounded full border,
+    # git status next to files, size + mtime column, a wider preview pane.
     yazi = {
       enable = true;
       shellWrapperName = "y";
-      settings.mgr = {
-        show_hidden = false;
-        sort_dir_first = true;
+      plugins = {
+        inherit (pkgs.yaziPlugins) full-border git;
+      };
+      initLua = ''
+        require("full-border"):setup { type = ui.Border.ROUNDED }
+        require("git"):setup()
+      '';
+      # square ends on the hovered row instead of the default rounded pill
+      theme.indicator.padding = {
+        open = "▐";
+        close = "▌";
+      };
+      settings = {
+        mgr = {
+          show_hidden = false;
+          sort_dir_first = true;
+          ratio = [1 3 4]; # parent / current / preview
+          linemode = "size";
+        };
+        plugin.prepend_fetchers = [
+          {
+            group = "git";
+            url = "*";
+            run = "git";
+          }
+          {
+            group = "git";
+            url = "*/";
+            run = "git";
+          }
+        ];
       };
     };
   };

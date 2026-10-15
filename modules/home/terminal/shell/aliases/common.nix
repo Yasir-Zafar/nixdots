@@ -33,9 +33,6 @@
   # Markdown
   "md" = "glow";
 
-  # File manager
-  "spf" = "superfile";
-
   # Editors
   "n" = "nvim";
   "v" = "nvim";

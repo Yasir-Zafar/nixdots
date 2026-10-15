@@ -9,7 +9,6 @@
       # nodemon # node --watch does this natively
       npm-check-updates
       ngrok
-      postman
       # nginx # a server belongs in a project devshell or services.nginx, not the user profile
     ];
 

@@ -3,7 +3,9 @@
   pkgs,
   my,
   ...
-}: {
+}: let
+  gruvbox = import ../../../../lib/gruvbox-gtk.nix {inherit pkgs my;};
+in {
   services.xserver = {
     enable = true; # LightDM still lives under the xserver service
     displayManager.lightdm = {
@@ -11,18 +13,9 @@
       background = my.assets + "/wall.jpg";
       greeters.gtk = {
         enable = true;
-        # Reference the files relative to this .nix file
-        theme.package = pkgs.runCommand "local-theme" {} ''
-          mkdir -p $out/share/themes
-          cp -r ${my.assets + "/Gruvbox-Green-Dark-Medium"} $out/share/themes/Gruvbox-Green-Dark-Medium
-        '';
-        theme.name = "Gruvbox-Green-Dark-Medium";
-
-        iconTheme.package = pkgs.runCommand "local-icons" {} ''
-          mkdir -p $out/share/icons
-          cp -r ${my.assets + "/Gruvbox-Plus-Dark"} $out/share/icons/Gruvbox-Plus-Dark
-        '';
-        iconTheme.name = "Gruvbox-Plus-Dark";
+        # same theme and icon packages as home (lib/gruvbox-gtk.nix)
+        inherit (gruvbox) theme;
+        iconTheme = gruvbox.icons;
         cursorTheme = {
           name = "Bibata-Modern-Classic";
           package = pkgs.bibata-cursors;
