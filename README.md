@@ -71,7 +71,8 @@ dots/
 │       ├── development/   editors, languages, git
 │       ├── applications/  media, documents, network, utilities, nixcord
 │       └── nixvim/        Neovim, written in Nix
-├── pkgs/nx-sh/           the nx CLI (bash): src/*.sh, one file per command + completions
+├── pkgs/nx/              the nx CLI + TUI (Rust)
+├── pkgs/nx-sh/           the old bash nx (fallback, one file per command)
 ├── lib/default.nix       values both flakes share (user, host, assets)
 ├── secrets/              encrypted personal values (sops-nix); the key is not in the repo
 ├── templates/            per-project dev shells (rust, python, node, c)
@@ -107,7 +108,7 @@ After the first switch, everything goes through `nx`. The full guide (everyday l
 
 ## nx
 
-`nx` is one command for the whole update lifecycle. It lives in [`pkgs/nx-sh/`](pkgs/nx-sh/) (plain bash in `src/`, one file per command), wraps [`nh`](https://github.com/nix-community/nh), and ships zsh and fish completions.
+`nx` is one command for the whole update lifecycle. It lives in [`pkgs/nx/`](pkgs/nx/) (Rust, with a TUI: `nx tui` or Mod+Shift+U; the old bash version is in `pkgs/nx-sh/`), wraps [`nh`](https://github.com/nix-community/nh), and ships zsh and fish completions.
 
 | Command | What it does |
 | --- | --- |
@@ -156,7 +157,7 @@ nix flake init -t ~/dots/nix#rust   # or python, node, c
 direnv allow
 ```
 
-CI runs the same statix, deadnix and alejandra checks on every push and pull request.
+CI runs the same statix, deadnix and alejandra checks on every push and pull request, plus rustfmt, clippy and the tests for `nx`.
 
 ## Credits
 

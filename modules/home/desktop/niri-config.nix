@@ -245,6 +245,10 @@
         "Mod+W".action.spawn = ["zen-beta"];
         "Mod+E".action.spawn = ["nautilus"];
         "Mod+Shift+Return".action.spawn = ["ghostty" "-e" "nvim"];
+        "Mod+Shift+U" = {
+          action.spawn = ["ghostty" "--title=nx" "-e" "nx" "tui"];
+          hotkey-overlay.title = "nx: updates and system overview (TUI)";
+        };
         "Ctrl+Shift+Escape".action.spawn = ["missioncenter"];
 
         # `Mod+Shift+/` shows every bind with its title

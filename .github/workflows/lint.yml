@@ -25,6 +25,28 @@ jobs:
       - name: alejandra
         run: nix run nixpkgs#alejandra -- --check --quiet nix hm hosts modules home pkgs lib
 
+  nx:
+    # the Rust nx (pkgs/nx): formatting, clippy with warnings as errors, and the tests.
+    # The toolchain comes from nixpkgs, like everything else here
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pkgs/nx
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: experimental-features = nix-command flakes
+
+      - name: rustfmt
+        run: nix shell nixpkgs#cargo nixpkgs#rustfmt --command cargo fmt --check
+
+      - name: clippy
+        run: nix shell nixpkgs#cargo nixpkgs#rustc nixpkgs#clippy nixpkgs#gcc --command cargo clippy --locked --all-targets -- -D warnings
+
+      - name: test
+        run: nix shell nixpkgs#cargo nixpkgs#rustc nixpkgs#gcc --command cargo test --locked
+
   eval:
     # catches evaluation errors (removed packages, renamed options) that lint can't see;
     # it only instantiates the derivations, nothing is built or downloaded beyond inputs

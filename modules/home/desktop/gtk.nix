@@ -14,7 +14,7 @@ in {
   gtk = {
     enable = true;
 
-    theme = gruvbox.theme;
+    inherit (gruvbox) theme;
     # libadwaita/gtk4 ignore the theme name; home-manager imports the theme's gtk.css
     # instead, which needs the package. Explicit so it survives the stateVersion bump.
     gtk4.theme = config.gtk.theme;
