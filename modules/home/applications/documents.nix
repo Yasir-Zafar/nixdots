@@ -3,6 +3,7 @@
     papers
     foliate
     obsidian
+    formiko
     gnome-text-editor
     gnome-decoder
     gnome-frog # ocr: grab text from images
