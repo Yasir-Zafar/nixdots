@@ -61,7 +61,10 @@ in {
         ext.graphql.vscode-graphql
         ext.graphql.vscode-graphql-syntax
 
-        # c / build
+        # c / rust / build (clangd, rust-analyzer and sops come from the system/home PATH)
+        ext.llvm-vs-code-extensions.vscode-clangd
+        ext.rust-lang.rust-analyzer
+        ext.vadimcn.vscode-lldb
         ext.ms-vscode.makefile-tools
 
         # containers
@@ -79,6 +82,13 @@ in {
         ext.tamasfe.even-better-toml
         ext.yzhang.markdown-all-in-one
         ext.mikestead.dotenv
+        ext.redhat.vscode-yaml
+        ext.streetsidesoftware.code-spell-checker
+        ext.vscodevim.vim
+
+        # remote and secrets
+        ext.ms-vscode-remote.remote-ssh
+        ext.signageos.signageos-vscode-sops
       ];
 
       userSettings = {
@@ -142,6 +152,19 @@ in {
         };
 
         # --- extensions ---
+        # vim: same habits as nixvim. Ctrl+P (quick open) and Ctrl+B (sidebar) stay VS Code's
+        "vim.leader" = "<space>";
+        "vim.useSystemClipboard" = true;
+        "vim.hlsearch" = true;
+        "vim.handleKeys" = {
+          "<C-p>" = false;
+          "<C-b>" = false;
+          "<C-w>" = false;
+        };
+        "editor.lineNumbers" = "relative";
+        "rust-analyzer.check.command" = "clippy";
+        "clangd.arguments" = ["--background-index" "--clang-tidy" "--header-insertion=never"];
+        "cSpell.language" = "en";
         "nix.enableLanguageServer" = true;
         "nix.serverPath" = "nil";
         "nix.serverSettings".nil.formatting.command = ["alejandra"];

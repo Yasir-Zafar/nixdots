@@ -13,13 +13,14 @@
     text = builtins.readFile ./nx.sh;
   };
 
-  commands = "update os home all build clean optimise diff status storage firmware doctor rollback try lint fmt help";
+  commands = "update os home all build clean optimise diff status apps storage firmware doctor rollback try lint fmt help";
 
   fishCompletions = pkgs.writeTextDir "share/fish/vendor_completions.d/nx.fish" ''
     complete -c nx -f
     complete -c nx -n __fish_use_subcommand -a "${commands}"
     complete -c nx -n "__fish_seen_subcommand_from os" -a "switch boot test build"
     complete -c nx -n "__fish_seen_subcommand_from home" -a "switch build -b"
+    complete -c nx -n "__fish_seen_subcommand_from apps" -a "--all --home --system"
     complete -c nx -n "__fish_seen_subcommand_from storage" -a "report clean -y --browsers --steam-shaders --trash --hard"
     complete -c nx -n "__fish_seen_subcommand_from firmware" -a "check update devices history bios"
     complete -c nx -n "__fish_seen_subcommand_from rollback" -a "os home"
@@ -37,6 +38,8 @@
       _values 'mode' switch boot test build
     elif [[ $words[2] == home ]]; then
       _values 'mode' switch build -b
+    elif [[ $words[2] == apps ]]; then
+      _values 'option' --all --home --system
     elif [[ $words[2] == storage ]]; then
       _values 'option' report clean -y --browsers --steam-shaders --trash --hard
     elif [[ $words[2] == firmware ]]; then
