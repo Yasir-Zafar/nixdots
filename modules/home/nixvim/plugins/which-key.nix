@@ -22,7 +22,7 @@
           }
           {
             __unkeyed-1 = "<leader>b";
-            group = "[B]uffer";
+            group = "[B]uffer (close)";
           }
           {
             __unkeyed-1 = "<leader>d";

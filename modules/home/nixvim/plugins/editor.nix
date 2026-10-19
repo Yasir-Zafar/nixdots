@@ -1,9 +1,8 @@
 # the editor features VS Code has out of the box that kickstart lacks:
-# tabs, outline, project search & replace, diff / file history, session restore, folding, inline diagnostics
+# outline, project search & replace, diff / file history, session restore, folding, inline diagnostics
 {
   programs.nixvim = {
     opts = {
-      termguicolors = true; # bufferline needs it
       # folds come from treesitter (treesitter.nix); everything open when a file is loaded (za / zM / zR)
       foldlevel = 99;
       foldlevelstart = 99;
@@ -25,22 +24,6 @@
     };
 
     plugins = {
-      # open files as tabs
-      bufferline = {
-        enable = true;
-        settings.options = {
-          diagnostics = "nvim_lsp";
-          offsets = [
-            {
-              filetype = "neo-tree";
-              text = "Explorer";
-              text_align = "left";
-              separator = true;
-            }
-          ];
-        };
-      };
-
       # symbol outline (VS Code's outline / breadcrumbs)
       aerial.enable = true;
 
@@ -60,11 +43,7 @@
         options = {inherit desc;};
       };
     in [
-      (map "n" "]b" "<cmd>BufferLineCycleNext<cr>" "Next buffer tab")
-      (map "n" "[b" "<cmd>BufferLineCyclePrev<cr>" "Previous buffer tab")
       (map "n" "<leader>bd" "<cmd>bdelete<cr>" "[B]uffer [d]elete")
-      (map "n" "<leader>bo" "<cmd>BufferLineCloseOthers<cr>" "[B]uffer close [o]thers")
-      (map "n" "<leader>bp" "<cmd>BufferLinePick<cr>" "[B]uffer [p]ick")
 
       (map "n" "<leader>o" "<cmd>AerialToggle! right<cr>" "[O]utline")
 

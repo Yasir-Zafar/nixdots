@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   programs.nixvim = {
-    # linters below that nothing else installs (eslint, statix, markdownlint-cli2, vale, hadolint come from the profile)
+    # linters below that nothing else installs (eslint, statix, hadolint come from the profile)
     extraPackages = [
       pkgs.luajitPackages.luacheck
       pkgs.python3Packages.flake8
@@ -22,10 +22,9 @@
         # c = ["clang-tidy"];
         # cpp = ["clang-tidy"];
         nix = ["statix"];
-        markdown = [
-          "markdownlint-cli2"
-          "vale"
-        ];
+        # markdown / text: off. vale flags every proper noun as a typo and markdownlint
+        # every long line or inline <div>, which buried READMEs in diagnostics
+        # markdown = ["markdownlint-cli2" "vale"];
         python = ["flake8"];
         #clojure = ["clj-kondo"];
         dockerfile = ["hadolint"];
@@ -35,7 +34,7 @@
         #rst = ["vale"];
         #ruby = ["ruby"];
         #terraform = ["tflint"];
-        text = ["vale"];
+        # text = ["vale"];
       };
 
       # Create autocommand which carries out the actual linting
