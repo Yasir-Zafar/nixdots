@@ -40,6 +40,11 @@
           set -g pure_symbol_reverse_prompt       "❮"
           set -g pure_symbol_git_dirty            "*"
 
+          # fzf.fish builds its own fd command and ignores FZF_DEFAULT_COMMAND, so give it the
+          # same flags (hidden files, follow links, skip .git) and an eza directory preview
+          set -g fzf_fd_opts --hidden --follow --exclude=.git
+          set -g fzf_preview_dir_cmd eza --all --color=always --icons --group-directories-first
+
           # sponge: don't clean history on startup, only on exit
           set -g sponge_purge_only_on_exit true
 

@@ -38,6 +38,18 @@
           enable = true;
           max-scroll-amount = "20%";
         };
+
+        # keyboard focus changes (Mod+H/L/J/K, Alt+Tab) move the pointer into the window too,
+        # so it never sits over a different window than the one that has focus
+        warp-mouse-to-focus.enable = true;
+      };
+
+      # --- Cursor ---
+      # theme and size stay at niri-flake's "default"/24: ~/.icons/default inherits Bibata (stylix)
+      cursor = {
+        # hide the pointer while typing. niri's docs warn it can break mouselook in some Wine
+        # games; if one misbehaves, set this to false
+        hide-when-typing = true;
       };
 
       # --- Outputs ---
@@ -45,7 +57,9 @@
         "eDP-1" = {
           enable = true;
           scale = 1.0;
-          variable-refresh-rate = "on-demand";
+          # the panel has no VRR (`niri msg outputs`: "Variable refresh rate: not supported"),
+          # so this did nothing; "on-demand" + a variable-refresh-rate window rule is the setup for a VRR monitor
+          # variable-refresh-rate = "on-demand";
           position = {
             x = 0;
             y = 0;
@@ -161,6 +175,7 @@
             }
           ];
           open-floating = true;
+          open-focused = false; # a toast must not steal focus from the game or window underneath
           default-floating-position = {
             x = 10;
             y = 10;
@@ -378,6 +393,7 @@
         "Mod+R".action.switch-preset-column-width = {};
         "Mod+Shift+R".action.switch-preset-window-height = {};
         "Mod+F".action.maximize-column = {};
+        "Mod+Ctrl+F".action.expand-column-to-available-width = {};
         "Mod+Shift+F".action.fullscreen-window = {};
         "Mod+C".action.center-column = {};
 
@@ -388,6 +404,8 @@
         # Window Management (Unstable features noted)
         "Mod+Q".action.close-window = {};
         "Mod+T".action.toggle-window-floating = {};
+        # without this a floating window (PiP, dialogs) can't be refocused from the keyboard
+        "Mod+Shift+V".action.switch-focus-between-floating-and-tiling = {};
         "Mod+Shift+T".action.toggle-column-tabbed-display = {};
 
         # Hardware Media Keys (also work on the lock screen)
@@ -433,13 +451,23 @@
         "Mod+WheelScrollLeft".action.focus-column-left = {};
         "Mod+Shift+WheelScrollRight".action.move-column-right = {};
         "Mod+Shift+WheelScrollLeft".action.move-column-left = {};
-        "Mod+WheelScrollDown".action.focus-workspace-down = {};
-        "Mod+WheelScrollUp".action.focus-workspace-up = {};
+        # cooldown (niri's default config has it too): a touchpad scroll sends a burst of events
+        # and would otherwise run through every workspace
+        "Mod+WheelScrollDown" = {
+          cooldown-ms = 150;
+          action.focus-workspace-down = {};
+        };
+        "Mod+WheelScrollUp" = {
+          cooldown-ms = 150;
+          action.focus-workspace-up = {};
+        };
       };
 
       # --- Startup Programs ---
       spawn-at-startup = [
         {command = ["noctalia"];}
+        # straight to the tray (Noctalia hosts it) so friends' messages arrive without opening it by hand
+        {command = ["discord" "--start-minimized"];}
       ];
 
       # --- Environment & Misc ---

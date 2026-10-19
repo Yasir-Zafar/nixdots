@@ -2,6 +2,7 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     showtime
+    stremio-linux-shell
     pear-desktop
     amberol
     gnome-podcasts

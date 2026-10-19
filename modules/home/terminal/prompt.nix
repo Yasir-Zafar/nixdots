@@ -1,11 +1,16 @@
 # One prompt for fish, zsh and bash, styled like the pure prompt fish used before:
 # single line, path in blue, branch in green, a yellow * when dirty, ❯ red on error.
 {
+  # fish only: once a command is run, its prompt line shrinks to just the ❯ (red if it failed),
+  # which keeps the scrollback clean. zsh and bash keep the full prompt.
+  programs.fish.functions.starship_transient_prompt_func = "starship module character";
+
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
     enableZshIntegration = true;
     enableBashIntegration = true;
+    enableTransience = true;
 
     settings = {
       add_newline = false;

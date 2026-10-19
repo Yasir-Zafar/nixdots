@@ -11,8 +11,7 @@ use ratatui::style::{Color, Style};
 use ratatui::symbols;
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{
-    Block, BorderType, Cell, Clear, LineGauge, List, ListItem, Paragraph, Row, Sparkline, Table,
-    Wrap,
+    Block, BorderType, Cell, Clear, List, ListItem, Paragraph, Row, Table, Wrap,
 };
 
 fn block(title: &str) -> Block<'_> {
@@ -790,72 +789,61 @@ fn plain_line(l: &str) -> Line<'static> {
 /// right.
 fn stats(f: &mut Frame, job: &Job, area: Rect) {
     let b = block("System");
-    let inner = b.inner(area);
+    let inner = b.inner(area).inner(ratatui::layout::Margin::new(1, 0));
     f.render_widget(b, area);
-    let [net, _, side, _, run] = Layout::horizontal([
-        Constraint::Percentage(42),
-        Constraint::Length(2),
-        Constraint::Percentage(26),
-        Constraint::Length(3),
-        Constraint::Fill(1),
+    // network, the machine, this run's numbers, its steps
+    let [net, side, run, steps] = Layout::horizontal([
+        Constraint::Fill(3),
+        Constraint::Fill(4),
+        Constraint::Fill(4),
+        Constraint::Fill(5),
     ])
+    .spacing(4)
     .areas(inner);
     network(f, job, net);
     machine(f, job, side);
-    this_run(f, job, run);
+    let sum = summary(job);
+    this_run(f, job, &sum, run);
+    step_list(f, job, &sum, steps);
 }
 
+/// Rate now, then the total and the peak, for each direction.
 fn network(f: &mut Frame, job: &Job, area: Rect) {
-    let [down_label, down, up_label, up] = Layout::vertical([
-        Constraint::Length(1),
-        Constraint::Length(2),
-        Constraint::Length(1),
-        Constraint::Length(2),
-    ])
-    .areas(area);
-    let rate = |q: &std::collections::VecDeque<u64>| q.back().copied().unwrap_or(0);
     let (rx, tx) = job.stats.totals();
-    let label = |name: &str, colour: Color, now: u64, total: u64| {
-        Line::from(vec![
-            Span::styled(format!(" {name} "), Style::new().fg(colour).bold()),
-            Span::styled(format!("{}/s", human(now)), Style::new().fg(FG).bold()),
-            Span::styled(format!("   {} this run", human(total)), t::muted()),
-        ])
+    let lines = |name: &str, colour: Color, q: &std::collections::VecDeque<u64>, total: u64| {
+        let now = q.back().copied().unwrap_or(0);
+        let peak = q.iter().copied().max().unwrap_or(0);
+        [
+            Line::from(vec![
+                Span::styled(format!("{name}  "), Style::new().fg(colour).bold()),
+                Span::styled(format!("{}/s", human(now)), Style::new().fg(FG).bold()),
+            ]),
+            Line::styled(
+                format!("{} this run · peak {}/s", human(total), human(peak)),
+                t::muted(),
+            ),
+        ]
     };
-    let width = down.width as usize;
-    let tail = |q: &std::collections::VecDeque<u64>| -> Vec<u64> {
-        q.iter()
-            .skip(q.len().saturating_sub(width))
-            .copied()
-            .collect()
-    };
-    f.render_widget(label("↓ down", AQUA, rate(&job.stats.down), rx), down_label);
-    f.render_widget(
-        Sparkline::default()
-            .data(tail(&job.stats.down))
-            .style(Style::new().fg(AQUA)),
-        down,
-    );
-    f.render_widget(label("↑ up  ", PURPLE, rate(&job.stats.up), tx), up_label);
-    f.render_widget(
-        Sparkline::default()
-            .data(tail(&job.stats.up))
-            .style(Style::new().fg(PURPLE)),
-        up,
-    );
+    let mut text = vec![];
+    text.extend(lines("↓ down", AQUA, &job.stats.down, rx));
+    text.push(Line::from(""));
+    text.extend(lines("↑ up  ", PURPLE, &job.stats.up, tx));
+    f.render_widget(Paragraph::new(text), area);
 }
 
 /// cpu (with load), memory and the store's disk, each a label over a gauge.
 fn machine(f: &mut Frame, job: &Job, area: Rect) {
     let rows: [Rect; 6] = Layout::vertical([Constraint::Length(1); 6]).areas(area);
+    // drawn by hand: LineGauge keeps a gap for its label, which pushes the bar out of
+    // line with the text above it
+    let width = area.width as usize;
     let gauge = |ratio: f64, colour: Color| {
-        LineGauge::default()
-            .filled_style(Style::new().fg(colour))
-            .unfilled_style(Style::new().fg(BG2))
-            .filled_symbol(symbols::line::THICK_HORIZONTAL)
-            .unfilled_symbol(symbols::line::THICK_HORIZONTAL)
-            .label("")
-            .ratio(ratio.clamp(0.0, 1.0))
+        let filled = (ratio.clamp(0.0, 1.0) * width as f64).round() as usize;
+        let bar = symbols::line::THICK_HORIZONTAL;
+        Line::from(vec![
+            Span::styled(bar.repeat(filled), Style::new().fg(colour)),
+            Span::styled(bar.repeat(width - filled), Style::new().fg(BG2)),
+        ])
     };
     let ratio = |part: u64, whole: u64| {
         if whole > 0 {
@@ -914,60 +902,66 @@ fn machine(f: &mut Frame, job: &Job, area: Rect) {
 }
 
 /// Time against the last run, what the log holds, then the steps so far (newest last).
-fn this_run(f: &mut Frame, job: &Job, area: Rect) {
-    let sum = summary(job);
+/// Time against the last run, then what the log holds.
+fn this_run(f: &mut Frame, job: &Job, sum: &Summary, area: Rect) {
     let running = job.finished.is_none();
     let elapsed = job.elapsed().as_secs();
     let sep = || Span::styled("  ·  ", Style::new().fg(BG2));
+    let label = |s: &'static str| Span::styled(s, Style::new().fg(BLUE).bold());
+    let bright = |s: String| Span::styled(s, Style::new().fg(FG).bold());
 
-    let mut time = vec![
-        Span::styled("time ", Style::new().fg(BLUE).bold()),
-        Span::styled(clock(elapsed), Style::new().fg(FG).bold()),
-    ];
+    let time = Line::from(vec![label("time  "), bright(clock(elapsed))]);
+    let mut expect = vec![Span::styled("      ", t::muted())];
     match job.previous {
         Some(prev) => {
-            time.push(sep());
-            time.push(Span::styled(
+            expect.push(Span::styled(
                 format!("last {}", clock(prev.as_secs())),
                 t::muted(),
             ));
             if running {
-                time.push(sep());
-                time.push(match prev.as_secs().checked_sub(elapsed) {
+                expect.push(sep());
+                expect.push(match prev.as_secs().checked_sub(elapsed) {
                     Some(left) => Span::styled(format!("~{} left", clock(left)), t::text()),
                     None => Span::styled("longer than last time", Style::new().fg(YELLOW)),
                 });
             }
         }
-        None => {
-            time.push(sep());
-            time.push(Span::styled("first timed run", t::muted()));
-        }
+        None => expect.push(Span::styled("first timed run", t::muted())),
     }
 
-    let count = |n: usize, what: &str, hot: Style| {
-        vec![
-            Span::styled(n.to_string(), if n > 0 { hot } else { t::muted() }),
-            Span::styled(format!(" {what}"), t::muted()),
-        ]
-    };
-    let mut log = vec![
-        Span::styled("log ", Style::new().fg(BLUE).bold()),
-        Span::styled(sum.lines.to_string(), Style::new().fg(FG).bold()),
-        Span::styled(" lines", t::muted()),
-        sep(),
-    ];
-    log.extend(count(sum.warnings, "warnings", t::warn()));
-    log.push(sep());
-    log.extend(count(sum.errors, "errors", t::bad()));
+    let mut log = vec![label("log   "), bright(sum.lines.to_string())];
+    log.push(Span::styled(" lines", t::muted()));
     if let Some(n) = job.scroll {
         log.push(sep());
         log.push(Span::styled(format!("at {n}"), Style::new().fg(BLUE)));
     }
+    let count = |n: usize, what: &str, hot: Style| {
+        [
+            Span::styled(n.to_string(), if n > 0 { hot } else { t::muted() }),
+            Span::styled(format!(" {what}"), t::muted()),
+        ]
+    };
+    let mut problems = vec![Span::styled("      ", t::muted())];
+    problems.extend(count(sum.warnings, "warnings", t::warn()));
+    problems.push(sep());
+    problems.extend(count(sum.errors, "errors", t::bad()));
 
-    let mut lines = vec![Line::from(time), Line::from(log), Line::from("")];
-    let room = (area.height as usize).saturating_sub(lines.len());
-    let shown = sum.steps.len().saturating_sub(room);
+    f.render_widget(
+        Paragraph::new(vec![
+            time,
+            Line::from(expect),
+            Line::from(""),
+            Line::from(log),
+            Line::from(problems),
+        ]),
+        area,
+    );
+}
+
+/// The steps so far, newest last; older ones drop off the top.
+fn step_list(f: &mut Frame, job: &Job, sum: &Summary, area: Rect) {
+    let mut lines = vec![];
+    let shown = sum.steps.len().saturating_sub(area.height as usize);
     for (i, step) in sum.steps.iter().enumerate().skip(shown) {
         let last = i + 1 == sum.steps.len();
         let (mark, mark_style, text_style) = match (last, job.finished) {

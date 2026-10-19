@@ -10,6 +10,8 @@
     zellij = {
       enable = true;
       # start it by hand with `zellij`, not on every terminal
+      # $SHELL is zsh (the login shell; ghostty only launches fish), so without this the panes open zsh
+      settings.default_shell = "fish";
     };
 
     lazygit.enable = true; # `lg` alias lives in shell/aliases/git.nix

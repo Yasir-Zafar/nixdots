@@ -891,7 +891,7 @@
         alwaysExpandRoles.enable = true; # Always expand role list
         alwaysTrust.enable = true; # Skip external link warnings
         anonymiseFileNames.enable = false; # Anonymise uploaded filenames
-        autoDndWhilePlaying.enable = true; # Auto DND when in a game
+        autoDndWhilePlaying.enable = false; # Auto DND when in a game (off: DND mutes every desktop notification while a Steam game runs)
         betterFolders.enable = true; # Improved server folders UI
         betterGifPicker.enable = true; # Improved GIF picker
         blurNsfw.enable = false; # Blur NSFW channel images
