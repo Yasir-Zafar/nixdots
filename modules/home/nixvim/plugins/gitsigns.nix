@@ -119,15 +119,14 @@
       {
         mode = "n";
         key = "<leader>hu";
-        # `undo_stage_hunk` is deprecated. See https://github.com/nvim-lua/kickstart.nvim/issues/1319
-        #  Replacement `stage_hunk` was accidentally merged. See https://github.com/nvim-lua/kickstart.nvim/pull/1321#issuecomment-2664265962
+        # gitsigns 1.x: stage_hunk on an already staged hunk unstages it (undo_stage_hunk is deprecated)
         action.__raw = ''
           function()
-            require('gitsigns').undo_stage_hunk()
+            require('gitsigns').stage_hunk()
           end
         '';
         options = {
-          desc = "git [u]ndo stage hunk";
+          desc = "git [u]nstage hunk";
         };
       }
       {
@@ -206,15 +205,14 @@
       {
         mode = "n";
         key = "<leader>tD";
-        # `toggle_deleted` is deprecated. See https://github.com/nvim-lua/kickstart.nvim/issues/1319
-        #  Replacement `preview_hunk_inline` was accidentally merged. See https://github.com/nvim-lua/kickstart.nvim/pull/1321#issuecomment-2664265962
+        # gitsigns 1.x: toggle_deleted is deprecated, the deleted lines are shown inline by preview_hunk_inline
         action.__raw = ''
           function()
-            require('gitsigns').toggle_deleted()
+            require('gitsigns').preview_hunk_inline()
           end
         '';
         options = {
-          desc = "[T]oggle git show [D]eleted";
+          desc = "[T]oggle git show [D]eleted (inline preview)";
         };
       }
     ];

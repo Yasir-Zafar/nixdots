@@ -1,378 +1,205 @@
+# Language servers through nixvim's `lsp` module (Neovim's own vim.lsp.config / vim.lsp.enable).
+# Was `plugins.lsp` (the nvim-lspconfig wrapper), which nixvim is retiring; nvim-lspconfig is still
+# loaded for its per-server defaults (cmd, filetypes, root markers).
 {pkgs, ...}: {
   programs.nixvim = {
-    plugins.cmp-nvim-lsp = {
-      enable = true;
-    };
+    plugins.cmp-nvim-lsp.enable = true;
 
     plugins.fidget = {
       enable = true;
-      settings = {
-        notification = {
-          window = {
-            winblend = 0;
-          };
-        };
-      };
+      settings.notification.window.winblend = 0;
     };
 
     # https://nix-community.github.io/nixvim/NeovimOptions/index.html?highlight=extraplugi#extraplugins
     extraPlugins = with pkgs.vimPlugins; [
-      # NOTE: This is where you would add a vim plugin that is not implemented in Nixvim, also see extraConfigLuaPre below
       plenary-nvim # Added for some formatters/linters
-      # TODO: Add luvit-meta when Nixos package is added
     ];
 
-    # https://nix-community.github.io/nixvim/NeovimOptions/autoGroups/index.html
-    autoGroups = {
-      "kickstart-lsp-attach" = {
-        clear = true;
-      };
-      "kickstart-lsp-detach" = {
-        clear = true;
-      };
-      "kickstart-lsp-highlight" = {
-        clear = false;
-      };
-    };
+    plugins.lspconfig.enable = true;
 
-    plugins.lsp = {
-      enable = true;
-
-      # Added from paste-2.txt
-      capabilities = ''
-        capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-      '';
-
+    lsp = {
       servers = {
+        # every server advertises what nvim-cmp can do (snippets, auto-import, …)
+        "*".config.capabilities.__raw = "require('cmp_nvim_lsp').default_capabilities()";
+
         rust_analyzer = {
           enable = true;
-          installCargo = true; # lets nixvim wire cargo into nvim's PATH
-          installRustc = true; # same for rustc
-
-          settings = {
-            rust-analyzer = {
-              check = {
-                command = "clippy"; # use clippy instead of check on save
-              };
-              cargo = {
-                allFeatures = true;
-              };
-              inlayHints = {
-                bindingModeHints.enable = true;
-                closureReturnTypeHints.enable = "with_block";
-              };
+          cargo.enable = true; # cargo + rustc on nvim's PATH for rust-analyzer
+          rustc.enable = true;
+          config.settings.rust-analyzer = {
+            check.command = "clippy"; # use clippy instead of check on save
+            cargo.allFeatures = true;
+            inlayHints = {
+              bindingModeHints.enable = true;
+              closureReturnTypeHints.enable = "with_block";
             };
           };
         };
+
         # C/C++ (clang-tools from nixpkgs; matches nix/development/c.nix)
         clangd = {
           enable = true;
-          cmd = [
-            "clangd"
-            "--background-index"
-            "--clang-tidy"
-            "--header-insertion=iwyu"
-            "--completion-style=detailed"
-            "--function-arg-placeholders"
-            "--fallback-style=llvm"
-          ];
-
-          filetypes = ["c" "cpp" "objc" "objcpp"];
+          config = {
+            cmd = [
+              "clangd"
+              "--background-index"
+              "--clang-tidy"
+              "--header-insertion=iwyu"
+              "--completion-style=detailed"
+              "--function-arg-placeholders"
+              "--fallback-style=llvm"
+            ];
+            filetypes = ["c" "cpp" "objc" "objcpp"];
+          };
         };
 
-        # rust_analyzer = {
-        #   enable = true;
-        #   installCargo = true;
-        #   installRustc = true;
-        # };
-
-        nil_ls = {
-          enable = true;
-        };
+        nil_ls.enable = true;
 
         # Python
         basedpyright.enable = true;
 
-        # TypeScript/JavaScript (the vue-aware variant is kept commented below)
+        # TypeScript/JavaScript (for vue: add "vue" here, the vue plugin below, and enable vue_ls)
         ts_ls = {
           enable = true;
-          filetypes = [
-            "typescript"
-            "javascript"
-            "javascriptreact"
-            "typescriptreact"
-          ];
+          config.filetypes = ["typescript" "javascript" "javascriptreact" "typescriptreact"];
+          # config.init_options.plugins = [
+          #   {
+          #     name = "@vue/typescript-plugin";
+          #     location = "${pkgs.vue-language-server}/lib/node_modules/@vue/language-server";
+          #     languages = ["vue"];
+          #   }
+          # ];
         };
-
-        bashls.enable = true;
-
-        jsonls.enable = true;
-
-        # # For TypeScript/JavaScript + vue (enable vue_ls below with it)
-        # ts_ls = {
-        #   enable = true;
-        #   filetypes = [
-        #     "typescript"
-        #     "javascript"
-        #     "javascriptreact"
-        #     "typescriptreact"
-        #     "vue"
-        #   ];
-        #   #  extraOptions = {
-        #   #    init_options = {
-        #   #      plugins = [
-        #   #        {
-        #   #          name = "@vue/typescript-plugin";
-        #   #          location = "${pkgs.vue-language-server}/lib/node_modules/@vue/language-server";
-        #   #          languages = ["vue"];
-        #   #        }
-        #   #      ];
-        #   #    };
-        #   #  };
-        # };
-        # vue_ls = {
-        #   enable = true;
-        #   package = pkgs.vue-language-server;
-        # };
-        #
+        # vue_ls.enable = true;
         # eslint = {
         #   enable = true;
-        #   settings = {
-        #     workingDirectories = [{mode = "auto";}];
-        #   };
+        #   config.settings.workingDirectories = [{mode = "auto";}];
         # };
-        #
         # cssls = {
         #   enable = true;
-        #   settings = {
-        #     css = {
-        #       validate = true;
-        #       lint = {
-        #         unknownAtRules = "ignore";
-        #       };
-        #     };
-        #     scss = {
-        #       validate = true;
-        #       lint = {
-        #         unknownAtRules = "ignore";
-        #       };
-        #     };
+        #   config.settings = {
+        #     css = { validate = true; lint.unknownAtRules = "ignore"; };
+        #     scss = { validate = true; lint.unknownAtRules = "ignore"; };
         #   };
         # };
-        #
         # html = {
         #   enable = true;
-        #   filetypes = ["html" "javascriptreact" "typescriptreact"];
+        #   config.filetypes = ["html" "javascriptreact" "typescriptreact"];
         # };
-        #
-        # jsonls = { # (enabled above without the extra settings)
-        #   enable = true;
-        #   settings = {
-        #     json = {
-        #       validate = {enable = true;};
-        #     };
-        #   };
-        # };
+
+        bashls.enable = true;
+        jsonls.enable = true;
 
         lua_ls = {
           enable = true;
-
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = ["vim"]; # Recognize 'vim' global in Neovim config
-              };
-              workspace = {
-                # Make the server aware of Neovim runtime files
-                library = "vim.api.nvim_get_runtime_file('', true)";
-                checkThirdParty = false;
-              };
-              telemetry = {
-                enable = false;
-              };
-              completion = {
-                callSnippet = "Replace";
-              };
-              # diagnostics = {
-              #   disable = [
-              #     "missing-fields"
-              #   ];
-              # };
+          config.settings.Lua = {
+            diagnostics.globals = ["vim"]; # Recognize 'vim' global in Neovim config
+            workspace = {
+              # Make the server aware of Neovim runtime files
+              library.__raw = "vim.api.nvim_get_runtime_file('', true)";
+              checkThirdParty = false;
             };
+            telemetry.enable = false;
+            completion.callSnippet = "Replace";
           };
         };
       };
 
-      keymaps = {
-        # Diagnostic keymaps
-        diagnostic = {
-          "<leader>q" = {
-            mode = "n";
-            action = "setloclist";
-            desc = "Open diagnostic [Q]uickfix list";
-          };
-        };
+      # set on the buffer when a server attaches
+      keymaps = [
+        {
+          key = "<leader>q";
+          action.__raw = "vim.diagnostic.setloclist";
+          options.desc = "Open diagnostic [Q]uickfix list";
+        }
+        # telescope pickers; jump back with <C-t>
+        {
+          key = "gd";
+          action.__raw = "require('telescope.builtin').lsp_definitions";
+          options.desc = "LSP: [G]oto [D]efinition";
+        }
+        {
+          key = "gr";
+          action.__raw = "require('telescope.builtin').lsp_references";
+          options.desc = "LSP: [G]oto [R]eferences";
+        }
+        {
+          key = "gI";
+          action.__raw = "require('telescope.builtin').lsp_implementations";
+          options.desc = "LSP: [G]oto [I]mplementation";
+        }
+        {
+          key = "<leader>D";
+          action.__raw = "require('telescope.builtin').lsp_type_definitions";
+          options.desc = "LSP: Type [D]efinition";
+        }
+        {
+          key = "<leader>ds";
+          action.__raw = "require('telescope.builtin').lsp_document_symbols";
+          options.desc = "LSP: [D]ocument [S]ymbols";
+        }
+        {
+          key = "<leader>ws";
+          action.__raw = "require('telescope.builtin').lsp_dynamic_workspace_symbols";
+          options.desc = "LSP: [W]orkspace [S]ymbols";
+        }
+        {
+          key = "<leader>rn";
+          lspBufAction = "rename";
+          options.desc = "LSP: [R]e[n]ame";
+        }
+        {
+          mode = ["n" "x"];
+          key = "<leader>ca";
+          lspBufAction = "code_action";
+          options.desc = "LSP: [C]ode [A]ction";
+        }
+        # not definition: declaration (in C, the header)
+        {
+          key = "gD";
+          lspBufAction = "declaration";
+          options.desc = "LSP: [G]oto [D]eclaration";
+        }
+      ];
 
-        extra = [
-          # Jump to the definition of the word under your cusor.
-          #  This is where a variable was first declared, or where a function is defined, etc.
-          #  To jump back, press <C-t>.
-          {
-            mode = "n";
-            key = "gd";
-            action.__raw = "require('telescope.builtin').lsp_definitions";
-            options = {
-              desc = "LSP: [G]oto [D]efinition";
-            };
-          }
-          # Find references for the word under your cursor.
-          {
-            mode = "n";
-            key = "gr";
-            action.__raw = "require('telescope.builtin').lsp_references";
-            options = {
-              desc = "LSP: [G]oto [R]eferences";
-            };
-          }
-          # Jump to the implementation of the word under your cursor.
-          #  Useful when your language has ways of declaring types without an actual implementation.
-          {
-            mode = "n";
-            key = "gI";
-            action.__raw = "require('telescope.builtin').lsp_implementations";
-            options = {
-              desc = "LSP: [G]oto [I]mplementation";
-            };
-          }
-          # Jump to the type of the word under your cursor.
-          #  Useful when you're not sure what type a variable is and you want to see
-          #  the definition of its *type*, not where it was *defined*.
-          {
-            mode = "n";
-            key = "<leader>D";
-            action.__raw = "require('telescope.builtin').lsp_type_definitions";
-            options = {
-              desc = "LSP: Type [D]efinition";
-            };
-          }
-          # Fuzzy find all the symbols in your current document.
-          #  Symbols are things like variables, functions, types, etc.
-          {
-            mode = "n";
-            key = "<leader>ds";
-            action.__raw = "require('telescope.builtin').lsp_document_symbols";
-            options = {
-              desc = "LSP: [D]ocument [S]ymbols";
-            };
-          }
-          # Fuzzy find all the symbols in your current workspace.
-          #  Similar to document symbols, except searches over your entire project.
-          {
-            mode = "n";
-            key = "<leader>ws";
-            action.__raw = "require('telescope.builtin').lsp_dynamic_workspace_symbols";
-            options = {
-              desc = "LSP: [W]orkspace [S]ymbols";
-            };
-          }
-        ];
-
-        lspBuf = {
-          # Rename the variable under your cursor.
-          #  Most Language Servers support renaming across files, etc.
-          "<leader>rn" = {
-            action = "rename";
-            desc = "LSP: [R]e[n]ame";
-          };
-          # Execute a code action, usually your cursor needs to be on top of an error
-          # or a suggestion from your LSP for this to activate.
-          "<leader>ca" = {
-            mode = ["n" "x"];
-            action = "code_action";
-            desc = "LSP: [C]ode [A]ction";
-          };
-          # WARN: This is not Goto Definition, this is Goto Declaration.
-          #  For example, in C this would take you to the header.
-          "gD" = {
-            action = "declaration";
-            desc = "LSP: [G]oto [D]eclaration";
-          };
-        };
-      };
-
-      # LSP servers and clients are able to communicate to each other what features they support.
-      #  By default, Neovim doesn't support everything that is in the LSP specification.
-      #  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-      #  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
-      # NOTE: This is done automatically by Nixvim when enabling cmp-nvim-lsp below is an example if you did want to add new capabilities
-      #capabilities = ''
-      #  capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-      #'';
-
-      # This function gets run when an LSP attaches to a particular buffer.
-      #   That is to say, every time a new file is opened that is associated with
-      #   an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
-      #   function will be executred to configure the current buffer
-      # NOTE: This is an example of an attribute that takes raw lua
+      # `client` and `bufnr` are in scope
       onAttach = ''
-        -- NOTE: Remember that Lua is a real programming language, and as such it is possible
-        -- to define small helper and utility functions so you don't have to repeat yourself.
-        --
-        -- In this case, we create a function that lets us more easily define mappings specific
-        -- for LSP related items. It sets the mode, buffer and description for us each time.
-        local map = function(keys, func, desc)
-          vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
-        end
-
-        -- The following two autocommands are used to highlight references of the
-        -- word under the cursor when your cursor rests there for a little while.
-        --    See `:help CursorHold` for information about when this is executed
-        --
-        -- When you move your cursor, the highlights will be cleared (the second autocommand).
-        if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, bufnr) then
-          local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+        -- highlight other uses of the word under the cursor while it rests there
+        if client:supports_method('textDocument/documentHighlight', bufnr) then
+          local group = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+          vim.api.nvim_clear_autocmds { group = group, buffer = bufnr }
           vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-            buffer = bufnr,
-            group = highlight_augroup,
-            callback = vim.lsp.buf.document_highlight,
+            buffer = bufnr, group = group, callback = vim.lsp.buf.document_highlight,
           })
-
           vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-            buffer = bufnr,
-            group = highlight_augroup,
-            callback = vim.lsp.buf.clear_references,
+            buffer = bufnr, group = group, callback = vim.lsp.buf.clear_references,
           })
-
           vim.api.nvim_create_autocmd('LspDetach', {
-            group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-            callback = function(event2)
+            buffer = bufnr,
+            group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = false }),
+            callback = function(ev)
               vim.lsp.buf.clear_references()
-              vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+              vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = ev.buf }
             end,
           })
         end
 
-        -- The following autocommand is used to enable inlay hints in your
-        -- code, if the language server you are using supports them
-        --
-        -- This may be unwanted, since they displace some of your code
-        if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, bufnr) then
-          map('<leader>th', function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-          end, '[T]oggle Inlay [H]ints')
+        -- inlay hints stay off until toggled
+        if client:supports_method('textDocument/inlayHint', bufnr) then
+          vim.keymap.set('n', '<leader>th', function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = bufnr }, { bufnr = bufnr })
+          end, { buffer = bufnr, desc = 'LSP: [T]oggle Inlay [H]ints' })
         end
       '';
     };
 
-    # Added from paste-2.txt for ESLint auto-fixing
+    # fix eslint issues on save (only does something once the eslint server above is enabled)
     extraConfigLuaPost = ''
-      -- Automatically fix eslint issues on save
       vim.api.nvim_create_autocmd('BufWritePre', {
         pattern = { '*.js', '*.jsx', '*.ts', '*.tsx' },
         callback = function(event)
-          if require('lspconfig.util').get_active_client_by_name(event.buf, 'eslint') then
-            vim.cmd 'EslintFixAll'
+          if #vim.lsp.get_clients { bufnr = event.buf, name = 'eslint' } > 0 then
+            vim.cmd 'LspEslintFixAll'
           end
         end,
       })

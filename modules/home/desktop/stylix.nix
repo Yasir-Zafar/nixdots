@@ -37,7 +37,8 @@
       # terminal, and shell/fish.nix sets all of those colours itself anyway
       fish.enable = false;
       lazygit.enable = true;
-      zellij.enable = true;
+      # zellij: off, its built-in gruvbox-dark theme looks better (terminal/workflow.nix)
+      zellij.enable = false;
       yazi.enable = true;
     };
   };

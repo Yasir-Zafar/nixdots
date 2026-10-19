@@ -19,7 +19,7 @@
             local disable_filetypes = { c = true, cpp = true }
             return {
               timeout_ms = 500,
-              lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype]
+              lsp_format = disable_filetypes[vim.bo[bufnr].filetype] and "never" or "fallback"
             }
           end
         '';
@@ -48,7 +48,7 @@
         key = "<leader>f";
         action.__raw = ''
           function()
-            require('conform').format { async = true, lsp_fallback = true }
+            require('conform').format { async = true, lsp_format = "fallback" }
           end
         '';
         options = {

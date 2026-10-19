@@ -11,6 +11,9 @@
     ./todo.nix
     # ./tss-tools.nix
     ./trouble.nix
+    ./workflow.nix
+    ./dap.nix
+    ./editor.nix
     ./kickstart
   ];
 }

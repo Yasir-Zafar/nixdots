@@ -80,15 +80,15 @@
           # <c-h> is similar, except moving you backwards.
           "<C-l>" = ''
             cmp.mapping(function()
-              if luasnip.expand_or_locally_jumpable() then
-                luasnip.expand_or_jump()
+              if require('luasnip').expand_or_locally_jumpable() then
+                require('luasnip').expand_or_jump()
               end
             end, { 'i', 's' })
           '';
           "<C-h>" = ''
             cmp.mapping(function()
-              if luasnip.locally_jumpable(-1) then
-                luasnip.jump(-1)
+              if require('luasnip').locally_jumpable(-1) then
+                require('luasnip').jump(-1)
               end
             end, { 'i', 's' })
           '';
@@ -130,9 +130,6 @@
           }
           {
             name = "buffer";
-          }
-          {
-            name = "cmdline";
           }
           # https://nix-community.github.io/nixvim/plugins/cmp-nvim-lsp-signature-help.html
           {
