@@ -466,8 +466,6 @@
       # --- Startup Programs ---
       spawn-at-startup = [
         {command = ["noctalia"];}
-        # straight to the tray (Noctalia hosts it) so friends' messages arrive without opening it by hand
-        {command = ["discord" "--start-minimized"];}
       ];
 
       # --- Environment & Misc ---

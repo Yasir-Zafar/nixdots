@@ -12,6 +12,7 @@
     ./fonts.nix
     ./media-libs.nix
     ./niri.nix
+    ./sway.nix # second session for apps without niri support
     ./flatpak.nix
     ./greeters/common.nix
     ./greeters/sysc-greet.nix
