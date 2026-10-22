@@ -40,6 +40,7 @@
       # zellij: off, its built-in gruvbox-dark theme looks better (terminal/workflow.nix)
       zellij.enable = false;
       yazi.enable = true;
+      rofi.enable = true; # bspwm session (desktop/bspwm.nix)
     };
   };
 }

@@ -38,7 +38,7 @@
 | **Fonts** | JetBrainsMono Nerd Font, Inter, Source Serif Pro |
 | **GTK / icons / cursor** | Gruvbox-Green-Dark, Gruvbox-Plus-Dark, Bibata Modern Classic |
 | **Browser** | [Zen](https://github.com/0xc000022070/zen-browser-flake), through its home-manager module (policies + extensions declared) |
-| **Gaming** | Steam + Proton-GE ([Millennium](https://github.com/SteamClientHomebrew/Millennium) wired up, currently off), Heroic, Prism Launcher, Dolphin, Sober (flatpak via [nix-flatpak](https://github.com/gmodena/nix-flatpak)), gamemode, MangoHud, ntsync |
+| **Gaming** | Steam + Proton-GE ([Millennium](https://github.com/SteamClientHomebrew/Millennium) wired up, currently off), Lutris (all launchers in one library), Heroic, Prism Launcher, Dolphin, Sober (flatpak via [nix-flatpak](https://github.com/gmodena/nix-flatpak)), gamemode, MangoHud, ntsync |
 | **Discord** | Vencord via [nixcord](https://github.com/FlameFlag/nixcord) |
 | **Hardware** | HP OmniBook 5 16", Intel Core Ultra 7 255U, Intel graphics |
 
@@ -59,14 +59,14 @@ dots/
 │   │   ├── nix.nix        nix settings, gc, store optimise
 │   │   ├── boot/          systemd-boot, kernel params (documented, test-first)
 │   │   ├── hardware/      Intel graphics, swap, firmware
-│   │   ├── desktop/       niri, fonts, greeters/ (sysc-greet active + alternates), gnome
+│   │   ├── desktop/       niri, bspwm (X11 session), fonts, greeters/ (sysc-greet active + alternates), gnome
 │   │   ├── services/      audio, bluetooth, networking, power, syncthing
 │   │   ├── gaming/        steam, gamemode, launchers, emulators
 │   │   ├── development/   system-level toolchains, docker
 │   │   ├── security/
 │   │   └── users/
 │   └── home/             home-manager modules
-│       ├── desktop/       niri config, noctalia, stylix, gtk/qt, gnome settings
+│       ├── desktop/       niri config, bspwm session, noctalia, stylix, gtk/qt, gnome settings
 │       ├── terminal/      ghostty, shells + aliases, prompt, tools
 │       ├── development/   editors, languages, git
 │       ├── applications/  media, documents, network, utilities, nixcord

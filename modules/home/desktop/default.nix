@@ -5,7 +5,7 @@
     ./gtk.nix
     ./qt.nix
     ./niri-config.nix
-    ./sway.nix
+    ./bspwm.nix
     ./noctalia.nix
   ];
 
