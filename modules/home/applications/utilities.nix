@@ -1,5 +1,9 @@
 # files, thumbnails, monitoring, system helpers
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
   home.packages = with pkgs; [
     nautilus
     loupe
@@ -13,11 +17,20 @@
     newsflash
     # gdm-settings # only useful with the gdm greeter (modules/nixos/desktop/greeters/gdm.nix)
     impression
-    theclicker # cli autoclicker, binds a key at evdev level, so it works on niri and bspwm
-    xclicker # gui autoclicker with a start/stop hotkey; X11 only (bspwm, or XWayland apps in niri)
-    # (pkgs.gearlever.override {dwarfs = null;}) # only works if the package supports it
-    # ^ broken in nixpkgs (makeWrapperArgs passes gappsWrapperArgs literally); restore on a later update
+    theclicker
+    (callPackage ../../../pkgs/way-clicker {}) # gui autoclicker; open it once, then Mod+X starts/stops
   ];
+
+  # way-clicker clicks through dotoolc, which hands the clicks to this daemon (it owns the
+  # virtual mouse on /dev/uinput, so "uinput" group, nixos/gaming). Works on niri and bspwm
+  systemd.user.services.dotoold = {
+    Unit.Description = "dotool daemon (way-clicker)";
+    Service = {
+      ExecStart = "${pkgs.dotool}/bin/dotoold";
+      Environment = ["PATH=${lib.makeBinPath [pkgs.coreutils pkgs.procps]}"]; # mkfifo, rm, pkill
+    };
+    Install.WantedBy = ["default.target"];
+  };
 
   # age out thumbnails nobody looked at in 30 days (systemd-tmpfiles-clean, daily)
   systemd.user.tmpfiles.rules = [

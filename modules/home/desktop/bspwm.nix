@@ -182,6 +182,7 @@ in {
       "super + e" = "nautilus";
       "super + shift + u" = "ghostty --title=nx -e nx tui";
       "ctrl + shift + Escape" = "missioncenter";
+      "super + x" = "way-clicker --nogui --toggle";
 
       # noctalia equivalents
       "super + {space,p}" = "${rofi} -show drun";

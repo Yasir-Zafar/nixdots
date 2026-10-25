@@ -295,6 +295,7 @@ in {
         "Mod+E" = run "Files" ["nautilus"];
         "Mod+Shift+U" = run "nx: updates and system overview (TUI)" ["ghostty" "--title=nx" "-e" "nx" "tui"];
         "Ctrl+Shift+Escape" = run "Mission Center" ["missioncenter"];
+        "Mod+X" = run "Autoclicker: start/stop" ["way-clicker" "--nogui" "--toggle"];
 
         # --- Noctalia (`noctalia msg --help`) ---
         "Mod+Space" = noctalia "Launcher" ["panel-toggle" "launcher"];
