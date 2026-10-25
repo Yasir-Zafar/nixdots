@@ -21,8 +21,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # pinned: later revs add cc-by-nc-40 to meta.license (unfree), and the module builds its
+    # package from the upstream flake's own pkgs, so our allowUnfree can't reach it
     sysc-greet = {
-      url = "github:Nomadcxx/sysc-greet";
+      url = "github:Nomadcxx/sysc-greet/4c98abc5bdddbf6c84d2a55d71b9120cbfccad0f";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

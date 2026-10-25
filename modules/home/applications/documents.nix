@@ -7,7 +7,7 @@
     gnome-text-editor
     gnome-decoder
     gnome-frog # ocr: grab text from images
-    errands
+    # errands # broken in nixpkgs; restore on a later update
     libreoffice
     qpdf
     # gnome-notes

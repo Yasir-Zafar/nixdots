@@ -76,6 +76,10 @@ in {
         market.chuckjonas.duckdb
         ext.mechatroner.rainbow-csv
 
+        # documents
+        ext.tomoki1207.pdf
+        market.adamraichu.docx-viewer
+
         # editing quality of life
         ext.usernamehw.errorlens
         ext.gruntfuggly.todo-tree
