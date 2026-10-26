@@ -1,6 +1,6 @@
 //! nh wrappers: nx os / nx home / nx build.
 
-use crate::sh::{Paths, cmd, run_or_exit};
+use crate::sh::{Paths, cmd, run_guarded_or_exit};
 use crate::{HomeMode, OsMode};
 use anyhow::Result;
 
@@ -16,7 +16,7 @@ pub fn os(p: &Paths, mode: OsMode, extra: &[String]) -> Result<()> {
         OsMode::Boot => c.args(["os", "boot"]).arg(&p.os),
         OsMode::Test => c.args(["os", "test"]).arg(&p.os),
     };
-    run_or_exit(c.args(extra))
+    run_guarded_or_exit(c.args(extra))
 }
 
 pub fn home(p: &Paths, mode: HomeMode, backup: bool) -> Result<()> {
@@ -32,5 +32,5 @@ pub fn home(p: &Paths, mode: HomeMode, backup: bool) -> Result<()> {
     if backup {
         c.env("HOME_MANAGER_BACKUP_EXT", "bak");
     }
-    run_or_exit(&mut c)
+    run_guarded_or_exit(&mut c)
 }

@@ -7,8 +7,8 @@ pub fn run(p: &Paths, inputs: &[String]) -> Result<()> {
         let name = flake.file_name().unwrap_or_default().to_string_lossy();
         ui::step(&format!("Updating {name}/flake.lock"));
         if inputs.is_empty() {
-            sh::run_or_exit(cmd("nix").args(["flake", "update", "--flake"]).arg(flake))?;
-        } else if !sh::run(
+            sh::run_guarded_or_exit(cmd("nix").args(["flake", "update", "--flake"]).arg(flake))?;
+        } else if !sh::run_guarded(
             cmd("nix")
                 .args(["flake", "update"])
                 .args(inputs)

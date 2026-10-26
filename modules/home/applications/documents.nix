@@ -6,7 +6,7 @@
     formiko
     gnome-text-editor
     gnome-decoder
-    gnome-frog # ocr: grab text from images
+    # gnome-frog # ocr: grab text from images (posthog broken in nixpkgs, 2026-10)
     # errands
     libreoffice
     qpdf

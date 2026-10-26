@@ -1,8 +1,9 @@
 //! Running other programs. nx is glue: nh, nix, nvd, fwupdmgr, git and friends do the work.
 
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, bail};
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::{Command, ExitStatus, Stdio};
+use std::time::{Duration, Instant};
 
 /// Where everything lives. NX_DOTS points nx at another checkout.
 #[derive(Clone)]
@@ -71,6 +72,130 @@ pub fn run_or_exit(c: &mut Command) -> Result<()> {
     let status = c
         .status()
         .with_context(|| format!("could not start {name}"))?;
+    if !status.success() {
+        std::process::exit(status.code().unwrap_or(1));
+    }
+    Ok(())
+}
+
+/// Updates and builds stop below this charge (percent) while running on battery.
+const LOW_BATTERY: u32 = 10;
+
+/// The charge, when it is under LOW_BATTERY and discharging (plugged in is fine).
+fn low_battery() -> Option<u32> {
+    std::fs::read_dir("/sys/class/power_supply")
+        .ok()?
+        .flatten()
+        .filter(|e| e.file_name().to_string_lossy().starts_with("BAT"))
+        .find_map(|e| {
+            let read = |f: &str| std::fs::read_to_string(e.path().join(f)).unwrap_or_default();
+            let level: u32 = read("capacity").trim().parse().ok()?;
+            (read("status").trim() == "Discharging" && level < LOW_BATTERY).then_some(level)
+        })
+}
+
+/// Every process as (pid, parent pid, command line with NULs between the arguments).
+fn processes() -> Vec<(i32, i32, String)> {
+    std::fs::read_dir("/proc")
+        .into_iter()
+        .flatten()
+        .flatten()
+        .filter_map(|e| {
+            let pid = e.file_name().to_str()?.parse().ok()?;
+            // "pid (name) state ppid ...": the name can hold spaces and parentheses
+            let stat = std::fs::read_to_string(e.path().join("stat")).ok()?;
+            let ppid = stat[stat.rfind(')')? + 1..]
+                .split_whitespace()
+                .nth(1)?
+                .parse()
+                .ok()?;
+            let args = std::fs::read(e.path().join("cmdline")).unwrap_or_default();
+            Some((pid, ppid, String::from_utf8_lossy(&args).into_owned()))
+        })
+        .collect()
+}
+
+/// System or home activation is running. Stopping that half-way can leave a half-switched
+/// system, so it is never interrupted.
+fn activating(procs: &[(i32, i32, String)]) -> bool {
+    procs.iter().any(|(_, _, args)| {
+        args.split('\0').any(|a| {
+            let name = Path::new(a).file_name();
+            name.is_some_and(|n| n == "switch-to-configuration")
+                || (name.is_some_and(|n| n == "activate") && a.contains("home-manager-generation"))
+        })
+    })
+}
+
+/// The process and everything started below it (nh, nix, nom, ...).
+fn family(procs: &[(i32, i32, String)], pid: i32) -> Vec<i32> {
+    let mut pids = vec![pid];
+    let mut i = 0;
+    while let Some(&parent) = pids.get(i) {
+        i += 1;
+        pids.extend(procs.iter().filter(|p| p.1 == parent).map(|p| p.0));
+    }
+    pids
+}
+
+fn signal(pids: &[i32], sig: i32) {
+    for &pid in pids {
+        // SAFETY: plain kill(2) on pids we just listed
+        unsafe {
+            libc::kill(pid, sig);
+        }
+    }
+}
+
+/// `status()` for updates and builds: refuses to start below LOW_BATTERY and stops what is
+/// running (like Ctrl+C) when the battery gets there, unless activation has begun. Both are
+/// errors, so chains like `nx all` stop too.
+fn guarded_status(c: &mut Command) -> Result<ExitStatus> {
+    let name = c.get_program().to_string_lossy().into_owned();
+    if let Some(level) = low_battery() {
+        bail!("battery at {level}%, not starting {name}");
+    }
+    let mut child = c
+        .spawn()
+        .with_context(|| format!("could not start {name}"))?;
+    let pid = child.id() as i32;
+    // the charge and the time when the interrupt was sent
+    let mut stopped: Option<(u32, Instant)> = None;
+    loop {
+        std::thread::sleep(Duration::from_millis(500));
+        if let Some(status) = child.try_wait()? {
+            return match stopped {
+                Some((level, _)) => bail!("battery at {level}%, {name} stopped"),
+                None => Ok(status),
+            };
+        }
+        match stopped {
+            None => {
+                if let Some(level) = low_battery() {
+                    let procs = processes();
+                    if !activating(&procs) {
+                        signal(&family(&procs, pid), libc::SIGINT);
+                        stopped = Some((level, Instant::now()));
+                    }
+                }
+            }
+            // it ignored the interrupt
+            Some((_, at)) if at.elapsed() > Duration::from_secs(15) => {
+                signal(&family(&processes(), pid), libc::SIGKILL);
+            }
+            _ => {}
+        }
+    }
+}
+
+/// Like `run`, with the battery guard.
+pub fn run_guarded(c: &mut Command) -> Result<bool> {
+    Ok(guarded_status(c)?.success())
+}
+
+/// Like `run_or_exit`, with the battery guard.
+pub fn run_guarded_or_exit(c: &mut Command) -> Result<()> {
+    let status = guarded_status(c)?;
     if !status.success() {
         std::process::exit(status.code().unwrap_or(1));
     }

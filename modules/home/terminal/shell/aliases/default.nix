@@ -12,7 +12,8 @@
     "reload" = "exec fish";
 
     # fish PATH is a list; just print it
-    "path" = "string join \\n $PATH";
+    # (not named `path`: that shadows fish's builtin and breaks git.fish completions)
+    "paths" = "string join \\n $PATH";
 
     # venv activate uses the fish-specific script
     "venv" = "source venv/bin/activate.fish";
@@ -24,7 +25,7 @@
   posixOverrides = {
     "-" = "cd -";
     "reload" = "exec zsh";
-    "path" = "echo -e \${PATH//:/\\n}";
+    "paths" = "echo -e \${PATH//:/\\n}";
     "venv" = "source venv/bin/activate";
     "mkvenv" = "python3 -m venv venv && source venv/bin/activate";
   };

@@ -82,8 +82,8 @@ pub fn run(p: &Paths, greeter: Greeter) -> Result<()> {
     std::fs::write(&cfg, swapped)?;
 
     ui::step(&format!("Building {name} (nothing is activated yet)"));
-    // plain `run` + bail (not run_or_exit): exiting directly would skip the restore above
-    if !sh::run(
+    // run_guarded + bail (not run_guarded_or_exit): exiting directly would skip the restore above
+    if !sh::run_guarded(
         cmd("nh")
             .args(["os", "build"])
             .arg(&p.os)
@@ -98,7 +98,7 @@ pub fn run(p: &Paths, greeter: Greeter) -> Result<()> {
         ui::step("Aborted, desktop/default.nix restored");
         return Ok(());
     }
-    if !sh::run(cmd("nh").args(["os", "boot"]).arg(&p.os))? {
+    if !sh::run_guarded(cmd("nh").args(["os", "boot"]).arg(&p.os))? {
         bail!("nh os boot failed, desktop/default.nix restored");
     }
     println!();
