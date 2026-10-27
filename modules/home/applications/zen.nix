@@ -31,19 +31,19 @@ in {
       SearchEngines = {
         Add = [
           {
-            Name = "OmniSearch";
+            Name = "MeurSearch";
             URLTemplate = "http://localhost:8087/search?q={searchTerms}";
             IconURL = "http://localhost:8087/static/favicon.ico";
             Alias = "@o";
           }
           {
-            Name = "OmniSearch Images";
+            Name = "MeurSearch Images";
             URLTemplate = "http://localhost:8087/images?q={searchTerms}";
             IconURL = "http://localhost:8087/static/favicon.ico";
             Alias = "@oi";
           }
         ];
-        Default = "OmniSearch";
+        Default = "MeurSearch";
       };
 
       ExtensionSettings =

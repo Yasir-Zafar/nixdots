@@ -47,11 +47,14 @@ in
     makeFlags = ["VERSION=${finalAttrs.version}" "GIT_REMOTE=https://codeberg.org/gabrielf/omnisearch"];
     env.NIX_CFLAGS_COMPILE = "-I${lib.getDev libxml2}/include/libxml2";
 
-    # gruvbox as the default theme (still switchable in /settings)
+    # gruvbox as the default theme (still switchable in /settings), branded MeurSearch
     postPatch = ''
       cp ${./gruvbox.css} static/themes/gruvbox.css
       substituteInPlace src/Utility/Utility.c \
         --replace-fail ': "system");' ': "gruvbox");'
+      substituteInPlace templates/home.html \
+        --replace-fail 'Omni<span>Search</span>' 'Meur<span>Search</span>'
+      substituteInPlace templates/* locales/* --replace-quiet OmniSearch MeurSearch
     '';
 
     # templates/static/locales are read from the working directory, next to config.ini
