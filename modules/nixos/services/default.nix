@@ -7,5 +7,6 @@
     ./power.nix
     ./compat.nix
     ./syncthing.nix
+    ./omnisearch.nix
   ];
 }

@@ -2,7 +2,7 @@
   home.packages = with pkgs; [
     papers
     foliate
-    obsidian
+    (obsidian.override {electron = electron_42;}) # electron 43.8.3 breaks renderer (webFrame errors), 2026-10
     formiko
     gnome-text-editor
     gnome-decoder

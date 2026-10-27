@@ -26,6 +26,26 @@ in {
       DisableFirefoxStudies = true;
       DontCheckDefaultBrowser = true; # xdg default is set in preferred-apps.nix
 
+      # local omnisearch (modules/nixos/services/omnisearch.nix) as the default engine;
+      # "@o" searches it explicitly, "@oi" searches its images
+      SearchEngines = {
+        Add = [
+          {
+            Name = "OmniSearch";
+            URLTemplate = "http://localhost:8087/search?q={searchTerms}";
+            IconURL = "http://localhost:8087/static/favicon.ico";
+            Alias = "@o";
+          }
+          {
+            Name = "OmniSearch Images";
+            URLTemplate = "http://localhost:8087/images?q={searchTerms}";
+            IconURL = "http://localhost:8087/static/favicon.ico";
+            Alias = "@oi";
+          }
+        ];
+        Default = "OmniSearch";
+      };
+
       ExtensionSettings =
         lib.genAttrs [
           "uBlock0@raymondhill.net" # uBlock Origin
