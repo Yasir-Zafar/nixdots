@@ -11,7 +11,7 @@
     dir = /var/cache/omnisearch
 
     [engines]
-    engines = "*"
+    engines = "ddg,startpage"
   '';
 
   # it reads config.ini, templates/, static/ and locales/ from its working directory

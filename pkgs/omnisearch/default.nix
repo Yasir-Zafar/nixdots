@@ -52,9 +52,11 @@ in
       cp ${./gruvbox.css} static/themes/gruvbox.css
       substituteInPlace src/Utility/Utility.c \
         --replace-fail ': "system");' ': "gruvbox");'
-      substituteInPlace templates/home.html \
-        --replace-fail 'Omni<span>Search</span>' 'Meur<span>Search</span>'
-      substituteInPlace templates/* locales/* --replace-quiet OmniSearch MeurSearch
+      substituteInPlace templates/* locales/* src/Routes/Search.c \
+        --replace-quiet 'Omni<span>' 'Meur<span>' \
+        --replace-quiet OmniSearch MeurSearch \
+        --replace-quiet Omnisearch MeurSearch \
+        --replace-quiet ' omnisearch ' ' MeurSearch '
     '';
 
     # templates/static/locales are read from the working directory, next to config.ini
