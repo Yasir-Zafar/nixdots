@@ -152,7 +152,12 @@ in {
       };
 
       # top-left corner toggles the overview, also while dragging something
-      gestures.hot-corners.enable = true;
+      gestures.hot-corners = {
+        top-left = true;
+        top-right = false;
+        bottom-left = false;
+        bottom-right = false;
+      };
 
       window-rules = [
         # square corners, contents clipped to them
@@ -352,6 +357,9 @@ in {
         "Mod+Up".action.focus-window-up = {};
         "Mod+Home".action.focus-column-first = {};
         "Mod+End".action.focus-column-last = {};
+        # Home/End sit behind Fn on the 60%: vim's gg / G
+        "Mod+G".action.focus-column-first = {};
+        "Mod+Shift+G".action.focus-column-last = {};
 
         # --- Move ---
         "Mod+Shift+H".action.move-column-left = {};
@@ -419,6 +427,15 @@ in {
         "XF86AudioPlay" = key "Play/pause" ["playerctl" "play-pause"];
         "XF86AudioNext" = key "Next track" ["playerctl" "next"];
         "XF86AudioPrev" = key "Previous track" ["playerctl" "previous"];
+        # same without Fn (60% keyboard): Alt + the vim keys, minus/equal like the size binds
+        "Mod+Alt+K" = key "Volume up" ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
+        "Mod+Alt+J" = key "Volume down" ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
+        "Mod+Alt+M" = key "Mute" ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
+        "Mod+Alt+Space" = key "Play/pause" ["playerctl" "play-pause"];
+        "Mod+Alt+L" = key "Next track" ["playerctl" "next"];
+        "Mod+Alt+H" = key "Previous track" ["playerctl" "previous"];
+        "Mod+Alt+Equal" = key "Brightness up" ["brightnessctl" "set" "10%+"];
+        "Mod+Alt+Minus" = key "Brightness down" ["brightnessctl" "set" "10%-"];
 
         # --- Mouse wheel ---
         "Mod+WheelScrollRight".action.focus-column-right = {};
