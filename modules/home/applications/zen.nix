@@ -46,6 +46,27 @@ in {
         Default = "MeurSearch";
       };
 
+      # taken from the live profile's prefs.js (2026-11-05). "default" only sets the default:
+      # a value changed in the UI still wins, so this matters on a fresh/lost profile.
+      # The policy rejects zen.*, font.*, sidebar.* and most privacy.* prefs; those stay
+      # in the profile, as do the Zen mods' own prefs (mod.*, theme.*, uc.*, user-*).
+      Preferences =
+        lib.mapAttrs (_: v: {
+          Value = v;
+          Status = "default";
+        }) {
+          "browser.translations.enable" = false;
+          "browser.ai.control.translations" = "blocked";
+          "browser.urlbar.suggest.searches" = false;
+          "browser.download.useDownloadDir" = false; # ask where to save
+          "browser.ctrlTab.sortByRecentlyUsed" = true;
+          "network.dns.disablePrefetch" = true;
+          "network.prefetch-next" = false;
+          "network.http.speculative-parallel-limit" = 0;
+          "media.videocontrols.picture-in-picture.video-toggle.enabled" = false;
+          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        };
+
       ExtensionSettings =
         lib.genAttrs [
           "uBlock0@raymondhill.net" # uBlock Origin

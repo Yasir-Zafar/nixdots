@@ -85,6 +85,20 @@ in {
         (f "PK" 4955 (-1.2) 5.11)
         (f "PK" 977 1.0 5.18)
       ];
+
+      # no Pro X in AutoEQ; closest is crinacle's EDX Pro (results/crinacle/711 in-ear/KZ EDX Pro)
+      edx-pro-x = autoEq (-5.1) [
+        (f "LSC" 105 (-2.3) 0.70)
+        (f "PK" 169 (-4.0) 0.82)
+        (f "PK" 9836 2.9 0.18)
+        (f "PK" 783 3.2 1.23)
+        (f "PK" 2062 (-4.8) 2.53)
+        (f "HSC" 10000 (-6.1) 0.70)
+        (f "PK" 9508 3.3 2.86)
+        (f "PK" 4965 (-5.7) 5.27)
+        (f "PK" 3516 2.7 3.58)
+        (f "PK" 6291 3.2 5.44)
+      ];
     };
 
     # no rule for the current device -> "flat"
@@ -101,12 +115,12 @@ in {
       route = "Headphones"; # in music (A2DP) mode; calls use the headset profile, no EQ
       preset = "buds2-pro";
     })
-    # wired: the laptop's headphone jack (its own sink, separate from the speakers)
+    # wired (KZ EDX Pro X): the laptop's headphone jack (its own sink, separate from the speakers)
     (autoload {
       device = "alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__Headphones__sink";
       description = "Core Ultra 200H/200V Series Processors HD Audio Headphones";
       route = "Headphones";
-      preset = "flat";
+      preset = "edx-pro-x";
     })
   ];
 }
