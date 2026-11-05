@@ -1,0 +1,292 @@
+# Noctalia (v5) settings, in Noctalia's own format. noctalia.nix loads this, adds the asset
+# paths, and home-manager writes the result to ~/.config/noctalia/config.toml (checked with
+# `noctalia config validate` at build time).
+#
+# Changes made in Noctalia's Settings go to ~/.local/state/noctalia/settings.toml, which wins
+# over this file. To keep a change: copy it here, then remove it from settings.toml (or
+# delete the file to drop every GUI change at once). `noctalia config export` shows both
+# layers merged.
+
+[bar]
+order = [ "default", "bar2", "bar3", "bar4" ]
+
+    [bar.bar2]
+    center = []
+    enabled = true
+    end = []
+    margin_ends = 0
+    radius = 40
+    shadow = false
+    start = []
+    thickness = 11
+
+    [bar.bar3]
+    center = []
+    enabled = true
+    end = []
+    margin_ends = 0
+    position = "right"
+    radius = 40
+    shadow = false
+    start = []
+    thickness = 11
+
+    [bar.bar4]
+    center = []
+    enabled = true
+    end = []
+    margin_ends = 0
+    position = "bottom"
+    radius = 40
+    shadow = false
+    start = []
+    thickness = 11
+
+    [bar.default]
+    capsule = true
+    capsule_padding = 8.0
+    capsule_radius = 10
+    capsule_thickness = 0.74999998696148396
+    end = [ "tray", "group:g2", "group:g1", "brightness", "battery", "control-center", "session" ]
+    font_family = "Inter Medium"
+    margin_ends = 0
+    padding = 10
+    position = "left"
+    radius = 80
+    radius_bottom_left = 0
+    radius_top_left = 0
+    shadow = false
+    start = [ "launcher", "workspaces", "active_window", "media", "group:g3" ]
+    thickness = 36
+
+        [[bar.default.capsule_group]]
+        accordion = true
+        accordion_direction = "end"
+        enabled = true
+        fill = "surface_container"
+        id = "g1"
+        members = [ "network", "volume", "bluetooth" ]
+        opacity = 1.0
+        padding = 8.0
+        radius = 10.0
+        widget_spacing = 10
+
+        [[bar.default.capsule_group]]
+        accordion = true
+        accordion_direction = "end"
+        enabled = true
+        fill = "surface_container"
+        id = "g2"
+        members = [ "notifications", "bar", "widget", "notes", "clipboard", "bar_2" ]
+        opacity = 1.0
+        padding = 10.0
+        radius = 10.0
+        widget_spacing = 10
+
+        [[bar.default.capsule_group]]
+        accordion = false
+        accordion_direction = "end"
+        enabled = true
+        fill = "surface_container"
+        id = "g3"
+        members = [ "cpu", "ram", "temp" ]
+        opacity = 1.0
+        padding = 8.0
+        radius = 10.0
+        widget_spacing = 8
+
+[battery]
+warning_threshold = 20
+
+# the account's credentials are in the Secret Service keyring, not here
+[calendar]
+enabled = true
+
+    [calendar.account.personal_google]
+    type = "google"
+
+[control_center]
+sidebar = "full"
+sidebar_section = "full"
+
+[desktop_widgets]
+enabled = false
+schema_version = 2
+widget_order = []
+
+    [desktop_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [desktop_widgets.widget]
+
+[dock]
+enabled = false
+
+[idle]
+behavior_order = [ "lock", "screen-off", "lock-and-suspend" ]
+
+    [idle.behavior.lock]
+    action = "lock"
+    enabled = true
+    timeout = 600.0
+
+    [idle.behavior.lock-and-suspend]
+    action = "lock_and_suspend"
+    enabled = true
+    timeout = 900.0
+
+    [idle.behavior.screen-off]
+    action = "screen_off"
+    enabled = true
+    timeout = 660.0
+
+[lockscreen_widgets]
+enabled = true
+schema_version = 2
+widget_order = [ "lockscreen-login-box@eDP-1" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 960.0
+    cy = 1077.0
+    output = "eDP-1"
+    placement_height = 1200.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@eDP-1".settings]
+        center_password_text = false
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+[location]
+auto_locate = true
+
+[notification]
+layer = "overlay"
+
+[osd]
+orientation = "vertical"
+position = "bottom_right"
+position_vertical = "bottom_right"
+
+[plugin_settings."raycursive/niri-displays"]
+panel_placement = "floating"
+
+[plugins]
+enabled = [
+    "noctalia/notes",
+    "whyoolw/sharednd",
+    "salemsayed/niri-active-workspace",
+    "thepunkoff/pomodoro",
+    "raycursive/niri-displays",
+    "rylos/syncthing",
+    "radimous/prismlauncher-instances"
+]
+
+[shell]
+button_borders = false
+font_family = "Inter SemiBold"
+niri_overview_type_to_launch_enabled = false
+telemetry_enabled = false
+
+    [shell.launcher]
+    app_grid = true
+    pinned = [ "discord" ]
+
+    [shell.panel]
+    control_center_placement = "floating"
+    open_near_click_session = true
+    session_placement = "floating"
+    shadow = false
+
+    [shell.session]
+    grid = true
+
+[theme]
+builtin = "Gruvbox"
+
+[widget.active_window]
+capsule_padding = 8
+display = "icon_only"
+
+[widget.bar]
+capsule = true
+enable_scroll = false
+show_pending = false
+type = "rylos/syncthing:bar"
+
+[widget.bar_2]
+show_resolution = false
+type = "raycursive/niri-displays:bar"
+
+[widget.battery]
+color = "#FE8019"
+
+[widget.bluetooth]
+capsule = true
+capsule_opacity = 0.0
+color = "tertiary"
+
+[widget.brightness]
+color = "secondary"
+
+[widget.clock]
+capsule = true
+capsule_opacity = 0.0
+format = "{:%I %M  }"
+
+[widget.control-center]
+color = "primary"
+
+[widget.cpu]
+color = "primary"
+show_value = false
+
+[widget.network]
+capsule = true
+capsule_opacity = 0.0
+color = "tertiary"
+
+[widget.notes]
+type = "noctalia/notes:notes"
+
+[widget.ram]
+color = "secondary"
+show_value = false
+
+[widget.session]
+color = "error"
+
+[widget.temp]
+color = "tertiary"
+show_value = false
+
+[widget.volume]
+capsule = true
+capsule_opacity = 0.0
+color = "tertiary"
+mute_color = "tertiary"
+
+[widget.widget]
+type = "thepunkoff/pomodoro:widget"
+
+[widget.workspaces]
+capsule = true
+capsule_padding = 10
+style = "minimal"

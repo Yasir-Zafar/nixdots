@@ -16,8 +16,9 @@
   rofi = "${config.programs.rofi.finalPackage}/bin/rofi";
   dunstctl = "${pkgs.dunst}/bin/dunstctl";
 
-  # same timings as noctalia's idle settings: screen off at 7 min, lock at 10
-  idle = "xset s 600 600; xset +dpms; xset dpms 420 420 420";
+  # same timings as noctalia's idle settings (noctalia.toml [idle]): lock at 10 min, screen
+  # off at 11. Noctalia's suspend at 15 min isn't copied here.
+  idle = "xset s 600 600; xset +dpms; xset dpms 660 660 660";
   lock = "i3lock -n -c ${builtins.substring 1 6 c.bg}";
 
   # Mod+Escape, noctalia's session menu
