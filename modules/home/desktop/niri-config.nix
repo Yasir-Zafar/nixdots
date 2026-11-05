@@ -2,13 +2,8 @@
 # Look (docs/PREFERENCES.md): no gaps, no focus ring, no border, no shadows, square corners.
 # Noctalia's own niri recommendations (layer rules, debug flag) come from its
 # docs/user/compositor-settings/niri.mdx.
-let
-  # gruvbox dark medium
-  c = {
-    bg2 = "#504945";
-    red = "#fb4934";
-    orange = "#fe8019";
-  };
+{my, ...}: let
+  c = my.colors; # gruvbox dark medium (lib/default.nix)
 
   spring = stiffness: {
     spring = {

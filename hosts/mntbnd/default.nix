@@ -7,6 +7,7 @@
   ];
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.overlays = [(import ../../pkgs)]; # our own packages as pkgs.<name> (pkgs/default.nix)
 
   system.stateVersion = "25.05";
 }

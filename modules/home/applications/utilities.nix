@@ -18,7 +18,7 @@
     # gdm-settings # only useful with the gdm greeter (modules/nixos/desktop/greeters/gdm.nix)
     impression
     theclicker
-    (callPackage ../../../pkgs/way-clicker {}) # gui autoclicker; open it once, then Mod+X starts/stops
+    way-clicker # gui autoclicker; open it once, then Mod+X starts/stops
   ];
 
   # way-clicker clicks through dotoolc, which hands the clicks to this daemon (it owns the

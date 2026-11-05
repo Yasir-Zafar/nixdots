@@ -10,6 +10,7 @@
   files = "org.gnome.Nautilus.desktop";
   archive = "org.gnome.FileRoller.desktop";
   mail = "thunderbird.desktop";
+  windows = "wine.desktop"; # from the system wine (nixos/users/packages.nix)
 
   assign = app: types: lib.genAttrs types (_: [app]);
 in {
@@ -68,6 +69,15 @@ in {
         "application/x-tar"
         "application/x-7z-compressed"
         "application/gzip"
+      ])
+      # .exe is detected as the first type; the rest are what wine.desktop lists
+      (assign windows [
+        "application/vnd.microsoft.portable-executable"
+        "application/x-msdownload"
+        "application/x-ms-dos-executable"
+        "application/x-msi"
+        "application/x-ms-shortcut"
+        "application/x-bat"
       ])
     ];
   };

@@ -4,7 +4,7 @@
     showtime
     stremio-linux-shell
     pear-desktop
-    # amberol # needs python reuse, broken in nixpkgs (no man output); restore on a later update
+    amberol
     gnome-podcasts
     ffmpeg
 

@@ -52,23 +52,22 @@
             "bluez5.enable-msbc" = true;
             "bluez5.enable-hw-volume" = true;
 
-            "bluez5.codecs" = [
-              "ldac"
-              "aptx_hd"
-              "aptx"
-              "aptx_ll"
-              "aptx_ll_duplex"
-              "opus_05_pro"
-              "opus_05_71"
-              "opus_05_51"
-              "opus_05"
-              "opus_05_duplex"
-              "aac"
-              "sbc_xq"
-            ];
+            # no "bluez5.codecs" list: unset means every codec pipewire has, and it picks
+            # the best one both sides support (music: LDAC > aptX HD > aptX > AAC > SBC-XQ;
+            # calls: LC3-SWB > mSBC > CVSD). The old list left out the call codecs, so calls
+            # were stuck on CVSD (8 kHz). Buds2 Pro: AAC for music; Samsung's own SSC codec
+            # doesn't exist on linux.
 
-            "bluez5.hfphsp-backend" = "pipewire";
+            # pipewire's own HFP/HSP implementation ("pipewire" was not a valid value)
+            "bluez5.hfphsp-backend" = "native";
           };
+        };
+
+        # calls: when an app records from the headset (Discord, Meet), switch it to the
+        # headset profile (best call codec above), and back to music quality afterwards.
+        # Already wireplumber's default; written down so it's on record.
+        "51-bluez-autoswitch"."wireplumber.settings" = {
+          "bluetooth.autoswitch-to-headset-profile" = true;
         };
       };
     };

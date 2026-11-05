@@ -22,7 +22,7 @@
     dolphin-emu
 
     # Limbus Company bot; run it from the bspwm (X11) session (desktop/bspwm.nix)
-    (callPackage ../../../pkgs/charge-grinder {})
+    charge-grinder
 
     gnome-mahjongg
     gnome-chess

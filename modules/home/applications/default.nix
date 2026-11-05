@@ -9,6 +9,6 @@
     ./zen.nix
     ./network.nix
     ./utilities.nix
-    #./easyeffect.nix
+    ./easyeffect.nix # per-headphone EQ presets
   ];
 }

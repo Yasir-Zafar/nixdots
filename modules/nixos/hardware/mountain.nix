@@ -3,7 +3,7 @@
 # typing interface to every user; uaccess alone is enough. uaccess has to be tagged before
 # 73-seat-late.rules, so this is a 70- rules file (services.udev.extraRules lands at 99).
 {pkgs, ...}: {
-  environment.systemPackages = [(pkgs.callPackage ../../../pkgs/basecamp-linux {})];
+  environment.systemPackages = [pkgs.basecamp-linux];
 
   services.udev.packages = [
     (pkgs.writeTextFile {

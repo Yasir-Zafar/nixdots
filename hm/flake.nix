@@ -88,8 +88,8 @@
     pkgs = import nixpkgs {
       localSystem.system = "x86_64-linux";
       config.allowUnfree = true;
-      # pkgs.claude-code comes from claude-code-nix instead of nixpkgs
-      overlays = [inputs.claude-code.overlays.default];
+      # pkgs.claude-code comes from claude-code-nix instead of nixpkgs; ../pkgs adds our own
+      overlays = [inputs.claude-code.overlays.default (import ../pkgs)];
     };
     antigravity = antigravity-nix.packages.x86_64-linux;
     my = import ../lib;

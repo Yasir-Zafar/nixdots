@@ -1,6 +1,6 @@
 # omnisearch metasearch engine on http://localhost:8087 (localhost only, no firewall port)
 {pkgs, ...}: let
-  omnisearch = pkgs.callPackage ../../../pkgs/omnisearch {};
+  inherit (pkgs) omnisearch;
 
   config = pkgs.writeText "config.ini" ''
     [server]

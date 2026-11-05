@@ -10,6 +10,18 @@
   # public repo doesn't carry them
   git.name = "Yasir-Zafar";
 
+  # gruvbox dark medium, for configs that take raw hex (niri, bspwm/polybar/rofi/dunst)
+  colors = {
+    bg = "#282828";
+    bg1 = "#3c3836";
+    bg2 = "#504945";
+    fg = "#ebdbb2";
+    gray = "#928374";
+    red = "#fb4934";
+    yellow = "#fabd2f";
+    orange = "#fe8019";
+  };
+
   # repo assets. Use `my.assets + "/file"` so only that file is copied to the store,
   # not the whole folder with the icon theme.
   assets = ../assets;

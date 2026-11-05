@@ -11,17 +11,7 @@
   my,
   ...
 }: let
-  # gruvbox dark medium
-  c = {
-    bg = "#282828";
-    bg1 = "#3c3836";
-    bg2 = "#504945";
-    fg = "#ebdbb2";
-    gray = "#928374";
-    red = "#fb4934";
-    yellow = "#fabd2f";
-    orange = "#fe8019";
-  };
+  c = my.colors; # gruvbox dark medium (lib/default.nix)
 
   rofi = "${config.programs.rofi.finalPackage}/bin/rofi";
   dunstctl = "${pkgs.dunst}/bin/dunstctl";
