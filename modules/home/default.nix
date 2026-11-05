@@ -2,7 +2,7 @@
 {
   imports = [
     ./secrets.nix # sops-nix: secrets/secrets.yaml
-    ./dotfiles.nix # nixvim
+    #./xdg.nix # old user-dirs / mime setup, kept for reference
     #./scripts/default.nix # superseded by nx (pkgs/nx-sh), kept for reference
     ./desktop/default.nix
     ./terminal/default.nix

@@ -1,6 +1,6 @@
 {my, ...}: {
   imports = [
-    ./nix.nix
+    ./nix-tools.nix
     ./py.nix
     ./c.nix
   ];

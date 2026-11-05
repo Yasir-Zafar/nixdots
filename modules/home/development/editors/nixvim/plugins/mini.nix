@@ -34,7 +34,7 @@
           };
         };
 
-        # pairs = {}; # off: nvim-autopairs (kickstart/plugins/autopairs.nix) does this and hooks into cmp
+        # pairs = {}; # off: nvim-autopairs (plugins/autopairs.nix) does this and hooks into cmp
 
         # Simple and easy statusline.
         #  You could remove this setup call if you don't like it,

@@ -4,12 +4,13 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    # zen is installed by home-manager now (hm/flake.nix); this input only backs the
-    # commented system install in modules/nixos/users/packages.nix
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake/beta";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # zen is installed by home-manager now (hm/flake.nix); this input only backed the
+    # commented system install in modules/nixos/users/packages.nix. Commented out so
+    # updates don't fetch it; uncomment both together to go back.
+    # zen-browser = {
+    #   url = "github:0xc000022070/zen-browser-flake/beta";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     niri = {
       url = "github:epireyn/niri-flake";

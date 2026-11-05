@@ -1,5 +1,5 @@
 # debugger with VS Code's keys (F5 / F9 / F10 / F11): rust + c/c++ through lldb-dap, python through debugpy
-# (the kickstart go version stays in kickstart/plugins/debug.nix, switched off).
+# (the kickstart go version stays in plugins/debug.nix, switched off).
 # lldb-dap instead of codelldb (vscode-lldb-adapter): nixpkgs has no binary cache for it, it compiles a rust toolchain
 {pkgs, ...}: {
   programs.nixvim = {

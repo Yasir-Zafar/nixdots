@@ -1,9 +1,7 @@
-# (add `config` / `pkgs` back to the arguments if the commented block below is revived)
+# XDG user dirs and mime defaults from before preferred-apps.nix (applications/) took
+# over the mime part. Not imported; kept for reference.
+# (add `config` to the arguments if the block below is revived)
 _: {
-  imports = [
-    ./nixvim
-  ];
-
   # # Manage dotfiles through Home Manager
   # home.file = {
   #   # Custom configuration files

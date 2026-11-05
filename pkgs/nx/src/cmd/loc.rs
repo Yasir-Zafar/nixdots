@@ -53,7 +53,7 @@ const RULES: &[(&str, &str, &str)] = &[
     ("pkgs/nx/", "nx", "Packaging and completions"),
     ("pkgs/nx-sh/", "nx", "Bash fallback (nx-sh)"),
     ("modules/nixos/", "Config", "System modules"),
-    ("modules/home/nixvim/", "Config", "Neovim (nixvim)"),
+    ("modules/home/development/editors/nixvim/", "Config", "Neovim (nixvim)"),
     ("modules/home/", "Config", "Home modules"),
     ("nix/", "Config", "Flakes, host, user, shared lib"),
     ("hm/", "Config", "Flakes, host, user, shared lib"),
