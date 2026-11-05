@@ -21,7 +21,7 @@
       mss
     ]);
 in
-  stdenvNoCC.mkDerivation (finalAttrs: {
+  stdenvNoCC.mkDerivation (_finalAttrs: {
     pname = "charge-grinder";
     version = "3.5.4-unstable-2026-10-20";
 
