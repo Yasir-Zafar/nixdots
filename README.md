@@ -33,7 +33,7 @@
 | **Greeter** | [sysc-greet](https://github.com/Nomadcxx/sysc-greet) on greetd, Gruvbox + ASCII rain |
 | **Terminal** | Ghostty, starship prompt, zellij, atuin, lazygit, yazi, fastfetch |
 | **Shells** | fish (interactive, in Ghostty), zsh (login), bash |
-| **Editor** | Neovim via [nixvim](https://github.com/nix-community/nixvim) (kickstart-style, nightly), plus VS Code, Antigravity and JetBrains (PyCharm, CLion) |
+| **Editor** | Neovim via [nixvim](https://github.com/nix-community/nixvim) (kickstart-style, nightly), Emacs 31 (fully declared, daemon), plus VS Code, Antigravity and JetBrains (PyCharm, CLion) |
 | **Theming** | [Stylix](https://github.com/nix-community/stylix) with `gruvbox-dark-medium`, opt-in per target |
 | **Fonts** | JetBrainsMono Nerd Font, Inter, Source Serif Pro |
 | **GTK / icons / cursor** | Gruvbox-Green-Dark, Gruvbox-Plus-Dark, Bibata Modern Classic |
