@@ -52,6 +52,13 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    # helium browser (chromium-based): not in nixpkgs yet. Repackages upstream's .deb; its home
+    # module adds launch flags. Policies are system-side (modules/nixos/desktop/helium.nix)
+    helium = {
+      url = "github:oxcl/nix-flake-helium-browser";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # claude code, rebuilt hourly from anthropic's releases (nixpkgs lags behind)
     claude-code = {
       url = "github:sadjow/claude-code-nix";

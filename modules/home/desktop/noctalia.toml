@@ -179,7 +179,7 @@ auto_locate = true
 
 # warmer screen from sunset to sunrise (times from [location]); 4000K at night by default
 [nightlight]
-enabled = true
+enabled = false # off for now (2026-11-08); true turns it back on
 
 [notification]
 layer = "overlay"

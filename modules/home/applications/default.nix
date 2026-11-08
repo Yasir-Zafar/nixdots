@@ -7,6 +7,7 @@
     ./communication.nix
     ./nixcord.nix
     ./zen.nix
+    ./helium.nix # second browser, set up like zen
     ./network.nix
     ./utilities.nix
     ./games.nix

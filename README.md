@@ -37,7 +37,7 @@
 | **Theming** | [Stylix](https://github.com/nix-community/stylix) with `gruvbox-dark-medium`, opt-in per target |
 | **Fonts** | JetBrainsMono Nerd Font, Inter, Source Serif Pro |
 | **GTK / icons / cursor** | Gruvbox-Green-Dark, Gruvbox-Plus-Dark, Bibata Modern Classic |
-| **Browser** | [Zen](https://github.com/0xc000022070/zen-browser-flake), through its home-manager module (policies + extensions declared) |
+| **Browser** | [Zen](https://github.com/0xc000022070/zen-browser-flake), through its home-manager module (policies + extensions declared); [Helium](https://helium.computer) as the Chromium one, same extensions via Chromium policies |
 | **Gaming** | Steam + Proton-GE + [Millennium](https://github.com/SteamClientHomebrew/Millennium), Lutris (all launchers in one library), Heroic, Prism Launcher, Dolphin, Sober (flatpak via [nix-flatpak](https://github.com/gmodena/nix-flatpak)), gamemode, MangoHud, ntsync |
 | **Discord** | Vencord via [nixcord](https://github.com/FlameFlag/nixcord) |
 | **Hardware** | HP OmniBook 5 16", Intel Core Ultra 7 255U, Intel graphics |
@@ -169,7 +169,7 @@ CI runs the same statix, deadnix and alejandra checks on every push and pull req
 - [Noctalia](https://github.com/noctalia-dev/noctalia)
 - [sysc-greet](https://github.com/Nomadcxx/sysc-greet)
 - [Millennium](https://github.com/SteamClientHomebrew/Millennium), [Stylix](https://github.com/nix-community/stylix), [nixvim](https://github.com/nix-community/nixvim), [nixcord](https://github.com/FlameFlag/nixcord), [nh](https://github.com/nix-community/nh)
-- [zen-browser-flake](https://github.com/0xc000022070/zen-browser-flake), [claude-code-nix](https://github.com/sadjow/claude-code-nix), [nix-flatpak](https://github.com/gmodena/nix-flatpak), [nix-index-database](https://github.com/nix-community/nix-index-database), [sops-nix](https://github.com/Mic92/sops-nix)
+- [zen-browser-flake](https://github.com/0xc000022070/zen-browser-flake), [nix-flake-helium-browser](https://github.com/oxcl/nix-flake-helium-browser), [claude-code-nix](https://github.com/sadjow/claude-code-nix), [nix-flatpak](https://github.com/gmodena/nix-flatpak), [nix-index-database](https://github.com/nix-community/nix-index-database), [sops-nix](https://github.com/Mic92/sops-nix)
 - [Gruvbox Plus icons](https://github.com/SylEleuth/gruvbox-plus-icon-pack) and [Gruvbox GTK theme](https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme)
 
 <div align="center">

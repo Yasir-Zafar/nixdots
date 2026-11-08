@@ -7,6 +7,5 @@
     fragments
     nicotine-plus
     proton-vpn
-    # chromium
   ];
 }

@@ -14,6 +14,7 @@
     ./niri.nix
     ./bspwm.nix # X11 session for apps without niri support
     ./flatpak.nix
+    ./helium.nix # helium's browser policies (the browser itself is in home)
     ./greeters/common.nix
     ./greeters/sysc-greet.nix
   ];
