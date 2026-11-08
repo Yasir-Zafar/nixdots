@@ -33,7 +33,9 @@
     atkinson-hyperlegible
 
     dejavu_fonts
-    liberation_ttf
+    liberation_ttf # metric-compatible Arial, Times New Roman, Courier New
+    carlito # metric-compatible Calibri (Office's default font): Word files keep their layout
+    caladea # metric-compatible Cambria
 
     noto-fonts
     noto-fonts-cjk-sans

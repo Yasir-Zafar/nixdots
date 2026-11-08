@@ -33,12 +33,12 @@
 | **Greeter** | [sysc-greet](https://github.com/Nomadcxx/sysc-greet) on greetd, Gruvbox + ASCII rain |
 | **Terminal** | Ghostty, starship prompt, zellij, atuin, lazygit, yazi, fastfetch |
 | **Shells** | fish (interactive, in Ghostty), zsh (login), bash |
-| **Editor** | Neovim via [nixvim](https://github.com/nix-community/nixvim) (kickstart-style, nightly), plus VS Code, Cursor, Antigravity and JetBrains |
+| **Editor** | Neovim via [nixvim](https://github.com/nix-community/nixvim) (kickstart-style, nightly), plus VS Code, Antigravity and JetBrains (PyCharm, CLion) |
 | **Theming** | [Stylix](https://github.com/nix-community/stylix) with `gruvbox-dark-medium`, opt-in per target |
 | **Fonts** | JetBrainsMono Nerd Font, Inter, Source Serif Pro |
 | **GTK / icons / cursor** | Gruvbox-Green-Dark, Gruvbox-Plus-Dark, Bibata Modern Classic |
 | **Browser** | [Zen](https://github.com/0xc000022070/zen-browser-flake), through its home-manager module (policies + extensions declared) |
-| **Gaming** | Steam + Proton-GE ([Millennium](https://github.com/SteamClientHomebrew/Millennium) wired up, currently off), Lutris (all launchers in one library), Heroic, Prism Launcher, Dolphin, Sober (flatpak via [nix-flatpak](https://github.com/gmodena/nix-flatpak)), gamemode, MangoHud, ntsync |
+| **Gaming** | Steam + Proton-GE + [Millennium](https://github.com/SteamClientHomebrew/Millennium), Lutris (all launchers in one library), Heroic, Prism Launcher, Dolphin, Sober (flatpak via [nix-flatpak](https://github.com/gmodena/nix-flatpak)), gamemode, MangoHud, ntsync |
 | **Discord** | Vencord via [nixcord](https://github.com/FlameFlag/nixcord) |
 | **Hardware** | HP OmniBook 5 16", Intel Core Ultra 7 255U, Intel graphics |
 
@@ -58,9 +58,9 @@ dots/
 │   ├── nixos/            system modules
 │   │   ├── nix.nix        nix settings, gc, store optimise
 │   │   ├── boot/          systemd-boot, kernel params (documented, test-first)
-│   │   ├── hardware/      Intel graphics, swap, firmware
-│   │   ├── desktop/       niri, bspwm (X11 session), fonts, greeters/ (sysc-greet active + alternates), gnome
-│   │   ├── services/      audio, bluetooth, networking, power, syncthing
+│   │   ├── hardware/      Intel graphics, swap, firmware, Mountain keyboard (BaseCamp)
+│   │   ├── desktop/       niri, bspwm (X11 session), fonts, flatpak, greeters/ (sysc-greet active + alternates), gnome
+│   │   ├── services/      audio, bluetooth, networking, power, syncthing, valent, waydroid, omnisearch
 │   │   ├── gaming/        steam, gamemode, launchers, emulators
 │   │   ├── development/   system-level toolchains, docker
 │   │   ├── security/
@@ -68,12 +68,13 @@ dots/
 │   └── home/             home-manager modules
 │       ├── desktop/       niri config, bspwm session, noctalia, stylix, gtk/qt, gnome settings
 │       ├── terminal/      ghostty, shells + aliases, prompt, tools
-│       ├── development/   editors, languages, git
-│       ├── applications/  media, documents, network, utilities, nixcord
-│       └── nixvim/        Neovim, written in Nix
-├── pkgs/nx/              the nx CLI + TUI (Rust)
-├── pkgs/nx-sh/           the old bash nx (fallback, one file per command)
-├── lib/default.nix       values both flakes share (user, host, assets)
+│       ├── development/   editors (nixvim: Neovim written in Nix, VS Code, JetBrains), languages, git
+│       └── applications/  media, documents, network, utilities, games, zen, nixcord, easyeffects, default apps
+├── pkgs/                 own packages, an overlay both flakes apply (pkgs.<name>)
+│   ├── nx/                the nx CLI + TUI (Rust)
+│   ├── nx-sh/             the old bash nx (fallback, one file per command)
+│   └── …                  way-clicker, basecamp-linux, charge-grinder, omnisearch
+├── lib/default.nix       values both flakes share (user, host, git, colors, assets)
 ├── secrets/              encrypted personal values (sops-nix); the key is not in the repo
 ├── templates/            per-project dev shells (rust, python, node, c)
 ├── assets/               wallpaper, avatar, GTK and icon themes
@@ -125,6 +126,9 @@ After the first switch, everything goes through `nx`. The full guide (everyday l
 | `nx storage [report\|clean] [--hard]` | show what's eating disk and clear only caches that rebuild themselves; `--hard` also drops the nix fetch cache, unused docker images and every old generation |
 | `nx firmware [check\|update\|…]` | firmware updates through fwupd / LVFS |
 | `nx try <greeter>` | boot-test another greeter (see below) |
+| `nx apps [--all]` | installed apps by the disk space only they use |
+| `nx loc` | lines of code in the repo, by category |
+| `nx tui` | all of the above in one interactive view (Mod+Shift+U) |
 | `nx lint` / `nx fmt` | statix + deadnix, and alejandra |
 
 ## Greeters
@@ -164,7 +168,7 @@ CI runs the same statix, deadnix and alejandra checks on every push and pull req
 - [niri](https://github.com/YaLTeR/niri) and [niri-flake](https://github.com/epireyn/niri-flake) (epireyn's fork of sodiboo's)
 - [Noctalia](https://github.com/noctalia-dev/noctalia)
 - [sysc-greet](https://github.com/Nomadcxx/sysc-greet)
-- [Stylix](https://github.com/nix-community/stylix), [nixvim](https://github.com/nix-community/nixvim), [nixcord](https://github.com/FlameFlag/nixcord), [nh](https://github.com/nix-community/nh)
+- [Millennium](https://github.com/SteamClientHomebrew/Millennium), [Stylix](https://github.com/nix-community/stylix), [nixvim](https://github.com/nix-community/nixvim), [nixcord](https://github.com/FlameFlag/nixcord), [nh](https://github.com/nix-community/nh)
 - [zen-browser-flake](https://github.com/0xc000022070/zen-browser-flake), [claude-code-nix](https://github.com/sadjow/claude-code-nix), [nix-flatpak](https://github.com/gmodena/nix-flatpak), [nix-index-database](https://github.com/nix-community/nix-index-database), [sops-nix](https://github.com/Mic92/sops-nix)
 - [Gruvbox Plus icons](https://github.com/SylEleuth/gruvbox-plus-icon-pack) and [Gruvbox GTK theme](https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme)
 

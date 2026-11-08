@@ -77,6 +77,6 @@
   security.rtkit.enable = true;
 
   environment.systemPackages = with pkgs; [
-    pavucontrol
+    pwvucontrol # volume mixer (GTK4, talks to pipewire directly); replaced pavucontrol 2026-11-08
   ];
 }

@@ -44,8 +44,13 @@ in {
     gnome-decoder
     # gnome-frog # ocr: grab text from images (posthog broken in nixpkgs, 2026-10)
     # errands
+    # gtk3 ui (follows the gruvbox theme) and java for Base come with the package. Its wrapper
+    # reads spelling/hyphenation from share/hunspell and share/hyphen of the profiles; the
+    # Calibri/Cambria stand-ins (carlito, caladea) are system fonts (nixos/desktop/fonts.nix)
     libreoffice
     hunspellDicts.en_GB-ise # spell check for libreoffice and gtk apps
+    hyphenDicts.en_GB # hyphenation (justified text, Tools > Language > Hyphenation)
+    pdfarranger # merge, split, rotate, reorder pdf pages
     qpdf
     # gnome-notes
     # thunderbird

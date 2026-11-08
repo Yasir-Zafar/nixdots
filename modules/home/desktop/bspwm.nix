@@ -131,7 +131,9 @@ in {
         state = "floating";
         sticky = true;
       };
-      "Pavucontrol".state = "floating";
+      # pwvucontrol: gtk4 under X11 may report either class
+      "Pwvucontrol".state = "floating";
+      "com.saivert.pwvucontrol".state = "floating";
     };
 
     # runs again on `bspc wm -r`, so daemons only start once and polybar is restarted
@@ -180,7 +182,7 @@ in {
       "super + semicolon" = "${rofi} -show emoji";
       "alt + Tab" = "${rofi} -show window";
       "super + v" = "CM_LAUNCHER=rofi ${pkgs.clipmenu}/bin/clipmenu";
-      "super + a" = "pavucontrol";
+      "super + a" = "pwvucontrol";
       "super + Escape" = "${session-menu}/bin/bspwm-session-menu";
       "super + shift + Escape" = "loginctl lock-session";
       "super + b" = "${power-cycle}/bin/bspwm-power-cycle";
@@ -359,7 +361,7 @@ in {
       label-volume = "󰕾 %percentage%%"
       label-muted = "󰖁 muted"
       label-muted-foreground = ${c.gray}
-      click-right = pavucontrol
+      click-right = pwvucontrol
 
       [module/backlight]
       type = internal/backlight

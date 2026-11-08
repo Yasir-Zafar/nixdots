@@ -192,7 +192,7 @@ in {
         {
           matches = [
             {app-id = "^org.gnome.Calculator$";}
-            {app-id = "^org.pulseaudio.pavucontrol$";}
+            {app-id = "^com.saivert.pwvucontrol$";}
           ];
           open-floating = true;
         }

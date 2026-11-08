@@ -6,6 +6,12 @@
     # GTK3, so it picks up the Gruvbox theme from desktop/gtk.nix
     lutris
     heroic
+
+    # windows games/apps outside steam, one wine prefix ("bottle") per game; runners, dxvk and
+    # bottles live in ~/.local/share/bottles. nixpkgs' build (gamemode, mangohud, gamescope
+    # included), without the "unsupported build" popup upstream shows outside flatpak.
+    # The system wine (nixos/users/packages.nix) still opens a double-clicked .exe.
+    (bottles.override {removeWarningPopup = true;})
     prismlauncher
     lunar-client
 
