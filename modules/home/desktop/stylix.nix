@@ -19,7 +19,7 @@
       };
       sizes = {
         terminal = 12;
-        applications = 11;
+        applications = 12; # same as gtk.nix
       };
     };
 

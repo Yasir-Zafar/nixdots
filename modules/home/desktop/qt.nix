@@ -6,8 +6,5 @@
     enable = true;
     platformTheme.name = "gtk3";
   };
-
-  home.sessionVariables = {
-    QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-  };
+  # QT_AUTO_SCREEN_SCALE_FACTOR dropped: qt6 ignores it (high-dpi scaling is always on)
 }

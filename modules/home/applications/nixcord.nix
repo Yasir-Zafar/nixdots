@@ -1,7 +1,5 @@
 # nixcord.nix — Full Vencord configuration via Nixcord
 # Imported from applications/default.nix; the module itself comes from inputs.nixcord in flake.nix.
-#
-# See flake setup instructions at the bottom of this file (in comments).
 {
   programs.nixcord = {
     enable = true;
@@ -717,7 +715,7 @@
       enableReactDevtools = false; # React DevTools (requires reload)
       autoUpdate = false; # Auto-update Vencord
       autoUpdateNotification = false; # Notify on auto-update
-      notifyAboutUpdates = true; # Notify when a manual update is available
+      notifyAboutUpdates = false; # updates come from the flake, nothing to act on
 
       # Themes
       themeLinks = [
@@ -775,7 +773,7 @@
         betterRoleContext.enable = false; # Better role right-click menu
         betterSessions.enable = false; # Improved sessions management
         betterUploadButton.enable = false; # Improved upload button
-        clearUrls.enable = false; # Strip tracking params from links
+        clearUrls.enable = true; # Strip tracking params from links
         copyEmojiMarkdown.enable = false; # Copy emoji as markdown
         copyFileContents.enable = false; # Copy file text contents
         copyStickerLinks.enable = false; # Copy sticker URLs
@@ -853,7 +851,7 @@
 
         # ── Notifications ─────────────────────────────────────────────────────
 
-        crashHandler.enable = false; # Catch & recover from crashes
+        crashHandler.enable = true; # Catch & recover from crashes
         noSystemBadge.enable = false; # Hide OS taskbar badge
         secretRingToneEnabler.enable = false; # Enable secret notification tones
         xsOverlay.enable = false; # Send notifications to XSOverlay (VR)
@@ -939,69 +937,3 @@
     };
   };
 }
-# =============================================================================
-# FLAKE SETUP INSTRUCTIONS
-# =============================================================================
-#
-# 1.  Add nixcord to your flake inputs (flake.nix):
-#
-#       inputs = {
-#         nixpkgs.url    = "github:NixOS/nixpkgs/nixos-25.11";
-#         home-manager = {
-#           url   = "github:nix-community/home-manager/release-25.11";
-#           inputs.nixpkgs.follows = "nixpkgs";
-#         };
-#         nixcord.url = "github:FlameFlag/nixcord";
-#       };
-#
-# 2.  Pass inputs through to your Home Manager config.
-#     In your homeConfigurations output:
-#
-#       outputs = { nixpkgs, home-manager, nixcord, ... }@inputs: {
-#         homeConfigurations."youruser" = home-manager.lib.homeManagerConfiguration {
-#           pkgs = nixpkgs.legacyPackages.x86_64-linux;
-#           extraSpecialArgs = { inherit inputs; };  # <-- important
-#           modules = [
-#             inputs.nixcord.homeModules.nixcord     # <-- import the module
-#             ./home.nix
-#             ./nixcord.nix                          # <-- this file
-#           ];
-#         };
-#       };
-#
-# 3.  Rebuild:
-#
-#       home-manager switch --flake .#youruser
-#
-# ── NixOS (system-wide) ──────────────────────────────────────────────────────
-#
-#   In configuration.nix instead of home.nix:
-#
-#     imports = [ inputs.nixcord.nixosModules.nixcord ];
-#     programs.nixcord = {
-#       enable = true;
-#       user   = "youruser";   # required at system level
-#     };
-#
-#   Rebuild with:  sudo nixos-rebuild switch --flake .#yourhostname
-#
-# ── macOS / nix-darwin ───────────────────────────────────────────────────────
-#
-#   imports = [ inputs.nixcord.darwinModules.nixcord ];
-#   programs.nixcord = {
-#     enable = true;
-#     user   = "youruser";
-#   };
-#
-#   Rebuild with:  darwin-rebuild switch --flake .#yourhostname
-#
-# ── Dorion note ──────────────────────────────────────────────────────────────
-#
-#   Dorion requires existing LocalStorage DBs before the Nix config can manage
-#   it.  Run it once first to create them:
-#
-#     nix run github:FlameFlag/nixcord#dorion
-#
-#   Log in, close it, then set dorion.enable = true and rebuild.
-# =============================================================================
-

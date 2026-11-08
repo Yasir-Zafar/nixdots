@@ -5,11 +5,7 @@ _: {
       general = {
         renice = 10;
       };
-
-      gpu = {
-        apply_gpu_optimisations = "accept-responsibility";
-        gpu_device = 0;
-      };
+      # no [gpu] section: gamemode's gpu tweaks are nvidia/amd only (this is an intel igpu)
     };
   };
 
