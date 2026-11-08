@@ -2,8 +2,7 @@
 # Upstream supports X11 and a few Wayland compositors (sway, Hyprland, KDE, GNOME), not niri,
 # so it is run from the bspwm X11 session (modules/nixos/desktop/bspwm.nix) and always uses its
 # X11 backend (Xlib/mss capture, uinput input); the Wayland portal/PipeWire path is left out.
-# Update: bump rev/version, set hash = "" and build; nix prints the new hash.
-# Pinned to main past v3.5.4 for the "fix graces" commit; go back to `tag` on the next release.
+# Update: bump tag/version, set hash = "" and build; nix prints the new hash.
 {
   stdenvNoCC,
   fetchFromGitHub,
@@ -23,13 +22,13 @@
 in
   stdenvNoCC.mkDerivation (_finalAttrs: {
     pname = "charge-grinder";
-    version = "3.5.4-unstable-2026-10-20";
+    version = "3.5.5";
 
     src = fetchFromGitHub {
       owner = "Walpth";
       repo = "Charge-Grinder";
-      rev = "fedce87ff1f8c82f01feee3fd6c30b218976f271";
-      hash = "sha256-30wfQ9BZnJbMR7sN82XNu2ha+LGPbnsxF8tnA/CaTQw=";
+      tag = "v3.5.5";
+      hash = "sha256-C3EFex7/SMde1F87IXQKHXz8PJodzIFGnlo7/OHrvmQ=";
     };
 
     nativeBuildInputs = [makeWrapper qt6.wrapQtAppsHook];

@@ -177,6 +177,10 @@ widget_order = [ "lockscreen-login-box@eDP-1" ]
 [location]
 auto_locate = true
 
+# warmer screen from sunset to sunrise (times from [location]); 4000K at night by default
+[nightlight]
+enabled = true
+
 [notification]
 layer = "overlay"
 

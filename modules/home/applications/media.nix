@@ -9,6 +9,7 @@
     ffmpeg
 
     obs-studio
+    snapshot # camera: check webcam and mic before calls
     # kooha
   ];
 

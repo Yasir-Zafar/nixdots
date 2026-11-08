@@ -7,6 +7,7 @@
     ./niri-config.nix
     ./bspwm.nix
     ./noctalia.nix
+    ./font-trial.nix
   ];
 
   # polkit-gnome runs as a systemd user service (modules/nixos/desktop/niri.nix); its xdg

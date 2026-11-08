@@ -9,6 +9,7 @@
     # gnome-frog # ocr: grab text from images (posthog broken in nixpkgs, 2026-10)
     # errands
     libreoffice
+    hunspellDicts.en_GB-ise # spell check for libreoffice and gtk apps
     qpdf
     # gnome-notes
     # thunderbird

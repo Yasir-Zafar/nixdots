@@ -13,6 +13,7 @@
     mission-center
     warehouse # flatpak manager
     powertop
+    pika-backup # borg backups of home to an external drive
 
     newsflash
     # gdm-settings # only useful with the gdm greeter (modules/nixos/desktop/greeters/gdm.nix)
