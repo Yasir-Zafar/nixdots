@@ -12,6 +12,7 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     beeper
+    claude-desktop # official linux beta, own package (pkgs/claude-desktop)
   ];
 
   services.protonmail-bridge = {

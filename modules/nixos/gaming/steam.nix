@@ -10,9 +10,9 @@
 
       # Millennium (steam client theming). If it lags behind a Steam client update and
       # breaks, comment these three lines out again to get plain Steam back
-      package = pkgs.millennium-steam.override {
-        extraArgs = "-system-composer";
-      };
+      # package = pkgs.millennium-steam.override {
+      #   extraArgs = "-system-composer";
+      # };
 
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;

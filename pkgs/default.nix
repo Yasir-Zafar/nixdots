@@ -9,4 +9,5 @@ final: _prev: {
   basecamp-linux = final.callPackage ./basecamp-linux {};
   charge-grinder = final.callPackage ./charge-grinder {};
   omnisearch = final.callPackage ./omnisearch {};
+  claude-desktop = final.callPackage ./claude-desktop {};
 }
