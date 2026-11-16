@@ -11,7 +11,6 @@
     installation_mode = "normal_installed";
     update_url = "https://clients2.google.com/service/update2/crx";
   };
-  omnisearch = "http://localhost:8087"; # modules/nixos/services/omnisearch.nix
 in {
   programs.chromium = {
     enable = true;
@@ -27,20 +26,10 @@ in {
         "fkagelmloambgokoeokbpihmgpkbgbfm" = "Indie Wiki Buddy";
       };
 
-      # local omnisearch as the default engine ("o" + Tab searches it explicitly);
-      # "oi" + Tab searches its images, like Zen's @o / @oi
+      # omnisearch (modules/nixos/services/omnisearch.nix) is off; back to google
       DefaultSearchProviderEnabled = true;
-      DefaultSearchProviderName = "MeurSearch";
-      DefaultSearchProviderKeyword = "o";
-      DefaultSearchProviderSearchURL = "${omnisearch}/search?q={searchTerms}";
-      DefaultSearchProviderIconURL = "${omnisearch}/static/favicon.ico";
-      SiteSearchSettings = [
-        {
-          name = "MeurSearch Images";
-          shortcut = "oi";
-          url = "${omnisearch}/images?q={searchTerms}";
-        }
-      ];
+      DefaultSearchProviderName = "Google";
+      DefaultSearchProviderSearchURL = "https://www.google.com/search?q={searchTerms}";
 
       # Bitwarden handles passwords; no google account, sync or usage reports
       PasswordManagerEnabled = false;
