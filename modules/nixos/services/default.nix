@@ -8,7 +8,7 @@
     ./compat.nix
     ./syncthing.nix
     ./kdeconnect.nix
-    ./waydroid.nix
-    ./omnisearch.nix
+    # ./waydroid.nix # off for now; module kept
+    # ./omnisearch.nix # off; package and module kept
   ];
 }
