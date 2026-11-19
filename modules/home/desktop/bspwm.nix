@@ -274,7 +274,7 @@ in {
       frame_width = 0
       corner_radius = 0
       separator_color = frame
-      icon_theme = Papirus-Dark
+      icon_theme = Gruvbox-Plus-Dark
       enable_recursive_icon_lookup = true
       background = "${c.bg1}"
       foreground = "${c.fg}"
