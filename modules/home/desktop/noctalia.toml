@@ -57,6 +57,8 @@ order = [ "default", "bar2", "bar3", "bar4" ]
     font_family = "Inter Medium"
     margin_ends = 0
     padding = 10
+    # gap between capsules = the 10px window gaps in mango
+    widget_spacing = 10
     position = "left"
     radius = 80
     radius_bottom_left = 0
@@ -85,7 +87,7 @@ order = [ "default", "bar2", "bar3", "bar4" ]
         id = "g2"
         members = [ "notifications", "bar", "widget", "notes", "clipboard", "bar_2" ]
         opacity = 1.0
-        padding = 10.0
+        padding = 8.0
         radius = 10.0
         widget_spacing = 10
 
@@ -232,7 +234,6 @@ telemetry_enabled = false
 builtin = "Gruvbox"
 
 [widget.active_window]
-capsule_padding = 8
 display = "icon_only"
 
 [widget.bar]
@@ -241,56 +242,82 @@ enable_scroll = false
 show_pending = false
 type = "rylos/syncthing:bar"
 
+# niri-only (raycursive/niri-displays): does nothing in mango
 [widget.bar_2]
+enabled = false
 show_resolution = false
 type = "raycursive/niri-displays:bar"
 
+# colours: gruvbox, alternating warm/cool down the bar so neighbours contrast.
+# top: launcher aqua, workspaces, app, media green, cpu orange, ram blue, temp yellow
+# middle: clock purple
+# bottom: notifications aqua, network purple (volume yellow, bluetooth blue on hover),
+# brightness green, battery orange, control center blue, power red
 [widget.battery]
-color = "#FE8019"
+font_scale = 0.85
+font_weight = 600
+color = "#fe8019"
 
 [widget.bluetooth]
 capsule = true
 capsule_opacity = 0.0
-color = "tertiary"
+color = "#83a598"
 
 [widget.brightness]
-color = "secondary"
+font_scale = 0.85
+font_weight = 600
+color = "#b8bb26"
 
+# labels (clock, network, brightness, battery) share one text size and weight: Inter
+# Medium at full size crowded the 36px bar next to the bolder icons
 [widget.clock]
 capsule = true
-capsule_opacity = 0.0
+font_scale = 0.85
+font_weight = 600
+color = "#d3869b"
 format = "{:%I %M  }"
 
 [widget.control-center]
-color = "primary"
+color = "#83a598"
 
 [widget.cpu]
-color = "primary"
+color = "#fe8019"
 show_value = false
 
+[widget.launcher]
+color = "#8ec07c"
+
+[widget.media]
+color = "#b8bb26"
+
+[widget.notifications]
+color = "#8ec07c"
+
 [widget.network]
+font_scale = 0.85
+font_weight = 600
 capsule = true
 capsule_opacity = 0.0
-color = "tertiary"
+color = "#d3869b"
 
 [widget.notes]
 type = "noctalia/notes:notes"
 
 [widget.ram]
-color = "secondary"
+color = "#83a598"
 show_value = false
 
 [widget.session]
-color = "error"
+color = "#fb4934"
 
 [widget.temp]
-color = "tertiary"
+color = "#fabd2f"
 show_value = false
 
 [widget.volume]
 capsule = true
 capsule_opacity = 0.0
-color = "tertiary"
+color = "#fabd2f"
 mute_color = "tertiary"
 
 [widget.widget]
@@ -300,5 +327,4 @@ type = "thepunkoff/pomodoro:widget"
 capsule = true
 # only tags/workspaces with windows (plus the current one): mango has 9 tags
 hide_when_empty = true
-capsule_padding = 10
 style = "minimal"

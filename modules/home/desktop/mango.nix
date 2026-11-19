@@ -336,11 +336,11 @@
         (note "Mod+middle click" "maximize over the tag")
         (note "Mod+Shift+click" "float / tile")
         (note "Mod+Ctrl+right click" "close")
-        (note "Mod+scroll" "previous / next tag (sideways: focus left / right)")
+        (note "Mod+scroll" "previous / next tag, empty ones too (sideways: focus left / right)")
         (note "Mod+Shift+scroll" "move the window to the previous / next tag")
         (note "Mod+Ctrl+scroll" "next / previous window")
         (note "Mod+Alt+scroll" "volume")
-        (note "Mod+back / forward" "previous / next tag")
+        (note "Mod+back / forward" "previous / next tag, empty ones too")
         (note "3 fingers" "focus in that direction")
         (note "4 fingers left / right" "next / previous tag")
         (note "4 fingers up / down" "open / close the overview")
@@ -432,19 +432,6 @@ in {
         ${config.wayland.windowManager.mango.package}/bin/mmsg dispatch reload_config >/dev/null || true
     done
   '';
-
-  # screen sharing (wlr portal, mango only): noctalia's launcher lists "Monitor: …" and
-  # "Window: …" entries (`noctalia dmenu`). Without a dmenu-style picker on the portal's PATH, sharing a single window
-  # fails (Discord: error 3002).
-  xdg.configFile."xdg-desktop-portal-wlr/config" = {
-    text = ''
-      [screencast]
-      chooser_type = dmenu
-      chooser_cmd = ${lib.getExe config.programs.noctalia.package} dmenu -p Share
-    '';
-    # the portal reads this only at start; try-restart does nothing when it isn't running
-    onChange = "${pkgs.systemd}/bin/systemctl --user try-restart xdg-desktop-portal-wlr.service || true";
-  };
 
   # outputs in the mango session. The first profile matching the connected screens wins on
   # plug-in, so a new screen starts mirrored. "*" = any external screen (HDMI, USB-C).
@@ -730,12 +717,12 @@ in {
         "SUPER+SHIFT,btn_left,togglefloating"
         "SUPER+CTRL,btn_right,killclient"
         # side buttons with Mod: previous / next tag
-        "SUPER,btn_side,viewtoleft_have_client,0"
-        "SUPER,btn_extra,viewtoright_have_client,0"
+        "SUPER,btn_side,viewtoleft,0"
+        "SUPER,btn_extra,viewtoright,0"
       ];
       axisbind = [
-        "SUPER,UP,viewtoleft_have_client,0"
-        "SUPER,DOWN,viewtoright_have_client,0"
+        "SUPER,UP,viewtoleft,0"
+        "SUPER,DOWN,viewtoright,0"
         "SUPER,LEFT,focusdir,left"
         "SUPER,RIGHT,focusdir,right"
         "SUPER+SHIFT,UP,tagtoleft,0"
