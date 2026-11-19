@@ -18,7 +18,9 @@ order = [ "default", "bar2", "bar3", "bar4" ]
     radius = 40
     shadow = false
     start = []
-    thickness = 11
+    # even: at 11 noctalia draws the outer edge on a half pixel, leaving a 1px seam
+    # on the right and bottom screen edges (checked in mango, 2026-11-19)
+    thickness = 12
 
     [bar.bar3]
     center = []
@@ -29,7 +31,9 @@ order = [ "default", "bar2", "bar3", "bar4" ]
     radius = 40
     shadow = false
     start = []
-    thickness = 11
+    # even: at 11 noctalia draws the outer edge on a half pixel, leaving a 1px seam
+    # on the right and bottom screen edges (checked in mango, 2026-11-19)
+    thickness = 12
 
     [bar.bar4]
     center = []
@@ -40,7 +44,9 @@ order = [ "default", "bar2", "bar3", "bar4" ]
     radius = 40
     shadow = false
     start = []
-    thickness = 11
+    # even: at 11 noctalia draws the outer edge on a half pixel, leaving a 1px seam
+    # on the right and bottom screen edges (checked in mango, 2026-11-19)
+    thickness = 12
 
     [bar.default]
     capsule = true
@@ -292,5 +298,7 @@ type = "thepunkoff/pomodoro:widget"
 
 [widget.workspaces]
 capsule = true
+# only tags/workspaces with windows (plus the current one): mango has 9 tags
+hide_when_empty = true
 capsule_padding = 10
 style = "minimal"
