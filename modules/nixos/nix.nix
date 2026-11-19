@@ -19,6 +19,10 @@
       max-substitution-jobs = 4;
       http-connections = 8;
       download-attempts = 10;
+      # nix's default is 1 MiB, and its own docs say downloads stall when the buffer fills
+      download-buffer-size = 64 * 1024 * 1024;
+      # every command in ~/dots printed "Git tree is dirty"
+      warn-dirty = false;
       stalled-download-timeout = 600;
 
       trusted-users = ["root" my.user];
@@ -30,6 +34,11 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
     };
+
+    # builds (max-jobs 4, every core each) only get CPU and disk time nothing else wants,
+    # so a big compile doesn't stutter the desktop or a game; they just finish later
+    daemonCPUSchedPolicy = "idle";
+    daemonIOSchedClass = "idle";
 
     # pin `nix shell nixpkgs#foo` and <nixpkgs> to the system's nixpkgs
     registry.nixpkgs.flake = inputs.nixpkgs;

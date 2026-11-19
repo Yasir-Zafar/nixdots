@@ -24,14 +24,23 @@
     };
 
     plugins = {
+      # load on first use instead of at startup (the plugins below with `lazyLoad`)
+      lz-n.enable = true;
+
       # symbol outline (VS Code's outline / breadcrumbs)
-      aerial.enable = true;
+      aerial = {
+        enable = true;
+        lazyLoad.settings.cmd = ["AerialToggle" "AerialOpen"];
+      };
 
       # Ctrl+Shift+H: search and replace across the project
       grug-far.enable = true;
 
       # side-by-side diffs, per-file history (VS Code's timeline), merge conflicts
-      diffview.enable = true;
+      diffview = {
+        enable = true;
+        lazyLoad.settings.cmd = ["DiffviewOpen" "DiffviewClose" "DiffviewFileHistory"];
+      };
 
       # reopen the files of the last session in this directory
       persistence.enable = true;

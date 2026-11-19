@@ -33,6 +33,8 @@
     sysc-greet = {
       url = "github:Nomadcxx/sysc-greet/4c98abc5bdddbf6c84d2a55d71b9120cbfccad0f";
       inputs.nixpkgs.follows = "nixpkgs";
+      # shares mango's copy of flake-utils (same commit)
+      inputs.flake-utils.follows = "mango/scenefx/flake-utils";
     };
 
     # flatpaks as config (Sober); see modules/nixos/desktop/flatpak.nix

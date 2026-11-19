@@ -19,26 +19,10 @@
           set -g fish_greeting
 
           # emacs key bindings
-          fish_default_key_bindings
 
           # pure prompt settings: unused while starship draws the prompt (terminal/prompt.nix),
           # kept so re-enabling the pure plugin below brings the old prompt back as it was
           # pure prompt — single line, gruvbox colors
-          set -g pure_prompt_single_line          true
-          set -g pure_show_system_time            false
-          set -g pure_show_jobs                   false
-          set -g pure_color_primary               brblue
-          set -g pure_color_success               brgreen
-          set -g pure_color_error                 brred
-          set -g pure_color_info                  bryellow
-          set -g pure_color_mute                  brblack
-          set -g pure_color_git_branch            green
-          set -g pure_color_git_dirty             yellow
-          set -g pure_color_git_unpulled_commits  yellow
-          set -g pure_color_git_unpushed_commits  yellow
-          set -g pure_symbol_prompt               "❯"
-          set -g pure_symbol_reverse_prompt       "❮"
-          set -g pure_symbol_git_dirty            "*"
 
           # fzf.fish builds its own fd command and ignores FZF_DEFAULT_COMMAND, so give it the
           # same flags (hidden files, follow links, skip .git) and an eza directory preview
@@ -99,28 +83,6 @@
               return 1
             end
             mkdir -p $argv[1]; and cd $argv[1]
-          '';
-        };
-
-        extract = {
-          description = "extract any archive (ouch)";
-          body = ''
-            if test (count $argv) -eq 0
-              echo "Usage: extract <archive>..."
-              return 1
-            end
-            ouch decompress $argv
-          '';
-        };
-
-        compress = {
-          description = "compress files into an archive, format from the extension (ouch)";
-          body = ''
-            if test (count $argv) -lt 2
-              echo "Usage: compress <files>... <archive.tar.zst|.zip|.7z|...>"
-              return 1
-            end
-            ouch compress $argv
           '';
         };
 

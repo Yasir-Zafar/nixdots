@@ -53,12 +53,13 @@
 
         merge = {
           tool = "vimdiff";
-          conflictstyle = "diff3";
+          conflictstyle = "zdiff3"; # diff3, minus the lines both sides share
         };
 
         rebase = {
           autoStash = true;
           autoSquash = true;
+          updateRefs = true; # stacked branches move along when the one below is rebased
         };
 
         fetch = {
@@ -72,6 +73,11 @@
         };
 
         color.ui = "auto";
+        column.ui = "auto"; # `git branch` / `git tag` in columns
+        branch.sort = "-committerdate"; # recently used branches first
+        tag.sort = "version:refname"; # v1.10 after v1.9
+        rerere.enabled = true; # a conflict resolved once is resolved the same way next time
+        commit.verbose = true; # the diff below the message while writing it
 
         credential.helper = "cache --timeout=3600";
         help.autocorrect = "prompt";

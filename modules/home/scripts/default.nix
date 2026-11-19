@@ -1,39 +1,18 @@
 {pkgs, ...}: let
-  # Custom scripts
+  # Custom scripts from before nx; they go through nh now (flake paths: terminal/tools.nix)
   rebuild-system = pkgs.writeShellScriptBin "rebuild-system" ''
-    #!/bin/bash
-
-    echo "Rebuilding NixOS system configuration..."
-    sudo nixos-rebuild switch --flake ~/dots/nix
-
-    echo "Rebuilding Home Manager configuration..."
-    home-manager switch --flake ~/dots/hm
-
-    echo "System rebuild complete!"
+    nh os switch && nh home switch
   '';
 
+  # -u: update the flake's inputs first
   update-system = pkgs.writeShellScriptBin "update-system" ''
-    #!/bin/bash
-
-    echo "Updating flake inputs..."
-    cd ~/dots/nix && nix flake update
-    cd ~/dots/hm && nix flake update
-
-    echo "Rebuilding with updates..."
-    rebuild-system
+    nh os switch -u && nh home switch -u
   '';
 
+  # same retention as the weekly nh clean timer (nixos/nix.nix). The old version ran
+  # `nix-collect-garbage -d`, which deleted every generation but the current one
   cleanup-system = pkgs.writeShellScriptBin "cleanup-system" ''
-    #!/bin/bash
-
-    echo "Cleaning up old generations..."
-    sudo nix-collect-garbage -d
-    home-manager expire-generations "-30 days"
-
-    echo "Optimizing nix store..."
-    sudo nix store optimise
-
-    echo "System cleanup complete!"
+    nh clean all --keep-since 7d --keep 5
   '';
 
   dev-env = pkgs.writeShellScriptBin "dev-env" ''

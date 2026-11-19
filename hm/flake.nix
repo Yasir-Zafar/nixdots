@@ -17,6 +17,9 @@
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
+      # the *.follows lines below without nixpkgs only share one copy of a helper flake
+      # that two inputs had locked at the same commit (fewer fetches and lock nodes)
+      inputs.flake-parts.follows = "nixvim/flake-parts";
     };
 
     niri = {
@@ -38,11 +41,14 @@
     nixcord = {
       url = "github:FlameFlag/nixcord";
       inputs.nixpkgs.follows = "nixpkgs";
+      # declared but unused by its outputs; it pulled a second home-manager (release-26.05)
+      inputs.home-manager.follows = "home-manager";
     };
 
     stylix = {
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "mango/flake-parts";
     };
 
     # prebuilt nix-index database: `, <cmd>` (comma) and command-not-found
@@ -69,6 +75,7 @@
     claude-code = {
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "nixvim/systems";
     };
 
     # encrypted secrets in the repo (secrets/secrets.yaml), decrypted at login
@@ -80,6 +87,7 @@
     antigravity-nix = {
       url = "github:jacopone/antigravity-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "mango/scenefx/flake-utils";
     };
 
     # VS Code extensions that nixpkgs doesn't ship (programs.vscode in

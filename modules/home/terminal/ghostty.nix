@@ -6,7 +6,6 @@
     settings = {
       window-decoration = true;
       window-theme = "dark";
-      window-colorspace = "srgb";
 
       window-width = 100;
       window-height = 30;
@@ -37,7 +36,8 @@
       font-style-bold-italic = "bold_italic";
       font-feature = "+liga";
 
-      scrollback-limit = 50000;
+      # no scrollback setting: the default is 50 MB (unlimited lines). The old
+      # `scrollback-limit = 50000` was bytes, about 1000x less than that
 
       mouse-hide-while-typing = true;
       mouse-shift-capture = true;
@@ -46,8 +46,6 @@
       click-repeat-interval = 500;
 
       clipboard-read = "allow";
-      clipboard-write = "allow";
-      clipboard-trim-trailing-spaces = true;
 
       confirm-close-surface = false;
 
@@ -66,11 +64,8 @@
         "ctrl+shift+f=toggle_fullscreen"
       ];
 
-      gtk-tabs-location = "top";
-
       minimum-contrast = 1.1;
 
-      cursor-style = "block";
       cursor-style-blink = true;
     };
   };

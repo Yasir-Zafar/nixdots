@@ -11,6 +11,10 @@
       dns = "systemd-resolved";
 
       wifi = {
+        # iwd instead of wpa_supplicant (2026-11-19, trial): faster connects and roaming.
+        # Saved networks stay NetworkManager's. To go back: delete this line and the
+        # wireless.iwd block below
+        backend = "iwd";
         # off: wifi power saving adds latency spikes (games, ssh); costs a little battery
         powersave = false;
         macAddress = "preserve";
@@ -18,6 +22,10 @@
 
       ethernet.macAddress = "preserve";
     };
+
+    # NetworkManager's powersave setting above goes through wpa_supplicant; with iwd the
+    # card's power saving is switched off here instead (check: iw dev wlo1 get power_save)
+    wireless.iwd.settings.DriverQuirks.PowerSaveDisable = "*";
 
     firewall = {
       enable = true;

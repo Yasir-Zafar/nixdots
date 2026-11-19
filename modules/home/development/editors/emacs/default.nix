@@ -91,7 +91,29 @@ in {
         yasnippet-snippets
 
         # code
-        treesit-grammars.with-all-grammars
+        # only the grammars of the -ts- modes init.el uses (all ~300 made every lock bump
+        # rebuild and download grammars nothing opens); add one here with its mode
+        (treesit-grammars.with-grammars (g:
+          with g; [
+            tree-sitter-bash
+            tree-sitter-c
+            tree-sitter-cpp
+            tree-sitter-cmake
+            tree-sitter-css
+            tree-sitter-go
+            tree-sitter-gomod
+            tree-sitter-java
+            tree-sitter-javascript
+            tree-sitter-json
+            tree-sitter-lua
+            tree-sitter-nix
+            tree-sitter-python
+            tree-sitter-rust
+            tree-sitter-toml
+            tree-sitter-tsx
+            tree-sitter-typescript
+            tree-sitter-yaml
+          ]))
         nix-ts-mode
         markdown-mode
         just-mode
