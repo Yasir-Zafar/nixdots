@@ -22,6 +22,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # mango (dwl-based tiling compositor): session + portals; config is in hm/
+    mango = {
+      url = "github:mangowm/mango";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # pinned: later revs add cc-by-nc-40 to meta.license (unfree), and the module builds its
     # package from the upstream flake's own pkgs, so our allowUnfree can't reach it
     sysc-greet = {
@@ -84,6 +90,7 @@
 
         modules = [
           niri.nixosModules.niri
+          inputs.mango.nixosModules.mango
           inputs.sysc-greet.nixosModules.default
           inputs.nix-flatpak.nixosModules.nix-flatpak
           ../hosts/${my.host}
