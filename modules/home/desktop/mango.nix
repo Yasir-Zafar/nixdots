@@ -435,13 +435,16 @@ in {
 
   # screen sharing (wlr portal, mango only): noctalia's launcher lists "Monitor: …" and
   # "Window: …" entries (`noctalia dmenu`). Without a dmenu-style picker on the portal's PATH, sharing a single window
-  # fails (Discord: error 3002). Read when the portal starts: after a change,
-  # `systemctl --user restart xdg-desktop-portal-wlr`.
-  xdg.configFile."xdg-desktop-portal-wlr/config".text = ''
-    [screencast]
-    chooser_type = dmenu
-    chooser_cmd = ${lib.getExe config.programs.noctalia.package} dmenu -p Share
-  '';
+  # fails (Discord: error 3002).
+  xdg.configFile."xdg-desktop-portal-wlr/config" = {
+    text = ''
+      [screencast]
+      chooser_type = dmenu
+      chooser_cmd = ${lib.getExe config.programs.noctalia.package} dmenu -p Share
+    '';
+    # the portal reads this only at start; try-restart does nothing when it isn't running
+    onChange = "${pkgs.systemd}/bin/systemctl --user try-restart xdg-desktop-portal-wlr.service || true";
+  };
 
   # outputs in the mango session. The first profile matching the connected screens wins on
   # plug-in, so a new screen starts mirrored. "*" = any external screen (HDMI, USB-C).
