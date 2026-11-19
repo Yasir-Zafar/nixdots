@@ -409,13 +409,33 @@
     "^gamescope$"
   ];
   games = ["^steam_app_[0-9]+$" "^org.vinegarhq.Sober$" "^Minecraft.*" "^gamescope$"];
+  # Floating windows. mango already floats, by itself, every window that has a parent
+  # (dialogs: file pickers, "save changes?", preferences), fixed-size windows, and X11
+  # dialog/splash/utility/modal windows. Floats open centred at the size the app asks for.
+  # These lists are for windows that don't say they're dialogs.
   float = [
+    # small tools that look wrong stretched over a tile
     "^org.gnome.Calculator$"
     "^com.saivert.pwvucontrol$"
     "wdisplays$" # network.cycles.wdisplays
-    "^polkit-.*"
-    "^xdg-desktop-portal.*"
     "^com.gabm.satty$"
+    "^com.belmoussaoui.Decoder$" # QR codes
+    "^io.gitlab.adhami3310.Impression$" # USB image writer
+    "^org.gnome.Snapshot$" # camera
+    "^ca.andyholmes.Valent$" # phone (KDE Connect)
+    "^(\\.protonvpn-app-wrapped|proton.vpn.app.gtk)$"
+    # small games
+    "^org.gnome.(Sudoku|Mines|Mahjongg|TwentyFortyEight|Chess)$"
+    # password and permission prompts
+    "^polkit-.*"
+    "^gcr-prompter$" # keyring unlock
+    # portal windows (file chooser for flatpaks/browsers, screen share picker)
+    "^xdg-desktop-portal.*"
+  ];
+  # by title, for windows whose app id is empty or shared with the main window
+  floatTitle = [
+    "^Way-Clicker$" # its app id is empty
+    "^Extension: .*" # browser extension popouts (Bitwarden…)
   ];
 in {
   home.packages = [
@@ -639,6 +659,17 @@ in {
         map (id: "scroller_proportion:1.0,app_id:${id}") big
         ++ map (id: "idle_inhibit_when_focus:1,app_id:${id}") games
         ++ map (id: "is_floating:1,app_id:${id}") float
+        ++ map (t: "is_floating:1,title:${t}") floatTitle
+        ++ [
+          # archive manager on its own (opening a .zip): a mid-size window, not a full tile
+          "is_floating:1,width:0.5,height:0.6,app_id:^org.gnome.FileRoller$"
+          # steam's side windows; the main window and games stay tiled
+          "is_floating:1,app_id:^steam$,title:^(Friends List|Steam Settings|Special Offers|Screenshot Manager)$"
+          # firefox-style library (bookmarks, downloads, history)
+          "is_floating:1,app_id:^zen-beta$,title:^Library$"
+          # JetBrains IDEs (X11): completion/search popups come as untitled "winN" windows
+          "is_floating:1,no_border:1,app_id:^jetbrains-.*,title:^win[0-9]+$"
+        ]
         ++ [
           # swallowing (dwm): a GUI app started from a terminal takes the terminal's place
           "is_term:1,app_id:^com.mitchellh.ghostty$"
@@ -647,7 +678,7 @@ in {
           # noctalia's settings window
           "is_floating:1,width:1080,height:920,app_id:^dev.noctalia.Noctalia$"
           # picture-in-picture: small, bottom-right, on every tag, no focus steal
-          "is_floating:1,is_global:1,is_open_silent:1,width:480,height:270,offset_x:95,offset_y:90,app_id:^zen-beta$,title:^Picture-in-Picture$"
+          "is_floating:1,is_global:1,is_open_silent:1,width:480,height:270,offset_x:95,offset_y:90,title:^Picture[ -]in[ -][Pp]icture$"
           # steam toasts: bottom-right, never stealing focus from the game
           "is_floating:1,is_open_silent:1,offset_x:100,offset_y:100,app_id:^steam$,title:^notificationtoasts_[0-9]+_desktop$"
           # the mirror on the external screen (display-mode): focus stays on the laptop
