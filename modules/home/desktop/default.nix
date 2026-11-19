@@ -4,6 +4,7 @@
     ./stylix.nix
     ./gtk.nix
     ./qt.nix
+    ./mango.nix # default session
     ./niri-config.nix
     ./bspwm.nix
     ./noctalia.nix

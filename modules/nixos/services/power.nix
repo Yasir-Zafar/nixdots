@@ -22,5 +22,14 @@
 
     upower.enable = true;
     power-profiles-daemon.enable = false;
+
+    # lid: suspend, except with an external screen connected ("docked"): then the laptop
+    # stays on and mango's switchbind (desktop/mango.nix) moves everything to that screen.
+    # These are logind's defaults, written out so the clamshell setup doesn't depend on them.
+    logind.settings.Login = {
+      HandleLidSwitch = "suspend";
+      HandleLidSwitchExternalPower = "suspend";
+      HandleLidSwitchDocked = "ignore";
+    };
   };
 }

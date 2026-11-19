@@ -29,6 +29,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # mango's home-manager module: ~/.config/mango/config.conf, validated at build time
+    mango = {
+      url = "github:mangowm/mango";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixcord = {
       url = "github:FlameFlag/nixcord";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -127,6 +133,7 @@
           #   ];
           # }
           niri.homeModules.niri
+          inputs.mango.hmModules.mango
           inputs.nixcord.homeModules.nixcord
           inputs.stylix.homeModules.stylix
           inputs.nix-index-database.homeModules.default
