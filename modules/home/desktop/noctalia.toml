@@ -52,7 +52,7 @@ order = [ "default", "bar2", "bar3", "bar4" ]
     capsule = true
     capsule_padding = 8.0
     capsule_radius = 10
-    capsule_thickness = 0.74999998696148396
+    capsule_thickness = 0.775 # keeps the capsules 5px from the screen edge at thickness 40
     end = [ "tray", "group:g2", "group:g1", "brightness", "battery", "control-center", "session" ]
     font_family = "Inter Medium"
     margin_ends = 0
@@ -65,7 +65,7 @@ order = [ "default", "bar2", "bar3", "bar4" ]
     radius_top_left = 0
     shadow = false
     start = [ "launcher", "workspaces", "active_window", "media", "group:g3" ]
-    thickness = 36
+    thickness = 40
 
         [[bar.default.capsule_group]]
         accordion = true
@@ -250,7 +250,7 @@ type = "raycursive/niri-displays:bar"
 
 # colours: gruvbox, alternating warm/cool down the bar so neighbours contrast.
 # top: launcher aqua, workspaces, app, media green, cpu orange, ram blue, temp yellow
-# middle: clock purple
+# (the clock keeps the default white)
 # bottom: notifications aqua, network purple (volume yellow, bluetooth blue on hover),
 # brightness green, battery orange, control center blue, power red
 [widget.battery]
@@ -268,13 +268,10 @@ font_scale = 0.85
 font_weight = 600
 color = "#b8bb26"
 
-# labels (clock, network, brightness, battery) share one text size and weight: Inter
-# Medium at full size crowded the 36px bar next to the bolder icons
+# no capsule, default (white) text
 [widget.clock]
 capsule = true
-font_scale = 0.85
-font_weight = 600
-color = "#d3869b"
+capsule_opacity = 0.0
 format = "{:%I %M  }"
 
 [widget.control-center]
