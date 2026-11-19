@@ -4,7 +4,7 @@
 # `mango -p` at build time, so a typo fails the build instead of the session.
 #
 # Look (docs/PREFERENCES.md): no shadows, no blur, no opacity, 10px corners (as noctalia's
-# capsules), 6px gaps and
+# capsules), 10px gaps and
 # a 2px border that marks the focused window; a window alone on a tag gets neither (it
 # fills the screen). Binds copy niri-config.nix wherever mango has the same thing, and
 # every bind has a plain-key version for the Everest 60 (no arrows/F-row/Print/XF86/grave).
@@ -424,6 +424,15 @@ in {
     displayMode
   ];
 
+  # a home switch swaps the config's symlink, which mango's own file watcher misses:
+  # tell every running mango to reload (no-op when none is running)
+  xdg.configFile."mango/config.conf".onChange = ''
+    for sock in "''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"/mango-*.sock; do
+      [ -S "$sock" ] && MANGO_INSTANCE_SIGNATURE="$sock" \
+        ${config.wayland.windowManager.mango.package}/bin/mmsg dispatch reload_config >/dev/null || true
+    done
+  '';
+
   # screen sharing (wlr portal, mango only): noctalia's launcher lists "Monitor: …" and
   # "Window: …" entries (`noctalia dmenu`). Without a dmenu-style picker on the portal's PATH, sharing a single window
   # fails (Discord: error 3002). Read when the portal starts: after a change,
@@ -487,10 +496,10 @@ in {
       # --- Look ---
       border_px = 2;
       no_border_when_single = 1;
-      gap_inner_horizontal = 6;
-      gap_inner_vertical = 6;
-      gap_outer_horizontal = 6;
-      gap_outer_vertical = 6;
+      gap_inner_horizontal = 10;
+      gap_inner_vertical = 10;
+      gap_outer_horizontal = 10;
+      gap_outer_vertical = 10;
       smart_gaps = 1; # a window alone fills the screen
       border_radius = 10; # noctalia's capsule_radius (noctalia.toml)
       no_radius_when_single = 0; # the frame bars round the screen edges anyway
@@ -504,7 +513,7 @@ in {
       root_color = hex c.bg;
       # also the switcher/overview frames
       focus_color = hex c.orange;
-      border_color = hex c.bg2;
+      border_color = hex c.bg3; # bright enough that unfocused windows read as the same size
       urgent_color = hex c.red;
       maximized_screen_color = hex c.yellow;
       scratchpad_color = hex c.blue;
