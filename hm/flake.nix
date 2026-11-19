@@ -117,6 +117,14 @@
   in {
     formatter.x86_64-linux = pkgs.alejandra;
 
+    # `nix flake check ./hm`: nix doesn't know homeConfigurations, so without this a home that
+    # no longer evaluates (renamed option, removed package) still passed. Only evaluates the
+    # home (its .drv path is written to a file); nothing of the home is built.
+    # The system side needs no such check: `nix flake check ./nix` evaluates nixosConfigurations.
+    checks.x86_64-linux.home-evaluates = pkgs.writeText "home-evaluates" (
+      builtins.unsafeDiscardStringContext inputs.self.homeConfigurations.${my.user}.activationPackage.drvPath
+    );
+
     devShells.x86_64-linux.default = pkgs.mkShell {
       packages = with pkgs; [alejandra statix deadnix nh];
     };
