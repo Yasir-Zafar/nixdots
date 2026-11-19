@@ -1,7 +1,10 @@
 {
   programs.nixvim = {
     # trouble v3: the old :TroubleToggle command is gone, everything is `:Trouble <source> <action>`
-    plugins.trouble.enable = true;
+    plugins.trouble = {
+      enable = true;
+      lazyLoad.settings.cmd = "Trouble"; # loads on the first :Trouble (the keys below)
+    };
     keymaps = [
       {
         mode = "n";

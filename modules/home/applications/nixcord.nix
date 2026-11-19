@@ -729,144 +729,46 @@
 
       # ── Plugins (Shared – Vencord + Equicord) ──────────────────────────────
       plugins = {
+        # every plugin is off unless enabled here (nixcord's default), so only the enabled ones are listed
         # ── UI / Visual ──────────────────────────────────────────────────────
 
         accountPanelServerProfile.enable = true; # Show server profile in account panel
-        alwaysAnimate.enable = false; # Always animate animated avatars/emojis
         betterRoleDot.enable = true; # Improve role colour dots
         betterSettings.enable = true; # Improved settings UI
-        biggerStreamPreview.enable = false; # Larger stream preview
-        characterCounter.enable = false; # Message character counter
-        clientTheme.enable = false; # Custom client accent colour
-        colorSighted.enable = false; # Remove colourblind-friendly icons
-        fixCodeblockGap.enable = false; # Fix gap below codeblocks
-        fixImagesQuality.enable = false; # Force max image quality
-        forceOwnerCrown.enable = false; # Always show owner crown icon
-        memberCount.enable = false; # Show member count in sidebar
-        mentionAvatars.enable = false; # Show avatars in @mentions
-        noMosaic.enable = false; # Disable image mosaic layout
-        noProfileThemes.enable = false; # Disable profile themes
-        noTypingAnimation.enable = false; # Disable typing indicator animation
-        pictureInPicture.enable = false; # PiP support for videos
-        plainFolderIcon.enable = false; # Plain server-folder icon
-        previewMessage.enable = false; # Preview formatted message before send
         roleColorEverywhere.enable = true; # Apply role colours in more places
-        serverListIndicators.enable = false; # Add indicators to server list
-        showAllMessageButtons.enable = false; # Always show message action buttons
-        showConnections.enable = false; # Show linked accounts on profiles
-        showHiddenThings.enable = false; # Reveal hidden UI elements
         showTimeoutDuration.enable = true; # Show timeout remaining duration
         themeAttributes.enable = true; # Extra CSS data attributes for themes
-        unlockedAvatarZoom.enable = false; # Remove avatar zoom cap
 
         # ── Rich Presence / Activity ─────────────────────────────────────────
 
-        customIdle.enable = false; # Customise idle timeout behaviour
-        customRpc.enable = false; # Manual custom Rich Presence
-        gameActivityToggle.enable = false; # Quick-toggle game activity
-        LastFMRichPresence.enable = false; # Last.fm → Discord status
-        streamerModeOnStream.enable = false; # Auto streamer-mode when streaming
-        webRichPresence.enable = false; # Browser-tab Rich Presence
-
         # ── Messaging / Chat ─────────────────────────────────────────────────
 
-        betterRoleContext.enable = false; # Better role right-click menu
-        betterSessions.enable = false; # Improved sessions management
-        betterUploadButton.enable = false; # Improved upload button
         clearUrls.enable = true; # Strip tracking params from links
-        copyEmojiMarkdown.enable = false; # Copy emoji as markdown
-        copyFileContents.enable = false; # Copy file text contents
+        # these two plugins have no default in nixcord, so off is written out
         copyStickerLinks.enable = false; # Copy sticker URLs
-        copyUserUrls.enable = false; # Copy user profile URLs
-        customCommands.enable = false; # Add custom slash commands
-        dearrow.enable = false; # Replace YouTube titles/thumbnails
-        disableCallIdle.enable = false; # Prevent idle disconnect in calls
-        disableDeepLinks.enable = false; # Open links in browser not app
-        dontRoundMyTimestamps.enable = false; # Exact message timestamps
-        expressionCloner.enable = false; # Clone emoji/stickers to own server
-        fakeNitro.enable = false; # Send animated emoji / use Nitro features
-        fakeProfileThemes.enable = false; # Fake Nitro profile themes
-        fixSpotifyEmbeds.enable = false; # Fix broken Spotify embeds
-        fixYoutubeEmbeds.enable = false; # Fix broken YouTube embeds
-        friendInvites.enable = false; # Manage friend invite links
-        fullSearchContext.enable = false; # More context in message search
         fullUserInChatbox.enable = false; # Show full username in chatbox
-        gifPaste.enable = false; # Paste GIFs directly
         greetStickerPicker.enable = true; # Improved greet sticker UI
-        hideMedia.enable = false; # Hide media embeds
-        iLoveSpam.enable = false; # Disable spam filter warnings
-        imageFilename.enable = false; # Improve image filenames
-        imageLink.enable = false; # Make image URLs clickable
-        imageZoom.enable = false; # Click-to-zoom images
         implicitRelationships.enable = true; # Show implicit friend relationships
         keepCurrentChannel.enable = true; # Stay in current channel on reload
-        messageLatency.enable = false; # Show message send latency
-        messageLinkEmbeds.enable = false; # Embed linked messages inline
-        mutualGroupDms.enable = false; # Show mutual group DMs on profiles
-        noMaskedUrlPaste.enable = false; # Paste raw URLs not masked links
-        noMiddleClickPaste.enable = false; # Disable middle-click paste
-        noReplyMention.enable = false; # Don't ping on reply by default
-        noServerEmojis.enable = false; # Hide server emoji section
-        noPendingCount.enable = false; # Hide pending friend request badge
-        noUnblockToJump.enable = false; # Jump to msg without unblocking
-        openInApp.enable = false; # Open links in desktop app
         overrideForumDefaults.enable = true; # Override forum channel defaults
-        pauseInvitesForever.enable = false; # Pause invites indefinitely
         permissionFreeWill.enable = true; # Ignore channel permission checks
         permissionsViewer.enable = true; # View channel permissions detail
-        pinDms.enable = false; # Pin DMs to top of list
         quickMention.enable = true; # Quick-mention from user popout
-        quickReply.enable = false; # Keyboard shortcut to reply
-        readAllNotificationsButton.enable = false; # "Mark all read" button
-        relationshipNotifier.enable = false; # Notify on friend remove/block
-        replaceGoogleSearch.enable = false; # Replace Google with custom engine
-        replyTimestamp.enable = false; # Show timestamp on replied message
-        revealAllSpoilers.enable = false; # Auto-reveal all spoilers
-        reverseImageSearch.enable = false; # Right-click reverse image search
-        sendTimestamps.enable = false; # Insert formatted timestamps
-        shikiCodeblocks.enable = false; # Shiki syntax highlighting
-        silentMessageToggle.enable = false; # Toggle silent message sending
-        stickerPaste.enable = false; # Paste stickers from clipboard
-        superReactionTweaks.enable = false; # Tweak super-reaction behaviour
-        translate.enable = false; # In-chat message translation
-        unindent.enable = false; # Remove leading indent from code
-        unsuppressEmbeds.enable = false; # Un-suppress hidden embeds
         userMessagesPronouns.enable = true; # Show pronouns in messages
-        userVoiceShow.enable = false; # Show which VC users are in
         usrbg.enable = true; # Custom user banner backgrounds
         validReply.enable = true; # Fix invalid reply display
         validUser.enable = true; # Fix invalid user display
 
         # ── Voice / Audio ─────────────────────────────────────────────────────
 
-        notificationVolume.enable = false; # Set notification volume
-        spotifyCrack.enable = false; # Disable Spotify pause-on-media
-        spotifyShareCommands.enable = false; # Spotify share slash commands
-        vcNarrator.enable = false; # Narrate VC join/leave events
         voiceChatDoubleClick.enable = true; # Double-click to join VC
-        voiceDownload.enable = false; # Download voice messages
-        voiceMessages.enable = false; # Record & send voice messages
-        volumeBooster.enable = false; # Boost output volume past 100%
         webScreenShareFixes.enable = true; # Fix screen-share on web
 
         # ── Notifications ─────────────────────────────────────────────────────
 
         crashHandler.enable = true; # Catch & recover from crashes
-        noSystemBadge.enable = false; # Hide OS taskbar badge
-        secretRingToneEnabler.enable = false; # Enable secret notification tones
-        xsOverlay.enable = false; # Send notifications to XSOverlay (VR)
 
         # ── Developer / Debug ────────────────────────────────────────────────
-
-        consoleJanitor.enable = false; # Filter noisy console output
-        consoleShortcuts.enable = false; # Extra browser-console helpers
-        f8Break.enable = false; # F8 debugger breakpoint
-        noDevtoolsWarning.enable = false; # Suppress DevTools warning
-        noF1.enable = false; # Disable F1 help shortcut
-        reactErrorDecoder.enable = false; # Decode minified React errors
-        startupTimings.enable = false; # Log startup performance
-        webContextMenus.enable = false; # Restore right-click menus on web
-        webKeybinds.enable = false; # Restore keybinds on web
 
         # ── Loading Screen ────────────────────────────────────────────────────
 
@@ -874,48 +776,28 @@
 
         # ── Accessibility ────────────────────────────────────────────────────
 
-        betterGifAltText.enable = false; # Better alt text for GIFs
-        ircColors.enable = false; # IRC-style username colours
-
         # ── Miscellaneous ─────────────────────────────────────────────────────
 
         decor.enable = true; # Custom avatar decorations
-        hideAttachments.enable = false; # Hide attachment previews
-        noOnboardingDelay.enable = false; # Skip onboarding animation
         petpet = {enable = false;}; # Pet the avatar (stays lowercase in JSON)
 
         # ── Vencord-only Plugins ─────────────────────────────────────────────
 
         alwaysExpandRoles.enable = true; # Always expand role list
         alwaysTrust.enable = true; # Skip external link warnings
-        anonymiseFileNames.enable = false; # Anonymise uploaded filenames
-        autoDndWhilePlaying.enable = false; # Auto DND when in a game (off: DND mutes every desktop notification while a Steam game runs)
+        # autoDndWhilePlaying stays off: auto DND when in a game would mute every desktop notification while a Steam game runs
         betterFolders.enable = true; # Improved server folders UI
         betterGifPicker.enable = true; # Improved GIF picker
-        blurNsfw.enable = false; # Blur NSFW channel images
         callTimer.enable = true; # Show call duration timer
-        devCompanion.enable = false; # Vencord plugin dev helper
         experiments.enable = true; # Enable Discord experiments tab
-        favoriteEmojiFirst.enable = false; # Sort favourite emoji to top
-        messageClickActions.enable = false; # Actions on message double-click
-        messageLogger.enable = false; # Log deleted/edited messages
         moreQuickReactions.enable = true; # More emoji in quick-react bar
         newGuildSettings.enable = true; # Better new-server defaults
-        noBlockedMessages.enable = false; # Hide blocked user messages
-        oneko.enable = false; # Neko cursor follower
-        onePingPerDm.enable = false; # One notification ping per DM
         platformIndicators.enable = true; # Show platform (mobile/web/etc.)
-        reviewDb.enable = false; # User review database
         serverInfo.enable = true; # Extra server info in sidebar
         showHiddenChannels.enable = true; # List locked/hidden channels
         showMeYourName.enable = true; # Show username alongside display name
-        silentTyping.enable = false; # Don't send typing indicator
-        sortFriendRequests.enable = false; # Sort requests by date
-        spotifyControls.enable = false; # Spotify controls in sidebar
-        textReplace.enable = false; # Auto replace text patterns
         typingIndicator.enable = true; # Show who is typing in channel list
         typingTweaks.enable = true; # Improve typing indicator display
-        vencordToolbox.enable = false; # Quick-access Vencord toolbox
         whoReacted.enable = true; # See who reacted to a message
       };
     };

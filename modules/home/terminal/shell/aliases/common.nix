@@ -6,6 +6,10 @@
   "...." = "cd ../../..";
   "....." = "cd ../../../..";
 
+  # archives (ouch picks the format from the extension and prints its own usage)
+  "extract" = "ouch decompress";
+  "compress" = "ouch compress";
+
   # ls -> eza
   "l" = "eza --icons --group-directories-first";
   "ll" = "eza --long --all --icons --group-directories-first --git";

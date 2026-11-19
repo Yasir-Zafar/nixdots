@@ -13,14 +13,12 @@
     nixpkgs.source = inputs.nixpkgs;
     package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
-    colorschemes = {
-      gruvbox = {
-        enable = true;
-        settings = {
-          transparent_mode = false;
-        };
-      };
-    };
+    colorschemes.gruvbox.enable = true;
+
+    # startup: Neovim's bytecode cache for required modules, and init.lua + the config
+    # files byte-compiled at build time
+    luaLoader.enable = true;
+    performance.byteCompileLua.enable = true;
 
     # https://nix-community.github.io/nixvim/NeovimOptions/index.html?highlight=globals#globals
     globals = {
@@ -131,27 +129,7 @@
           desc = "Exit terminal mode";
         };
       }
-      # TIP: Disable arrow keys in normal mode
-      {
-        mode = "n";
-        key = "<left>";
-        action = "<cmd>echo 'Use h to move!!'<CR>";
-      }
-      {
-        mode = "n";
-        key = "<right>";
-        action = "<cmd>echo 'Use l to move!!'<CR>";
-      }
-      {
-        mode = "n";
-        key = "<up>";
-        action = "<cmd>echo 'Use k to move!!'<CR>";
-      }
-      {
-        mode = "n";
-        key = "<down>";
-        action = "<cmd>echo 'Use j to move!!'<CR>";
-      }
+      # (kickstart's "disable the arrow keys" binds are gone: the Everest 60 has no arrows)
       # Keybinds to make split navigation easier.
       #  Use CTRL+<hjkl> to switch between windows
       #
@@ -231,11 +209,5 @@
     extraPlugins = with pkgs.vimPlugins; [
       yuck-vim
     ];
-
-    # The line beneath this is called `modeline`. See `:help modeline`
-    # https://nix-community.github.io/nixvim/NeovimOptions/index.html?highlight=extraplugins#extraconfigluapost
-    extraConfigLuaPost = ''
-      -- vim: ts=2 sts=2 sw=2 et
-    '';
   };
 }
