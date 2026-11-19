@@ -3,7 +3,8 @@
 # The home-manager module writes ~/.config/mango/config.conf and checks it with
 # `mango -p` at build time, so a typo fails the build instead of the session.
 #
-# Look (docs/PREFERENCES.md): no shadows, no blur, no opacity, square corners, 6px gaps and
+# Look (docs/PREFERENCES.md): no shadows, no blur, no opacity, 10px corners (as noctalia's
+# capsules), 6px gaps and
 # a 2px border that marks the focused window; a window alone on a tag gets neither (it
 # fills the screen). Binds copy niri-config.nix wherever mango has the same thing, and
 # every bind has a plain-key version for the Everest 60 (no arrows/F-row/Print/XF86/grave).
@@ -87,9 +88,284 @@
     '';
   };
 
-  # Mod+Shift+/: the bind lines of the live config, searchable in less
+  # --- Key binds, with the text Mod+Shift+/ shows ---
+  # b: a bind and its description; l: same, also on the lock screen; n: no key repeat;
+  # h: bound but not listed (arrow twins); note: listed only (summary rows, mouse…)
+  b = desc: line: {
+    inherit desc line;
+    kind = "bind";
+  };
+  l = desc: line: {
+    inherit desc line;
+    kind = "bindl";
+  };
+  n = desc: line: {
+    inherit desc line;
+    kind = "bindn";
+  };
+  h = line: {
+    desc = null;
+    inherit line;
+    kind = "bind";
+  };
+  hl = line: {
+    desc = null;
+    inherit line;
+    kind = "bindl";
+  };
+  note = keys: desc: {
+    inherit keys desc;
+    line = null;
+    kind = "note";
+  };
+
+  # "SUPER+SHIFT,bracketleft,…" -> "Mod+Shift+["
+  pretty = line: let
+    parts = lib.splitString "," (builtins.unsafeDiscardStringContext line);
+    mods = lib.filter (m: m != "NONE") (lib.splitString "+" (builtins.head parts));
+    key = builtins.elemAt parts 1;
+    modName = {
+      SUPER = "Mod";
+      CTRL = "Ctrl";
+      ALT = "Alt";
+      SHIFT = "Shift";
+    };
+    keyName = {
+      Return = "Enter";
+      Escape = "Esc";
+      space = "Space";
+      Tab = "Tab";
+      Print = "Print";
+      bracketleft = "[";
+      bracketright = "]";
+      minus = "-";
+      equal = "=";
+      comma = ",";
+      period = ".";
+      slash = "/";
+      semicolon = ";";
+      backslash = "\\";
+    };
+    k =
+      keyName.${
+        key
+      } or (
+        if builtins.stringLength key == 1
+        then lib.toUpper key
+        else key
+      );
+  in
+    lib.concatStringsSep "+" (map (m: modName.${m} or m) mods ++ [k]);
+
+  sheet = [
+    {
+      title = "Apps";
+      binds = [
+        (b "terminal" "SUPER,Return,spawn,ghostty")
+        (b "nvim in a terminal" "SUPER+SHIFT,Return,spawn,ghostty -e nvim")
+        (b "drop-down terminal (show/hide)" "SUPER,d,toggle_named_scratchpad,ghostty.scratch,none,ghostty --class=ghostty.scratch --gtk-single-instance=false")
+        (b "Zen" "SUPER,w,spawn,zen-beta")
+        (b "files" "SUPER,e,spawn,nautilus")
+        (b "nx tui (updates, apps, storage)" "SUPER+SHIFT,u,spawn,ghostty --title=nx -e nx tui")
+        (b "Mission Center" "CTRL+SHIFT,Escape,spawn,missioncenter")
+        (b "autoclicker start/stop" "SUPER,x,spawn,way-clicker --nogui --toggle")
+      ];
+    }
+    {
+      title = "Noctalia";
+      binds = [
+        (b "launcher" "SUPER,space,${noctalia "panel-toggle launcher"}")
+        (b "launcher" "SUPER,p,${noctalia "panel-toggle launcher"}")
+        (b "emoji picker" "SUPER,semicolon,${noctalia "panel-toggle launcher /emo"}")
+        (b "clipboard history" "SUPER,v,${noctalia "panel-toggle clipboard"}")
+        (b "control center" "SUPER,a,${noctalia "panel-toggle control-center"}")
+        (b "session menu (logout, reboot…)" "SUPER,Escape,${noctalia "panel-toggle session"}")
+        (b "lock screen" "SUPER+SHIFT,Escape,${noctalia "session lock"}")
+        (b "next power profile" "SUPER,b,${noctalia "power-cycle"}")
+        (b "caffeine (no sleep) on/off" "SUPER,i,${noctalia "caffeine-toggle"}")
+        (b "do-not-disturb on/off" "SUPER+SHIFT,n,${noctalia "notification-dnd-toggle"}")
+        (b "hide/show the bar" "SUPER+SHIFT,b,${noctalia "bar-toggle"}")
+        (b "window switcher (tap: previous window)" "ALT,Tab,${noctalia "window-switcher hold"}")
+      ];
+    }
+    {
+      title = "Focus and moving windows (this tag)";
+      binds = [
+        (note "Mod+H J K L" "focus left / down / up / right (arrows work too)")
+        (h "SUPER,h,focusdir,left")
+        (h "SUPER,l,focusdir,right")
+        (h "SUPER,j,focusdir,down")
+        (h "SUPER,k,focusdir,up")
+        (h "SUPER,Left,focusdir,left")
+        (h "SUPER,Right,focusdir,right")
+        (h "SUPER,Down,focusdir,down")
+        (h "SUPER,Up,focusdir,up")
+        (note "Mod+Shift+H J K L" "swap with the window in that direction (arrows too)")
+        (h "SUPER+SHIFT,h,exchange_client,left")
+        (h "SUPER+SHIFT,l,exchange_client,right")
+        (h "SUPER+SHIFT,j,exchange_client,down")
+        (h "SUPER+SHIFT,k,exchange_client,up")
+        (h "SUPER+SHIFT,Left,exchange_client,left")
+        (h "SUPER+SHIFT,Right,exchange_client,right")
+        (h "SUPER+SHIFT,Down,exchange_client,down")
+        (h "SUPER+SHIFT,Up,exchange_client,up")
+        (b "swap with the big (master) window" "SUPER,z,zoom")
+        (b "next window in order" "SUPER,n,focusstack,next")
+        (b "back to the last focused window" "SUPER+SHIFT,o,focuslast")
+        (b "jump: press the letter shown on a window" "SUPER,o,togglejump")
+        (b "switcher with previews (this tag)" "SUPER,g,switcher,next")
+        (b "switcher, backwards" "SUPER+SHIFT,g,switcher,prev")
+        (b "overview of all tags" "SUPER,Tab,toggleoverview")
+        (b "overview of the tags in view" "SUPER+SHIFT,Tab,toggleoverview,1")
+        (n "close window" "SUPER,q,killclient")
+      ];
+    }
+    {
+      title = "Sizes and layouts";
+      binds = [
+        (b "big (master) area smaller" "SUPER,minus,setmfact,-0.05")
+        (b "big (master) area bigger" "SUPER,equal,setmfact,+0.05")
+        (b "one big window less" "SUPER+SHIFT,minus,incnmaster,-1")
+        (b "one big window more" "SUPER+SHIFT,equal,incnmaster,+1")
+        (b "layout menu: then T D G M K S C V F R (Esc: cancel)" "SUPER,y,setkeymode,layout")
+        (b "next layout" "SUPER+SHIFT,y,switch_layout")
+        (b "tabs layout (monocle)" "SUPER+SHIFT,t,setlayout,monocle")
+        (b "scroller layout: next width" "SUPER,r,switch_proportion_preset")
+        (b "dwindle layout: flip this split" "SUPER+SHIFT,r,dwindle_toggle_current_split")
+        (b "maximize over the tag" "SUPER,f,togglemaximizescreen")
+        (b "fullscreen" "SUPER+SHIFT,f,togglefullscreen")
+        (b "fake fullscreen (stays in its tile)" "SUPER+CTRL,f,togglefakefullscreen")
+        (b "float / tile" "SUPER,t,togglefloating")
+        (b "center the floating window" "SUPER,c,centerwin")
+        (b "keep on top" "SUPER+SHIFT,v,toggleoverlay")
+      ];
+    }
+    {
+      title = "Tabs inside a tile (groups)";
+      binds = [
+        (b "join the window on the left as a tab" "SUPER+SHIFT,comma,groupjoin,left")
+        (b "join the window on the right as a tab" "SUPER+SHIFT,period,groupjoin,right")
+        (b "join the window above as a tab" "SUPER+CTRL,comma,groupjoin,up")
+        (b "join the window below as a tab" "SUPER+CTRL,period,groupjoin,down")
+        (b "previous tab" "SUPER,comma,groupfocus,prev")
+        (b "next tab" "SUPER,period,groupfocus,next")
+        (b "take the window out of the tabs" "SUPER,slash,groupleave")
+      ];
+    }
+    {
+      title = "Tags";
+      binds = [
+        (note "Mod+1…9" "show tag N (press again: back)")
+        (note "Mod+Shift+1…9" "move the window to tag N")
+        (note "Mod+Ctrl+1…9" "also show tag N (several tags at once)")
+        (note "Mod+Ctrl+Shift+1…9" "also put the window on tag N")
+        (b "show every tag" "SUPER,0,view,00")
+        (b "window on every tag (sticky)" "SUPER+SHIFT,0,toggleglobal")
+        (b "previous tag with windows" "SUPER,bracketleft,viewtoleft_have_client,0")
+        (b "next tag with windows" "SUPER,bracketright,viewtoright_have_client,0")
+        (b "move the window one tag left" "SUPER+SHIFT,bracketleft,tagtoleft,0")
+        (b "move the window one tag right" "SUPER+SHIFT,bracketright,tagtoright,0")
+        (b "go to a new empty tag" "SUPER,backslash,view_insert,next")
+        (b "overlay tag 0 (show/hide)" "SUPER,s,toggle_special_tag")
+        (b "move the window to/from the overlay tag" "SUPER+CTRL,s,tag_special_tag")
+        (b "hide the window (scratchpad)" "SUPER,m,minimized")
+        (b "bring the hidden window back" "SUPER+SHIFT,m,restore_minimized")
+        (b "show/hide the scratchpad" "SUPER+CTRL,m,toggle_scratchpad")
+      ];
+    }
+    {
+      title = "Monitors";
+      binds = [
+        (b "focus the monitor on the left" "SUPER+CTRL,h,focusmon,left")
+        (b "focus the monitor on the right" "SUPER+CTRL,l,focusmon,right")
+        (h "SUPER+CTRL,Left,focusmon,left")
+        (h "SUPER+CTRL,Right,focusmon,right")
+        (b "move the window to the left monitor" "SUPER+CTRL+SHIFT,h,tagmon,left,0")
+        (b "move the window to the right monitor" "SUPER+CTRL+SHIFT,l,tagmon,right,0")
+        (h "SUPER+CTRL+SHIFT,Left,tagmon,left,0")
+        (h "SUPER+CTRL+SHIFT,Right,tagmon,right,0")
+        (b "external screen: mirror -> extend -> only external" "SUPER+CTRL,p,spawn,${displayMode}/bin/display-mode next")
+        (b "screen settings (resolution, scale)" "SUPER+CTRL+SHIFT,p,spawn,wdisplays")
+        (b "screens off" "SUPER+SHIFT,p,${noctalia "dpms-off"}")
+      ];
+    }
+    {
+      title = "Screenshots";
+      binds = [
+        (b "area, annotate in satty" ''SUPER+SHIFT,s,spawn_shell,grim -g "$(slurp)" - | satty --filename - --output-filename ~/Pictures/Screenshots/satty-$(date +%F_%H-%M-%S).png'')
+        (b "area to file + clipboard (Print = Fn+K)" "NONE,Print,spawn,${shot}/bin/mango-screenshot area")
+        (b "every screen" "SHIFT,Print,spawn,${shot}/bin/mango-screenshot screen")
+        (b "focused window" "CTRL,Print,spawn,${shot}/bin/mango-screenshot window")
+      ];
+    }
+    {
+      title = "Media (Fn keys work too, also when locked)";
+      binds = [
+        (l "volume up" "SUPER+ALT,k,${wpctl "set-volume @DEFAULT_AUDIO_SINK@ 5%+"}")
+        (l "volume down" "SUPER+ALT,j,${wpctl "set-volume @DEFAULT_AUDIO_SINK@ 5%-"}")
+        (l "mute" "SUPER+ALT,m,${wpctl "set-mute @DEFAULT_AUDIO_SINK@ toggle"}")
+        (l "play/pause" "SUPER+ALT,space,spawn,playerctl play-pause")
+        (l "next track" "SUPER+ALT,l,spawn,playerctl next")
+        (l "previous track" "SUPER+ALT,h,spawn,playerctl previous")
+        (l "brightness up" "SUPER+ALT,equal,spawn,brightnessctl set 10%+")
+        (l "brightness down" "SUPER+ALT,minus,spawn,brightnessctl set 10%-")
+        (hl "NONE,XF86AudioRaiseVolume,${wpctl "set-volume @DEFAULT_AUDIO_SINK@ 5%+"}")
+        (hl "NONE,XF86AudioLowerVolume,${wpctl "set-volume @DEFAULT_AUDIO_SINK@ 5%-"}")
+        (hl "NONE,XF86AudioMute,${wpctl "set-mute @DEFAULT_AUDIO_SINK@ toggle"}")
+        (hl "NONE,XF86AudioMicMute,${wpctl "set-mute @DEFAULT_AUDIO_SOURCE@ toggle"}")
+        (hl "NONE,XF86MonBrightnessUp,spawn,brightnessctl set 10%+")
+        (hl "NONE,XF86MonBrightnessDown,spawn,brightnessctl set 10%-")
+        (hl "NONE,XF86AudioPlay,spawn,playerctl play-pause")
+        (hl "NONE,XF86AudioNext,spawn,playerctl next")
+        (hl "NONE,XF86AudioPrev,spawn,playerctl previous")
+      ];
+    }
+    {
+      title = "Session";
+      binds = [
+        (note "Mod+Shift+/" "this key list")
+        (b "reload the config (normally automatic)" "SUPER+SHIFT,c,reload_config")
+        (b "quit mango" "SUPER+SHIFT,e,quit")
+      ];
+    }
+    {
+      title = "Mouse and touchpad";
+      binds = [
+        (note "Mod+drag" "move; drop on another window to swap them")
+        (note "Mod+right drag" "resize (or drag the gap between two windows)")
+        (note "Mod+middle click" "maximize over the tag")
+        (note "Mod+Shift+click" "float / tile")
+        (note "Mod+Ctrl+right click" "close")
+        (note "Mod+scroll" "previous / next tag (sideways: focus left / right)")
+        (note "Mod+Shift+scroll" "move the window to the previous / next tag")
+        (note "Mod+Ctrl+scroll" "next / previous window")
+        (note "Mod+Alt+scroll" "volume")
+        (note "Mod+back / forward" "previous / next tag")
+        (note "3 fingers" "focus in that direction")
+        (note "4 fingers left / right" "next / previous tag")
+        (note "4 fingers up / down" "open / close the overview")
+        (note "top-left corner" "overview")
+      ];
+    }
+  ];
+
+  entries = lib.concatMap (s: s.binds) sheet;
+  linesOf = kind: map (e: e.line) (lib.filter (e: e.kind == kind) entries);
+
+  pad = width: str: str + lib.concatStrings (lib.replicate (lib.max 1 (width - builtins.stringLength str)) " ");
+  sheetText =
+    lib.concatMapStringsSep "\n\n" (s:
+      lib.concatStringsSep "\n" ([s.title]
+        ++ map (e: "  ${pad 24 (e.keys or (pretty e.line))}${e.desc}")
+        (lib.filter (e: e.desc != null) s.binds)))
+    sheet
+    + "\n\nLayout menu (Mod+Y, then one key)\n"
+    + lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v: "  ${pad 24 (lib.toUpper k)}${v}") layouts)
+    + "\n";
+
+  # Mod+Shift+/: what each bind does (q closes)
   keys = pkgs.writeShellScript "mango-keys" ''
-    grep -E '^(bind|mousebind|axisbind|gesturebind|key_mode)' ~/.config/mango/config.conf | ${pkgs.less}/bin/less
+    exec ${pkgs.less}/bin/less -R ${pkgs.writeText "mango-keys.txt" sheetText}
   '';
 
   # tag binds 1-9, dwm/awesome style
@@ -148,6 +424,16 @@ in {
     displayMode
   ];
 
+  # screen sharing (wlr portal, mango only): noctalia's launcher lists "Monitor: …" and
+  # "Window: …" entries (`noctalia dmenu`). Without a dmenu-style picker on the portal's PATH, sharing a single window
+  # fails (Discord: error 3002). Read when the portal starts: after a change,
+  # `systemctl --user restart xdg-desktop-portal-wlr`.
+  xdg.configFile."xdg-desktop-portal-wlr/config".text = ''
+    [screencast]
+    chooser_type = dmenu
+    chooser_cmd = ${lib.getExe config.programs.noctalia.package} dmenu -p Share
+  '';
+
   # outputs in the mango session. The first profile matching the connected screens wins on
   # plug-in, so a new screen starts mirrored. "*" = any external screen (HDMI, USB-C).
   # niri keeps its own outputs (niri-config.nix): kanshi only runs with mango.
@@ -155,8 +441,20 @@ in {
     enable = true;
     systemdTarget = "mango-session.target";
     settings = let
-      laptop = extra: {criteria = "eDP-1"; position = "0,0"; scale = 1.0;} // extra;
-      screen = extra: {criteria = "*"; status = "enable"; scale = 1.0;} // extra;
+      laptop = extra:
+        {
+          criteria = "eDP-1";
+          position = "0,0";
+          scale = 1.0;
+        }
+        // extra;
+      screen = extra:
+        {
+          criteria = "*";
+          status = "enable";
+          scale = 1.0;
+        }
+        // extra;
       profile = name: outputs: {
         profile = {
           inherit name outputs;
@@ -194,8 +492,8 @@ in {
       gap_outer_horizontal = 6;
       gap_outer_vertical = 6;
       smart_gaps = 1; # a window alone fills the screen
-      border_radius = 0;
-      no_radius_when_single = 0;
+      border_radius = 10; # noctalia's capsule_radius (noctalia.toml)
+      no_radius_when_single = 0; # the frame bars round the screen edges anyway
       blur = 0;
       blur_layer = 0;
       shadows = 0;
@@ -227,7 +525,7 @@ in {
           focus_bg_color = hex c.bg1;
           border_color = hex c.bg;
           border_width = 0;
-          corner_radius = 0;
+          corner_radius = 10;
           font_desc = "Inter Medium 11";
         };
       };
@@ -241,7 +539,7 @@ in {
           focus_bg_color = hex c.bg1;
           border_color = hex c.bg;
           border_width = 0;
-          corner_radius = 0;
+          corner_radius = 10;
           font_desc = "Inter Medium 11";
         };
       };
@@ -251,7 +549,7 @@ in {
         focus_fg_color = hex c.fg;
         focus_bg_color = hex c.bg1;
         border_width = 0;
-        corner_radius = 0;
+        corner_radius = 10;
         font_desc = "Inter Medium 12";
       };
       jump_label_decorate = {
@@ -261,7 +559,7 @@ in {
         focus_bg_color = hex c.orange;
         border_color = hex c.orange;
         border_width = 2;
-        corner_radius = 0;
+        corner_radius = 6;
         font_desc = "JetBrainsMono Nerd Font Bold 16";
       };
 
@@ -403,158 +701,14 @@ in {
         "no_animation:1,no_blur:1,layer_name:^selection$"
       ];
 
-      # --- Key binds (SUPER = Mod) ---
-      bindn = [
-        "SUPER,q,killclient"
-      ];
-      # work on the lock screen too: volume, brightness, media
-      bindl = [
-        "NONE,XF86AudioRaiseVolume,${wpctl "set-volume @DEFAULT_AUDIO_SINK@ 5%+"}"
-        "NONE,XF86AudioLowerVolume,${wpctl "set-volume @DEFAULT_AUDIO_SINK@ 5%-"}"
-        "NONE,XF86AudioMute,${wpctl "set-mute @DEFAULT_AUDIO_SINK@ toggle"}"
-        "NONE,XF86AudioMicMute,${wpctl "set-mute @DEFAULT_AUDIO_SOURCE@ toggle"}"
-        "NONE,XF86MonBrightnessUp,spawn,brightnessctl set 10%+"
-        "NONE,XF86MonBrightnessDown,spawn,brightnessctl set 10%-"
-        "NONE,XF86AudioPlay,spawn,playerctl play-pause"
-        "NONE,XF86AudioNext,spawn,playerctl next"
-        "NONE,XF86AudioPrev,spawn,playerctl previous"
-        # same without Fn (60% keyboard), as in niri
-        "SUPER+ALT,k,${wpctl "set-volume @DEFAULT_AUDIO_SINK@ 5%+"}"
-        "SUPER+ALT,j,${wpctl "set-volume @DEFAULT_AUDIO_SINK@ 5%-"}"
-        "SUPER+ALT,m,${wpctl "set-mute @DEFAULT_AUDIO_SINK@ toggle"}"
-        "SUPER+ALT,space,spawn,playerctl play-pause"
-        "SUPER+ALT,l,spawn,playerctl next"
-        "SUPER+ALT,h,spawn,playerctl previous"
-        "SUPER+ALT,equal,spawn,brightnessctl set 10%+"
-        "SUPER+ALT,minus,spawn,brightnessctl set 10%-"
-      ];
-
+      # --- Key binds: the lines come from `sheet` above (bind/bindl/bindn) ---
       bind =
-        [
-          # session
-          "SUPER+SHIFT,e,quit"
-          "SUPER+SHIFT,c,reload_config" # mostly not needed: the config reloads on change
-          "SUPER+SHIFT,p,${noctalia "dpms-off"}"
-          "SUPER+SHIFT,slash,spawn,ghostty --title=mango-keys -e ${keys}"
-
-          # applications
-          "SUPER,Return,spawn,ghostty"
-          "SUPER+SHIFT,Return,spawn,ghostty -e nvim"
-          "SUPER,w,spawn,zen-beta"
-          "SUPER,e,spawn,nautilus"
-          "SUPER+SHIFT,u,spawn,ghostty --title=nx -e nx tui"
-          "CTRL+SHIFT,Escape,spawn,missioncenter"
-          "SUPER,x,spawn,way-clicker --nogui --toggle"
-          "SUPER+CTRL,p,spawn,${displayMode}/bin/display-mode next" # mirror -> extend -> external, like Win+P
-          "SUPER+CTRL+SHIFT,p,spawn,wdisplays" # resolution, refresh, scale by hand
-          "SUPER,d,toggle_named_scratchpad,ghostty.scratch,none,ghostty --class=ghostty.scratch --gtk-single-instance=false"
-
-          # noctalia (`noctalia msg --help`)
-          "SUPER,space,${noctalia "panel-toggle launcher"}"
-          "SUPER,p,${noctalia "panel-toggle launcher"}"
-          "SUPER,semicolon,${noctalia "panel-toggle launcher /emo"}"
-          "SUPER,v,${noctalia "panel-toggle clipboard"}"
-          "SUPER,a,${noctalia "panel-toggle control-center"}"
-          "SUPER,Escape,${noctalia "panel-toggle session"}"
-          "SUPER+SHIFT,Escape,${noctalia "session lock"}"
-          "SUPER,b,${noctalia "power-cycle"}"
-          "SUPER,i,${noctalia "caffeine-toggle"}"
-          "SUPER+SHIFT,n,${noctalia "notification-dnd-toggle"}"
-          "SUPER+SHIFT,b,${noctalia "bar-toggle"}"
-          # hold: a quick tap switches straight to the previous window
-          "ALT,Tab,${noctalia "window-switcher hold"}"
-
-          # overview and switching
-          "SUPER,Tab,toggleoverview"
-          "SUPER+SHIFT,Tab,toggleoverview,1" # only the tags in view
-          "SUPER,o,togglejump" # a letter on every window: press it to focus that one
-          # windows of this tag, with thumbnails (grave is behind Fn on the Everest 60)
-          "SUPER,g,switcher,next"
-          "SUPER+SHIFT,g,switcher,prev"
-
-          # screenshots (Print is Fn+K on the Everest 60; Mod+Shift+S is the plain one)
-          "NONE,Print,spawn,${shot}/bin/mango-screenshot area"
-          "SHIFT,Print,spawn,${shot}/bin/mango-screenshot screen"
-          "CTRL,Print,spawn,${shot}/bin/mango-screenshot window"
-          ''SUPER+SHIFT,s,spawn_shell,grim -g "$(slurp)" - | satty --filename - --output-filename ~/Pictures/Screenshots/satty-$(date +%F_%H-%M-%S).png''
-
-          # focus (vim keys + arrows)
-          "SUPER,h,focusdir,left"
-          "SUPER,l,focusdir,right"
-          "SUPER,j,focusdir,down"
-          "SUPER,k,focusdir,up"
-          "SUPER,Left,focusdir,left"
-          "SUPER,Right,focusdir,right"
-          "SUPER,Down,focusdir,down"
-          "SUPER,Up,focusdir,up"
-          "SUPER,n,focusstack,next" # dwm Mod+J/K: walk the stack in order
-          "SUPER+SHIFT,o,focuslast"
-          # move windows around inside the tag: swap with the neighbour
-          "SUPER+SHIFT,h,exchange_client,left"
-          "SUPER+SHIFT,l,exchange_client,right"
-          "SUPER+SHIFT,j,exchange_client,down"
-          "SUPER+SHIFT,k,exchange_client,up"
-          "SUPER+SHIFT,Left,exchange_client,left"
-          "SUPER+SHIFT,Right,exchange_client,right"
-          "SUPER+SHIFT,Down,exchange_client,down"
-          "SUPER+SHIFT,Up,exchange_client,up"
-          "SUPER,z,zoom" # dwm: swap with the master
-
-          # sharing a tag: master size and count (tile, center_tile, deck…)
-          "SUPER,minus,setmfact,-0.05"
-          "SUPER,equal,setmfact,+0.05"
-          "SUPER+SHIFT,minus,incnmaster,-1"
-          "SUPER+SHIFT,equal,incnmaster,+1"
-          "SUPER,r,switch_proportion_preset" # scroller tags: 1/3, 1/2, 2/3, full
-          "SUPER+SHIFT,r,dwindle_toggle_current_split" # dwindle tags: flip this split
-
-          # groups: windows stacked in one tile with a tab bar (awesome/i3 tabs)
-          "SUPER,comma,groupfocus,prev"
-          "SUPER,period,groupfocus,next"
-          "SUPER+SHIFT,comma,groupjoin,left"
-          "SUPER+SHIFT,period,groupjoin,right"
-          "SUPER+CTRL,comma,groupjoin,up"
-          "SUPER+CTRL,period,groupjoin,down"
-          "SUPER,slash,groupleave"
-
-          # layouts
-          "SUPER,y,setkeymode,layout" # then t/d/g/m/k/s/c/v/f/r, see key_mode below
-          "SUPER+SHIFT,y,switch_layout" # cycle tile → dwindle → grid → monocle → deck → scroller
-          "SUPER+SHIFT,t,setlayout,monocle" # tabbed, like niri's Mod+Shift+T
-
-          # window state
-          "SUPER,f,togglemaximizescreen" # cover the tag (bar stays)
-          "SUPER+SHIFT,f,togglefullscreen"
-          "SUPER+CTRL,f,togglefakefullscreen" # the app thinks it's fullscreen, stays in its tile
-          "SUPER,t,togglefloating"
-          "SUPER,c,centerwin"
-          "SUPER+SHIFT,v,toggleoverlay" # keep on top
-          "SUPER+SHIFT,0,toggleglobal" # sticky: on every tag
-          "SUPER,m,minimized" # hide in the scratchpad
-          "SUPER+SHIFT,m,restore_minimized"
-          "SUPER+CTRL,m,toggle_scratchpad"
-          "SUPER,s,toggle_special_tag" # tag 0: a tiled overlay over any tag
-          "SUPER+CTRL,s,tag_special_tag" # move the window to/from tag 0
-
-          # tags
-          "SUPER,0,view,00" # every tag at once (dwm Mod+0)
-          "SUPER,bracketleft,viewtoleft_have_client,0"
-          "SUPER,bracketright,viewtoright_have_client,0"
-          "SUPER+SHIFT,bracketleft,tagtoleft,0"
-          "SUPER+SHIFT,bracketright,tagtoright,0"
-          "SUPER,backslash,view_insert,next" # an empty tag next to this one
-
-          # monitors (laptop + HDMI): Ctrl = monitor, Ctrl+Shift = take the window there
-          "SUPER+CTRL,h,focusmon,left"
-          "SUPER+CTRL,l,focusmon,right"
-          "SUPER+CTRL,Left,focusmon,left"
-          "SUPER+CTRL,Right,focusmon,right"
-          "SUPER+CTRL+SHIFT,h,tagmon,left,0"
-          "SUPER+CTRL+SHIFT,l,tagmon,right,0"
-          "SUPER+CTRL+SHIFT,Left,tagmon,left,0"
-          "SUPER+CTRL+SHIFT,Right,tagmon,right,0"
-        ]
-        ++ tags;
+        linesOf "bind"
+        ++ tags
+        # outside `sheet`: the viewer shows the sheet, so it can't be part of it
+        ++ ["SUPER+SHIFT,slash,spawn,ghostty --title=mango-keys -e ${keys}"];
+      bindl = linesOf "bindl"; # also on the lock screen
+      bindn = linesOf "bindn"; # no key repeat
 
       # --- Mouse ---
       mousebind = [
