@@ -484,22 +484,16 @@ in {
       env = ["QT_QPA_PLATFORMTHEME,gtk3"]; # keep in sync with qt.nix
 
       # --- Look ---
+      # Blur, shadows, opacity and dimming are off by default, so there is nothing to set
+      # for "no blur / no opacity". The outer gaps are 10 by default, like these.
       border_px = 2;
       no_border_when_single = 1;
       gap_inner_horizontal = 10;
       gap_inner_vertical = 10;
-      gap_outer_horizontal = 10;
-      gap_outer_vertical = 10;
       smart_gaps = 1; # a window alone fills the screen
-      border_radius = 10; # noctalia's capsule_radius (noctalia.toml)
-      no_radius_when_single = 0; # the frame bars round the screen edges anyway
-      blur = 0;
-      blur_layer = 0;
-      shadows = 0;
-      layer_shadows = 0;
-      focused_opacity = 1.0;
-      unfocused_opacity = 1.0;
-      dim_enable = 0;
+      # noctalia's capsule_radius (noctalia.toml); a window alone keeps its rounded corners
+      # (the default), the frame bars round the screen edges anyway
+      border_radius = 10;
       root_color = hex c.bg;
       # also the switcher/overview frames
       focus_color = hex c.orange;
@@ -511,8 +505,7 @@ in {
       overlay_color = hex c.blue;
       drop_color = "0x${lib.removePrefix "#" c.orange}80"; # where a dragged window will land
       split_color = hex c.orange;
-      cursor_theme = "Bibata-Modern-Classic"; # stylix.nix
-      cursor_size = 24;
+      cursor_theme = "Bibata-Modern-Classic"; # stylix.nix (size 24 is mango's default too)
 
       # tab bars of monocle/deck and of window groups, title bar of the switcher
       tab_bar = {
@@ -530,7 +523,6 @@ in {
       };
       group_bar = {
         height = 28;
-        close_button_enable = 0;
         decorate = {
           fg_color = hex c.gray;
           bg_color = hex c.bg;
@@ -547,7 +539,6 @@ in {
         bg_color = hex c.bg;
         focus_fg_color = hex c.fg;
         focus_bg_color = hex c.bg1;
-        border_width = 0;
         corner_radius = 10;
         font_desc = "Inter Medium 12";
       };
@@ -563,9 +554,8 @@ in {
       };
 
       # --- Animations: movement only, no fades (no opacity) ---
-      animations = 1;
-      # noctalia animates its own panels; mango's layer animations on top of them glitch
-      layer_animations = 0;
+      # Layer animations are off by default and have to stay off: noctalia animates its own
+      # panels, and mango's on top of them glitch. Focus changes aren't animated either.
       animation_type_open = "slide";
       animation_type_close = "slide";
       animation_fade_in = 0;
@@ -576,7 +566,6 @@ in {
         close = 180;
         move = 280;
         tag = 260;
-        focus = 0;
       };
       # ease-out-expo for open/move/tag, ease-in for close
       animation_curve = {
@@ -584,61 +573,41 @@ in {
         move = "0.16,1,0.3,1";
         tag = "0.16,1,0.3,1";
         close = "0.4,0,1,1";
-        focus = "0.16,1,0.3,1";
       };
 
       # --- Input: same as niri-config.nix ---
       xkb_rules_layout = "us";
       xkb_rules_options = "ctrl:nocaps";
+      # (tap to click, tap and drag, drag lock, disable while typing and the gestures are on
+      # by default, like in niri-config.nix)
       repeat_delay = 500;
       repeat_rate = 50;
-      numlock_on = 0;
-      tap_to_click = 1;
-      tap_and_drag = 1;
-      drag_lock = 1;
       trackpad_natural_scrolling = 1;
-      trackpad_disable_while_typing = 1;
       trackpad_accel_speed = 0.9;
       trackpad_scroll_factor = 0.8;
-      mouse_natural_scrolling = 0;
       mouse_accel_speed = 0.5;
-      axis_scroll_factor = 1.0;
-      gesture_live = 1;
       device_rule = ["type:tablet,monitor:eDP-1"];
 
       # --- Focus and the mouse ---
-      sloppy_focus = 1; # focus follows mouse
-      warp_cursor = 1; # keyboard focus moves the pointer along
+      # Defaults that stay: focus follows the mouse, keyboard focus moves the pointer along,
+      # a window that asks for focus gets it, Mod+drag onto another tile swaps them.
       cursor_hide_timeout = 5;
       cursor_hide_on_keypress = 1;
-      focus_on_activate = 1;
-      drag_tile_to_tile = 1; # Mod+drag a tiled window onto another to swap them
-      drag_tile_small = 1;
-      enable_border_resize = 1; # drag the edge between two windows to resize
-      border_resize_size = 8; # grab strip: there's no border to aim at
+      border_resize_size = 8; # grab strip for dragging the edge between two windows: no border to aim at
       enable_floating_snap = 1;
-      snap_distance = 30;
       # top-left corner: overview (like niri's hot corner)
       enable_hotarea = 1;
       hotarea_corner = 0;
-      hotarea_size = 10;
-      hotarea_disable_on_fullscreen = 1;
 
       # --- Tags and monitors ---
-      tag_num = 9;
       view_current_to_back = 1; # Mod+N on the tag you're on goes back (niri back-and-forth)
       focus_cross_monitor = 1; # Mod+H/L walk onto the other monitor at the edge
       exchange_cross_monitor = 1;
-      focus_cross_tag = 0;
       scratchpad_cross_monitor = 1;
-      single_scratchpad = 1;
       scratchpad_width_ratio = 0.7;
       scratchpad_height_ratio = 0.7;
       special_dim = 0.0; # tag 0 overlay: no dimming (no opacity)
-      xwayland_persistence = 1;
-      sync_obj_enable = 1;
       idle_inhibit_when_fullscreen = 1; # fullscreen video/games keep the screen on
-      auto_reload_config = 1;
       # no monitor_rule: kanshi (above) sets the outputs, and mango would re-apply its
       # rules on plug-in and fight it
       # lid with an external screen: move to it (and back when opened)
@@ -648,21 +617,17 @@ in {
       ];
 
       # --- Layouts ---
-      tag_rule = ["id:*,layout_name:tile"];
+      # Every tag starts in tile (mango's first layout), so there is no tag_rule. Also the
+      # defaults: a new window becomes master, the master area is 55% with one master window,
+      # monocle and deck are drawn as tabs (niri's tabbed column).
       circle_layout = "tile,dwindle,grid,monocle,deck,scroller";
-      new_is_master = 1;
-      default_master_factor = 0.55;
-      default_master_count = 1;
-      monocle_tab_mode = 1; # monocle = tabs (niri's tabbed column)
       monocle_no_border = 1; # one window in view: no border needed
-      deck_tab_mode = 1;
       dwindle_smart_split = 1; # new window goes to the side of the focused one the cursor is on
       dwindle_smart_resize = 1;
       dwindle_preserve_split = 1;
       scroller_structs = 0;
       scroller_default_proportion = 0.5;
       scroller_proportion_preset = "0.333,0.5,0.667,1.0"; # niri's presets
-      scroller_focus_center = 0;
       scroller_prefer_center = 1;
       scroller_prefer_overspread = 0;
       overview_gap_inner = 8;
@@ -692,12 +657,11 @@ in {
         ];
 
       # --- Layer rules ---
+      # (no no_animation / no_blur / no_shadow rules: layer animations, blur and shadows are
+      # off for every layer already, which also keeps slurp's selection out of screenshots)
       layer_rule = [
         # notifications stay out of screen shares and recordings
-        "shield_when_capture:1,no_animation:1,layer_name:^noctalia-notification"
-        "no_blur:1,no_shadow:1,layer_name:^noctalia-"
-        # slurp's selection: no animation, so it isn't in the screenshot
-        "no_animation:1,no_blur:1,layer_name:^selection$"
+        "shield_when_capture:1,layer_name:^noctalia-notification"
       ];
 
       # --- Key binds: the lines come from `sheet` above (bind/bindl/bindn) ---
