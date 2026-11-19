@@ -1,9 +1,10 @@
 {
   imports = [
     ./lsp.nix
+    ./rust.nix
     ./conform.nix
     ./gitsigns.nix
-    ./nvim-cmp.nix
+    ./blink-cmp.nix
     ./mini.nix
     ./telescope.nix
     ./treesitter.nix

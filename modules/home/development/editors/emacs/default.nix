@@ -20,6 +20,7 @@
     basedpyright
     typescript-language-server
     typescript
+    gopls # needs `go` from the project's own env (envrc)
     nil
     lua-language-server
     bash-language-server

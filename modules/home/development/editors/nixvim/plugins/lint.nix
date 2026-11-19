@@ -1,9 +1,9 @@
 {pkgs, ...}: {
   programs.nixvim = {
-    # linters below that nothing else installs (eslint, statix, hadolint come from the profile)
+    # linters below that nothing else installs (eslint, statix, hadolint come from the profile;
+    # ruff comes with conform.nix)
     extraPackages = [
       pkgs.luajitPackages.luacheck
-      pkgs.python3Packages.flake8
     ];
 
     # Linting
@@ -25,7 +25,7 @@
         # markdown / text: off. vale flags every proper noun as a typo and markdownlint
         # every long line or inline <div>, which buried READMEs in diagnostics
         # markdown = ["markdownlint-cli2" "vale"];
-        python = ["flake8"];
+        python = ["ruff"];
         #clojure = ["clj-kondo"];
         dockerfile = ["hadolint"];
         #inko = ["inko"];

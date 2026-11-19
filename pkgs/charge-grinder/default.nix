@@ -22,13 +22,13 @@
 in
   stdenvNoCC.mkDerivation (_finalAttrs: {
     pname = "charge-grinder";
-    version = "3.5.5";
+    version = "3.6.1";
 
     src = fetchFromGitHub {
       owner = "Walpth";
       repo = "Charge-Grinder";
-      tag = "v3.5.5";
-      hash = "sha256-C3EFex7/SMde1F87IXQKHXz8PJodzIFGnlo7/OHrvmQ=";
+      tag = "v3.6.1";
+      hash = "sha256-WDMdQg2+O9mkLhKgX+qAW1zyb9Gwdd4uSF3BbVjqehY=";
     };
 
     nativeBuildInputs = [makeWrapper qt6.wrapQtAppsHook];

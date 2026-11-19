@@ -4,8 +4,8 @@
     extraPackages = with pkgs; [
       stylua # Lua formatter
       alejandra # Nix formatter
-      prettier # JS/TS/HTML/CSS/JSON formatter
-      black
+      prettier # JS/TS/HTML/CSS/JSON/YAML/Markdown formatter
+      ruff # python formatter + import sorting (and the linter in lint.nix)
       rustfmt
     ];
 
@@ -27,15 +27,18 @@
           rust = ["rustfmt"];
           lua = ["stylua"];
           nix = ["alejandra"];
-          # javascript = ["prettier"];
-          # typescript = ["prettier"];
-          # javascriptreact = ["prettier"];
-          # typescriptreact = ["prettier"];
-          # json = ["prettier"];
+          # the same formatters as Emacs (apheleia), so a file comes out identical in both
+          javascript = ["prettier"];
+          typescript = ["prettier"];
+          javascriptreact = ["prettier"];
+          typescriptreact = ["prettier"];
+          json = ["prettier"];
+          jsonc = ["prettier"];
+          yaml = ["prettier"];
+          markdown = ["prettier"];
           html = ["prettier"];
           css = ["prettier"];
-          python = ["black"];
-          # Run multiple formatters sequentially: python = ["isort" "black"];
+          python = ["ruff_organize_imports" "ruff_format"]; # run in sequence
           # Use first available: javascript = [["prettierd" "prettier"]];
         };
       };

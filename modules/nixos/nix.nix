@@ -22,8 +22,13 @@
       stalled-download-timeout = 600;
 
       trusted-users = ["root" my.user];
-      extra-substituters = ["https://noctalia.cachix.org"];
-      extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
+      # noctalia; nix-community (the neovim nightly overlay's builds, so nvim isn't compiled
+      # at every lock bump)
+      extra-substituters = ["https://noctalia.cachix.org" "https://nix-community.cachix.org"];
+      extra-trusted-public-keys = [
+        "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
     };
 
     # pin `nix shell nixpkgs#foo` and <nixpkgs> to the system's nixpkgs

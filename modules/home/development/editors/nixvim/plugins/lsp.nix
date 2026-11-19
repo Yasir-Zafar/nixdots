@@ -3,8 +3,6 @@
 # loaded for its per-server defaults (cmd, filetypes, root markers).
 {pkgs, ...}: {
   programs.nixvim = {
-    plugins.cmp-nvim-lsp.enable = true;
-
     plugins.fidget = {
       enable = true;
       settings.notification.window.winblend = 0;
@@ -19,22 +17,10 @@
 
     lsp = {
       servers = {
-        # every server advertises what nvim-cmp can do (snippets, auto-import, …)
-        "*".config.capabilities.__raw = "require('cmp_nvim_lsp').default_capabilities()";
+        # every server advertises what blink.cmp can do (snippets, auto-import, …)
+        "*".config.capabilities.__raw = "require('blink.cmp').get_lsp_capabilities()";
 
-        rust_analyzer = {
-          enable = true;
-          cargo.enable = true; # cargo + rustc on nvim's PATH for rust-analyzer
-          rustc.enable = true;
-          config.settings.rust-analyzer = {
-            check.command = "clippy"; # use clippy instead of check on save
-            cargo.allFeatures = true;
-            inlayHints = {
-              bindingModeHints.enable = true;
-              closureReturnTypeHints.enable = "with_block";
-            };
-          };
-        };
+        # rust-analyzer is started by rustaceanvim, see rust.nix
 
         # C/C++ (clang-tools from nixpkgs; matches nix/development/c.nix)
         clangd = {

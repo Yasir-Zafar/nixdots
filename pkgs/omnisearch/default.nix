@@ -32,13 +32,13 @@
 in
   stdenv.mkDerivation (finalAttrs: {
     pname = "omnisearch";
-    version = "0-unstable-2026-10-25";
+    version = "0-unstable-2026-11-09";
 
     src = fetchFromCodeberg {
       owner = "gabrielf";
       repo = "omnisearch";
-      rev = "e5a836e1359bbc06a1c197cd02b1732368928e62";
-      hash = "sha256-n+5q3q2mMhg7marSHIYGfwsJLLvLBkx2S1kkDyHfVJk=";
+      rev = "e72fadc791163ac7fd0eabb2aceec50942482ddd";
+      hash = "sha256-B5SPqLMmdJA+kc+Et1D/0eIxxsNv/gahJVNCAUmifl0=";
     };
 
     buildInputs = [beaker curl libxml2 openssl];
