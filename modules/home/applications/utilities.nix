@@ -9,6 +9,15 @@
     loupe
     ffmpegthumbnailer
     gnome-epub-thumbnailer
+    # font thumbnails in nautilus, and the font viewer itself. Images, pdfs and videos
+    # already thumbnail (office files have no thumbnailer that works for docx)
+    gnome-font-viewer
+
+    # viewers next to loupe (images, gifs) and showtime/mpv (video)
+    imv # fast keyboard image viewer, plays gifs; `imv dir/` for a folder
+    chafa # images, gifs and video frames right in the terminal: `chafa pic.gif`
+    mediainfo # codecs, bitrate, resolution, tracks of any media file
+    imagemagick # `magick in.png -resize 50% out.jpg`, `identify`
 
     mission-center
     warehouse # flatpak manager

@@ -63,7 +63,7 @@ in {
         warp-mouse-to-focus.enable = true;
       };
 
-      # theme and size stay at niri-flake's "default"/24: ~/.icons/default inherits Bibata (stylix)
+      # theme and size stay at niri-flake's "default"/24: ~/.local/share/icons/default inherits Bibata (stylix)
       cursor = {
         # niri warns this can break mouselook in some Wine games; set false if one misbehaves
         hide-when-typing = true;

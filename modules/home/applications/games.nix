@@ -13,7 +13,6 @@
     # The system wine (nixos/users/packages.nix) still opens a double-clicked .exe.
     (bottles.override {removeWarningPopup = true;})
     prismlauncher
-    lunar-client
 
     dolphin-emu
 

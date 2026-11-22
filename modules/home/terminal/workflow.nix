@@ -68,6 +68,9 @@ in {
       enable = true;
       # keep up-arrow for normal history, atuin on ctrl+r
       flags = ["--disable-up-arrow"];
+      # the one setting atuin's own default config.toml had (enter runs the command
+      # instead of only pasting it); home-manager writes the file now
+      settings.enter_accept = true;
     };
 
     # plain `zellij` stays a blank session; `dev` opens the project workspace (layout below)

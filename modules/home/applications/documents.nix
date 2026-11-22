@@ -51,7 +51,6 @@ in {
     hunspellDicts.en_GB-ise # spell check for libreoffice and gtk apps
     hyphenDicts.en_GB # hyphenation (justified text, Tools > Language > Hyphenation)
     pdfarranger # merge, split, rotate, reorder pdf pages
-    qpdf
     # gnome-notes
     # thunderbird
     # zoom-us

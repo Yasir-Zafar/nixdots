@@ -22,6 +22,7 @@
       appname() {
         local app=$1 f
         for dir in /etc/profiles/per-user/"$USER"/share/applications "$HOME"/.nix-profile/share/applications \
+          "$HOME"/.local/state/nix/profile/share/applications \
           /run/current-system/sw/share/applications "$HOME"/.local/share/flatpak/exports/share/applications \
           /var/lib/flatpak/exports/share/applications; do
           [ -d "$dir" ] || continue

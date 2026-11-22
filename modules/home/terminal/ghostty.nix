@@ -10,8 +10,8 @@
       window-width = 100;
       window-height = 30;
 
-      window-padding-x = 10;
-      window-padding-y = 8;
+      window-padding-x = 14;
+      window-padding-y = 12;
       window-padding-balance = true;
 
       # no fixed `title`: it would override the shell-integration title updates below

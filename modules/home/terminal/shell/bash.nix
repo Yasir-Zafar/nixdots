@@ -1,4 +1,4 @@
-{
+{config, ...}: {
   programs.bash = {
     enable = true;
     enableCompletion = true;
@@ -6,6 +6,7 @@
     historyControl = ["ignoredups" "ignorespace"];
     historySize = 10000;
     historyFileSize = 10000;
+    historyFile = "${config.xdg.stateHome}/bash/history";
 
     sessionVariables.HISTTIMEFORMAT = "%F %T ";
 

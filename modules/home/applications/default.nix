@@ -4,6 +4,7 @@
     ./media.nix
     ./creative.nix
     ./documents.nix
+    ./pdf.nix # pdf command line tools
     ./communication.nix
     ./nixcord.nix
     ./zen.nix

@@ -6,6 +6,9 @@
   nix = {
     settings = {
       experimental-features = ["nix-command" "flakes"];
+      # user profile in ~/.local/state/nix/profile, not ~/.nix-profile (home sets
+      # nix.assumeXdg to match)
+      use-xdg-base-directories = true;
       # dedupe happens weekly (nix.optimise below) instead of during every build
 
       # when free space drops under 5 GiB during a build, gc dead store paths until 20 GiB

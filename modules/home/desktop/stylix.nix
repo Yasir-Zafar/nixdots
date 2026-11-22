@@ -43,4 +43,7 @@
       rofi.enable = true; # bspwm session (desktop/bspwm.nix)
     };
   };
+
+  # the cursor theme only in ~/.local/share/icons (also written there), not in ~/.icons
+  home.pointerCursor.dotIcons.enable = false;
 }

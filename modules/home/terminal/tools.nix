@@ -35,6 +35,7 @@
     # File tools
     tree
     ncdu
+    xdg-ninja # lists files and folders in ~ that could move to ~/.config etc.
     unzip
     p7zip
     unrar

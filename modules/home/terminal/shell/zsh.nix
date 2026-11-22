@@ -7,6 +7,8 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
+    # .zshrc, .zcompdump and plugins live in ~/.config/zsh; ~/.zshenv only sets ZDOTDIR
+    dotDir = "${config.xdg.configHome}/zsh";
     # A plain `compinit` re-checks every completion file on each start (~400 ms here).
     # Trust the cached dump (`compinit -C`, ~7 ms) and only do the full check once the
     # dump is a day old; a home switch also deletes it (activation below), so new
@@ -54,7 +56,7 @@
     history = {
       size = 10000;
       save = 10000;
-      path = "${config.home.homeDirectory}/.zsh_history";
+      path = "${config.xdg.stateHome}/zsh/history";
       share = true;
       ignoreDups = true;
       ignoreSpace = true;
@@ -91,7 +93,7 @@
       zstyle ':completion:*' rehash true
       zstyle ':completion:*' menu no
       zstyle ':completion:*' use-cache true
-      zstyle ':completion:*' cache-path "$HOME/.zcompcache"
+      zstyle ':completion:*' cache-path "''${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
       zstyle ':completion:*:descriptions' format '%B%d%b'
       zstyle ':completion:*' group-name ""
 
@@ -113,6 +115,6 @@
 
   # new packages may bring new completions: start from a fresh dump after each switch
   home.activation.zshCompdump = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    run rm -f "$HOME/.zcompdump"
+    run rm -f "${config.programs.zsh.dotDir}/.zcompdump"
   '';
 }
