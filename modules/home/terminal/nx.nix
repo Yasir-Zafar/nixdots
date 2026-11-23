@@ -2,7 +2,6 @@
 {pkgs, ...}: {
   home.packages = [pkgs.nx];
 
-  # the bash version (pkgs/nx-sh, one file per command) is the fallback: swap the line
-  # above for this one if the Rust build ever breaks
+  # fallback if the Rust build breaks: the bash version
   # home.packages = import ../../../pkgs/nx-sh {inherit pkgs;};
 }

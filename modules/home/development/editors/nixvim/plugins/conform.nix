@@ -1,6 +1,5 @@
 {pkgs, ...}: {
   programs.nixvim = {
-    # Add required dependencies
     extraPackages = with pkgs; [
       stylua # Lua formatter
       alejandra # Nix formatter
@@ -9,7 +8,6 @@
       rustfmt
     ];
 
-    # Conform.nvim formatter config
     plugins.conform-nvim = {
       enable = true;
       settings = {
@@ -44,7 +42,6 @@
       };
     };
 
-    # Format buffer keybinding
     keymaps = [
       {
         mode = "";

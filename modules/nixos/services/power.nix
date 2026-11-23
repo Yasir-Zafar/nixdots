@@ -14,18 +14,13 @@
       };
     };
 
-    # Intel's thermal daemon: this laptop has the Intel DPTF tables (INT3400), so it runs
-    # in adaptive mode and applies HP's own thermal/power limits. Works next to tuned
-    # (tuned picks the profile, thermald keeps temperatures inside HP's limits).
-    # Added 2026-11-05 as a trial; if it throttles too early, remove this line.
+    # thermald: adaptive mode with HP's DPTF limits, next to tuned (trial since 2026-11-05)
     thermald.enable = true;
 
     upower.enable = true;
     power-profiles-daemon.enable = false;
 
-    # lid: suspend, except with an external screen connected ("docked"): then the laptop
-    # stays on and mango's switchbind (desktop/mango.nix) moves everything to that screen.
-    # These are logind's defaults, written out so the clamshell setup doesn't depend on them.
+    # lid: suspend unless docked; then mango moves to the external screen (logind defaults, written out)
     logind.settings.Login = {
       HandleLidSwitch = "suspend";
       HandleLidSwitchExternalPower = "suspend";

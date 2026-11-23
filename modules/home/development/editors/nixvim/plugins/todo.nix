@@ -1,7 +1,6 @@
 {
   programs.nixvim = {
-    # Highlight todo, notes, etc in comments
-    # https://nix-community.github.io/nixvim/plugins/todo-comments/index.html
+    # highlight TODO/NOTE in comments
     plugins.todo-comments = {
       enable = true;
       settings = {

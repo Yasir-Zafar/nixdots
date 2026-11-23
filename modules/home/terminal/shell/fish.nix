@@ -7,25 +7,12 @@
     fish = {
       enable = true;
 
-      # --------------------------------------------------------------- #
-      # SHELL INIT                                                        #
-      # runs in every interactive shell                                   #
-      # --------------------------------------------------------------- #
       interactiveShellInit = lib.mkMerge [
-        # main part: default position, i.e. before the atuin/zoxide/starship hooks, so
-        # fish_default_key_bindings can't wipe atuin's ctrl+r
+        # before the atuin/zoxide/starship hooks, so key bindings can't wipe atuin's ctrl+r
         ''
-          # disable greeting
           set -g fish_greeting
 
-          # emacs key bindings
-
-          # pure prompt settings: unused while starship draws the prompt (terminal/prompt.nix),
-          # kept so re-enabling the pure plugin below brings the old prompt back as it was
-          # pure prompt — single line, gruvbox colors
-
-          # fzf.fish builds its own fd command and ignores FZF_DEFAULT_COMMAND, so give it the
-          # same flags (hidden files, follow links, skip .git) and an eza directory preview
+          # fzf.fish ignores FZF_DEFAULT_COMMAND
           set -g fzf_fd_opts --hidden --follow --exclude=.git
           set -g fzf_preview_dir_cmd eza --all --color=always --icons --group-directories-first
 
@@ -36,10 +23,8 @@
           set -g __done_min_cmd_duration 10000
         ''
 
-        # colours: the whole gruvbox set lives here (stylix's fish target is off). Ordered
-        # after the default-position hooks; fastfetch (terminal/fetch.nix, mkAfter) is last.
+        # gruvbox colours (stylix's fish target is off)
         (lib.mkOrder 1100 ''
-          # Syntax Highlighting Colors
           set -g fish_color_normal ebdbb2
           set -g fish_color_command b8bb26
           set -g fish_color_quote d3869b
@@ -57,7 +42,6 @@
           set -g fish_color_cwd green
           set -g fish_color_cwd_root red
           set -g fish_color_valid_path --underline
-          # the rest of the gruvbox set (these used to come from stylix's fish target)
           set -g fish_color_autosuggestion 665c54
           set -g fish_color_cancel -r
           set -g fish_color_host normal
@@ -69,11 +53,7 @@
         '')
       ];
 
-      # aliases come from aliases/ (shared + fish overrides)
-
-      # --------------------------------------------------------------- #
-      # FUNCTIONS                                                         #
-      # --------------------------------------------------------------- #
+      # aliases: aliases/
       functions = {
         mkcd = {
           description = "mkdir and cd";
@@ -97,8 +77,7 @@
           '';
         };
 
-        # mkvenv can't be a plain alias because it needs sequential commands.
-        # posix aliases use &&; fish uses 'and'.
+        # not an alias: fish has no &&-style alias
         mkvenv = {
           description = "create venv and activate it";
           body = ''
@@ -118,29 +97,13 @@
         };
       };
 
-      # --------------------------------------------------------------- #
-      # PLUGINS                                                           #
-      # home-manager installs these into the fish data dir at build time; #
-      # no fisher/runtime plugin manager needed.                          #
-      #                                                                   #
-      # fzf.fish       — rich fzf widgets (file, dir, process, var,      #
-      #                  history). Replaces plain fzf shell integration.  #
-      #                  Requires: fzf + fd in PATH (both in packages).   #
-      #                                                                   #
-      # autopair.fish  — auto-close brackets and quotes.                  #
-      #                                                                   #
-      # done           — desktop notification when a long command (>10s)  #
-      #                  finishes in the background.                       #
-      #                                                                   #
-      # sponge         — removes failed/interrupted commands from history  #
-      #                  automatically.                                    #
-      # --------------------------------------------------------------- #
       plugins = [
-        # pure: replaced by starship (terminal/prompt.nix), which all three shells share
+        # old prompt, now starship (terminal/prompt.nix)
         # {
         #   name = "pure";
         #   src = pkgs.fishPlugins.pure.src;
         # }
+        # fzf widgets, replaces fzf's own fish integration
         {
           name = "fzf-fish";
           src = pkgs.fishPlugins.fzf-fish.src;
@@ -149,10 +112,12 @@
           name = "autopair";
           src = pkgs.fishPlugins.autopair.src;
         }
+        # notify when a long command finishes
         {
           name = "done";
           src = pkgs.fishPlugins.done.src;
         }
+        # drop failed commands from history
         {
           name = "sponge";
           src = pkgs.fishPlugins.sponge.src;
@@ -160,21 +125,12 @@
       ];
     };
 
-    # ----------------------------------------------------------------- #
-    # DIRENV — hook injected by HM; no manual eval in interactiveShellInit
-    # ----------------------------------------------------------------- #
     direnv = {
       enable = true;
       enableFishIntegration = true;
       nix-direnv.enable = true;
     };
 
-    # ----------------------------------------------------------------- #
-    # FZF                                                                 #
-    # enableFishIntegration is OFF — fzf.fish plugin above provides the  #
-    # fish-side widgets and is richer. The HM fzf block still sets       #
-    # FZF_DEFAULT_COMMAND / FZF_DEFAULT_OPTS via the env vars it exports. #
-    # ----------------------------------------------------------------- #
     fzf = {
       enable = true;
       enableFishIntegration = false; # handled by fzf.fish plugin
@@ -195,18 +151,12 @@
       fileWidget.options = ["--preview 'bat --color=always --style=numbers --line-range=:500 {}'"];
     };
 
-    # ----------------------------------------------------------------- #
-    # ZOXIDE — hook injected by HM; no manual eval needed                 #
-    # ----------------------------------------------------------------- #
     zoxide = {
       enable = true;
       enableFishIntegration = true;
       options = ["--cmd cd"];
     };
 
-    # ----------------------------------------------------------------- #
-    # BAT                                                                  #
-    # ----------------------------------------------------------------- #
     bat = {
       enable = true;
       config = {
@@ -217,14 +167,9 @@
       };
     };
 
-    # ----------------------------------------------------------------- #
-    # EZA                                                                  #
-    # enableFishIntegration is OFF — it would add its own aliases that    #
-    # conflict with the aliases from aliases/.        #
-    # ----------------------------------------------------------------- #
     eza = {
       enable = true;
-      enableFishIntegration = false;
+      enableFishIntegration = false; # its aliases clash with aliases/
       icons = "auto";
       git = true;
       extraOptions = [
@@ -235,7 +180,6 @@
   };
 
   home.packages = with pkgs; [
-    coreutils # for `date` used in the backup function
-    # fzf, bat, eza, direnv — declared via programs.* above
+    coreutils # `date` in the backup function
   ];
 }

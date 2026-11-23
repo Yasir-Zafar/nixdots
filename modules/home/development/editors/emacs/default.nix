@@ -1,18 +1,10 @@
-# Emacs 31 (pgtk: native wayland), configured end to end with stock Emacs keys.
-#
-# Nix owns everything that can be installed: Emacs itself, every package (no package.el, no
-# downloads at runtime), tree-sitter grammars, language servers, formatters, debug adapters, and
-# the daemon. The Lisp is in ./early-init.el and ./init.el, linked into ~/.config/emacs.
-# Values Nix knows (tool paths, fonts) reach Lisp through the generated nix.el.
-# State (history, recentf, eln cache…) goes to ~/.local/state/emacs, never into the repo.
-# Keys and usage: docs/EMACS.md. The old Doom-style setup is ../emacs.nix (not imported).
+# Emacs 31 (pgtk), stock keys, every package from Nix. Lisp: ./init.el; keys: docs/EMACS.md
 {
   config,
   pkgs,
   ...
 }: let
-  # on emacs' exec-path only, so they don't land on the shell's PATH (nixvim does the same).
-  # A project's own toolchain (direnv / templates/) still comes first through envrc.
+  # on emacs' exec-path only, not the shell's PATH
   tools = with pkgs; [
     # language servers (eglot)
     rust-analyzer
@@ -90,9 +82,7 @@ in {
         yasnippet
         yasnippet-snippets
 
-        # code
-        # only the grammars of the -ts- modes init.el uses (all ~300 made every lock bump
-        # rebuild and download grammars nothing opens); add one here with its mode
+        # code (only the grammars init.el's -ts- modes use)
         (treesit-grammars.with-grammars (g:
           with g; [
             tree-sitter-bash
@@ -150,9 +140,7 @@ in {
       ];
   };
 
-  # one Emacs in the background, started on first use (socket activation): `emacsclient -c`
-  # opens a window in it instantly, and the "Emacs (Client)" launcher entry does the same.
-  # $EDITOR stays nvim.
+  # daemon, socket-activated; `emacsclient -c` or the launcher entry
   services.emacs = {
     enable = true;
     client.enable = true;

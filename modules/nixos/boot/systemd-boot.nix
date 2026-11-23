@@ -15,21 +15,14 @@
 
     kernelPackages = pkgs.linuxPackages_latest;
 
-    # Testing a change safely: never edit this list first. At the boot menu press `e` on
-    # the newest entry, add/remove the param, boot once, and check what it affects
-    # (sound, mic, keyboard/touchpad, brightness, `cat /proc/cmdline`). The edit is
-    # gone on the next boot. Only move it here once it worked, then `nx os boot` and
-    # reboot; the previous generation stays in the menu as the way back.
+    # try a param for one boot first (`e` at the boot menu); add it here only once it worked
     kernelParams = [
-      # quiet boot (the console log level itself is boot.consoleLogLevel below: a
-      # "loglevel=3" here was overridden by the loglevel=4 nixos appends after it)
+      # quiet boot (log level: consoleLogLevel below; nixos appends loglevel=4 after params)
       "quiet"
       "udev.log_level=3"
 
-      # NOT a default on this kernel (CONFIG_INTEL_IOMMU_DEFAULT_ON is not set): keeps
-      # the Intel IOMMU on (DMA protection, device passthrough for VMs)
+      # not a default here (CONFIG_INTEL_IOMMU_DEFAULT_ON unset): Intel IOMMU on
       "intel_iommu=on"
-      # removed: "mitigations=auto" is already the kernel default (CONFIG_CPU_MITIGATIONS=y)
 
       # nested virtualisation for VMs inside VMs (harmless if unused)
       "kvm-intel.nested=1"
@@ -37,21 +30,12 @@
       "acpi_backlight=native" # only intel_backlight exists; keeps it that way
       "i8042.nopnp" # keyboard/touchpad controller probing
 
-      # Removed 2026-10-15 (at my request, without a test boot first). If something
-      # below breaks, press `e` at the boot menu, add the param back for one boot to
-      # confirm, then restore it here:
-      #   "acpi_osi=Linux"  old firmware workaround. Symptoms if needed: odd fan,
-      #                     thermal or brightness behaviour, missing hotkeys
-      #   "snd-intel-dspcfg.dsp_driver=1"  forced legacy HDA audio. Without it the SOF
-      #                     driver runs, which also drives the built-in digital mics
-      #                     (firmware ships them). Symptom if needed: no sound at all
-      #   "nvme_core.default_ps_max_latency_us=5500"  kept the SSD out of its deepest
-      #                     power state. Symptoms if needed: nvme timeouts/resets in
-      #                     `journalctl -k`, hangs after suspend
+      # removed 2026-10-15 without a test boot; re-add one if its symptom shows up:
+      #   "acpi_osi=Linux"  odd fan/thermal/brightness, missing hotkeys
+      #   "snd-intel-dspcfg.dsp_driver=1"  no sound at all
+      #   "nvme_core.default_ps_max_latency_us=5500"  nvme timeouts, hangs after suspend
     ];
 
-    # already in hardware-configuration.nix's availableKernelModules (ahci is for SATA,
-    # this laptop is NVMe only); harmless, left as is
     consoleLogLevel = 3; # errors only on the console during boot
 
     initrd.kernelModules = [
@@ -69,8 +53,6 @@
 
     tmp.cleanOnBoot = true;
 
-    # systemd in the initrd and dbus-broker are already nixos defaults (checked with
-    # nix eval), so there is nothing to switch on here
   };
 
   systemd.coredump = {
@@ -85,8 +67,7 @@
     ];
   };
 
-  # earlyoom is the oom killer here. systemd-oomd (on by default) watches no slices in
-  # this config, so it only ran idle next to it
+  # earlyoom is the oom killer; systemd-oomd watched no slices here
   services.earlyoom.enable = true;
   systemd.oomd.enable = false;
 }

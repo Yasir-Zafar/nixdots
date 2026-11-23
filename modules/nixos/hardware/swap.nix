@@ -1,6 +1,4 @@
-# Two swap tiers. vm.swappiness stays at 10 (gaming/performance.nix) so the kernel still
-# avoids swapping (modded minecraft hates being swapped out when it loses focus); when
-# it does swap, it goes to compressed RAM first and only then to the SSD.
+# zram first, then the swapfile; swappiness 10 (modded minecraft hates being swapped out)
 {
   # compressed swap in RAM, used first (higher priority than the swapfile)
   zramSwap = {

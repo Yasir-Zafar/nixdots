@@ -1,11 +1,5 @@
-# Noctalia bar/shell. Settings live in noctalia.toml (Noctalia's own format, so an export
-# from its Settings can be pasted in); only the paths are filled in here.
-#
-# Wallpapers: ~/Pictures/Wallpapers is a normal folder. Every image in assets/ is linked
-# into it (links to the live checkout, not the store); new files in assets/ need a
-# `git add` before the next home switch, since flakes only see files git knows about.
-# Files you drop into the folder yourself are left alone and show up in Noctalia's
-# wallpaper picker as well.
+# Noctalia; settings in noctalia.toml (its own export format), paths filled in here
+# assets/ wallpapers are linked into ~/Pictures/Wallpapers; new ones need `git add`
 {
   config,
   lib,
@@ -14,8 +8,7 @@
 }: let
   assets = "${my.home}/dots/assets";
   folder = "${config.home.homeDirectory}/Pictures/Wallpapers";
-  # profile.jpg is the avatar; wall.jpg is the same picture as 2.jpg (bspwm and lightdm
-  # use that name)
+  # profile.jpg = avatar; wall.jpg = 2.jpg (the name bspwm/lightdm use)
   notWallpapers = ["profile.jpg" "wall.jpg"];
   isImage = name: lib.any (ext: lib.hasSuffix ext (lib.toLower name)) [".png" ".jpg" ".jpeg" ".webp"];
   repoWallpapers = lib.attrNames (lib.filterAttrs (name: type:

@@ -13,7 +13,6 @@
 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
-    # MOZ_ENABLE_WAYLAND and CLUTTER_BACKEND dropped: firefox/zen default to wayland, clutter is gone
     QT_QPA_PLATFORM = "wayland;xcb";
     # x11 fallback: old/bundled SDL2 games without wayland support fail with plain "wayland"
     SDL_VIDEODRIVER = "wayland,x11";
@@ -60,8 +59,7 @@
     libdisplay-info
   ];
 
-  # niri-flake ships its own polkit agent (kde); ours below already registers first,
-  # so the second one fails on every login ("an authentication agent already exists")
+  # niri-flake's kde polkit agent clashes with mine ("agent already exists")
   systemd.user.services.niri-flake-polkit.enable = false;
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {

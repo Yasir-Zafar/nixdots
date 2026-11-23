@@ -1,5 +1,4 @@
-# The old Emacs setup (Doom-style: pgtk Emacs plus loose language servers, config kept
-# outside the repo). Not imported; replaced on 2026-11-08 by ./emacs/ (fully declared).
+# old Doom-style Emacs setup, not imported (replaced by ./emacs/)
 {pkgs, ...}: {
   programs.emacs = {
     enable = true;

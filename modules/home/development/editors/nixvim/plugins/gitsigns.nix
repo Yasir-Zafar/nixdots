@@ -1,8 +1,6 @@
 {
   programs.nixvim = {
-    # Adds git related signs to the gutter, as well as utilities for managing changes
-    # See `:help gitsigns` to understand what the configuration keys do
-    # https://nix-community.github.io/nixvim/plugins/gitsigns/index.html
+    # git signs in the gutter + hunk actions
     plugins.gitsigns = {
       enable = true;
       settings = {
@@ -16,8 +14,6 @@
       };
     };
 
-    # NOTE: add gitsigns recommended keymaps if you are interested
-    # https://nix-community.github.io/nixvim/keymaps/index.html
     keymaps = [
       # Navigation
       {
@@ -119,7 +115,7 @@
       {
         mode = "n";
         key = "<leader>hu";
-        # gitsigns 1.x: stage_hunk on an already staged hunk unstages it (undo_stage_hunk is deprecated)
+        # 1.x: stage_hunk on a staged hunk unstages it
         action.__raw = ''
           function()
             require('gitsigns').stage_hunk()
@@ -205,7 +201,7 @@
       {
         mode = "n";
         key = "<leader>tD";
-        # gitsigns 1.x: toggle_deleted is deprecated, the deleted lines are shown inline by preview_hunk_inline
+        # 1.x: deleted lines show via preview_hunk_inline
         action.__raw = ''
           function()
             require('gitsigns').preview_hunk_inline()

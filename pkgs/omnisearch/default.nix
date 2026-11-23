@@ -1,7 +1,4 @@
-# omnisearch: small metasearch engine in C (ddg, startpage, yahoo, mojeek), not in nixpkgs.
-# Upstream lives on git.bwaaa.monster; this builds from the codeberg mirrors. beaker is its
-# web/template library, built alongside. Adds a gruvbox theme and makes it the default.
-# Runs as a service in modules/nixos/services/omnisearch.nix.
+# omnisearch: small C metasearch engine, from the codeberg mirrors, gruvbox default. Service: nixos/services/omnisearch.nix
 # Update: bump rev/version, set hash = "" and build; nix prints the new hash.
 {
   lib,

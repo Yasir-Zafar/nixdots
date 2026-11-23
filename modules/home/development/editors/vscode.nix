@@ -1,9 +1,4 @@
-# VS Code, declared: extensions, settings and update behaviour all live here.
-# Extensions come from nixpkgs wherever it has them (patched for NixOS, cached); the few it
-# lacks come from the marketplace through nix-vscode-extensions (hm/flake.nix), pinned by
-# flake.lock and bumped with `nx update`. The extensions folder is read-only: add or drop
-# an extension here, not in the UI. Settings are merged into settings.json on every
-# switch (declared keys win; the UI can still change anything not listed).
+# VS Code: extensions from nixpkgs, else nix-vscode-extensions; UI can't add extensions
 {
   config,
   pkgs,

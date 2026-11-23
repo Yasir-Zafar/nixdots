@@ -11,8 +11,7 @@
       homeFlake = "${config.home.homeDirectory}/dots/hm";
     };
 
-    # `, cowsay hi` runs a package without installing it; typing a missing command
-    # suggests the package that has it (database comes prebuilt from the flake input)
+    # `, cowsay hi`; missing commands suggest their package
     nix-index.enable = true;
     nix-index-database.comma.enable = true;
 

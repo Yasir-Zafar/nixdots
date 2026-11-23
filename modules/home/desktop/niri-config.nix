@@ -1,7 +1,4 @@
-# niri (26.04) via niri-flake. Docs: https://niri-wm.github.io/niri and niri-flake's docs.md.
-# Look (docs/PREFERENCES.md): no gaps, no focus ring, no border, no shadows, square corners.
-# Noctalia's own niri recommendations (layer rules, debug flag) come from its
-# docs/user/compositor-settings/niri.mdx.
+# niri via niri-flake: no gaps, focus ring, border or shadows; square corners.
 {my, ...}: let
   c = my.colors; # gruvbox dark medium (lib/default.nix)
 
@@ -14,7 +11,7 @@
   };
   easing = duration-ms: curve: {easing = {inherit duration-ms curve;};};
 
-  # spawn bind with a hotkey-overlay title (every spawn bind gets one, so Mod+Shift+/ reads well)
+  # spawn bind with a hotkey-overlay title
   run = title: argv: {
     action.spawn = argv;
     hotkey-overlay.title = title;
@@ -63,7 +60,6 @@ in {
         warp-mouse-to-focus.enable = true;
       };
 
-      # theme and size stay at niri-flake's "default"/24: ~/.local/share/icons/default inherits Bibata (stylix)
       cursor = {
         # niri warns this can break mouselook in some Wine games; set false if one misbehaves
         hide-when-typing = true;
@@ -120,8 +116,7 @@ in {
         # where a dragged window will land
         insert-hint.display.color = "${c.orange}80";
 
-        # transparent workspaces: the wallpaper lives in the backdrop (layer rule below), so it
-        # stays put while workspaces scroll and shows behind the overview
+        # transparent: the wallpaper sits in the backdrop and stays put while scrolling
         background-color = "transparent";
       };
 
@@ -130,8 +125,7 @@ in {
         workspace-shadow.enable = false;
       };
 
-      # niri's own Alt-Tab (MRU with previews). Alt+Tab itself stays noctalia's switcher
-      # (normal binds win), so this only adds switching between windows of the same app
+      # Alt+Tab stays noctalia's; this only adds same-app switching
       recent-windows = {
         highlight = {
           active-color = c.orange;
@@ -246,8 +240,7 @@ in {
           matches = [{namespace = "^noctalia-wallpaper";}];
           place-within-backdrop = true;
         }
-        # no blur. Noctalia asks niri to blur behind its surfaces by itself
-        # (ext-background-effect), so it has to be switched off here
+        # noctalia requests blur itself, so switch it off here
         {
           matches = [{namespace = "^noctalia-";}];
           background-effect.blur = false;
@@ -395,7 +388,6 @@ in {
         "Mod+F".action.maximize-column = {};
         "Mod+Ctrl+F".action.expand-column-to-available-width = {};
         "Mod+Shift+F".action.fullscreen-window = {};
-        # tells the app it is maximized (no gaps here, so it mostly matters for the app's own UI)
         "Mod+M".action.maximize-window-to-edges = {};
         "Mod+C".action.center-column = {};
         "Mod+Ctrl+C".action.center-visible-columns = {};
@@ -465,7 +457,7 @@ in {
       };
       xwayland-satellite.enable = true;
 
-      # QT_QPA_PLATFORM / NIXOS_OZONE_WL come from modules/nixos/desktop/niri.nix (session-wide)
+      # QT_QPA_PLATFORM / NIXOS_OZONE_WL: nixos/desktop/niri.nix
       environment.QT_QPA_PLATFORMTHEME = "gtk3"; # keep in sync with qt.nix
 
       debug = {

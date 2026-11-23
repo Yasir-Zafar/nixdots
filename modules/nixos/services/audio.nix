@@ -9,8 +9,7 @@
 
     pulse.enable = true;
 
-    # pipewire's x11 bell module aborts (and dumps core) when xwayland-satellite
-    # closes the X display at logout; nothing here needs the X11 bell
+    # pipewire's x11 bell aborts when xwayland-satellite closes at logout
     extraConfig.pipewire."90-no-x11-bell"."context.properties"."module.x11.bell" = false;
 
     wireplumber = {
@@ -37,8 +36,7 @@
           ];
 
           "monitor.bluez.properties" = {
-            # one list: a separate fragment used to add the headset roles,
-            # which made the effective value depend on merge order
+            # one list: a split fragment made the value depend on merge order
             "bluez5.roles" = [
               "a2dp_sink"
               "a2dp_source"
@@ -52,20 +50,14 @@
             "bluez5.enable-msbc" = true;
             "bluez5.enable-hw-volume" = true;
 
-            # no "bluez5.codecs" list: unset means every codec pipewire has, and it picks
-            # the best one both sides support (music: LDAC > aptX HD > aptX > AAC > SBC-XQ;
-            # calls: LC3-SWB > mSBC > CVSD). The old list left out the call codecs, so calls
-            # were stuck on CVSD (8 kHz). Buds2 Pro: AAC for music; Samsung's own SSC codec
-            # doesn't exist on linux.
+            # no codec list: pipewire picks the best both sides support (an old list kept calls on CVSD)
 
             # pipewire's own HFP/HSP implementation ("pipewire" was not a valid value)
             "bluez5.hfphsp-backend" = "native";
           };
         };
 
-        # calls: when an app records from the headset (Discord, Meet), switch it to the
-        # headset profile (best call codec above), and back to music quality afterwards.
-        # Already wireplumber's default; written down so it's on record.
+        # switch to the headset profile while an app records (wireplumber default, kept on record)
         "51-bluez-autoswitch"."wireplumber.settings" = {
           "bluetooth.autoswitch-to-headset-profile" = true;
         };

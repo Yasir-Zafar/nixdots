@@ -4,9 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    # zen is installed by home-manager now (hm/flake.nix); this input only backed the
-    # commented system install in modules/nixos/users/packages.nix. Commented out so
-    # updates don't fetch it; uncomment both together to go back.
+    # zen: installed by home-manager now; uncomment with users/packages.nix to go back
     # zen-browser = {
     #   url = "github:0xc000022070/zen-browser-flake/beta";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -28,8 +26,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # pinned: later revs add cc-by-nc-40 to meta.license (unfree), and the module builds its
-    # package from the upstream flake's own pkgs, so our allowUnfree can't reach it
+    # pinned: later revs are unfree (cc-by-nc), and my allowUnfree can't reach the module's pkgs
     sysc-greet = {
       url = "github:Nomadcxx/sysc-greet/4c98abc5bdddbf6c84d2a55d71b9120cbfccad0f";
       inputs.nixpkgs.follows = "nixpkgs";

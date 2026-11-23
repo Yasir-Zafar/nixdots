@@ -1,15 +1,10 @@
 {
   programs.nixvim.plugins = {
-    # `friendly-snippets` contains a variety of premade snippets (blink loads them itself,
-    # and expands them with Neovim's built-in snippet engine)
-    #    https://github.com/rafamadriz/friendly-snippets
+    # friendly-snippets, expanded by Neovim's built-in engine
     friendly-snippets.enable = true;
     lazydev.enable = true; # Lua completion for the Neovim API (source below)
 
-    # Autocompletion. Replaced nvim-cmp: one plugin, no separate source plugins or snippet
-    # engine. Brackets after a function are added by blink itself (accept.auto_brackets).
-    # See `:help blink-cmp`
-    # https://nix-community.github.io/nixvim/plugins/blink-cmp/index.html
+    # completion; also adds () after functions (accept.auto_brackets)
     blink-cmp = {
       enable = true;
 
@@ -17,8 +12,7 @@
       setupLspCapabilities = false;
 
       settings = {
-        # preset "default": <C-n>/<C-p> select, <C-y> accept, <C-Space> menu / docs,
-        # <C-e> hide, <C-b>/<C-f> scroll docs, <Tab>/<S-Tab> snippet jump, <C-k> signature
+        # preset default: <C-n>/<C-p> select, <C-y> accept, <C-Space> menu, <C-e> hide
         keymap = {
           preset = "default";
           # the keys the old nvim-cmp setup used for jumping around in a snippet

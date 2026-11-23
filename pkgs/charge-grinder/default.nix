@@ -1,7 +1,4 @@
-# Charge Grinder: Limbus Company mirror dungeon bot, run from source instead of the AppImage.
-# Upstream supports X11 and a few Wayland compositors (sway, Hyprland, KDE, GNOME), not niri,
-# so it is run from the bspwm X11 session (modules/nixos/desktop/bspwm.nix) and always uses its
-# X11 backend (Xlib/mss capture, uinput input); the Wayland portal/PipeWire path is left out.
+# Charge Grinder (Limbus bot) from source; X11 backend only, so run it from the bspwm session
 # Update: bump tag/version, set hash = "" and build; nix prints the new hash.
 {
   stdenvNoCC,
@@ -41,11 +38,7 @@ in
       cp -r App.py Bot.py stats.py version source source_app ImageAssets $out/share/charge-grinder/
     '';
 
-    # after the qt hook has filled qtWrapperArgs. The env vars are the ones upstream's
-    # AppRun sets. From source, game.log/game.csv go next to the code (read-only store) unless
-    # APPIMAGE is set, so it points into the data dir; assets don't look at it (source/utils/paths.py).
-    # XDG_SESSION_TYPE picks the backend (source/utils/utils.py); x11 even if started from niri
-    # (shell wrapper: the qt hook swaps makeWrapper for the binary one, which has no --run)
+    # after the qt hook fills qtWrapperArgs; env vars as upstream's AppRun, logs into the data dir, x11 backend always
     postFixup = ''
       makeShellWrapper ${python.interpreter} $out/bin/charge-grinder \
         "''${qtWrapperArgs[@]}" \

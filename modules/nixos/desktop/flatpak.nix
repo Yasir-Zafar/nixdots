@@ -1,7 +1,4 @@
-# Flatpaks as config (nix-flatpak). The flatpak service itself is enabled in
-# greeters/common.nix; flathub is added as a remote by default.
-# Only what is listed here is managed: other flatpaks and runtimes are left alone
-# (uninstallUnmanaged stays off).
+# flatpaks as config (nix-flatpak); only listed ones are managed
 {
   services.flatpak = {
     packages = [

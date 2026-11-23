@@ -8,8 +8,7 @@
     steam = {
       enable = true;
 
-      # Millennium (steam client theming). If it lags behind a Steam client update and
-      # breaks, comment these three lines out again to get plain Steam back
+      # Millennium theming; if a Steam update breaks it, comment these out
       # package = pkgs.millennium-steam.override {
       #   extraArgs = "-system-composer";
       # };

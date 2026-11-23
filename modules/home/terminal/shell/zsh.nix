@@ -7,12 +7,8 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    # .zshrc, .zcompdump and plugins live in ~/.config/zsh; ~/.zshenv only sets ZDOTDIR
     dotDir = "${config.xdg.configHome}/zsh";
-    # A plain `compinit` re-checks every completion file on each start (~400 ms here).
-    # Trust the cached dump (`compinit -C`, ~7 ms) and only do the full check once the
-    # dump is a day old; a home switch also deletes it (activation below), so new
-    # completions show up right away.
+    # full compinit (~400 ms) only once a day, else the cached dump (~7 ms)
     completionInit = ''
       autoload -U compinit
       () {
@@ -24,11 +20,9 @@
         fi
       }
     '';
-    autosuggestion.enable = true; # Native HM flag (handles zsh-autosuggestions)
+    autosuggestion.enable = true;
 
-    # --- Plugins ---
-    # Sourced safely via Nix packages. Order is maintained:
-    # Completions -> Framework Hooks -> Mid-tier logic -> Syntax Highlighting last.
+    # order matters: syntax highlighting last
     plugins = [
       {
         name = "zsh-completions";
@@ -52,7 +46,6 @@
       }
     ];
 
-    # --- History Configuration ---
     history = {
       size = 10000;
       save = 10000;
@@ -66,28 +59,24 @@
 
     defaultKeymap = "emacs";
 
-    # --- Interactive Shell Customization (.zshrc changes) ---
     initContent = ''
-      # --- Prompt Layout ---
-      # No framework dependencies.
-      # %B...%b (bold), %F{color}...%f (foreground), %~ (CWD), %(?.success.fail) (exit evaluation)
-      # prompt comes from starship (terminal/prompt.nix); the old hand-written one:
+      # prompt is starship (terminal/prompt.nix); the old one:
       # setopt PROMPT_SUBST
       # PS1='%B%F{blue}%~%f%b %(?.%F{green}❯%f.%F{red}❯%f) '
 
-      # --- Keybindings & Substring Navigation ---
+      # --- keys ---
       bindkey '^p'   history-substring-search-up
       bindkey '^n'   history-substring-search-down
       bindkey '^[[A' history-substring-search-up
       bindkey '^[[B' history-substring-search-down
 
-      # --- Core Shell Options ---
+      # --- options ---
       setopt AUTO_CD AUTO_PUSHD PUSHD_IGNORE_DUPS PUSHD_SILENT
       setopt ALWAYS_TO_END AUTO_MENU COMPLETE_IN_WORD LIST_PACKED
       setopt HIST_VERIFY INC_APPEND_HISTORY SHARE_HISTORY
       setopt CORRECT EXTENDED_GLOB GLOB_DOTS
 
-      # --- Tab Completion System Styles ---
+      # --- completion ---
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
       zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
       zstyle ':completion:*' rehash true
@@ -97,18 +86,18 @@
       zstyle ':completion:*:descriptions' format '%B%d%b'
       zstyle ':completion:*' group-name ""
 
-      # --- Advanced fzf-tab Interactive Previews ---
+      # --- fzf-tab previews ---
       zstyle ':fzf-tab:complete:cd:*'                fzf-preview 'eza -1 --color=always --icons $realpath'
       zstyle ':fzf-tab:complete:__zoxide_z:*'        fzf-preview 'eza -1 --color=always --icons $realpath'
       zstyle ':fzf-tab:complete:kill:argument-rest'  fzf-preview 'ps --pid=$word -o cmd --no-headers -w -w'
       zstyle ':fzf-tab:complete:kill:argument-rest'  fzf-flags '--preview-window=down:3:wrap'
 
-      # --- Inline Autosuggestions Settings ---
+      # --- autosuggestions ---
       ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-      ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=100 # stop suggesting for pasted blobs, not normal commands
+      ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=100 # not for pasted blobs
       ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 
-      # --- External Credentials / Overrides Hook ---
+      # --- private overrides ---
       [[ -f ~/.zsh_private ]] && source ~/.zsh_private
     '';
   };

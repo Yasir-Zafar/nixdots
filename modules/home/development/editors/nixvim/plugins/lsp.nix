@@ -1,6 +1,4 @@
-# Language servers through nixvim's `lsp` module (Neovim's own vim.lsp.config / vim.lsp.enable).
-# Was `plugins.lsp` (the nvim-lspconfig wrapper), which nixvim is retiring; nvim-lspconfig is still
-# loaded for its per-server defaults (cmd, filetypes, root markers).
+# language servers via nixvim's lsp module; nvim-lspconfig only for server defaults
 {pkgs, ...}: {
   programs.nixvim = {
     plugins.fidget = {
@@ -8,7 +6,6 @@
       settings.notification.window.winblend = 0;
     };
 
-    # https://nix-community.github.io/nixvim/NeovimOptions/index.html?highlight=extraplugi#extraplugins
     extraPlugins = with pkgs.vimPlugins; [
       plenary-nvim # Added for some formatters/linters
     ];
@@ -81,7 +78,6 @@
           config.settings.Lua = {
             diagnostics.globals = ["vim"]; # Recognize 'vim' global in Neovim config
             workspace = {
-              # Make the server aware of Neovim runtime files
               library.__raw = "vim.api.nvim_get_runtime_file('', true)";
               checkThirdParty = false;
             };

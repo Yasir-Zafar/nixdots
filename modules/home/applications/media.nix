@@ -27,8 +27,7 @@
       tscale = "oversample";
     };
 
-    # lighter settings that keep playback smooth on the iGPU without the charger
-    # (applied by the battery.lua script below) and for anything above 1440p
+    # lighter settings on battery (battery.lua) and above 1440p
     profiles = {
       battery = {
         scale = "spline36";

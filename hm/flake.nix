@@ -17,8 +17,7 @@
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
-      # the *.follows lines below without nixpkgs only share one copy of a helper flake
-      # that two inputs had locked at the same commit (fewer fetches and lock nodes)
+      # *.follows without nixpkgs: share one copy of a helper flake locked at the same commit
       inputs.flake-parts.follows = "nixvim/flake-parts";
     };
 
@@ -41,7 +40,7 @@
     nixcord = {
       url = "github:FlameFlag/nixcord";
       inputs.nixpkgs.follows = "nixpkgs";
-      # declared but unused by its outputs; it pulled a second home-manager (release-26.05)
+      # unused by its outputs, but would pull a second home-manager
       inputs.home-manager.follows = "home-manager";
     };
 
@@ -64,8 +63,7 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    # helium browser (chromium-based): not in nixpkgs yet. Repackages upstream's .deb; its home
-    # module adds launch flags. Policies are system-side (modules/nixos/desktop/helium.nix)
+    # helium (not in nixpkgs): repackaged .deb; policies in nixos/desktop/helium.nix
     helium = {
       url = "github:oxcl/nix-flake-helium-browser";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -90,8 +88,7 @@
       inputs.flake-utils.follows = "mango/scenefx/flake-utils";
     };
 
-    # VS Code extensions that nixpkgs doesn't ship (programs.vscode in
-    # modules/home/development/editors/vscode.nix); nixpkgs is used wherever it has them
+    # VS Code extensions nixpkgs doesn't ship
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -109,7 +106,7 @@
     pkgs = import nixpkgs {
       localSystem.system = "x86_64-linux";
       config.allowUnfree = true;
-      # pkgs.claude-code comes from claude-code-nix instead of nixpkgs; ../pkgs adds our own
+      # pkgs.claude-code comes from claude-code-nix instead of nixpkgs; ../pkgs adds my own
       overlays = [inputs.claude-code.overlays.default (import ../pkgs)];
     };
     antigravity = antigravity-nix.packages.x86_64-linux;
@@ -117,10 +114,7 @@
   in {
     formatter.x86_64-linux = pkgs.alejandra;
 
-    # `nix flake check ./hm`: nix doesn't know homeConfigurations, so without this a home that
-    # no longer evaluates (renamed option, removed package) still passed. Only evaluates the
-    # home (its .drv path is written to a file); nothing of the home is built.
-    # The system side needs no such check: `nix flake check ./nix` evaluates nixosConfigurations.
+    # `nix flake check ./hm` evaluates the home (nothing built), so a broken home fails it
     checks.x86_64-linux.home-evaluates = pkgs.writeText "home-evaluates" (
       builtins.unsafeDiscardStringContext inputs.self.homeConfigurations.${my.user}.activationPackage.drvPath
     );

@@ -1,10 +1,5 @@
-# Secrets with sops-nix. secrets/secrets.yaml is encrypted in the repo; it's decrypted
-# at login by the `sops-nix` user service with the age key below, into
-# $XDG_RUNTIME_DIR/secrets.d (RAM only), linked from ~/.config/sops-nix/secrets.
-#
-# The private key is NOT in the repo: ~/.config/sops/age/keys.txt. Back it up
-# (password manager / USB). Without it the secrets can't be decrypted.
-# Edit secrets with:  sops ~/dots/secrets/secrets.yaml
+# sops-nix: secrets/secrets.yaml decrypted at login into RAM. Age key (not in repo, back it up):
+# ~/.config/sops/age/keys.txt. Edit: sops ~/dots/secrets/secrets.yaml
 {
   config,
   inputs,
@@ -19,8 +14,7 @@
 
     secrets = {
       git_email = {};
-      # not consumed by any config: the thunderbird account keeps it in its profile.
-      # Kept here so the address is recorded somewhere (see communication.nix)
+      # unused by config, recorded only (Thunderbird keeps the account)
       proton_address = {};
     };
 

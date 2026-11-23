@@ -1,22 +1,14 @@
 {
   programs.nixvim = {
-    # Shows how to use the DAP plugin to debug your code.
-    #
-    # Primarily focused on configuring the debugger for Go, but can
-    # be extended to other languages as well. That's why it's called
-    # kickstart.nixvim and not kitchen-sink.nixvim ;)
-    # https://nix-community.github.io/nixvim/plugins/dap/index.html
+    # kickstart's DAP example (go), not imported
     plugins.dap = {
       enable = true;
     };
 
-    # Creates a beautiful debugger UI
+    # debugger UI
     plugins.dap-ui = {
       enable = true;
 
-      # Set icons to characters that are more likely to work in every terminal.
-      # Feel free to remove or use ones that you like more! :)
-      # Don't feel like these are good choices.
       settings = {
         icons = {
           expanded = "▾";
@@ -40,14 +32,12 @@
       };
     };
 
-    # Add your own debuggers here
+    # debuggers
     plugins.dap-go = {
       enable = true;
     };
 
-    # https://nix-community.github.io/nixvim/keymaps/index.html
     keymaps = [
-      # Basic debugging keymaps, feel free to change to your liking!
       {
         mode = "n";
         key = "<F5>";
@@ -120,8 +110,7 @@
           desc = "Debug: Set Breakpoint";
         };
       }
-      # Toggle to see last session result. Without this, you can't see session output
-      # in case of unhandled exception.
+      # last session result (shows output after an unhandled exception)
       {
         mode = "n";
         key = "<F7>";
@@ -136,7 +125,6 @@
       }
     ];
 
-    # https://nix-community.github.io/nixvim/NeovimOptions/index.html?highlight=extraconfiglua#extraconfiglua
     extraConfigLua = ''
       require('dap').listeners.after.event_initialized['dapui_config'] = require('dapui').open
       require('dap').listeners.before.event_terminated['dapui_config'] = require('dapui').close

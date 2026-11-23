@@ -1,12 +1,9 @@
-# Policies for Helium (modules/home/applications/helium.nix), mirroring Zen's (zen.nix).
-# Chromium-based browsers read policies only from /etc/chromium/policies; nixos' chromium
-# module just writes those files (it installs no browser). Nothing else here reads them.
+# Helium policies (managed = enforced, recommended = defaults), mirroring zen.nix. Check: helium://policy
 #   managed      enforced (greyed out in settings): extensions, search, privacy
 #   recommended  defaults only, changeable in settings (like Zen's Status = "default")
 # Check what applied: helium://policy
 {my, ...}: let
-  # installed like a normal extension (can be disabled, updates itself), reinstalled when missing.
-  # Helium rewrites the web store URL to its own privacy proxy (Helium services)
+  # installed like a normal extension, reinstalled when missing
   extension = {
     installation_mode = "normal_installed";
     update_url = "https://clients2.google.com/service/update2/crx";

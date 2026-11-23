@@ -33,8 +33,7 @@
       ghostty.enable = true;
       bat.enable = true;
       fzf.enable = true;
-      # fish: off. Its base16 script re-wrote ~25 universal variables on every new
-      # terminal, and shell/fish.nix sets all of those colours itself anyway
+      # fish: off, its base16 script rewrote ~25 universal vars per terminal
       fish.enable = false;
       lazygit.enable = true;
       # zellij: off, its built-in gruvbox-dark theme looks better (terminal/workflow.nix)

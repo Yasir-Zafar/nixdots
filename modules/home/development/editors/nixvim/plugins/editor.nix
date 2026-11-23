@@ -1,16 +1,15 @@
-# the editor features VS Code has out of the box that kickstart lacks:
-# outline, project search & replace, diff / file history, session restore, folding, inline diagnostics
+# VS Code features kickstart lacks: outline, search/replace, diffs, sessions, folding
 {
   programs.nixvim = {
     opts = {
-      # folds come from treesitter (treesitter.nix); everything open when a file is loaded (za / zM / zR)
+      # folds from treesitter, all open on load
       foldlevel = 99;
       foldlevelstart = 99;
       foldtext = "";
       sessionoptions = "buffers,curdir,tabpages,winsize,help,globals,skiprtp,folds";
     };
 
-    # error text at the end of the line like VS Code's problem lens (K = hover, <leader>e = float)
+    # error text at line end (K = hover, <leader>e = float)
     diagnostic.settings = {
       virtual_text = {
         spacing = 2;

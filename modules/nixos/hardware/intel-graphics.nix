@@ -1,12 +1,8 @@
 {pkgs, ...}: {
-  # early KMS: the display driver starts in the initrd, so the screen keeps one mode
-  # from boot to greeter (no flicker / mode switch when the real driver would load)
+  # early KMS: one display mode from boot to greeter
   boot.initrd.kernelModules = ["i915"];
 
-  # xe instead of i915: tried 2026-11-23 and dropped the same day. The Arrow Lake iGPU
-  # (8086:7d41) only runs on xe through force_probe; video decode, vulkan and idle power
-  # were fine, but Noctalia was killed by a Wayland protocol error (code 6) whenever it
-  # opened a small popup (volume/media OSD). To try again: "xe" in the initrd above and
+  # xe: tried and dropped 2026-11-23 (Noctalia died on OSD popups). To retry: "xe" in the initrd and
   # boot.kernelParams = [
   #   "i915.force_probe=!7d41" # stop i915 from taking the GPU first
   #   "xe.force_probe=7d41"

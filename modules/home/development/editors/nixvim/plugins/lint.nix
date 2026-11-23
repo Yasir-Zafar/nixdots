@@ -1,17 +1,14 @@
 {pkgs, ...}: {
   programs.nixvim = {
-    # linters below that nothing else installs (eslint, statix, hadolint come from the profile;
-    # ruff comes with conform.nix)
+    # linters nothing else installs (eslint, statix, hadolint: profile; ruff: conform.nix)
     extraPackages = [
       pkgs.luajitPackages.luacheck
     ];
 
     # Linting
-    # https://nix-community.github.io/nixvim/plugins/lint/index.html
     plugins.lint = {
       enable = true;
 
-      # NOTE: Enabling these will cause errors unless these tools are installed
       lintersByFt = {
         # rust = ["rust-clippy"]; # nvim-lint has no linter of that name (it errors on every rust buffer);
         # rust-analyzer already runs clippy on save, see lsp.nix
@@ -37,8 +34,6 @@
         # text = ["vale"];
       };
 
-      # Create autocommand which carries out the actual linting
-      # on the specified events.
       autoCmd = {
         callback.__raw = ''
           function()
@@ -54,7 +49,6 @@
       };
     };
 
-    # https://nix-community.github.io/nixvim/NeovimOptions/autoGroups/index.html
     autoGroups = {
       lint = {
         clear = true;

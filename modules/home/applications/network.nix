@@ -5,6 +5,7 @@
     parabolic
     aria2
     fragments
+    qbittorrent
     nicotine-plus
     proton-vpn
   ];

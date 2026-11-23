@@ -1,14 +1,6 @@
-# chat and mail (discord lives in nixcord.nix)
-#
-# Mail: Thunderbird talks to Proton through the local Bridge (127.0.0.1).
-# One-time setup after the first switch:
-#   1. `systemctl --user stop protonmail-bridge`, then `protonmail-bridge --cli`; `login`
-#      (credentials go into gnome-keyring), `info` shows the bridge username and its
-#      generated password; `exit`, then `systemctl --user start protonmail-bridge`
-#      (a second instance can't take the lock while the service runs)
-#   2. open Thunderbird, enter that bridge password, and accept the bridge's self-signed
-#      certificate once (also for smtp port 1025)
-# Theme: the "Gruvbox Dark Thunderbird" add-on, installed by hand (no stylix target).
+# chat and mail (discord: nixcord.nix). Thunderbird reaches Proton through the local Bridge.
+# First setup: stop the bridge service, `protonmail-bridge --cli` → login / info, start it
+# again; give Thunderbird that password and accept the self-signed cert.
 {pkgs, ...}: {
   home.packages = with pkgs; [
     beeper
@@ -37,14 +29,8 @@
     };
   };
 
-  # The Proton account was declared here. The address now lives only in
-  # secrets/secrets.yaml (proton_address), so the public repo doesn't carry it, and an
-  # e-mail account can't be built from a runtime secret. Thunderbird keeps the account
-  # in its own profile (prefs.js), so mail works as before. To recreate it on a new
-  # machine: Thunderbird → new account → IMAP 127.0.0.1:1143 / SMTP 127.0.0.1:1025,
-  # STARTTLS, user = the proton address, password from `protonmail-bridge --cli` → info.
-  # The old declaration, for reference (address = the proton address, realName = my
-  # full name, bridgeTls = { enable = true; useStartTls = true; }):
+  # the account lives in Thunderbird's profile (the address is a sops secret):
+  # IMAP 127.0.0.1:1143, SMTP 1025, STARTTLS. Old declaration:
   # accounts.email.accounts.proton = {
   #   inherit address realName;
   #   userName = address;

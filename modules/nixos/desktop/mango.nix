@@ -1,19 +1,12 @@
-# mango (github:mangowm/mango): a dwl-based tiling compositor, dwm tags + awesome-style
-# layouts. The flake's module installs mango + mmsg, adds the "Mango" session for the
-# greeter and sets mango's portals: gtk for most things, wlr for screencast/screenshot.
-# niri.nix stays imported: its session variables, polkit agent and tools are shared,
-# and niri stays a session.
-# User config (binds, rules, look): modules/home/desktop/mango.nix
+# mango session; niri.nix stays imported for the shared env, polkit agent and tools.
+# User config: modules/home/desktop/mango.nix
 {
   config,
   lib,
   pkgs,
   ...
 }: let
-  # screen sharing picker. The portal sends "Monitor: eDP-1 …" and "Window: <title>
-  # (<app_id>)" lines; noctalia's launcher shows them as title + subtitle ("Screen eDP-1",
-  # "<title>" / "Zen · window"), and the original line goes back to the portal.
-  # noctalia's dmenu has no per-line icons, only text.
+  # screen share picker: portal lines shown as title + subtitle in noctalia's launcher
   sharePicker = pkgs.writeShellApplication {
     name = "share-picker";
     runtimeInputs = [config.programs.noctalia.package pkgs.gnugrep pkgs.gnused pkgs.coreutils];
@@ -77,9 +70,8 @@
 in {
   programs.mango.enable = true;
 
-  # Without a dmenu-style picker, sharing a single window fails (Discord: error 3002).
-  # It has to be set here: NixOS starts the portal with --config=<this>, so a
-  # ~/.config/xdg-desktop-portal-wlr/config is never read.
+  # without a picker single-window shares fail (Discord 3002); must be set here, the
+  # portal never reads ~/.config/xdg-desktop-portal-wlr/config
   xdg.portal.wlr.settings.screencast = {
     chooser_type = "dmenu";
     chooser_cmd = lib.getExe sharePicker;

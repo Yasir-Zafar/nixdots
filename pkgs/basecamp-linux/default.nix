@@ -1,7 +1,4 @@
-# basecamp-linux: unofficial app for Mountain peripherals (Everest 60: RGB only), not in nixpkgs.
-# Runs gui.py from source instead of the AppImage, so its self-updater and source overlay
-# (both AppImage-only) never patch anything. License: GPL-3 plus a non-commercial clause.
-# Device access (udev): modules/nixos/hardware/mountain.nix.
+# basecamp-linux: Mountain peripherals app (Everest 60 RGB), from source so the AppImage updater never runs. udev: nixos/hardware/mountain.nix
 # Update: bump rev/version, set hash = "" and build; nix prints the new hash.
 {
   stdenvNoCC,

@@ -5,9 +5,7 @@
 }: let
   c = my.colors;
 
-  # markdown reader/editor (opens single .md files, no vault). The window is libadwaita, so
-  # gtk.nix themes it; the rendered preview has its own css, so its dark colours are
-  # swapped for gruvbox here (the later block wins over adwaita.css's own dark block).
+  # markdown editor; preview css recoloured to gruvbox
   apostrophe = pkgs.apostrophe.overrideAttrs (old: {
     postInstall =
       (old.postInstall or "")
@@ -44,9 +42,7 @@ in {
     gnome-decoder
     # gnome-frog # ocr: grab text from images (posthog broken in nixpkgs, 2026-10)
     # errands
-    # gtk3 ui (follows the gruvbox theme) and java for Base come with the package. Its wrapper
-    # reads spelling/hyphenation from share/hunspell and share/hyphen of the profiles; the
-    # Calibri/Cambria stand-ins (carlito, caladea) are system fonts (nixos/desktop/fonts.nix)
+    # spelling from the hunspell/hyphen dicts below, Calibri/Cambria stand-ins are system fonts
     libreoffice
     hunspellDicts.en_GB-ise # spell check for libreoffice and gtk apps
     hyphenDicts.en_GB # hyphenation (justified text, Tools > Language > Hyphenation)

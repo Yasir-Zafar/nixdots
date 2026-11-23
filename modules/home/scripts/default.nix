@@ -1,5 +1,5 @@
 {pkgs, ...}: let
-  # Custom scripts from before nx; they go through nh now (flake paths: terminal/tools.nix)
+  # old scripts from before nx, now through nh
   rebuild-system = pkgs.writeShellScriptBin "rebuild-system" ''
     nh os switch && nh home switch
   '';
@@ -9,8 +9,7 @@
     nh os switch -u && nh home switch -u
   '';
 
-  # same retention as the weekly nh clean timer (nixos/nix.nix). The old version ran
-  # `nix-collect-garbage -d`, which deleted every generation but the current one
+  # same retention as the nh clean timer (nixos/nix.nix)
   cleanup-system = pkgs.writeShellScriptBin "cleanup-system" ''
     nh clean all --keep-since 7d --keep 5
   '';
@@ -46,7 +45,6 @@ in {
     dev-env
   ];
 
-  # Additional utility scripts can be added here
   home.file = {
     # Bash functions and utilities
     ".local/bin/nix-utils" = {

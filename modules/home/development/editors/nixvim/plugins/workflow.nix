@@ -1,9 +1,7 @@
-# nvim's side of the zellij workspace (docs/WORKFLOW.md): claude code in the next tab,
-# lazygit opening files here, buffers following edits made by other panes
+# nvim's side of the zellij workspace (docs/WORKFLOW.md)
 {
   programs.nixvim = {
-    # claude code runs in its own zellij tab (`claude-ide`); this plugin is only the IDE side:
-    # selection / diagnostics / open files go to claude, claude's edits come back as diffs here
+    # IDE side of claude code (`claude-ide` tab): selection out, diffs back
     plugins.claudecode = {
       enable = true;
       settings = {
@@ -14,7 +12,7 @@
         };
       };
     };
-    # the plugin would put nixpkgs' claude-code on nvim's PATH; claude comes from the claude-code-nix overlay
+    # claude itself comes from the claude-code-nix overlay
     dependencies.claude-code.enable = false;
 
     # changes made on disk by claude, lazygit or a formatter show up without `:e`

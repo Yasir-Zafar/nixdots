@@ -1,10 +1,4 @@
-# Helium: chromium-based second browser, set up close to Zen (zen.nix). Zen stays the default.
-#
-# - package and launch flags: here, through the flake's home-manager module
-# - settings, search engine and extensions: chromium policies, which chromium-based browsers
-#   only read from /etc, so they live in modules/nixos/desktop/helium.nix
-# - uBlock Origin is built into Helium (its own fork), so it isn't in the extension list
-# - profile: ~/.config/net.imput.helium (not managed, like Zen's)
+# Helium, second browser close to Zen. Policies (settings, extensions): nixos/desktop/helium.nix
 {
   inputs,
   pkgs,

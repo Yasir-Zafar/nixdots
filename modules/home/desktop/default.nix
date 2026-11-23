@@ -11,9 +11,7 @@
     ./font-trial.nix
   ];
 
-  # polkit-gnome runs as a systemd user service (modules/nixos/desktop/niri.nix); its xdg
-  # autostart copy only failed at every login with "an authentication agent already
-  # exists". A user entry with Hidden=true switches that copy off.
+  # hide polkit-gnome's xdg autostart copy: the user service already runs it
   xdg.configFile."autostart/polkit-gnome-authentication-agent-1.desktop".text = ''
     [Desktop Entry]
     Type=Application

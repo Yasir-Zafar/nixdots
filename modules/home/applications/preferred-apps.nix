@@ -1,5 +1,4 @@
-# Default applications: one place for "what opens what".
-# Change an app here and both the env vars and the xdg mime handlers follow.
+# default apps: env vars and mime handlers both follow this
 {lib, ...}: let
   browser = "zen-beta.desktop";
   # first one is the default, mpv is the fallback ("open with" lists it next)

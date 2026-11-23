@@ -1,7 +1,4 @@
-# GTK theme, icons and font, applied declaratively from the repo's assets/ (what nwg-look
-# used to do by hand): settings.ini for gtk3/4, .gtkrc-2.0, gsettings (dconf) and the
-# gtk4 css import all come from home-manager's gtk module. Not stylix's gtk target: that
-# generates its own theme instead of this one.
+# GTK theme, icons and font from assets/ (not stylix's gtk target: it generates its own)
 {
   config,
   pkgs,
@@ -15,8 +12,7 @@ in {
     enable = true;
 
     inherit (gruvbox) theme;
-    # libadwaita/gtk4 ignore the theme name; home-manager imports the theme's gtk.css
-    # instead, which needs the package. Explicit so it survives the stateVersion bump.
+    # gtk4 ignores the theme name; HM imports its gtk.css, which needs the package
     gtk4.theme = config.gtk.theme;
     iconTheme = gruvbox.icons;
     colorScheme = "dark";

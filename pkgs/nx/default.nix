@@ -1,8 +1,5 @@
 # nx: update management for ~/dots (Rust): rebuilds through nh, reports (status, apps,
-# storage, doctor, generations) and a TUI (`nx tui`). See docs/USAGE.md §5.
-# The programs it drives are put on its PATH by the wrapper; systemctl, journalctl, sudo,
-# docker and flatpak come from the system PATH.
-# The bash version it replaced is kept in ../nx-sh.
+# storage, doctor, generations) and a TUI (`nx tui`). Bash fallback: ../nx-sh
 {
   lib,
   rustPlatform,

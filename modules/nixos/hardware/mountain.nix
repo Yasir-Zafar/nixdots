@@ -1,7 +1,4 @@
-# Mountain Everest 60 keyboard (USB vendor 3282): BaseCamp-Linux, plus raw USB/HID access for the
-# logged-in user. Upstream's 99-mountain.rules also sets MODE="0666", which opens the keyboard's
-# typing interface to every user; uaccess alone is enough. uaccess has to be tagged before
-# 73-seat-late.rules, so this is a 70- rules file (services.udev.extraRules lands at 99).
+# Mountain Everest 60: BaseCamp-Linux + HID access via uaccess (not upstream's 0666); must be a 70- rules file
 {pkgs, ...}: {
   environment.systemPackages = [pkgs.basecamp-linux];
 

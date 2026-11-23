@@ -9,8 +9,7 @@
       cargo-outdated
 
       taplo
-      # openssl, pkg-config, libiconv: native deps belong in the project's dev shell
-      # (templates/rust wires openssl + pkg-config); globally they never linked anyway
+      # native deps (openssl, pkg-config) belong in the project's dev shell
     ];
 
     # ~/.local/share/cargo/bin is on PATH via shell/environment.nix

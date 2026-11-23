@@ -11,11 +11,7 @@
     niriPackage = config.programs.niri.package;
   };
 
-  # sysc-greet has no declarative config: it reads its saved choices from the greeter's
-  # cache. Seed them (gruvbox + ascii rain) on every boot/switch. The file is rewritten
-  # each time, so the last user and session are part of the seed: sysc-greet only
-  # prefills the username when the saved session matches the selected one ("Mango" is the
-  # Name in mango's session file; "Niri" for niri), then jumps straight to the password.
+  # no declarative config: seed its cache (theme, last user + session) on every boot/switch
   systemd.tmpfiles.rules = let
     prefs = builtins.replaceStrings ["\""] ["\\x22"] (builtins.toJSON {
       theme = "Gruvbox";

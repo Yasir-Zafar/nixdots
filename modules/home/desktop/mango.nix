@@ -1,24 +1,6 @@
-# mango (github:mangowm/mango), the default session. Docs: https://mangowm.github.io/docs
-# and docs/ in the repo. System side: modules/nixos/desktop/mango.nix.
-# The home-manager module writes ~/.config/mango/config.conf and checks it with
-# `mango -p` at build time, so a typo fails the build instead of the session.
-#
-# Look (docs/PREFERENCES.md): no shadows, no blur, no opacity, 10px corners (as noctalia's
-# capsules), 10px gaps and
-# a 2px border that marks the focused window; a window alone on a tag gets neither (it
-# fills the screen). Binds copy niri-config.nix wherever mango has the same thing, and
-# every bind has a plain-key version for the Everest 60 (no arrows/F-row/Print/XF86/grave).
-#
-# External screens (HDMI, USB-C): kanshi owns the outputs in this session. Plugging one in
-# mirrors the laptop onto it (wl-mirror, fullscreen there); Mod+Ctrl+P cycles mirror ->
-# extend -> external only, like Win+P. Closing the lid with a screen connected moves to
-# "external only" (logind doesn't suspend while docked: nixos/services/power.nix).
-#
-# Tags work like dwm/awesome: a window can be on several tags, and several tags can be
-# shown at once (Mod+Ctrl+N adds tag N to the view, Mod+Ctrl+Shift+N adds the window
-# to tag N). Every tag starts in tile (dwm master/stack); Mod+Y opens the layout keys.
-# Noctalia's recommended mango settings (layer_animations=0, exec_once) come from
-# docs/user/compositor-settings/mango.mdx in noctalia.
+# mango (github:mangowm/mango), the default session. System side: nixos/desktop/mango.nix.
+# Only options that differ from mango's defaults. Binds follow niri-config.nix, each
+# with a plain-key version for the 60% board.
 {
   config,
   pkgs,
@@ -392,8 +374,7 @@
     r = "right_tile";
   };
 
-  # windows that should take the whole tag: on tile they are the master (alone = full
-  # screen); on a scroller tag they open full width, like niri's open-maximized
+  # take the whole tag: master on tile, full width on scroller
   big = [
     "^zen-beta$"
     "^firefox$"
@@ -409,10 +390,7 @@
     "^gamescope$"
   ];
   games = ["^steam_app_[0-9]+$" "^org.vinegarhq.Sober$" "^Minecraft.*" "^gamescope$"];
-  # Floating windows. mango already floats, by itself, every window that has a parent
-  # (dialogs: file pickers, "save changes?", preferences), fixed-size windows, and X11
-  # dialog/splash/utility/modal windows. Floats open centred at the size the app asks for.
-  # These lists are for windows that don't say they're dialogs.
+  # float: mango floats real dialogs itself, these are windows that don't say they are
   float = [
     # small tools that look wrong stretched over a tile
     "^org.gnome.Calculator$"
@@ -444,8 +422,7 @@ in {
     displayMode
   ];
 
-  # a home switch swaps the config's symlink, which mango's own file watcher misses:
-  # tell every running mango to reload (no-op when none is running)
+  # mango's file watcher misses the symlink swap on a home switch
   xdg.configFile."mango/config.conf".onChange = ''
     for sock in "''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"/mango-*.sock; do
       [ -S "$sock" ] && MANGO_INSTANCE_SIGNATURE="$sock" \
@@ -453,9 +430,8 @@ in {
     done
   '';
 
-  # outputs in the mango session. The first profile matching the connected screens wins on
-  # plug-in, so a new screen starts mirrored. "*" = any external screen (HDMI, USB-C).
-  # niri keeps its own outputs (niri-config.nix): kanshi only runs with mango.
+  # outputs, mango only (niri has its own). First matching profile wins, so a new
+  # screen starts mirrored; Mod+Ctrl+P cycles mirror/extend/external.
   services.kanshi = {
     enable = true;
     systemdTarget = "mango-session.target";
@@ -482,8 +458,7 @@ in {
       };
     in [
       (profile "laptop" [(laptop {status = "enable";})])
-      # the external screen sits far off to the side, so the pointer can't wander onto
-      # the mirror; wl-mirror covers it with the laptop's picture
+      # far off to the side so the pointer can't wander onto the mirror
       (profile "mirror" [(laptop {status = "enable";}) (screen {position = "10000,0";})])
       (profile "extend" [(laptop {status = "enable";}) (screen {position = "1920,0";})])
       (profile "external" [(laptop {status = "disable";}) (screen {position = "0,0";})])
@@ -492,27 +467,23 @@ in {
 
   wayland.windowManager.mango = {
     enable = true;
-    # mango imports the session environment and starts mango-session.target itself
-    # (set_activation_env in its main.c); this only defines the target unit, which pulls
-    # in graphical-session.target (polkit agent, portals). The NixOS module doesn't link
-    # mango's own copy of the unit.
+    # mango starts mango-session.target itself; this only defines the unit, which the
+    # NixOS module doesn't ship
     systemd.enable = true;
 
     settings = {
       exec_once = ["noctalia"];
-      # QT_QPA_PLATFORM / NIXOS_OZONE_WL come from modules/nixos/desktop/niri.nix (session-wide)
+      # QT_QPA_PLATFORM / NIXOS_OZONE_WL: nixos/desktop/niri.nix
       env = ["QT_QPA_PLATFORMTHEME,gtk3"]; # keep in sync with qt.nix
 
       # --- Look ---
-      # Blur, shadows, opacity and dimming are off by default, so there is nothing to set
-      # for "no blur / no opacity". The outer gaps are 10 by default, like these.
+      # default: no blur/shadows/opacity/dimming, outer gaps 10
       border_px = 2;
       no_border_when_single = 1;
       gap_inner_horizontal = 10;
       gap_inner_vertical = 10;
       smart_gaps = 1; # a window alone fills the screen
-      # noctalia's capsule_radius (noctalia.toml); a window alone keeps its rounded corners
-      # (the default), the frame bars round the screen edges anyway
+      # = noctalia's capsule_radius
       border_radius = 10;
       root_color = hex c.bg;
       # also the switcher/overview frames
@@ -574,8 +545,7 @@ in {
       };
 
       # --- Animations: movement only, no fades (no opacity) ---
-      # Layer animations are off by default and have to stay off: noctalia animates its own
-      # panels, and mango's on top of them glitch. Focus changes aren't animated either.
+      # layer animations stay off (default): they glitch on top of noctalia's own
       animation_type_open = "slide";
       animation_type_close = "slide";
       animation_fade_in = 0;
@@ -598,8 +568,7 @@ in {
       # --- Input: same as niri-config.nix ---
       xkb_rules_layout = "us";
       xkb_rules_options = "ctrl:nocaps";
-      # (tap to click, tap and drag, drag lock, disable while typing and the gestures are on
-      # by default, like in niri-config.nix)
+      # default: tap to click, drag lock, disable while typing, gestures
       repeat_delay = 500;
       repeat_rate = 50;
       trackpad_natural_scrolling = 1;
@@ -609,8 +578,7 @@ in {
       device_rule = ["type:tablet,monitor:eDP-1"];
 
       # --- Focus and the mouse ---
-      # Defaults that stay: focus follows the mouse, keyboard focus moves the pointer along,
-      # a window that asks for focus gets it, Mod+drag onto another tile swaps them.
+      # default: focus follows mouse, pointer follows focus, Mod+drag swaps tiles
       cursor_hide_timeout = 5;
       cursor_hide_on_keypress = 1;
       border_resize_size = 8; # grab strip for dragging the edge between two windows: no border to aim at
@@ -628,8 +596,8 @@ in {
       scratchpad_height_ratio = 0.7;
       special_dim = 0.0; # tag 0 overlay: no dimming (no opacity)
       idle_inhibit_when_fullscreen = 1; # fullscreen video/games keep the screen on
-      # no monitor_rule: kanshi (above) sets the outputs, and mango would re-apply its
-      # rules on plug-in and fight it
+      float_full_to_top = 1; # dialogs open above a fullscreen window (newest on top)
+      # no monitor_rule: it would fight kanshi on plug-in
       # lid with an external screen: move to it (and back when opened)
       switchbind = [
         "lid_on,spawn,${displayMode}/bin/display-mode lid-close"
@@ -637,9 +605,7 @@ in {
       ];
 
       # --- Layouts ---
-      # Every tag starts in tile (mango's first layout), so there is no tag_rule. Also the
-      # defaults: a new window becomes master, the master area is 55% with one master window,
-      # monocle and deck are drawn as tabs (niri's tabbed column).
+      # default: tile on every tag, new window = master, 55% master, monocle/deck as tabs
       circle_layout = "tile,dwindle,grid,monocle,deck,scroller";
       monocle_no_border = 1; # one window in view: no border needed
       dwindle_smart_split = 1; # new window goes to the side of the focused one the cursor is on
@@ -688,8 +654,6 @@ in {
         ];
 
       # --- Layer rules ---
-      # (no no_animation / no_blur / no_shadow rules: layer animations, blur and shadows are
-      # off for every layer already, which also keeps slurp's selection out of screenshots)
       layer_rule = [
         # notifications stay out of screen shares and recordings
         "shield_when_capture:1,layer_name:^noctalia-notification"

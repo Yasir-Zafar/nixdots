@@ -1,10 +1,6 @@
-# bspwm session (system side: modules/nixos/desktop/bspwm.nix), set up to feel like niri:
-# same binds where bspwm has an equivalent, no gaps/borders/shadows, Gruvbox.
-# Noctalia is Wayland-only, so on X11 its jobs are done by:
-#   bar: polybar   launcher/emoji/window switcher: rofi   clipboard: clipmenu
-#   notifications: dunst   lock/idle: xss-lock + i3lock   session/power/caffeine: scripts below
-# The X11 tools are started from bspwmrc by store path rather than installed: a dunst on
-# PATH would be D-Bus activated in niri before noctalia claims notifications.
+# bspwm (X11), set up like niri. Noctalia's jobs: polybar, rofi, clipmenu, dunst, i3lock.
+# Those are started by store path, not installed: a dunst on PATH would grab
+# notifications in niri before noctalia.
 {
   config,
   pkgs,
@@ -16,8 +12,7 @@
   rofi = "${config.programs.rofi.finalPackage}/bin/rofi";
   dunstctl = "${pkgs.dunst}/bin/dunstctl";
 
-  # same timings as noctalia's idle settings (noctalia.toml [idle]): lock at 10 min, screen
-  # off at 11. Noctalia's suspend at 15 min isn't copied here.
+  # as noctalia's idle: lock at 10 min, screen off at 11
   idle = "xset s 600 600; xset +dpms; xset dpms 660 660 660";
   lock = "i3lock -n -c ${builtins.substring 1 6 c.bg}";
 
@@ -94,8 +89,7 @@ in {
   xsession.windowManager.bspwm = {
     enable = true;
 
-    # outputs as in niri-config.nix (X calls HDMI-A-1 "HDMI-1"); 5 desktops per monitor,
-    # like niri's per-monitor workspaces. After plugging a monitor in: Mod+Ctrl+R.
+    # 5 desktops per monitor; after plugging one in: Mod+Ctrl+R
     extraConfigEarly = ''
       xrandr --output eDP-1 --primary --auto --pos 0x0 --output HDMI-1 --auto --right-of eDP-1
       for m in $(bspc query -M --names); do
@@ -112,8 +106,7 @@ in {
       gapless_monocle = true;
       single_monocle = false;
 
-      # niri's warp-mouse-to-focus. focus_follows_pointer stays off (niri has it on):
-      # Charge Grinder moves the mouse and would hand focus to another window
+      # focus_follows_pointer off: Charge Grinder moves the mouse and would steal focus
       pointer_follows_focus = true;
       pointer_follows_monitor = true;
       focus_follows_pointer = false;

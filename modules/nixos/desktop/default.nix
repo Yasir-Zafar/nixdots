@@ -1,12 +1,10 @@
-# Desktop: mango + noctalia (default session), niri (second Wayland session), bspwm (X11 session), fonts, media libraries, and one greeter.
-# Every greeter has its own set of problems, so all of them are kept in ./greeters:
+# mango + noctalia (default), niri, bspwm (X11), fonts, media libs, one greeter.
 #   sysc-greet.nix  sysc-greet on greetd (active)
 #   tuigreet.nix    tuigreet on greetd (the previous default)
 #   lightdm.nix     lightdm, themed from assets/
 #   gdm.nix         gdm
 #   ly.nix          ly
-# Swap the greeter line below to change it, or boot-test one with `nx try <greeter>`.
-# ./gnome.nix is the full gnome desktop from before niri (not imported).
+# greeters in ./greeters: swap the line below, or boot-test with `nx try <greeter>`. ./gnome.nix: old, not imported
 {
   imports = [
     ./fonts.nix

@@ -1,16 +1,11 @@
-# launchers, emulators and games. The system side (steam, gamemode, uinput, the
-# gaming sysctls) is in modules/nixos/gaming.
+# launchers, emulators, games (system side: nixos/gaming)
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    # one library for every launcher: enable Steam/GOG/Epic/itch/... under Sources.
-    # GTK3, so it picks up the Gruvbox theme from desktop/gtk.nix
+    # one library for every launcher (Sources)
     lutris
     heroic
 
-    # windows games/apps outside steam, one wine prefix ("bottle") per game; runners, dxvk and
-    # bottles live in ~/.local/share/bottles. nixpkgs' build (gamemode, mangohud, gamescope
-    # included), without the "unsupported build" popup upstream shows outside flatpak.
-    # The system wine (nixos/users/packages.nix) still opens a double-clicked .exe.
+    # windows games outside steam, a prefix per game; no upstream 'unsupported' popup
     (bottles.override {removeWarningPopup = true;})
     prismlauncher
 

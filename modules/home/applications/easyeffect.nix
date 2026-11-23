@@ -1,12 +1,6 @@
-# EasyEffects (8.x) through home-manager's module: one output preset per headphone, loaded on
-# its own when that device becomes the output (autoload files below). Everything else
-# (laptop speakers, HDMI) falls back to "flat", so a headphone EQ never sticks to the speakers.
-# Presets and autoload rules are store links: change them here, not in the app.
-# Before this used a hand-written systemd unit; home-manager's module now does the same job.
+# EasyEffects: a preset per headphone, autoloaded; everything else falls back to flat
 {lib, ...}: let
-  # AutoEQ ParametricEQ.txt -> EasyEffects equalizer. Each filter line becomes
-  # (f "<type>" <Fc> <gain> <Q>); the Preamp line is the preamp argument. "APO (DR)" makes
-  # the bands behave like Equalizer APO's, which is what AutoEQ computes against.
+  # AutoEQ ParametricEQ.txt -> equalizer: (f type Fc gain Q)
   f = type: frequency: gain: q: {inherit type frequency gain q;};
   autoEq = preamp: filters: let
     types = {
@@ -47,8 +41,7 @@
     };
   };
 
-  # rule: when <device> (pipewire node.name) is the output on <route> (the route's
-  # description, as EasyEffects shows it), load <preset>
+  # rule: <device> on <route> loads <preset>
   autoload = {
     device,
     description,

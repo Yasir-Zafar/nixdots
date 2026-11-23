@@ -1,5 +1,4 @@
-# short fastfetch with a small nixos logo, shown when a ghostty window opens
-# (alternative: the cat in cat.txt, by jgs (Joan G. Stark) via ascii.co.uk/art/cats)
+# fastfetch when a ghostty window opens (cat.txt: ascii cat by jgs, the alternative)
 {lib, ...}: {
   programs.fastfetch = {
     enable = true;

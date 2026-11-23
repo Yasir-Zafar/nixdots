@@ -1,9 +1,4 @@
-# Zen through the flake's home-manager module.
-#
-# `profiles` is deliberately NOT set: the module only writes profiles.ini when it is, so
-# the existing profile (~/.config/zen/15738ebx.Default Profile: tabs, logins, history,
-# workspaces) stays exactly as it is. What is declared here goes into Zen's policies,
-# which the browser applies on top of the profile.
+# Zen. Never set `profiles`: it rewrites profiles.ini; everything here is policies.
 {
   inputs,
   lib,
@@ -29,10 +24,7 @@ in {
       # omnisearch (modules/nixos/services/omnisearch.nix) is off; back to google
       SearchEngines.Default = "Google";
 
-      # taken from the live profile's prefs.js (2026-11-05). "default" only sets the default:
-      # a value changed in the UI still wins, so this matters on a fresh/lost profile.
-      # The policy rejects zen.*, font.*, sidebar.* and most privacy.* prefs; those stay
-      # in the profile, as do the Zen mods' own prefs (mod.*, theme.*, uc.*, user-*).
+      # from the live prefs.js (2026-11-05); only defaults, the UI wins. zen.*/font.*/sidebar.* stay in the profile
       Preferences =
         lib.mapAttrs (_: v: {
           Value = v;

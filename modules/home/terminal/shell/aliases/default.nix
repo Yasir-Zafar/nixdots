@@ -11,15 +11,13 @@
     # reload fish (not zsh)
     "reload" = "exec fish";
 
-    # fish PATH is a list; just print it
-    # (not named `path`: that shadows fish's builtin and breaks git.fish completions)
+    # not `path`: that shadows a fish builtin
     "paths" = "string join \\n $PATH";
 
     # venv activate uses the fish-specific script
     "venv" = "source venv/bin/activate.fish";
 
-    # mkvenv: && is not fish syntax; defined as a function in fish.nix instead
-    # (omitted here so it doesn't land as a broken alias)
+    # mkvenv: a function in fish.nix
   };
 
   posixOverrides = {
@@ -30,9 +28,7 @@
     "mkvenv" = "python3 -m venv venv && source venv/bin/activate";
   };
 
-  # aliases that shadow a real command (du -> dust, grep -> rg, rm -> rm -i, ...).
-  # In fish they become abbreviations: `du` expands to `dust` on screen when typed,
-  # while scripts, `fish -c` and other programs still get the real du.
+  # aliases that shadow a real command: abbreviations in fish, so scripts get the real one
   shadowing = [
     "cp"
     "mv"

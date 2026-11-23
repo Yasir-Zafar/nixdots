@@ -1,5 +1,4 @@
-# A plain python3 for scripts, `py`, `serve` and `mkvenv`. Libraries live per project:
-# templates/python (uv-managed .venv) or `uv add` in an existing one.
+# plain python3; libraries per project (templates/python, uv)
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     python3

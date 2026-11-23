@@ -16,18 +16,13 @@
 
       # no fixed `title`: it would override the shell-integration title updates below
 
-      # launch fish without making it the login shell.
-      # zsh remains the login shell; fish inherits the login environment
-      # (PATH, env vars) from the zsh session that started the display server.
+      # fish here, zsh stays the login shell
       command = "fish";
 
-      # shell-integration tells ghostty to inject its fish integration
-      # (prompt marks, title updates, sudo passthrough, cursor shape).
       shell-integration = "fish";
       shell-integration-features = "cursor,sudo,title";
 
-      # as in the original config: stylix would add a "Noto Color Emoji" family
-      # here, which breaks emoji rendering; let fontconfig fall back instead
+      # stylix's "Noto Color Emoji" family breaks emoji; let fontconfig fall back
       font-family = lib.mkForce "JetBrainsMono Nerd Font Mono";
 
       font-style = "regular";
@@ -36,8 +31,7 @@
       font-style-bold-italic = "bold_italic";
       font-feature = "+liga";
 
-      # no scrollback setting: the default is 50 MB (unlimited lines). The old
-      # `scrollback-limit = 50000` was bytes, about 1000x less than that
+      # scrollback: default 50 MB
 
       mouse-hide-while-typing = true;
       mouse-shift-capture = true;

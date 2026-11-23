@@ -9,8 +9,7 @@
     loupe
     ffmpegthumbnailer
     gnome-epub-thumbnailer
-    # font thumbnails in nautilus, and the font viewer itself. Images, pdfs and videos
-    # already thumbnail (office files have no thumbnailer that works for docx)
+    # font thumbnails + font viewer
     gnome-font-viewer
 
     # viewers next to loupe (images, gifs) and showtime/mpv (video)
@@ -31,8 +30,7 @@
     way-clicker # gui autoclicker; open it once, then Mod+X starts/stops
   ];
 
-  # way-clicker clicks through dotoolc, which hands the clicks to this daemon (it owns the
-  # virtual mouse on /dev/uinput, so "uinput" group, nixos/gaming). Works on niri and bspwm
+  # dotool daemon owns the virtual mouse (uinput group); way-clicker uses it
   systemd.user.services.dotoold = {
     Unit.Description = "dotool daemon (way-clicker)";
     Service = {

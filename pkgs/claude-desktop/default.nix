@@ -1,5 +1,4 @@
-# claude-desktop: Anthropic's official Linux beta (Electron), not in nixpkgs. Repackages the .deb
-# from their apt repo; the app doesn't self-update on Linux, so updates are a bump here.
+# claude-desktop: Anthropic's Linux beta, repackaged .deb; no self-update, bump here.
 # Update: newest Version/SHA256 in
 #   https://downloads.claude.ai/claude-desktop/apt/stable/dists/stable/main/binary-amd64/Packages
 # (hash: nix hash convert --hash-algo sha256 --to sri <hex>).

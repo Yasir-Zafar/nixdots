@@ -1,8 +1,4 @@
-# Fonts on trial, from docs/PROSPECTS.md. Installed for the user only and set as nobody's
-# default, so nothing changes until one is picked by name somewhere. Keepers move to
-# modules/nixos/desktop/fonts.nix (or stylix.nix); the rest get dropped from this list.
-# Not here: Iosevka and Noto (already system fonts), Manrope, Outfit and Space Grotesk
-# (only in google-fonts, which downloads the whole collection).
+# fonts on trial (docs/PROSPECTS.md), user-only and nobody's default
 {
   lib,
   pkgs,
@@ -12,7 +8,7 @@
   fonts.fontconfig.enable = true;
 
   home.packages = with pkgs; [
-    # terminal (mono). Ghostty has the nerd font icons built in, so the plain fonts work
+    # terminal (mono)
     fira-code
     cascadia-code
     monaspace.static # one variant; the full package is all four (static, variable, frozen, nerd)
@@ -25,8 +21,7 @@
     fantasque-sans-mono
     departure-mono
 
-    # bitmap / pixel (crisp at their exact sizes only). spleen and tamzen both ship an X11
-    # fonts.dir index, which collides; hiPrio keeps spleen's (fontconfig doesn't use it)
+    # bitmap / pixel; spleen and tamzen fonts.dir indexes collide, hiPrio keeps spleen's
     cozette
     (lib.hiPrio spleen)
     tamzen

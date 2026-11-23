@@ -1,8 +1,4 @@
-# way-clicker: Qt6 autoclicker that works on Wayland (not in nixpkgs). Clicks go through
-# dotoolc -> dotoold -> /dev/uinput, so it also works on X11; dotoold runs as a user service
-# (modules/home/applications/utilities.nix). `way-clicker --nogui --toggle` starts/stops
-# clicking in the running window (and does nothing if it isn't open), which is what the
-# niri / sxhkd binds call.
+# way-clicker: Qt6 autoclicker, clicks via dotool (daemon: applications/utilities.nix)
 # Update: bump rev/version, set hash = "" and build; nix prints the new hash.
 {
   lib,
@@ -31,9 +27,7 @@ python3Packages.buildPythonApplication {
   nativeBuildInputs = [qt6.wrapQtAppsHook copyDesktopItems];
   buildInputs = [qt6.qtbase qt6.qtwayland];
 
-  # `--toggle` starts the GUI by running `sys.executable -m way_clicker`, but the bare
-  # interpreter has none of the wrapper's python path, PATH or Qt plugins (and upstream
-  # discards the error); start the wrapper itself instead.
+  # `--toggle` would start a bare interpreter without the wrapper's env; run the wrapper
   postPatch = ''
     substituteInPlace way_clicker/__main__.py \
       --replace-fail '[sys.executable, "-m", "way_clicker"]' '["'"$out"'/bin/way-clicker"]'

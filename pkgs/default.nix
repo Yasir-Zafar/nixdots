@@ -1,8 +1,6 @@
-# Packages that aren't in nixpkgs, added to pkgs as an overlay by both flakes, so modules
-# use them as pkgs.<name>. Build one on its own with
+# my packages, an overlay in both flakes (pkgs.<name>). Build one:
 #   nix build ~/dots/hm#homeConfigurations.boi.pkgs.<name>
-# nx-sh (the bash fallback for nx) is a list of packages, not one, so it isn't in here;
-# see modules/home/terminal/nx.nix.
+# nx-sh is a list, not one package: see modules/home/terminal/nx.nix
 final: _prev: {
   nx = final.callPackage ./nx {};
   way-clicker = final.callPackage ./way-clicker {};

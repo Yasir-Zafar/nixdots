@@ -21,14 +21,10 @@ in {
           package = pkgs.bibata-cursors;
           size = 24;
         };
-        # LightDM can actually read your home folder easier,
-        # but using a nix path is still safer.
         extraConfig = ''
-          # Set the cursor speed/sensitivity
-          # Note: LightDM uses X11 settings; 1 is default, higher is faster
+          # cursor speed (1 = default, higher is faster)
           cursor-speed = 0.5
 
-          # You can also set specific accessibility or input tweaks here
           keyboard-opened = false
           indicators = ~host;~spacer;~clock;~spacer;~session;~language;~a11y;~power
         '';
@@ -36,5 +32,4 @@ in {
     };
   };
 
-  # gtk-engine-murrine (gtk2 theme engine) used to be installed here; nixpkgs removed it with gtk2
 }

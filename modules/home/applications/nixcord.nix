@@ -1,11 +1,9 @@
-# nixcord.nix — Full Vencord configuration via Nixcord
-# Imported from applications/default.nix; the module itself comes from inputs.nixcord in flake.nix.
+# Vencord through nixcord (one client block at a time)
 {
   programs.nixcord = {
     enable = true;
 
-    # ─── Client ────────────────────────────────────────────────────────────────
-    # Only enable ONE client block at a time.
+    # Client
 
     discord = {
       enable = true; # Set false to use only Vesktop/Legcord/etc.
@@ -25,16 +23,14 @@
       krisp.enable = false; # Krisp noise cancellation
 
       settings = {
-        # Raw Discord settings.json entries, e.g.:
-        # SKIP_HOST_UPDATE = true;
       };
     };
 
     # vesktop.enable = false;         # Vesktop (Vencord-bundled standalone client)
-    # dorion.enable  = false;         # Dorion  (WebKitGTK-based; see note below)
+    # dorion.enable  = false;         # Dorion  (WebKitGTK-based)
     # legcord.enable = false;         # Legcord (lightweight client)
 
-    # ─── Quick CSS ─────────────────────────────────────────────────────────────
+    # Quick CSS
     quickCss = ''
       /**
        * @name Gruvbox Dark
@@ -706,7 +702,7 @@
       }
     '';
 
-    # ─── Core Vencord Config ───────────────────────────────────────────────────
+    # Core Vencord Config
     config = {
       useQuickCss = true; # Enable the quickCss block above
       frameless = true; # Remove window frame / titlebar
@@ -717,20 +713,17 @@
       autoUpdateNotification = false; # Notify on auto-update
       notifyAboutUpdates = false; # updates come from the flake, nothing to act on
 
-      # Themes
       themeLinks = [
-        # "https://raw.githubusercontent.com/rose-pine/discord/main/rose-pine.theme.css"
       ];
       enabledThemeLinks = []; # Subset of themeLinks to actually activate
       themes = {
-        # "my-theme" = ./themes/my-theme.css;
       };
       enabledThemes = []; # e.g. [ "my-theme.css" ]
 
-      # ── Plugins (Shared – Vencord + Equicord) ──────────────────────────────
+      # Plugins (Shared – Vencord + Equicord)
       plugins = {
-        # every plugin is off unless enabled here (nixcord's default), so only the enabled ones are listed
-        # ── UI / Visual ──────────────────────────────────────────────────────
+        # every plugin is off unless enabled here
+        # UI / Visual
 
         accountPanelServerProfile.enable = true; # Show server profile in account panel
         betterRoleDot.enable = true; # Improve role colour dots
@@ -739,9 +732,8 @@
         showTimeoutDuration.enable = true; # Show timeout remaining duration
         themeAttributes.enable = true; # Extra CSS data attributes for themes
 
-        # ── Rich Presence / Activity ─────────────────────────────────────────
 
-        # ── Messaging / Chat ─────────────────────────────────────────────────
+        # Messaging / Chat
 
         clearUrls.enable = true; # Strip tracking params from links
         # these two plugins have no default in nixcord, so off is written out
@@ -759,33 +751,31 @@
         validReply.enable = true; # Fix invalid reply display
         validUser.enable = true; # Fix invalid user display
 
-        # ── Voice / Audio ─────────────────────────────────────────────────────
+        # Voice / Audio
 
         voiceChatDoubleClick.enable = true; # Double-click to join VC
         webScreenShareFixes.enable = true; # Fix screen-share on web
 
-        # ── Notifications ─────────────────────────────────────────────────────
+        # Notifications
 
         crashHandler.enable = true; # Catch & recover from crashes
 
-        # ── Developer / Debug ────────────────────────────────────────────────
 
-        # ── Loading Screen ────────────────────────────────────────────────────
+        # Loading Screen
 
         loadingQuotes.enable = true; # Custom loading screen quotes
 
-        # ── Accessibility ────────────────────────────────────────────────────
 
-        # ── Miscellaneous ─────────────────────────────────────────────────────
+        # Miscellaneous
 
         decor.enable = true; # Custom avatar decorations
         petpet = {enable = false;}; # Pet the avatar (stays lowercase in JSON)
 
-        # ── Vencord-only Plugins ─────────────────────────────────────────────
+        # Vencord-only Plugins
 
         alwaysExpandRoles.enable = true; # Always expand role list
         alwaysTrust.enable = true; # Skip external link warnings
-        # autoDndWhilePlaying stays off: auto DND when in a game would mute every desktop notification while a Steam game runs
+        # autoDndWhilePlaying off: it would mute notifications during every Steam game
         betterFolders.enable = true; # Improved server folders UI
         betterGifPicker.enable = true; # Improved GIF picker
         callTimer.enable = true; # Show call duration timer
@@ -802,20 +792,15 @@
       };
     };
 
-    # ─── Extra / per-client config overrides ──────────────────────────────────
-    # These are merged on top of `config` for the specified client only.
+    # Extra / per-client config overrides
     extraConfig = {}; # All clients
     vencordConfig = {}; # Vencord (Discord) only
     equicordConfig = {}; # Equicord (Discord) only
     vesktopConfig = {}; # Vesktop only
     equibopConfig = {}; # Equibop only
 
-    # ─── Third-party user plugins ─────────────────────────────────────────────
-    # After adding here, also enable the plugin under extraConfig.plugins.
+    # Third-party user plugins
     userPlugins = {
-      # someCoolPlugin = "github:someUser/someCoolPlugin/abc123def456";
-      # myLocalPlugin  = "/home/user/projects/myPlugin";  # needs --impure
-      # anotherPlugin  = ./plugins/anotherPlugin;
     };
   };
 }

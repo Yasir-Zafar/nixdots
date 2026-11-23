@@ -1,5 +1,4 @@
-# terminal workflow: history, multiplexer, git ui, file manager
-# The zellij "dev" workspace (tabs: nvim, claude, git, term) is described in docs/WORKFLOW.md
+# history, zellij `dev` workspace (docs/WORKFLOW.md), lazygit, yazi
 {
   lib,
   pkgs,
@@ -28,8 +27,7 @@
     '';
   };
 
-  # zj-edit FILE [LINE]: open FILE in the workspace's nvim and switch to its tab (lazygit's `e`);
-  # without a running nvim it simply runs nvim here
+  # zj-edit FILE [LINE]: open in the workspace's nvim (lazygit's `e`), else plain nvim
   zj-edit = pkgs.writeShellApplication {
     name = "zj-edit";
     text = ''
@@ -47,8 +45,7 @@
     '';
   };
 
-  # claude-ide: `claude --ide`, started once this workspace's nvim has published its IDE lock file
-  # (so diffs and selection are connected from the first prompt)
+  # claude-ide: `claude --ide` once nvim's IDE lock file exists
   claude-ide = pkgs.writeShellApplication {
     name = "claude-ide";
     runtimeInputs = [pkgs.coreutils pkgs.gnugrep];
@@ -68,8 +65,7 @@ in {
       enable = true;
       # keep up-arrow for normal history, atuin on ctrl+r
       flags = ["--disable-up-arrow"];
-      # the one setting atuin's own default config.toml had (enter runs the command
-      # instead of only pasting it); home-manager writes the file now
+      # enter runs the command instead of pasting it
       settings.enter_accept = true;
     };
 
@@ -77,10 +73,9 @@ in {
     zellij = {
       enable = true;
       settings = {
-        # $SHELL is zsh (the login shell; ghostty only launches fish), so without this the panes open zsh
+        # $SHELL is zsh (login shell)
         default_shell = "fish";
-        # locked = every key goes to the app in the pane (nvim, lazygit and claude all use
-        # ctrl chords zellij would steal); zellij itself is driven by the Alt layer below
+        # locked: keys go to the pane's app; zellij is driven by the Alt layer below
         default_mode = "locked";
         copy_command = "wl-copy";
         scroll_buffer_size = 20000;
@@ -174,10 +169,7 @@ in {
       };
     };
 
-    # yazi: faster terminal file manager with previews (images in ghostty, pdf, video);
-    # `y` opens it and cds to wherever you quit. Colours and icons come from stylix
-    # (gruvbox-dark-medium); the rest of the look is added here: rounded full border,
-    # git status next to files, size + mtime column, a wider preview pane.
+    # `y` opens it and cds to where you quit; colours from stylix
     yazi = {
       enable = true;
       shellWrapperName = "y";

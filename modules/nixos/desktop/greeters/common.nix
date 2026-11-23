@@ -1,6 +1,4 @@
-# Shared by every greeter variant: desktop services, the avatar, gnome utility apps
-# and the xdg user dirs. The greeter files next to this one only hold what is
-# specific to that greeter.
+# shared by every greeter: desktop services, avatar, gnome apps, xdg dirs
 {
   pkgs,
   my,
